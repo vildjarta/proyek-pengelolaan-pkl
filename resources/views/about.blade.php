@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data - Sistem Pengelolaan PKL</title>
+    <title>About - Sistem Pengelolaan PKL</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -12,7 +12,7 @@
             min-height: 100vh;
         }
 
-        .login-card {
+        .about-card {
             border-radius: 1rem;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
         }
@@ -35,32 +35,25 @@
 
 <body>
     <div class="container d-flex align-items-center justify-content-center" style="min-height:100vh;">
-        <div class="col-md-5">
-            <div class="card login-card p-4">
+        <div class="col-md-7">
+            <div class="card about-card p-4">
                 <div class="logo-pkl mb-3">
                     <i class="bi bi-briefcase"></i>
                 </div>
-                <h3 class="text-center mb-4 text-success">Sistem Pengelolaan PKL</h3>
-                <form method="POST" action="#">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Pengguna</label>
-                        <input type="email" class="form-control" id="email" name="email" required autofocus
-                            placeholder="nama@email.com">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Kata Sandi</label>
-                        <input type="password" class="form-control" id="password" name="password" required
-                            placeholder="********">
-                    </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                        <label class="form-check-label" for="remember">Ingat Saya</label>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">Masuk</button>
-                </form>
-                <div class="mt-3 text-center">
-                    <small>Belum punya akun? <a href="/">login</a></small>
+                <h3 class="text-center mb-4 text-success">Tentang Sistem Pengelolaan PKL</h3>
+                <p class="text-center">
+                    Sistem Pengelolaan PKL adalah aplikasi yang dirancang untuk memudahkan pengelolaan data Praktik Kerja Lapangan (PKL) di lingkungan sekolah atau institusi pendidikan. 
+                </p>
+                <ul>
+                    <li>Mengelola data peserta PKL</li>
+                    <li>Mencatat kehadiran dan penilaian</li>
+                    <li>Memudahkan komunikasi antara siswa, pembimbing, dan institusi</li>
+                </ul>
+                <p>
+                    Aplikasi ini dikembangkan untuk meningkatkan efisiensi dan transparansi dalam proses PKL, serta memberikan kemudahan akses informasi bagi seluruh pihak yang terlibat.
+                </p>
+                <div class="mt-4 text-center">
+                    <a href="/" class="btn btn-success">Kembali ke Beranda</a>
                 </div>
             </div>
         </div>
