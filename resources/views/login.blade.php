@@ -62,6 +62,9 @@
                 <div class="mt-3 text-center">
                     <small>Belum punya akun? <a href="/data">data</a></small>
                 </div>
+                <div class="mt-3 text-center">
+                    <small>sudah punya akun? <a href="/home">home</a></small>
+                </div>
             </div>
         </div>
     </div>
