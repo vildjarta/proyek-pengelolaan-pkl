@@ -42,7 +42,6 @@
                 </div>
                 <h3 class="text-center mb-4 text-success">Sistem Pengelolaan PKL</h3>
                 <form method="POST" action="#">
-                    @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Pengguna</label>
                         <input type="email" class="form-control" id="email" name="email" required autofocus
