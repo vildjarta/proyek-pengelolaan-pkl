@@ -31,9 +31,9 @@
         }
 
         .logo-pkl img {
-            width: 80%;
-            height: 80%;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -42,12 +42,16 @@
     <div class="container d-flex align-items-center justify-content-center" style="min-height:100vh;">
         <div class="col-md-5">
             <div class="card login-card p-4">
+                <!-- Logo Baru -->
                 <div class="logo-pkl mb-3">
-                    <!-- Logo Baru -->
-                    <img src="logo-baru.png" alt="Logo PKL">
+                    <img src="{{ asset('assets/images/logo-baru.png') }}" alt="Logo PKL">
                 </div>
+
                 <h3 class="text-center mb-4 text-success">Sistem Pengelolaan PKL</h3>
+
+                <!-- Form Login -->
                 <form method="POST" action="#">
+                    @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Pengguna</label>
                         <input type="email" class="form-control" id="email" name="email" required autofocus
@@ -64,15 +68,18 @@
                     </div>
                     <button type="submit" class="btn btn-success w-100">Masuk</button>
                 </form>
+
+                <!-- Link Daftar dan Home -->
                 <div class="mt-3 text-center">
                     <small>Belum punya akun? <a href="/data">data</a></small>
                 </div>
-                <div class="mt-3 text-center">
-                    <small>sudah punya akun? <a href="/home">home</a></small>
+                <div class="mt-2 text-center">
+                    <small>Sudah punya akun? <a href="/home">home</a></small>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
