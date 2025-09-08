@@ -18,17 +18,22 @@
         }
 
         .logo-pkl {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             background: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem auto;
-            font-size: 2rem;
-            color: #1cc88a;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .logo-pkl img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -38,7 +43,8 @@
         <div class="col-md-5">
             <div class="card login-card p-4">
                 <div class="logo-pkl mb-3">
-                    <i class="bi bi-briefcase"></i>
+                    <!-- Logo Baru -->
+                    <img src="logo-baru.png" alt="Logo PKL">
                 </div>
                 <h3 class="text-center mb-4 text-success">Sistem Pengelolaan PKL</h3>
                 <form method="POST" action="#">
