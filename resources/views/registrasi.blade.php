@@ -69,7 +69,7 @@
                     <img src="{{ asset('assets/images/logo-baru.png') }}" alt="Logo PKL">
                 </div>
 
-                <h3 class="text-center mb-4" style="color:#769FCD;">Registrasi Akun PKL</h3>
+                <h3 class="text-center mb-4" style="color:#769FCD;">Buat Akun PKL</h3>
 
                 <!-- Form Registrasi -->
                 <form method="POST" action="#">
