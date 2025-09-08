@@ -105,7 +105,7 @@
 
                 <!-- Link Daftar dan Home -->
                 <div class="mt-3 text-center text-link">
-                    <small>Belum punya akun? <a href="/registrasi">registrasi</a></small>
+                    <small>Belum punya akun? <a href="/registrasi">Buat akun</a></small>
                 </div>
                 <div class="mt-2 text-center text-link">
                     <small>Sudah punya akun? <a href="/home">home</a></small>
