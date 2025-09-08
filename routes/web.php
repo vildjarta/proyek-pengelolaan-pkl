@@ -2,10 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/login', function () {
-    return view('index');
+Route::get('/', function () {
+    return view('login');
 });
-
 
 Route::get('/home', function () {
     // return view('home');
