@@ -64,7 +64,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <a href="#">Mahasiswa</a>
-      <a href="#">Dosen Pembimbing</a>
+      <a href="#">Dosen Pembimbing</    a>
       <a href="#">Perusahaan PKL</a>
       <a href="#">Rating & Review</a>
       <a href="#">Admin / Koordinator</a>
@@ -73,9 +73,9 @@
     <!-- Content -->
     <div class="content">
       <h2>Selamat Datang di Sistem Pengelolaan PKL</h2>
-      
+
       <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        
+
         <!-- Kolom kiri: Jadwal -->
         <div style="flex: 1; min-width: 320px;">
           <div class="card">
@@ -110,7 +110,7 @@
         <div style="flex: 1; min-width: 320px;">
           <div class="card">
             <h3>⭐ Tempat PKL Terfavorit</h3>
-            
+
             <div class="favorite-card">
               <h4>PT Teknologi Nusantara</h4>
               <p>⭐ 4.9 | Bidang: IT & Software</p>
