@@ -1,0 +1,160 @@
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #444;
+}
+
+/* Main Layout Wrapper */
+/* Perbaikan pada .main-content-wrapper */
+.main-content-wrapper {
+    margin-top: 60px; /* Jarak dari header atas */
+    margin-left: 260px; /* Posisikan konten tepat di samping sidebar */
+    padding: 30px; /* Tambahkan padding untuk isi konten */
+    flex-grow: 1; /* Biarkan konten mengisi sisa ruang */
+    transition: margin-left 0.3s ease;
+}
+
+body.sidebar-closed .main-content-wrapper {
+    margin-left: 70px; /* Sesuaikan saat sidebar tertutup */
+}
+
+/* Perbaikan pada .content */
+.content {
+    padding: 30px;
+    background-color: #fff;
+    flex-grow: 1; /* Pastikan konten mengisi ruang yang tersedia */
+}
+
+
+/* Header inside the table card */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #5b8ad2;
+}
+
+/* Headings */
+h2.title {
+    color: #5b8ad2;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table thead tr {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+/* Button Styles */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+.btn-primary {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #5b8ad2;
+}
+
+.btn-warning {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: #5b8ad2;
+}
+
+.btn-danger {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #5b8ad2;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Alert Message Styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.table td .btn {
+    min-width: 80px; /* Memberikan lebar minimum yang sama */
+    text-align: center; /* Memastikan teks tetap di tengah */
+    box-sizing: border-box; /* Mencegah padding mempengaruhi lebar total */
+}

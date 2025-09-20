@@ -10,10 +10,19 @@
 </head>
 
 <body>
+<<<<<<< HEAD
 
     <div class="d-flex">
         {{-- header --}}
         @include('layout.header')
+=======
+  
+<div class="header">
+  <div class="header-left">
+    <div class="logo">
+      <img src="assets/images/logo-baru.png" alt="Logo PKL JOZZ">
+      <span>PKL JOZZ</span>
+>>>>>>> 52c806c (push)
     </div>
 
     <div class="d-flex">

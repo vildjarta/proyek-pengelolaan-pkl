@@ -1,6 +1,7 @@
 /* Import font dari Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+<<<<<<< HEAD
 /* --- Palet Warna Sinkron dengan Desain Login --- */
 :root {
     --color-primary-blue: #5b8ad2;
@@ -17,10 +18,19 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--color-light-blue-bg);
     transition: all 0.3s ease;
+=======
+/* --- General Styling --- */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f6fa;
+  transition: all 0.3s ease;
+>>>>>>> 52c806c (push)
 }
 
 /* --- Header Styling --- */
 .header {
+<<<<<<< HEAD
     position: fixed;
     top: 0;
     left: 0;
@@ -33,6 +43,20 @@ body {
     padding: 0 20px;
     box-shadow: 0 2px 4px var(--color-shadow);
     z-index: 1000;
+=======
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+>>>>>>> 52c806c (push)
 }
 
 .header-left {
@@ -55,16 +79,23 @@ body {
 }
 
 .header-left .logo span {
+<<<<<<< HEAD
     font-size: 1.2rem;
     font-weight: 600;
     white-space: nowrap;
     color: var(--color-text-dark);
+=======
+  font-size: 1.2rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #333;
+>>>>>>> 52c806c (push)
 }
 
 .header-left .menu-toggle {
     cursor: pointer;
     font-size: 1.5rem;
-    color: var(--color-primary-blue);
+    color: #4a6fa5;
 }
 
 .header .menu-right {
@@ -77,6 +108,7 @@ body {
 }
 
 .header .menu-right a {
+<<<<<<< HEAD
     color: var(--color-primary-blue);
     text-decoration: none;
     font-weight: 500;
@@ -90,6 +122,21 @@ body {
 .user-profile-wrapper {
     position: relative;
     cursor: pointer;
+=======
+  color: #4a6fa5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.header .menu-right a:hover {
+  color: #1ab394;
+}
+
+.user-profile-wrapper {
+  position: relative; /* Penting untuk posisi dropdown */
+  cursor: pointer;
+>>>>>>> 52c806c (push)
 }
 
 .user-info {
@@ -100,6 +147,7 @@ body {
 }
 
 .user-info .avatar {
+<<<<<<< HEAD
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -131,6 +179,30 @@ body {
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+=======
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #ddd;
+}
+
+.profile-dropdown-menu {
+  position: absolute;
+  top: 100%; /* Posisi tepat di bawah user-info */
+  right: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  min-width: 180px;
+  z-index: 999;
+  
+  /* Menyembunyikan dropdown secara default */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+>>>>>>> 52c806c (push)
 }
 
 .user-profile-wrapper.active .profile-dropdown-menu {
@@ -140,12 +212,21 @@ body {
 }
 
 .profile-dropdown-menu a {
+<<<<<<< HEAD
     display: block;
     padding: 10px 15px;
     color: var(--color-text-dark);
     text-decoration: none;
     font-weight: 400;
     transition: background-color 0.2s ease;
+=======
+  display: block;
+  padding: 10px 15px;
+  color: #555;
+  text-decoration: none;
+  font-weight: 400;
+  transition: background-color 0.2s ease;
+>>>>>>> 52c806c (push)
 }
 
 .profile-dropdown-menu a i {
@@ -153,12 +234,18 @@ body {
 }
 
 .profile-dropdown-menu a:hover {
+<<<<<<< HEAD
     background-color: var(--color-light-blue-bg);
     color: var(--color-primary-blue);
+=======
+  background-color: #f0f2f5;
+  color: #1a73e8;
+>>>>>>> 52c806c (push)
 }
 
 /* --- Sidebar Styling --- */
 .sidebar {
+<<<<<<< HEAD
     position: fixed;
     top: 60px;
     left: 0;
@@ -171,6 +258,20 @@ body {
     overflow-y: auto;
     padding-bottom: 20px;
     z-index: 900;
+=======
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 260px;
+  background-color: #2f4050;
+  color: #fff;
+  height: calc(100vh - 60px);
+  flex-shrink: 0;
+  transition: width 0.3s ease;
+  overflow-y: auto;
+  padding-bottom: 20px;
+  z-index: 900;
+>>>>>>> 52c806c (push)
 }
 
 body.sidebar-closed .sidebar {
@@ -192,12 +293,21 @@ body.sidebar-closed .sidebar ul li a i {
 }
 
 .sidebar h4 {
+<<<<<<< HEAD
     margin: 15px 20px 10px;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
     font-weight: 500;
     white-space: nowrap;
+=======
+  margin: 15px 20px 10px;
+  font-size: 0.8rem;
+  color: #a7b1c2;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+>>>>>>> 52c806c (push)
 }
 
 .sidebar ul {
@@ -207,6 +317,7 @@ body.sidebar-closed .sidebar ul li a i {
 }
 
 .sidebar ul li a {
+<<<<<<< HEAD
     display: flex;
     align-items: center;
     padding: 12px 20px;
@@ -222,6 +333,23 @@ body.sidebar-closed .sidebar ul li a i {
 .sidebar ul li.active a {
     background-color: rgba(255, 255, 255, 0.2);
     color: var(--color-white);
+=======
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  background-color: #1ab394;
+}
+
+.sidebar ul li.active a {
+  background-color: #1ab394;
+  color: #fff;
+>>>>>>> 52c806c (push)
 }
 
 .sidebar ul li a i {
@@ -258,13 +386,14 @@ body.sidebar-closed .main-content-wrapper {
     margin-left: 70px;
 }
 
-/* --- Content Styling -- */
+/* --- Content Styling --- */
 .content {
     padding: 30px;
     flex-grow: 1;
 }
 
 .content h2 {
+<<<<<<< HEAD
     color: var(--color-text-dark);
     margin-top: 0;
     font-weight: 600;
@@ -273,6 +402,16 @@ body.sidebar-closed .main-content-wrapper {
 
 .content p {
     color: var(--color-text-gray);
+=======
+  color: #333;
+  margin-top: 0;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.content p {
+  color: #666;
+>>>>>>> 52c806c (push)
 }
 
 /* --- Responsiveness --- */
