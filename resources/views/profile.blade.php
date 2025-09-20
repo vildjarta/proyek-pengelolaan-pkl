@@ -21,10 +21,10 @@
     <a href="#">Ajukan Proposal</a>
     <a href="#">Akademik</a>
     <a href="/profile" class="profile-link">
-      <div class="user-info">
-        <span>Nama User</span>
-        <div class="avatar"></div>
-      </div>
+    <div class="user-info">
+    <span>Nama User</span>
+    <img src="https://via.placeholder.com/35" alt="Avatar Pengguna" class="avatar">
+    </div>
     </a>
   </div>
 </div>
