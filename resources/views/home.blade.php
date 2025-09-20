@@ -12,7 +12,7 @@
 <div class="header">
   <div class="header-left">
     <div class="logo">
-      <img src="https://i.ibb.co/yYtHbDP/logo.png" alt="Logo PKL JOZZ">
+      <img src="assets/images/logo-baru.png" alt="Logo PKL JOZZ">
       <span>PKL JOZZ</span>
     </div>
     <i class="fa fa-bars menu-toggle"></i>
