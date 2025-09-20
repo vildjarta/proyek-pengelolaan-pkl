@@ -23,7 +23,9 @@
     <div class="user-profile-wrapper">
       <div class="user-info">
         <span>Nama User</span>
-        <div class="avatar"></div>
+        <div class="avatar">
+          <img src="https://i.ibb.co/L5w2W64/user-profile.jpg" alt="Foto Profil">
+        </div>
       </div>
       <div class="profile-dropdown-menu">
         <a href="/profile"><i class="fa fa-user-circle"></i> Profil Saya</a>

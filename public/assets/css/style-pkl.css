@@ -3,12 +3,12 @@
 
 /* --- Palet Warna Sinkron dengan Desain Login --- */
 :root {
-  --color-primary-blue: #5b8ad2; /* Warna biru utama pada tombol */
-  --color-light-blue-bg: #eaf1f8; /* Warna latar belakang gradasi */
-  --color-text-dark: #333333; /* Warna teks gelap */
-  --color-text-gray: #6b6b6b; /* Warna teks abu-abu */
+  --color-primary-blue: #5b8ad2;
+  --color-light-blue-bg: #eaf1f8;
+  --color-text-dark: #333333;
+  --color-text-gray: #6b6b6b;
   --color-white: #ffffff;
-  --color-shadow: rgba(0, 0, 0, 0.08); /* Warna bayangan */
+  --color-shadow: rgba(0, 0, 0, 0.08);
 }
 
 /* --- General Styling --- */
@@ -81,7 +81,7 @@ body {
 }
 
 .header .menu-right a:hover {
-  color: #1ab394; /* Warna hover tetap, bisa disesuaikan */
+  color: #1ab394;
 }
 
 .user-profile-wrapper {
@@ -89,6 +89,7 @@ body {
   cursor: pointer;
 }
 
+/* Kunci dari masalah Anda ada di sini */
 .user-info {
   display: flex;
   align-items: center;
@@ -100,11 +101,14 @@ body {
   width: 35px;
   height: 35px;
   border-radius: 50%;
-<<<<<<< HEAD
-  background-color: #ddd;
-=======
-  object-fit: cover; 
->>>>>>> a4c5928d1569be572459d7a6467fa059a4f7e243
+  overflow: hidden;
+}
+
+.user-info .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .profile-dropdown-menu {
