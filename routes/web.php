@@ -30,3 +30,4 @@ Route::get('/profile', function () {
     // return view('menu');
     return view('profile');
 });
+
