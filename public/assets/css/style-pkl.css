@@ -100,7 +100,11 @@ body {
   width: 35px;
   height: 35px;
   border-radius: 50%;
+<<<<<<< HEAD
   background-color: #ddd;
+=======
+  object-fit: cover; 
+>>>>>>> a4c5928d1569be572459d7a6467fa059a4f7e243
 }
 
 .profile-dropdown-menu {
