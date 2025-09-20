@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Sistem PKL JOZZ</title>
+  <title>Profil Pengguna</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style-pkl.css">
@@ -12,7 +12,7 @@
 <div class="header">
   <div class="header-left">
     <div class="logo">
-      <img src="https://i.ibb.co/yYtHbDP/logo.png" alt="Logo PKL JOZZ">
+      <img src="assets/images/logo-baru.png" alt="Logo PKL JOZZ">
       <span>PKL JOZZ</span>
     </div>
     <i class="fa fa-bars menu-toggle"></i>
@@ -20,17 +20,12 @@
   <div class="menu-right">
     <a href="#">Ajukan Proposal</a>
     <a href="#">Akademik</a>
-    <div class="user-profile-wrapper">
-      <div class="user-info">
-        <span>Nama User</span>
-        <div class="avatar"></div>
-      </div>
-      <div class="profile-dropdown-menu">
-        <a href="/profile"><i class="fa fa-user-circle"></i> Profil Saya</a>
-        <a href="#"><i class="fa fa-cog"></i> Pengaturan</a>
-        <a href="#"><i class="fa fa-sign-out-alt"></i> Logout</a>
-      </div>
+    <a href="/profile" class="profile-link">
+    <div class="user-info">
+    <span>Nama User</span>
+    <img src="https://via.placeholder.com/35" alt="Avatar Pengguna" class="avatar">
     </div>
+    </a>
   </div>
 </div>
 
@@ -38,7 +33,7 @@
   <div class="menu-list">
     <h4>General</h4>
     <ul>
-      <li class="active"><a href="#"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+      <li><a href="/"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
     </ul>
 
     <h4>Mahasiswa</h4>
@@ -47,7 +42,7 @@
       <li><a href="#"><i class="fa fa-tasks"></i> <span>Status Proposal</span></a></li>
       <li><a href="#"><i class="fa fa-calendar"></i> <span>Jadwal Bimbingan</span></a></li>
       <li><a href="#"><i class="fa fa-chart-bar"></i> <span>Statistik Perusahaan</span></a></li>
-      <li><a href="#"><i class="fa fa-user"></i> <span>Profil Mahasiswa</span></a></li>
+      <li class="active"><a href="/profile"><i class="fa fa-user"></i> <span>Profil Mahasiswa</span></a></li>
     </ul>
 
     <h4>Dosen Pembimbing</h4>
@@ -97,42 +92,38 @@
 
 <div class="main-content-wrapper">
   <div class="content">
-    <h2>Selamat Datang di Sistem PKL JOZZ</h2>
-    <p>Silakan pilih menu dari sidebar atau gunakan menu atas untuk navigasi cepat.</p>
+    <h2><i class="fa fa-user"></i> Profil Pengguna</h2>
+    <p>Perbarui informasi akun Anda di sini.</p>
+    
+    <div class="form-container">
+      <form action="/profile/update" method="POST">
+        <div class="form-group">
+          <label for="nama">Nama Lengkap</label>
+          <input type="text" id="nama" name="nama" value="Nama User" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="user@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="telepon">Nomor Telepon</label>
+          <input type="tel" id="telepon" name="telepon" value="081234567890">
+        </div>
+        <div class="form-group">
+          <label for="password">Password Baru</label>
+          <input type="password" id="password" name="password" placeholder="Masukkan password baru">
+        </div>
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <script>
-  // Pastikan skrip berjalan setelah DOM sepenuhnya dimuat
-  document.addEventListener('DOMContentLoaded', function() {
-    // --- SKRIP TOGGLE SIDEBAR ---
-    const toggleButton = document.querySelector('.menu-toggle');
-    const body = document.body;
-
-    if (toggleButton) {
-      toggleButton.addEventListener('click', function() {
-        body.classList.toggle('sidebar-closed');
-      });
-    }
-
-    // --- SKRIP TOGGLE DROPDOWN PROFIL ---
-    const profileWrapper = document.querySelector('.user-profile-wrapper');
-    const userinfo = document.querySelector('.user-info');
-    
-    if (userinfo) {
-      userinfo.addEventListener('click', function(e) {
-        // Mencegah navigasi halaman saat mengklik dropdown
-        e.preventDefault(); 
-        profileWrapper.classList.toggle('active');
-      });
-      
-      // Menutup dropdown saat mengklik di luar area menu
-      document.addEventListener('click', function(e) {
-        if (!profileWrapper.contains(e.target)) {
-          profileWrapper.classList.remove('active');
-        }
-      });
-    }
+  document.querySelector('.menu-toggle').addEventListener('click', function() {
+    document.body.classList.toggle('sidebar-closed');
   });
 </script>
 
