@@ -25,3 +25,8 @@ Route::get('/menu', function () {
     // return view('menu');
     return view('menu');
 });
+
+Route::get('/profile', function () {
+    // return view('menu');
+    return view('profile');
+});
