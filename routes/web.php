@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RatingDanReviewController;
 
 Route::get('/', function () {
     return view('login');
@@ -31,3 +32,4 @@ Route::get('/profile', function () {
     return view('profile');
 });
 
+Route::resource('ratingdanreview', RatingDanReviewController::class);
