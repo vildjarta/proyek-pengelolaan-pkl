@@ -8,26 +8,34 @@ use Illuminate\Http\Request;
 class RatingDanReviewController extends Controller
 {
     /**
-     * Menampilkan daftar semua rating dan review.
-     * Menggunakan pagination untuk membatasi jumlah data yang ditampilkan.
+     * Menampilkan daftar semua rating dan review dengan fitur pencarian.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reviews = RatingDanReview::paginate(5);
+        // Mulai query Eloquent
+        $query = RatingDanReview::query();
+
+        // Cek apakah ada input pencarian (search)
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+
+            // Tambahkan filter berdasarkan ID perusahaan atau nama perusahaan
+            // Di sini kita hanya bisa memfilter berdasarkan ID perusahaan karena tidak ada kolom nama perusahaan di tabel RatingDanReview.
+            $query->where('id_perusahaan', 'LIKE', '%' . $searchTerm . '%');
+        }
+
+        // Terapkan pagination ke query yang sudah difilter
+        // Gunakan appends() agar pagination tetap mempertahankan parameter pencarian
+        $reviews = $query->paginate(5)->appends($request->query());
+
         return view('Rating.ratingdanreview', compact('reviews'));
     }
 
-    /**
-     * Menampilkan formulir untuk membuat rating dan review baru.
-     */
     public function create()
     {
         return view('Rating.create');
     }
 
-    /**
-     * Menyimpan rating dan review baru ke database.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -49,17 +57,11 @@ class RatingDanReviewController extends Controller
         return redirect()->route('ratingdanreview.index')->with('success', 'Review berhasil dikirim!');
     }
 
-    /**
-     * Menampilkan formulir edit untuk rating dan review tertentu.
-     */
     public function edit(RatingDanReview $ratingdanreview)
     {
         return view('Rating.edit', compact('ratingdanreview'));
     }
     
-    /**
-     * Memperbarui rating dan review di database.
-     */
     public function update(Request $request, RatingDanReview $ratingdanreview)
     {
         $request->validate([
@@ -75,9 +77,6 @@ class RatingDanReviewController extends Controller
         return redirect()->route('ratingdanreview.index')->with('success', 'Review berhasil diupdate!');
     }
 
-    /**
-     * Menghapus rating dan review dari database.
-     */
     public function destroy(RatingDanReview $ratingdanreview)
     {
         $ratingdanreview->delete();
