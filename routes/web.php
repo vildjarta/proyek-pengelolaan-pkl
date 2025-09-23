@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PerusahaanController;
 
 Route::get('/', function () {
     return view('login');
@@ -30,3 +31,5 @@ Route::get('/profile', function () {
     // return view('menu');
     return view('profile');
 });
+
+Route::resource('perusahaan', PerusahaanController::class);
