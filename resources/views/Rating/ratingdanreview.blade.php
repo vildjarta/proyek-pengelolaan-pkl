@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rating & Review</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #4A90E2;
@@ -33,11 +34,27 @@
             font-weight: 600;
         }
 
-        /* --- PERUBAHAN DI SINI --- */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--dark-bg);
+        }
+        
+        .back-link i {
+            margin-right: 8px;
+        }
+        
         .container {
-            /* Hapus max-width untuk membuat konten melebar full layar */
             max-width: none; 
-            margin: 0; /* Hapus margin otomatis */
+            margin: 0;
         }
 
         .card {
@@ -177,6 +194,10 @@
 <body>
 
     <div class="container">
+        <a href="{{ url()->previous() }}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </a>
+        
         <h2>Rating & Review</h2>
 
         {{-- Form Tambah Rating & Review --}}

@@ -33,3 +33,7 @@ Route::get('/profile', function () {
 });
 
 Route::resource('ratingdanreview', RatingDanReviewController::class);
+
+Route::get('/ratingperusahaan', function () {
+    return view('Rating.ratingperusahaan');
+});

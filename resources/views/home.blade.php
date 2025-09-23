@@ -74,7 +74,7 @@
         <h4>Rating & Review</h4>
         <ul>
             <li><a href="#"><i class="fa fa-star"></i> <span>Beri Rating</span></a></li>
-            <li><a href="#"><i class="fa fa-ranking-star"></i> <span>Ranking Perusahaan</span></a></li>
+            <li><a href="/ratingperusahaan"><i class="fa fa-ranking-star"></i> <span>Ranking Perusahaan</span></a></li>
         </ul>
 
         <h4>Admin / Koordinator</h4>
