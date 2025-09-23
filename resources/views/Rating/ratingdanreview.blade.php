@@ -194,8 +194,8 @@
 <body>
 
     <div class="container">
-        <a href="{{ url()->previous() }}" class="back-link">
-            <i class="fas fa-arrow-left"></i> Kembali
+        <a href="{{ url('/ratingperusahaan') }}" class="back-link">
+         <i class="fas fa-arrow-left"></i> Kembali
         </a>
         
         <h2>Rating & Review</h2>

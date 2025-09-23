@@ -47,13 +47,14 @@
         }
 
         .stars {
-            color: #ffc107; /* Golden color for stars */
+            color: #ffc107; /* warna emas untuk bintang */
         }
 
         .stars .fa-star:not(.filled) {
-            color: #e0e0e0; /* Lighter color for empty stars */
+            color: #e0e0e0; /* abu untuk bintang kosong */
         }
 
+        /* tombol */
         .action-btn {
             background-color: #3b5998;
             color: #fff;
@@ -63,14 +64,59 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             font-size: 0.9em;
+            min-width: 150px; /* seragam */
         }
 
         .action-btn:hover {
             background-color: #2e4a86;
         }
+
+        .btn-view {
+            background-color: #28a745; /* Hijau */
+        }
+
+        .btn-view:hover {
+            background-color: #1f8b36;
+        }
+
+        /* Input pencarian */
+        .search-box {
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            padding: 10px;
+            width: 100%;
+            max-width: 350px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Kolom Peringkat rata tengah */
+        th:first-child,
+        td:first-child {
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            width: 100px;
+        }
+
+        /* Kolom Aksi rata tengah */
+        th:last-child, 
+        td:last-child {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        td:last-child {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
         <div class="header-left">
             <div class="logo">
@@ -100,6 +146,7 @@
         </div>
     </div>
 
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="menu-list">
             <h4>General</h4>
@@ -161,11 +208,18 @@
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="main-content-wrapper">
         <div class="content">
             <h2 class="page-title">Ranking Perusahaan</h2>
+
+            <!-- 🔎 Input Pencarian -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari perusahaan...">
+            </div>
+
             <div class="ranking-container">
-                <table>
+                <table id="rankingTable">
                     <thead>
                         <tr>
                             <th>Peringkat</th>
@@ -187,7 +241,10 @@
                                     <i class="fas fa-star filled"></i>
                                 </span>
                             </td>
-                            <td><a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a></td>
+                            <td>
+                                <a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a>
+                                <a href="/lihatreview"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
+                            </td>
                         </tr>
                         <tr>
                             <td>2</td>
@@ -201,7 +258,10 @@
                                     <i class="fas fa-star"></i>
                                 </span>
                             </td>
-                            <td><a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a></td>
+                            <td>
+                                <a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a>
+                                <a href="/lihatreview"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
+                            </td>
                         </tr>
                         <tr>
                             <td>3</td>
@@ -215,7 +275,10 @@
                                     <i class="fas fa-star"></i>
                                 </span>
                             </td>
-                            <td><a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a></td>
+                            <td>
+                                <a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a>
+                                <a href="/lihatreview"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -223,6 +286,7 @@
         </div>
     </div>
 
+    <!-- Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.querySelector('.menu-toggle');
@@ -248,6 +312,17 @@
                     }
                 });
             }
+
+            // 🔎 Script Pencarian
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                const filter = this.value.toLowerCase();
+                const rows = document.querySelectorAll("#rankingTable tbody tr");
+
+                rows.forEach(row => {
+                    const namaPerusahaan = row.cells[1].textContent.toLowerCase();
+                    row.style.display = namaPerusahaan.includes(filter) ? "" : "none";
+                });
+            });
         });
     </script>
 </body>
