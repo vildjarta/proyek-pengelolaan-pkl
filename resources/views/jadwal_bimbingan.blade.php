@@ -17,6 +17,7 @@
                         <th>Tanggal</th>
                         <th>Waktu</th>
                         <th>Topik</th>
+<<<<<<< HEAD
                         <th>Catatan</th> {{-- HEADER DIPERBAIKI --}}
                         <th>Aksi</th>   {{-- HEADER DITAMBAHKAN --}}
                     </tr>
@@ -47,6 +48,29 @@
                         <td colspan="7" style="text-align: center;">Belum ada jadwal bimbingan yang ditambahkan.</td>
                     </tr>
                     @endforelse
+=======
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($jadwals as $jadwal)
+                    <tr>
+                        <td>{{ $jadwal->mahasiswa->nama }}</td>
+                        <td>{{ $jadwal->dosen->nama }}</td>
+                        <td>{{ $jadwal->tanggal }}</td>
+                        <td>{{ $jadwal->waktu }}</td>
+                        <td>{{ $jadwal->topik }}</td>
+                        <td>
+                            <a href="{{ route('jadwal.edit', $jadwal->id) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('jadwal.destroy', $jadwal->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+>>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
                 </tbody>
             </table>
         </div>
