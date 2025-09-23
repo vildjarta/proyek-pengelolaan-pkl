@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style-pkl.css">
+    <link rel="stylesheet" href="assets/css/style-pkl-jadwal.css">
 </head>
 <body>
     
 <div class="header">
     <div class="header-left">
         <div class="logo">
-            <img src="https://i.ibb.co/yYtHbDP/logo.png" alt="Logo PKL JOZZ">
+            <img src="asset/images/logo-baru.png" alt="Logo PKL JOZZ">
             <span>PKL JOZZ</span>
         </div>
         <i class="fa fa-bars menu-toggle"></i>
@@ -50,7 +51,7 @@
         <ul>
             <li><a href="#"><i class="fa fa-file-alt"></i> <span>Ajukan Proposal</span></a></li>
             <li><a href="#"><i class="fa fa-tasks"></i> <span>Status Proposal</span></a></li>
-            <li><a href="#"><i class="fa fa-calendar"></i> <span>Jadwal Bimbingan</span></a></li>
+            <li><a href="{{ route('jadwal.index') }}"><i class="fa fa-calendar"></i> <span>Jadwal Bimbingan</span></a></li>
             <li><a href="#"><i class="fa fa-chart-bar"></i> <span>Statistik Perusahaan</span></a></li>
             <li><a href="#"><i class="fa fa-user"></i> <span>Profil Mahasiswa</span></a></li>
         </ul>
@@ -58,7 +59,7 @@
         <h4>Dosen Pembimbing</h4>
         <ul>
             <li><a href="#"><i class="fa fa-users"></i> <span>Daftar Mahasiswa Bimbingan</span></a></li>
-            <li><a href="#"><i class="fa fa-calendar-check"></i> <span>Jadwal Bimbingan</span></a></li>
+            <li><a href="{{ route('jadwal.index') }}"><i class="fa fa-calendar"></i> <span>Jadwal Bimbingan</span></a></li>
             <li><a href="#"><i class="fa fa-edit"></i> <span>Input Nilai</span></a></li>
             <li><a href="#"><i class="fa fa-building"></i> <span>Statistik Perusahaan</span></a></li>
             <li><a href="#"><i class="fa fa-user-tie"></i> <span>Profil Dosen</span></a></li>
@@ -102,8 +103,7 @@
 
 <div class="main-content-wrapper">
     <div class="content">
-        <h2>Selamat Datang di Sistem PKL JOZZ</h2>
-        <p>Silakan pilih menu dari sidebar atau gunakan menu atas untuk navigasi cepat.</p>
+        @yield('content')
     </div>
 </div>
 

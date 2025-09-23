@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JadwalBimbinganController;
+
+Route::resource('jadwal', JadwalBimbinganController::class);
 
 Route::get('/', function () {
     return view('login');
 });
+
 
 Route::get('/registrasi', function () {
     // return view('registrasi');

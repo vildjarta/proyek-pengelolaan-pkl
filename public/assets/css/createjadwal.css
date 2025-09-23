@@ -1,0 +1,98 @@
+/* ==============================================
+  STYLING KHUSUS UNTUK HALAMAN DAFTAR JADWAL
+==============================================
+*/
+
+/* Pembungkus utama untuk tabel */
+.table-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Tombol "Tambah Jadwal" */
+.table-card .btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 25px; /* Memberi jarak ke tabel */
+    font-weight: bold;
+    border: none;
+}
+
+.table-card .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Notifikasi Sukses */
+.table-card .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Styling Tabel Utama */
+.table-card .table {
+    width: 100%;
+    border-collapse: collapse; /* Menghilangkan spasi antar border */
+    font-size: 16px;
+}
+
+/* Styling Header Tabel (th) */
+.table-card .table thead th {
+    background-color: #f8f9fa; /* Warna latar abu-abu muda */
+    color: #333;
+    font-weight: 600; /* Sedikit tebal */
+    text-align: left;
+    padding: 15px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Styling Sel Tabel (td) */
+.table-card .table tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef; /* Garis pemisah antar baris */
+    vertical-align: middle;
+}
+
+/* Efek hover pada baris tabel */
+.table-card .table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Menghilangkan border pada baris terakhir */
+.table-card .table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Styling Tombol Aksi (Edit & Hapus) di dalam tabel */
+.table-card .table .btn {
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.table-card .table .btn-warning {
+    background-color: #ffc107;
+}
+.table-card .table .btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.table-card .table .btn-danger {
+    background-color: #dc3545;
+}
+.table-card .table .btn-danger:hover {
+    background-color: #c82333;
+}
