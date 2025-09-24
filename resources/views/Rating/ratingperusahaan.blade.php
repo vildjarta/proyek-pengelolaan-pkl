@@ -242,8 +242,8 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a>
-                                <a href="/lihatreview"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
+                                <a href="{{ route('ratingdanreview.create') }}"><button class="action-btn">Rating & Review</button></a>
+                                <a href="{{ route('lihatratingdanreview') }}"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
                             </td>
                         </tr>
                         <tr>
@@ -259,8 +259,8 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a>
-                                <a href="/lihatreview"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
+                                <a href="{{ route('ratingdanreview.create') }}"><button class="action-btn">Rating & Review</button></a>
+                                <a href="{{ route('lihatratingdanreview') }}"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
                             </td>
                         </tr>
                         <tr>
@@ -276,8 +276,8 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="/ratingdanreview"><button class="action-btn">Rating & Review</button></a>
-                                <a href="/lihatreview"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
+                                <a href="{{ route('ratingdanreview.create') }}"><button class="action-btn">Rating & Review</button></a>
+                                <a href="{{ route('lihatratingdanreview') }}"><button class="action-btn btn-view">Lihat Rating & Review</button></a>
                             </td>
                         </tr>
                     </tbody>

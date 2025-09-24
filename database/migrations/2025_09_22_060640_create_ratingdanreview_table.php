@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('rating_dan_review', function (Blueprint $table) {
+        Schema::create('rating_dan_reviews', function (Blueprint $table) {
             $table->id('id_review');
             
             // Perbaikan: Gunakan unsignedBigInteger untuk ID manual

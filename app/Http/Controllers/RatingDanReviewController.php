@@ -4,83 +4,80 @@ namespace App\Http\Controllers;
 
 use App\Models\RatingDanReview;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class RatingDanReviewController extends Controller
 {
     /**
-     * Menampilkan daftar semua rating dan review dengan fitur pencarian.
+     * Menampilkan daftar rating dan review dengan fitur pencarian dan paginasi.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
-        // Mulai query Eloquent
         $query = RatingDanReview::query();
 
-        // Cek apakah ada input pencarian (search)
         if ($request->has('search')) {
             $searchTerm = $request->input('search');
-
-            // Tambahkan filter berdasarkan ID perusahaan atau nama perusahaan
-            // Di sini kita hanya bisa memfilter berdasarkan ID perusahaan karena tidak ada kolom nama perusahaan di tabel RatingDanReview.
-            $query->where('id_perusahaan', 'LIKE', '%' . $searchTerm . '%');
+            
+            // Pencarian hanya berdasarkan ID karena tidak ada relasi
+            $query->where('id_mahasiswa', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('id_perusahaan', 'like', '%' . $searchTerm . '%');
         }
 
-        // Terapkan pagination ke query yang sudah difilter
-        // Gunakan appends() agar pagination tetap mempertahankan parameter pencarian
+        // Ambil data dengan paginasi dan tambahkan parameter pencarian ke URL
         $reviews = $query->paginate(5)->appends($request->query());
 
-        return view('Rating.ratingdanreview', compact('reviews'));
+        return view('Rating.lihatratingdanreview', compact('reviews'));
     }
 
+    /**
+     * Menampilkan form untuk membuat rating dan review baru.
+     *
+     * @return \Illuminate\View\View
+     */
     public function create()
     {
-        return view('Rating.create');
+        return view('Rating.ratingdanreview');
     }
 
+    /**
+     * Menyimpan rating dan review baru ke database.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'id_mahasiswa' => 'required|integer',
-            'id_perusahaan' => 'required|integer',
+        // Validasi data yang masuk dari formulir
+        $validatedData = $request->validate([
+            'id_mahasiswa' => 'required|numeric',
+            'id_perusahaan' => 'required|numeric',
             'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string',
-            'tanggal_review' => 'required|date',
-        ]);
-        
-        RatingDanReview::create([
-            'id_mahasiswa' => $request->id_mahasiswa,
-            'id_perusahaan' => $request->id_perusahaan,
-            'rating' => $request->rating,
-            'review' => $request->review,
-            'tanggal_review' => $request->tanggal_review,
-        ]);
-        
-        return redirect()->route('ratingdanreview.index')->with('success', 'Review berhasil dikirim!');
-    }
-
-    public function edit(RatingDanReview $ratingdanreview)
-    {
-        return view('Rating.edit', compact('ratingdanreview'));
-    }
-    
-    public function update(Request $request, RatingDanReview $ratingdanreview)
-    {
-        $request->validate([
-            'id_mahasiswa' => 'required|integer',
-            'id_perusahaan' => 'required|integer',
-            'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string',
+            'review' => 'required|string|max:1000',
             'tanggal_review' => 'required|date',
         ]);
 
-        $ratingdanreview->update($request->all());
+        // Simpan data ke database
+        RatingDanReview::create($validatedData);
 
-        return redirect()->route('ratingdanreview.index')->with('success', 'Review berhasil diupdate!');
+        // Redirect pengguna kembali ke halaman daftar review
+        return redirect()->route('lihatratingdanreview')->with('success', 'Rating dan review berhasil disimpan!');
     }
 
-    public function destroy(RatingDanReview $ratingdanreview)
+    /**
+     * Menampilkan halaman ranking perusahaan.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRanking()
     {
-        $ratingdanreview->delete();
+        // Logika untuk mengambil data ranking dapat ditambahkan di sini
+        // Misalnya:
+        // $ranking = Perusahaan::withCount('ratings')->orderByDesc('ratings_count')->get();
+        // return view('Rating.ratingperusahaan', compact('ranking'));
 
-        return redirect()->route('ratingdanreview.index')->with('success', 'Review berhasil dihapus!');
+        return view('Rating.ratingperusahaan');
     }
 }
