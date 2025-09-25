@@ -28,12 +28,6 @@
         @method('PUT')
 
         <div class="mb-3">
-            <label for="id_perusahaan" class="form-label">ID Perusahaan</label>
-            <input type="text" name="id_perusahaan" id="id_perusahaan" class="form-control"
-                value="{{ old('id_perusahaan', $perusahaan->id_perusahaan) }}" required>
-        </div>
-
-        <div class="mb-3">
             <label for="nama" class="form-label">Nama Perusahaan</label>
             <input type="text" name="nama" id="nama" class="form-control"
                 value="{{ old('nama', $perusahaan->nama) }}" required>

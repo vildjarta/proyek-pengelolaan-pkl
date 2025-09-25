@@ -24,7 +24,6 @@ class PerusahaanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_perusahaan' => 'required|string|max:20|unique:perusahaan,id_perusahaan',
             'nama'          => 'required|string|max:255',
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
@@ -50,7 +49,6 @@ class PerusahaanController extends Controller
         $perusahaan = Perusahaan::findOrFail($id);
 
         $validated = $request->validate([
-            'id_perusahaan' => 'required|string|max:20|unique:perusahaan,id_perusahaan',
             'nama'          => 'required|string|max:255',
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
