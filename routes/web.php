@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JadwalController;
+
 use App\Http\Controllers\TranscriptController;
 
 Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcript.index');
@@ -37,6 +39,13 @@ Route::get('/profile', function () {
     // return view('menu');
     return view('profile');
 });
+
+Route::get('/daftar-jadwal', function () {
+    // return view('menu');
+    return view('daftar-jadwal');
+});
+
+Route::resource('jadwal', JadwalController::class);
 
 Route::get('/transkrip', function () {
     // return view('menu');
