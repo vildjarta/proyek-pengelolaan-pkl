@@ -1,16 +1,14 @@
 /* Import font dari Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 /* --- Palet Warna Sinkron dengan Desain Login --- */
 :root {
-    --color-primary-blue: #5b8ad2;
-    --color-light-blue-bg: #eaf1f8;
-    --color-text-dark: #333333;
-    --color-text-gray: #6b6b6b;
+    --color-primary-blue: #5b8ad2; /* Warna biru utama pada tombol */
+    --color-light-blue-bg: #eaf1f8; /* Warna latar belakang gradasi */
+    --color-text-dark: #333333; /* Warna teks gelap */
+    --color-text-gray: #6b6b6b; /* Warna teks abu-abu */
     --color-white: #ffffff;
-    --color-shadow: rgba(0, 0, 0, 0.08);
+    --color-shadow: rgba(0, 0, 0, 0.08); /* Warna bayangan */
 }
 
 /* --- General Styling --- */
@@ -19,31 +17,10 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--color-light-blue-bg);
     transition: all 0.3s ease;
-=======
-=======
-/* --- Palet Warna Sinkron dengan Desain Login --- */
-:root {
-  --color-primary-blue: #5b8ad2; /* Warna biru utama pada tombol */
-  --color-light-blue-bg: #eaf1f8; /* Warna latar belakang gradasi */
-  --color-text-dark: #333333; /* Warna teks gelap */
-  --color-text-gray: #6b6b6b; /* Warna teks abu-abu */
-  --color-white: #ffffff;
-  --color-shadow: rgba(0, 0, 0, 0.08); /* Warna bayangan */
-}
-
->>>>>>> 357347e (pus)
-/* --- General Styling --- */
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--color-light-blue-bg);
-  transition: all 0.3s ease;
->>>>>>> 52c806c (push)
 }
 
 /* --- Header Styling --- */
 .header {
-<<<<<<< HEAD
     position: fixed;
     top: 0;
     left: 0;
@@ -56,20 +33,6 @@ body {
     padding: 0 20px;
     box-shadow: 0 2px 4px var(--color-shadow);
     z-index: 1000;
-=======
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  background-color: var(--color-white);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  box-shadow: 0 2px 4px var(--color-shadow);
-  z-index: 1000;
->>>>>>> 52c806c (push)
 }
 
 .header-left {
@@ -92,21 +55,10 @@ body {
 }
 
 .header-left .logo span {
-<<<<<<< HEAD
     font-size: 1.2rem;
     font-weight: 600;
     white-space: nowrap;
     color: var(--color-text-dark);
-=======
-  font-size: 1.2rem;
-  font-weight: 600;
-  white-space: nowrap;
-<<<<<<< HEAD
-  color: #333;
->>>>>>> 52c806c (push)
-=======
-  color: var(--color-text-dark);
->>>>>>> 357347e (pus)
 }
 
 .header-left .menu-toggle {
@@ -120,13 +72,10 @@ body {
     align-items: center;
     gap: 20px;
     flex-shrink: 0;
-    /* Menambahkan margin-right untuk memberi ruang di ujung kanan */
     margin-right: 20px;
 }
 
 .header .menu-right a {
-<<<<<<< HEAD
-<<<<<<< HEAD
     color: var(--color-primary-blue);
     text-decoration: none;
     font-weight: 500;
@@ -140,35 +89,16 @@ body {
 .user-profile-wrapper {
     position: relative;
     cursor: pointer;
-=======
-  color: #4a6fa5;
-=======
-  color: var(--color-primary-blue);
->>>>>>> 357347e (pus)
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.header .menu-right a:hover {
-  color: #1ab394; /* Warna hover tetap, bisa disesuaikan */
-}
-
-.user-profile-wrapper {
-  position: relative;
-  cursor: pointer;
->>>>>>> 52c806c (push)
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 10px; 
+    gap: 10px;
     flex-shrink: 0;
 }
 
 .user-info .avatar {
-<<<<<<< HEAD
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -188,41 +118,17 @@ body {
 .profile-dropdown-menu {
     position: absolute;
     top: 100%;
-    right: 0; 
+    right: 0;
     background-color: var(--color-white);
     border-radius: 8px;
     box-shadow: 0 4px 12px var(--color-shadow);
     padding: 10px 0;
     min-width: 180px;
     z-index: 999;
-    
     visibility: hidden;
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-=======
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  object-fit: cover; 
-}
-
-.profile-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: var(--color-white);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px var(--color-shadow);
-  padding: 10px 0;
-  min-width: 180px;
-  z-index: 999;
-  
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
->>>>>>> 52c806c (push)
 }
 
 .user-profile-wrapper.active .profile-dropdown-menu {
@@ -232,21 +138,12 @@ body {
 }
 
 .profile-dropdown-menu a {
-<<<<<<< HEAD
     display: block;
     padding: 10px 15px;
     color: var(--color-text-dark);
     text-decoration: none;
     font-weight: 400;
     transition: background-color 0.2s ease;
-=======
-  display: block;
-  padding: 10px 15px;
-  color: var(--color-text-dark);
-  text-decoration: none;
-  font-weight: 400;
-  transition: background-color 0.2s ease;
->>>>>>> 52c806c (push)
 }
 
 .profile-dropdown-menu a i {
@@ -254,23 +151,12 @@ body {
 }
 
 .profile-dropdown-menu a:hover {
-<<<<<<< HEAD
-<<<<<<< HEAD
     background-color: var(--color-light-blue-bg);
     color: var(--color-primary-blue);
-=======
-  background-color: #f0f2f5;
-  color: #1a73e8;
->>>>>>> 52c806c (push)
-=======
-  background-color: var(--color-light-blue-bg);
-  color: var(--color-primary-blue);
->>>>>>> 357347e (pus)
 }
 
 /* --- Sidebar Styling --- */
 .sidebar {
-<<<<<<< HEAD
     position: fixed;
     top: 60px;
     left: 0;
@@ -283,20 +169,6 @@ body {
     overflow-y: auto;
     padding-bottom: 20px;
     z-index: 900;
-=======
-  position: fixed;
-  top: 60px;
-  left: 0;
-  width: 260px;
-  background-color: var(--color-primary-blue);
-  color: var(--color-white);
-  height: calc(100vh - 60px);
-  flex-shrink: 0;
-  transition: width 0.3s ease;
-  overflow-y: auto;
-  padding-bottom: 20px;
-  z-index: 900;
->>>>>>> 52c806c (push)
 }
 
 body.sidebar-closed .sidebar {
@@ -318,21 +190,12 @@ body.sidebar-closed .sidebar ul li a i {
 }
 
 .sidebar h4 {
-<<<<<<< HEAD
     margin: 15px 20px 10px;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
     font-weight: 500;
     white-space: nowrap;
-=======
-  margin: 15px 20px 10px;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  font-weight: 500;
-  white-space: nowrap;
->>>>>>> 52c806c (push)
 }
 
 .sidebar ul {
@@ -342,7 +205,6 @@ body.sidebar-closed .sidebar ul li a i {
 }
 
 .sidebar ul li a {
-<<<<<<< HEAD
     display: flex;
     align-items: center;
     padding: 12px 20px;
@@ -358,28 +220,6 @@ body.sidebar-closed .sidebar ul li a i {
 .sidebar ul li.active a {
     background-color: rgba(255, 255, 255, 0.2);
     color: var(--color-white);
-=======
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  color: var(--color-white);
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.sidebar ul li a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.sidebar ul li.active a {
-<<<<<<< HEAD
-  background-color: #1ab394;
-  color: #fff;
->>>>>>> 52c806c (push)
-=======
-  background-color: rgba(255, 255, 255, 0.2);
-  color: var(--color-white);
->>>>>>> 357347e (pus)
 }
 
 .sidebar ul li a i {
@@ -391,15 +231,6 @@ body.sidebar-closed .sidebar ul li a i {
 
 .sidebar ul li a span {
     white-space: nowrap;
-}
-
-.sidebar.menu-closed ul li a span {
-    display: none;
-}
-
-.sidebar.menu-closed ul li a i {
-    margin: 0;
-    width: 100%;
 }
 
 /* --- Main Content Wrapper --- */
@@ -423,8 +254,6 @@ body.sidebar-closed .main-content-wrapper {
 }
 
 .content h2 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     color: var(--color-text-dark);
     margin-top: 0;
     font-weight: 600;
@@ -433,23 +262,6 @@ body.sidebar-closed .main-content-wrapper {
 
 .content p {
     color: var(--color-text-gray);
-=======
-  color: #333;
-=======
-  color: var(--color-text-dark);
->>>>>>> 357347e (pus)
-  margin-top: 0;
-  font-weight: 600;
-  font-size: 1.8rem;
-}
-
-.content p {
-<<<<<<< HEAD
-  color: #666;
->>>>>>> 52c806c (push)
-=======
-  color: var(--color-text-gray);
->>>>>>> 357347e (pus)
 }
 
 /* --- Responsiveness --- */
@@ -470,4 +282,3 @@ body.sidebar-closed .main-content-wrapper {
         display: none; 
     }
 }
-

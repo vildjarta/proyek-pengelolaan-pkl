@@ -1,13 +1,6 @@
-@extends('home')
+@extends('layout.header')
+@extends('layout.sidebar')
 
-@section('content')
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9c7b63e (membaiki di branch)
-=======
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 <div class="main-content-wrapper">
     <div class="content">
         <h2>Tambah Jadwal Bimbingan</h2>
@@ -52,10 +45,6 @@
 
             <button type="submit" class="btn btn-success">Simpan Jadwal</button>
         </form>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
     </div>
 </div>
 
@@ -64,59 +53,3 @@
         return confirm("Apakah Anda yakin ingin menyimpan jadwal ini?");
     }
 </script>
-<<<<<<< HEAD
-@endsection
-=======
-    <div class="main-content-wrapper">
-        <div class="content">
-            <h2>Tambah Jadwal Bimbingan</h2>
-            <form action="{{ route('jadwal.store') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label for="mahasiswa_id">Mahasiswa</label>
-                    <select name="mahasiswa_id" id="mahasiswa_id" class="form-control">
-                        @foreach($mahasiswas as $mahasiswa)
-                            <option value="{{ $mahasiswa->id }}">{{ $mahasiswa->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="dosen_id">Dosen</label>
-                    <select name="dosen_id" id="dosen_id" class="form-control">
-                        @foreach($dosens as $dosen)
-                            <option value="{{ $dosen->id }}">{{ $dosen->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="tanggal">Tanggal</label>
-                    <input type="date" name="tanggal" id="tanggal" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="waktu">Waktu</label>
-                    <input type="time" name="waktu" id="waktu" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="topik">Topik</label>
-                    <input type="text" name="topik" id="topik" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success">Simpan</button>
-            </form>
-        </div>
-    </div>
-@endsection
->>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
-=======
-    </div>
-</div>
-
-<script>
-    function confirmSubmit() {
-        return confirm("Apakah Anda yakin ingin menyimpan jadwal ini?");
-    }
-</script>
-@endsection
->>>>>>> 9c7b63e (membaiki di branch)
-=======
-@endsection
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa

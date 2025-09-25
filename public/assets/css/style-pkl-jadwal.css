@@ -6,26 +6,24 @@ body {
 }
 
 /* Main Layout Wrapper */
-/* Perbaikan pada .main-content-wrapper */
 .main-content-wrapper {
-    margin-top: 60px; /* Jarak dari header atas */
-    margin-left: 260px; /* Posisikan konten tepat di samping sidebar */
-    padding: 30px; /* Tambahkan padding untuk isi konten */
-    flex-grow: 1; /* Biarkan konten mengisi sisa ruang */
+    margin-top: 60px;
+    margin-left: 260px;
+    padding: 30px;
+    flex-grow: 1;
     transition: margin-left 0.3s ease;
 }
 
 body.sidebar-closed .main-content-wrapper {
-    margin-left: 70px; /* Sesuaikan saat sidebar tertutup */
+    margin-left: 70px;
 }
 
-/* Perbaikan pada .content */
+/* Content */
 .content {
     padding: 30px;
     background-color: #fff;
-    flex-grow: 1; /* Pastikan konten mengisi ruang yang tersedia */
+    flex-grow: 1;
 }
-
 
 /* Header inside the table card */
 .table-header {
@@ -80,21 +78,8 @@ h2.title {
     text-decoration: none;
     display: inline-block;
     transition: background-color 0.3s ease;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     box-sizing: border-box;
     vertical-align: middle;
-=======
->>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
-=======
-    box-sizing: border-box;
-    vertical-align: middle;
->>>>>>> 9c7b63e (membaiki di branch)
-=======
-    box-sizing: border-box;
-    vertical-align: middle;
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 }
 
 .btn-primary {
@@ -103,65 +88,25 @@ h2.title {
 }
 
 .btn-primary:hover {
-    background-color: #5b8ad2;
+    background-color: #4a75b3; /* Warna hover dibuat sedikit lebih gelap */
 }
 
 .btn-warning {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
-    background-color: #5b8ad2;
-    color: #fff;
-}
-
-.btn-warning:hover {
-    background-color: #5b8ad2;
-}
-
-.btn-danger {
-    background-color: #5b8ad2;
-<<<<<<< HEAD
-=======
-    background-color: #ffc107;
+    background-color: #ffc107; /* Warna kuning untuk warning */
     color: #212529;
-=======
-    background-color: #5b8ad2;
-    color: #fff;
->>>>>>> 9c7b63e (membaiki di branch)
 }
 
 .btn-warning:hover {
-    background-color: #5b8ad2;
+    background-color: #e0a800;
 }
 
 .btn-danger {
-<<<<<<< HEAD
-    background-color: #dc3545;
->>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
-=======
-    background-color: #5b8ad2;
->>>>>>> 9c7b63e (membaiki di branch)
-=======
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
+    background-color: #dc3545; /* Warna merah untuk danger */
     color: #fff;
 }
 
 .btn-danger:hover {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    background-color: #5b8ad2;
-=======
     background-color: #c82333;
->>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
-=======
-    background-color: #5b8ad2;
->>>>>>> 9c7b63e (membaiki di branch)
-=======
-    background-color: #5b8ad2;
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 }
 
 .btn-success {
@@ -171,6 +116,12 @@ h2.title {
 
 .btn-success:hover {
     background-color: #218838;
+}
+
+/* Aturan spesifik untuk tombol di dalam tabel */
+.table td .btn {
+    min-width: 80px;
+    text-align: center;
 }
 
 /* Form Styles */
@@ -205,24 +156,4 @@ h2.title {
     color: #155724;
     background-color: #d4edda;
     border-color: #c3e6cb;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9c7b63e (membaiki di branch)
-=======
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
-}
-.table td .btn {
-    min-width: 80px; /* Memberikan lebar minimum yang sama */
-    text-align: center; /* Memastikan teks tetap di tengah */
-    box-sizing: border-box; /* Mencegah padding mempengaruhi lebar total */
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
-=======
->>>>>>> 9c7b63e (membaiki di branch)
-=======
->>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 }
