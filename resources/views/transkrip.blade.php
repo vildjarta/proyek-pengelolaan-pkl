@@ -6,7 +6,9 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="container">
+    @extends('layout.header')
+    @extends('layout.sidebar')
+    <div class="main-content-wrapper">
         <h2>Cek Kelayakan PKL</h2>
         <p>Paste transkrip kamu di bawah ini (copy dari KHS/Word/PDF).</p>
 
@@ -114,6 +116,6 @@
     document.getElementById('saveForm').style.display = 'block';
     }
     </script>
-
+    <script src="{{ asset('assets/js/hhd.js') }}"></script>
 </body>
 </html>
