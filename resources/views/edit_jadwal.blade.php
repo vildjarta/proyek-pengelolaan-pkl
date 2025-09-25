@@ -3,8 +3,11 @@
 @section('content')
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 <div class="main-content-wrapper">
     <div class="content">
         <h2>Edit Jadwal Bimbingan</h2>
@@ -60,6 +63,7 @@
             <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Batal</a>
         </form>
 <<<<<<< HEAD
+<<<<<<< HEAD
     </div>
 </div>
 =======
@@ -90,4 +94,8 @@
     </div>
 </div>
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+    </div>
+</div>
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 @endsection

@@ -5,17 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\jadwal_bimbingan;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 use App\Models\User;
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
 =======
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 use Illuminate\Http\Request;
 
 class JadwalBimbinganController extends Controller
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
     /**
      * Menampilkan daftar resource.
      */
@@ -49,6 +55,7 @@ class JadwalBimbinganController extends Controller
             'waktu_selesai' => 'required|date_format:H:i',
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
+<<<<<<< HEAD
 =======
     // Menampilkan daftar jadwal.
 =======
@@ -92,6 +99,8 @@ class JadwalBimbinganController extends Controller
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
         ]);
 
         jadwal_bimbingan::create($request->all());
@@ -101,6 +110,9 @@ class JadwalBimbinganController extends Controller
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
     /**
      * Menampilkan form untuk mengedit resource.
      */
@@ -125,6 +137,7 @@ class JadwalBimbinganController extends Controller
             'waktu_selesai' => 'required|date_format:H:i',
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
+<<<<<<< HEAD
 =======
     // Menampilkan form untuk mengedit jadwal.
 =======
@@ -159,6 +172,8 @@ class JadwalBimbinganController extends Controller
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
         ]);
 
         $jadwal->update($request->all());
@@ -168,12 +183,16 @@ class JadwalBimbinganController extends Controller
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
     /**
      * Menghapus resource dari storage.
      */
     public function destroy(jadwal_bimbingan $jadwal)
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     // Menghapus jadwal.
@@ -181,11 +200,14 @@ class JadwalBimbinganController extends Controller
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
 =======
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
     {
         $jadwal->delete();
 
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 }
@@ -195,3 +217,6 @@ class JadwalBimbinganController extends Controller
 =======
 }
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+}
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa

@@ -19,6 +19,9 @@
                         <th>Topik</th>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
                         <th>Catatan</th> {{-- HEADER DIPERBAIKI --}}
                         <th>Aksi</th>   {{-- HEADER DITAMBAHKAN --}}
                     </tr>
@@ -49,6 +52,7 @@
                         <td colspan="7" style="text-align: center;">Belum ada jadwal bimbingan yang ditambahkan.</td>
                     </tr>
                     @endforelse
+<<<<<<< HEAD
 =======
                         <th>Aksi</th>
 =======
@@ -88,6 +92,8 @@
                     </tr>
                     @endforelse
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
                 </tbody>
             </table>
         </div>

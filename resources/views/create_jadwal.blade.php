@@ -3,8 +3,11 @@
 @section('content')
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
 <div class="main-content-wrapper">
     <div class="content">
         <h2>Tambah Jadwal Bimbingan</h2>
@@ -50,6 +53,9 @@
             <button type="submit" class="btn btn-success">Simpan Jadwal</button>
         </form>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
     </div>
 </div>
 
@@ -58,6 +64,7 @@
         return confirm("Apakah Anda yakin ingin menyimpan jadwal ini?");
     }
 </script>
+<<<<<<< HEAD
 @endsection
 =======
     <div class="main-content-wrapper">
@@ -110,3 +117,6 @@
 </script>
 @endsection
 >>>>>>> 9c7b63e (membaiki di branch)
+=======
+@endsection
+>>>>>>> 9c7b63e51e2c0f28446ad8d29ee9c96f187e06aa
