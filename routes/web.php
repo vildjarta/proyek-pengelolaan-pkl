@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PerusahaanController;
 use App\Http\Controllers\TranscriptController;
 
 Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcript.index');
@@ -37,6 +38,8 @@ Route::get('/profile', function () {
     // return view('menu');
     return view('profile');
 });
+
+Route::resource('perusahaan', PerusahaanController::class);
 
 Route::get('/transkrip', function () {
     // return view('menu');
