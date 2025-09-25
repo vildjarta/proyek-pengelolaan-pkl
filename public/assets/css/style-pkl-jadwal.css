@@ -81,10 +81,15 @@ h2.title {
     display: inline-block;
     transition: background-color 0.3s ease;
 <<<<<<< HEAD
+<<<<<<< HEAD
     box-sizing: border-box;
     vertical-align: middle;
 =======
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
+=======
+    box-sizing: border-box;
+    vertical-align: middle;
+>>>>>>> 9c7b63e (membaiki di branch)
 }
 
 .btn-primary {
@@ -97,6 +102,7 @@ h2.title {
 }
 
 .btn-warning {
+<<<<<<< HEAD
 <<<<<<< HEAD
     background-color: #5b8ad2;
     color: #fff;
@@ -111,24 +117,36 @@ h2.title {
 =======
     background-color: #ffc107;
     color: #212529;
+=======
+    background-color: #5b8ad2;
+    color: #fff;
+>>>>>>> 9c7b63e (membaiki di branch)
 }
 
 .btn-warning:hover {
-    background-color: #e0a800;
+    background-color: #5b8ad2;
 }
 
 .btn-danger {
+<<<<<<< HEAD
     background-color: #dc3545;
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
+=======
+    background-color: #5b8ad2;
+>>>>>>> 9c7b63e (membaiki di branch)
     color: #fff;
 }
 
 .btn-danger:hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
     background-color: #5b8ad2;
 =======
     background-color: #c82333;
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
+=======
+    background-color: #5b8ad2;
+>>>>>>> 9c7b63e (membaiki di branch)
 }
 
 .btn-success {
@@ -173,11 +191,17 @@ h2.title {
     background-color: #d4edda;
     border-color: #c3e6cb;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9c7b63e (membaiki di branch)
 }
 .table td .btn {
     min-width: 80px; /* Memberikan lebar minimum yang sama */
     text-align: center; /* Memastikan teks tetap di tengah */
     box-sizing: border-box; /* Mencegah padding mempengaruhi lebar total */
+<<<<<<< HEAD
 =======
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
+=======
+>>>>>>> 9c7b63e (membaiki di branch)
 }

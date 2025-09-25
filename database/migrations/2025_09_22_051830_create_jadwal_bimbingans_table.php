@@ -12,17 +12,31 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jadwal_bimbingans', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('mahasiswa_id')->constrained('users'); // Asumsi tabel users untuk mahasiswa
-        $table->foreignId('dosen_id')->constrained('users');     // Asumsi tabel users untuk dosen
-        $table->date('tanggal');
-        $table->time('waktu');
-        $table->string('topik');
-        $table->text('catatan')->nullable();
-        $table->enum('status', ['terjadwal', 'selesai', 'dibatalkan'])->default('terjadwal');
-        $table->timestamps();
-    });
-}
+            $table->id();
+            
+            // DIUBAH: Sesuai input teks di form, bukan relasi ID
+            $table->string('mahasiswa')->nullable();
+            $table->string('dosen')->nullable();
+
+            $table->date('tanggal');
+
+            // DIUBAH: Sesuai form yang meminta rentang waktu
+            $table->time('waktu_mulai');
+            $table->time('waktu_selesai');
+
+            // DISESUAIKAN: Dibuat nullable karena di form bersifat opsional
+            $table->string('topik')->nullable(); 
+            
+            // Kolom ini sudah sesuai dengan form Anda
+            $table->text('catatan')->nullable(); 
+            
+            // Kolom ini tidak ada di form, tapi kita simpan untuk status internal
+            $table->enum('status', ['terjadwal', 'selesai', 'dibatalkan'])->default('terjadwal');
+            
+            $table->timestamps();
+        });
+    }
+
     /**
      * Reverse the migrations.
      */

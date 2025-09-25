@@ -2,6 +2,9 @@
 
 @section('content')
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9c7b63e (membaiki di branch)
 <div class="main-content-wrapper">
     <div class="content">
         <h2>Edit Jadwal Bimbingan</h2>
@@ -56,6 +59,7 @@
             <button type="submit" class="btn btn-success">Update Jadwal</button>
             <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Batal</a>
         </form>
+<<<<<<< HEAD
     </div>
 </div>
 =======
@@ -82,4 +86,8 @@
         </div>
     </div>
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
+=======
+    </div>
+</div>
+>>>>>>> 9c7b63e (membaiki di branch)
 @endsection

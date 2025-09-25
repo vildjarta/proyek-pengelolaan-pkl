@@ -2,6 +2,9 @@
 
 @section('content')
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9c7b63e (membaiki di branch)
 <div class="main-content-wrapper">
     <div class="content">
         <h2>Tambah Jadwal Bimbingan</h2>
@@ -46,6 +49,7 @@
 
             <button type="submit" class="btn btn-success">Simpan Jadwal</button>
         </form>
+<<<<<<< HEAD
     </div>
 </div>
 
@@ -95,3 +99,14 @@
     </div>
 @endsection
 >>>>>>> f13a77b (menambahkan crud jadwal untuk bimbingan dll)
+=======
+    </div>
+</div>
+
+<script>
+    function confirmSubmit() {
+        return confirm("Apakah Anda yakin ingin menyimpan jadwal ini?");
+    }
+</script>
+@endsection
+>>>>>>> 9c7b63e (membaiki di branch)
