@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class jadwal_bimbingan extends Model
 {
     protected $fillable = [
-        'mahasiswa_id', 
-        'dosen_id', 
-        'tanggal', 
-        'waktu', 
-        'topik', 
-        'catatan', 
-        'status'
+        'mahasiswa',
+        'dosen',
+        'tanggal',
+        'waktu_mulai',
+        'waktu_selesai',
+        'topik',
+        'catatan',
+        'status',
     ];
 
     /**
