@@ -8,7 +8,7 @@ class Perusahaan extends Model
 {
     protected $table = 'perusahaan';
     protected $primaryKey = 'id_perusahaan';
-    public $incrementing = false; // karena NIM biasanya bukan auto-increment
+    public $incrementing = true; // karena dia biasanya bukan auto-increment
     protected $keyType = 'string'; // kalau NIM berupa string, bukan integer
 
     protected $fillable = [
