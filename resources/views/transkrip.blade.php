@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Transcript</title>
 </head>
 <body>
     @extends('layout.header')
@@ -21,7 +21,7 @@
         <div id="result" style="margin-top:20px;"></div>
     </div>
 
-    <div id="hasil"></div>
+    <div id="hasil" class="main-content-wrapper"></div>
     <form id="saveForm" method="POST" action="/transkrip/save" style="display:none;">
         @csrf
         <input type="hidden" name="nama_mahasiswa" value="Contoh Mahasiswa">
