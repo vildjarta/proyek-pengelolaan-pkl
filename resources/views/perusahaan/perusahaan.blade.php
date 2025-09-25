@@ -46,46 +46,47 @@
 
             <div class="row g-4">
                 @forelse($perusahaans as $prs)
-                <div class="col-md-4 col-sm-6">
-                    <div class="card company-card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ $prs->nama }}</h5>
-                            <p class="card-text mb-1"><strong>Alamat:</strong> {{ $prs->alamat }}</p>
-                            <p class="card-text mb-1"><strong>Bidang Usaha:</strong> {{ $prs->bidang_usaha }}</p>
-                            <p class="card-text">
-                                <strong>Status:</strong>
-                                <span
-                                    class="status-badge 
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card company-card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ $prs->nama }}</h5>
+                                <p class="card-text mb-1"><strong>Alamat:</strong> {{ $prs->alamat }}</p>
+                                <p class="card-text mb-1"><strong>Bidang Usaha:</strong> {{ $prs->bidang_usaha }}</p>
+                                <p class="card-text">
+                                    <strong>Status:</strong>
+                                    <span
+                                        class="status-badge 
                                 {{ $prs->status == 'Aktif' ? 'bg-success text-white' : 'bg-secondary text-white' }}">
-                                    {{ $prs->status }}
-                                </span>
-                            </p>
+                                        {{ $prs->status }}
+                                    </span>
+                                </p>
 
-                            <div class="mt-auto">
-                                <a href="{{ route('perusahaan.edit', $prs->id_perusahaan) }}"
-                                    class="btn btn-warning btn-sm">Edit</a>
+                                <div class="mt-auto">
+                                    <a href="{{ route('perusahaan.edit', $prs->id_perusahaan) }}"
+                                        class="btn btn-warning btn-sm">Edit</a>
 
-                                <form action="{{ route('perusahaan.destroy', $prs->id_perusahaan) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Yakin mau hapus data ini?')">
-                                        Hapus
-                                    </button>
-                                </form>
+                                    <form action="{{ route('perusahaan.destroy', $prs->id_perusahaan) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Yakin mau hapus data ini?')">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 @empty
-                <div class="col-12">
-                    <div class="alert alert-info text-center">Belum ada data perusahaan</div>
-                </div>
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">Belum ada data perusahaan</div>
+                    </div>
                 @endforelse
             </div>
         </div>
     </div>
+    <script src="{{ asset('assets/js/hhd.js') }}"></script>
 </body>
 
 </html>
