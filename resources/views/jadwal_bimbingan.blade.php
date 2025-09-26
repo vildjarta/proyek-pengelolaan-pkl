@@ -1,7 +1,6 @@
 @extends('layout.header')
 @extends('layout.sidebar')
 
-
     <div class="main-content-wrapper">
         <div class="table-card">
             <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Tambah Jadwal</a>

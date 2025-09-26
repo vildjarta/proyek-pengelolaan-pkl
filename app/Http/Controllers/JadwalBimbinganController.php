@@ -46,7 +46,7 @@ class JadwalBimbinganController extends Controller
 
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
     }
-    
+
     /**
      * Menampilkan form untuk mengedit resource.
      */
@@ -61,7 +61,6 @@ class JadwalBimbinganController extends Controller
      */
     public function update(Request $request, jadwal_bimbingan $jadwal)
     {
-        dd($jadwal, $request->all()); 
         // Validasi yang benar untuk memperbarui data.
         $request->validate([
             'mahasiswa' => 'nullable|string|max:255',
@@ -74,7 +73,7 @@ class JadwalBimbinganController extends Controller
         ]);
 
         $jadwal->update($request->all());
-
+            
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate!');
     }
 

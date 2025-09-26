@@ -53,3 +53,8 @@
         </div>
     </div>
 </div>
+<script>
+    function confirmSubmit() {
+        return confirm("Apakah Anda yakin untuk mengubah jadwal ini?");
+    }
+</script>
