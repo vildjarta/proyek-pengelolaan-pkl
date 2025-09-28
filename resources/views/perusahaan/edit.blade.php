@@ -47,10 +47,25 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" id="status" class="form-control" required>
-                <option value="Aktif" {{ old('status', $perusahaan->status) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="Non-Aktif" {{ old('status', $perusahaan->status) == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
+                <option value="Aktif" {{ old('status', $perusahaan->status) == 'Aktif' ? 'selected' : '' }}>Aktif
+                </option>
+                <option value="Non-Aktif" {{ old('status', $perusahaan->status) == 'Non-Aktif' ? 'selected' : '' }}>
+                    Non-Aktif</option>
             </select>
         </div>
+
+        <div class="mb-3">
+            <label for="lat" class="form-label">Latitude</label>
+            <input type="text" name="lat" id="lat" class="form-control"
+                value="{{ old('lat', $perusahaan->lat) }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="lng" class="form-label">Longitude</label>
+            <input type="text" name="lng" id="lng" class="form-control"
+                value="{{ old('lng', $perusahaan->lng) }}">
+        </div>
+
 
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('perusahaan.index') }}" class="btn btn-secondary">Batal</a>

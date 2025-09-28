@@ -17,6 +17,8 @@ class Perusahaan extends Model
         'alamat',
         'status',
         'bidang_usaha',
+        'lat',
+        'lng',
         'created_at',
         'updated_at',
     ];

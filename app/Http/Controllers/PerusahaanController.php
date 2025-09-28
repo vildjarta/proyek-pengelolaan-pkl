@@ -28,6 +28,8 @@ class PerusahaanController extends Controller
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
+            'lat'           => 'required|string|max:50',
+            'lng'           => 'required|string|max:50',
         ]);
 
         Perusahaan::create($validated);
@@ -42,10 +44,16 @@ class PerusahaanController extends Controller
         $perusahaan = Perusahaan::findOrFail($id);
         return view('perusahaan.edit', compact('perusahaan'));
     }
+    public function show($id)
+    {
+        $perusahaan = Perusahaan::findOrFail($id);
+        return view('perusahaan.show', compact('perusahaan'));
+    }
 
     // Proses update perusahaan
     public function update(Request $request, $id)
     {
+        ($id);
         $perusahaan = Perusahaan::findOrFail($id);
 
         $validated = $request->validate([
@@ -53,6 +61,8 @@ class PerusahaanController extends Controller
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
+            'lat'           => 'required|string|max:50',
+            'lng'           => 'required|string|max:50',
         ]);
 
         $perusahaan->update($validated);

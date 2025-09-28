@@ -74,6 +74,8 @@
                                             Hapus
                                         </button>
                                     </form>
+                                    <a href="{{ route('perusahaan.show', $prs->id_perusahaan) }}"
+                                        class="btn btn-warning btn-sm">Detail</a>
                                 </div>
                             </div>
                         </div>

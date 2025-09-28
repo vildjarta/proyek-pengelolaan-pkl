@@ -28,8 +28,8 @@
 
         <div class="mb-3">
             <label for="nama" class="form-label">Nama Perusahaan</label>
-            <input type="text" name="nama" id="nama" class="form-control"
-                value="{{ old('nama') }}" required>
+            <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}"
+                required>
         </div>
 
         <div class="mb-3">
@@ -52,9 +52,21 @@
             </select>
         </div>
 
+        <div class="mb-3">
+            <label for="lat" class="form-label">Latitude</label>
+            <input type="text" name="lat" id="lat" class="form-control" value="{{ old('lat') }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="lng" class="form-label">Langitude</label>
+            <input type="text" name="lng" id="lng" class="form-control" value="{{ old('lng') }}">
+        </div>
+
+
         <button type="submit" class="btn btn-success">Simpan</button>
         <a href="{{ route('perusahaan.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 
 </body>
+
 </html>
