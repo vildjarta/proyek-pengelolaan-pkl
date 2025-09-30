@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RatingDanReviewController;
-
+use App\Http\Controllers\DataDosenPembimbingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,3 +29,10 @@ Route::resource('ratingdanreview', RatingDanReviewController::class)->names([
     'index' => 'lihatratingdanreview',     // alias index
     'create' => 'tambahratingdanreview',   // alias create
 ]);
+
+Route::get('/profile', function () {
+    return view('profile.profile'); 
+    // folder.profile
+});
+
+Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
