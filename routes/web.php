@@ -4,6 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\MahasiswaController;
 
+use App\Http\Controllers\TranscriptController;
+
+Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcript.index');
+Route::post('/transcript/analyze', [TranscriptController::class, 'analyze'])->name('transcript.analyze');
+Route::get('/transkrip', [TranscriptController::class, 'index']);
+Route::post('/transkrip/save', [TranscriptController::class, 'save']);
+Route::get('/transkrip_result', [TranscriptController::class, 'results'])->name('transkrip_result');
+
 // Halaman utama -> login
 Route::get('/', function () {
     return view('login');
@@ -41,6 +49,11 @@ Route::get('/daftar-jadwal', function () {
 
 // Resource untuk Jadwal (CRUD otomatis)
 Route::resource('jadwal', JadwalController::class);
+
+Route::get('/transkrip', function () {
+    // return view('menu');
+    return view('transkrip');
+});
 
 // Resource untuk Mahasiswa (CRUD otomatis)
 Route::resource('mahasiswa', MahasiswaController::class);

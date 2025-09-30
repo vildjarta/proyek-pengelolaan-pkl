@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="assets/css/style-pkl.css">
 </head>
 <body>
-    
+
 <div class="header">
     <div class="header-left">
         <div class="logo">
@@ -17,11 +17,11 @@
         </div>
         <i class="fa fa-bars menu-toggle"></i>
     </div>
-    
+
     <div class="menu-right">
         <a href="#">Ajukan Proposal</a>
         <a href="#">Akademik</a>
-        
+
         <div class="user-profile-wrapper">
             <div class="user-info">
                 <span>Nama User</span>
@@ -35,7 +35,7 @@
                 <a href="#"><i class="fa fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
-        
+
     </div>
 </div>
 
@@ -48,8 +48,8 @@
 
         <h4>Mahasiswa</h4>
         <ul>
-            <li><a href="#"><i class="fa fa-file-alt"></i> <span>Ajukan Proposal</span></a></li>
-            <li><a href="#"><i class="fa fa-tasks"></i> <span>Status Proposal</span></a></li>
+            <li><a href="#"><i class="fa fa-file-alt"></i> <span>Tambahkan Transkrip</span></a></li>
+            <li><a href="#"><i class="fa fa-tasks"></i> <span>Status PKL</span></a></li>
             <li><a href="#"><i class="fa fa-calendar"></i> <span>Jadwal Bimbingan</span></a></li>
             <li><a href="#"><i class="fa fa-chart-bar"></i> <span>Statistik Perusahaan</span></a></li>
             <li><a href="#"><i class="fa fa-user"></i> <span>Profil Mahasiswa</span></a></li>
@@ -100,32 +100,25 @@
     </div>
 </div>
 
-<div class="main-content-wrapper">
-    <div class="content">
-        <h2>Selamat Datang di Sistem PKL JOZZ</h2>
-        <p>Silakan pilih menu dari sidebar atau gunakan menu atas untuk navigasi cepat.</p>
-    </div>
-</div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const toggleButton = document.querySelector('.menu-toggle');
         const body = document.body;
         const profileWrapper = document.querySelector('.user-profile-wrapper');
         const userinfo = document.querySelector('.user-info');
-        
+
         if (toggleButton) {
             toggleButton.addEventListener('click', function() {
                 body.classList.toggle('sidebar-closed');
             });
         }
-        
+
         if (userinfo) {
             userinfo.addEventListener('click', function(e) {
-                e.preventDefault(); 
+                e.preventDefault();
                 profileWrapper.classList.toggle('active');
             });
-            
+
             document.addEventListener('click', function(e) {
                 if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
                     profileWrapper.classList.remove('active');
