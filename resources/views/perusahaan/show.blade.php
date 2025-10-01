@@ -38,7 +38,7 @@
     </div>
 
     <div class="d-flex">
-        {{-- sidebar --}}
+        {{-- sidebar  --}}
         @include('layout.sidebar')
     </div>
 
