@@ -49,9 +49,17 @@
     @csrf
     @method('PUT')
 
+    <!-- Input NIP -->
     <div class="mb-3">
       <label class="form-label">NIP</label>
-      <input type="text" name="NIP" value="{{ $item->NIP }}" class="form-control" readonly>
+      <input type="text" name="NIP" id="NIP" value="{{ $item->NIP }}" 
+             class="form-control"
+             maxlength="18" pattern="\d{18}"
+             title="NIP harus 18 digit angka" required>
+      <!-- Peringatan merah -->
+      <div id="nipWarning" class="form-text text-danger" style="display:none;">
+        NIP harus 18 angka.
+      </div>
     </div>
 
     <div class="mb-3">
@@ -78,6 +86,30 @@
 </div>
 
 <script>
+  // =========================
+  // Validasi NIP real-time
+  // =========================
+  const nipInput = document.getElementById("NIP");
+  const nipWarning = document.getElementById("nipWarning");
+
+  nipInput.addEventListener("input", function () {
+    // Hanya angka yang boleh
+    this.value = this.value.replace(/\D/g, "");
+    // Maksimal 18 digit
+    if (this.value.length > 18) {
+      this.value = this.value.slice(0, 18);
+    }
+    // Tampilkan peringatan kalau belum 18 digit
+    if (this.value.length > 0 && this.value.length < 18) {
+      nipWarning.style.display = "block";
+    } else {
+      nipWarning.style.display = "none";
+    }
+  });
+
+  // =========================
+  // Tag Input Nama Mahasiswa
+  // =========================
   const tagContainer = document.getElementById('tagInputContainer');
   const tagInput = document.getElementById('tagInput');
   const hiddenInput = document.getElementById('hiddenNamaMahasiswa');
@@ -117,6 +149,7 @@
     });
     tagContainer.appendChild(tagInput);
     tagInput.value = '';
+    updateHiddenInput();
   }
 
   renderTags();

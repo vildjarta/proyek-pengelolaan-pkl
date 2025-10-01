@@ -4,49 +4,102 @@
   <meta charset="UTF-8">
   <title>Daftar Dosen Pembimbing - Sistem PKL JOZZ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
+
+  {{-- CSS Header & Sidebar --}}
+  <link rel="stylesheet" href="{{ asset('assets/css/style-header-sidebar.css') }}">
+
   <style>
-    body {background-color:#eef6ff;transition:margin-left 0.3s ease;}
-    .container-page {width:calc(100% - 260px);margin-left:260px;margin-top:120px;padding:0 25px 40px;transition:all 0.3s ease;}
-    body.sidebar-closed .container-page {width:calc(100% - 80px);margin-left:80px;}
-    .card-main {border-radius:10px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.08);background:#fff;padding-bottom:20px;}
-    .card-header-custom {background:#e6f0ff;padding:18px 24px 10px;border-bottom:2px solid #dbeafe;display:flex;justify-content:space-between;align-items:center;}
-    .card-header-custom h4 {margin:0;font-weight:700;color:#1e3a8a;}
-    .btn-add {background:#2563eb;color:#fff;border:none;padding:9px 16px;border-radius:8px;font-weight:600;text-decoration:none!important;display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 5px rgba(37,99,235,0.2);transition:0.2s;}
+    body {
+      background-color:#eef6ff;
+      transition:margin-left 0.3s ease;
+      margin:0;
+      font-family:Arial, sans-serif;
+    }
+    .container-page {
+      width:calc(100% - 260px);
+      margin-left:260px;
+      margin-top:120px;
+      padding:0 25px 40px;
+      transition:all 0.3s ease;
+    }
+    body.sidebar-closed .container-page {
+      width:calc(100% - 80px);
+      margin-left:80px;
+    }
+    .card-main {
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      background:#fff;
+      padding-bottom:20px;
+    }
+    .card-header-custom {
+      background:#e6f0ff;
+      padding:18px 24px 10px;
+      border-bottom:2px solid #dbeafe;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .card-header-custom h4 {
+      margin:0;
+      font-weight:700;
+      color:#1e3a8a;
+    }
+    .btn-add {
+      background:#2563eb;
+      color:#fff;
+      border:none;
+      padding:9px 16px;
+      border-radius:8px;
+      font-weight:600;
+      text-decoration:none!important;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 2px 5px rgba(37,99,235,0.2);
+      transition:0.2s;
+    }
     .btn-add:hover {background:#1d4ed8;}
 
-    /* Tabel Styling */
-    .table-custom {width:100%;border-collapse:collapse;}
-    .table-custom thead th {
-      background:#f8fafc;
-      padding:15px 18px;
-      font-weight:700;
-      color:#0f172a;
-      border-bottom:2px solid #dbeafe;
+    /* Tabel */
+    .table-custom {
+      width:100%;
+      border-collapse:collapse;
     }
-    .table-custom tbody td {
+    .table-custom th, 
+    .table-custom td {
+      border:1px solid #e2e8f0; /* full border supaya grid rapi */
       padding:14px 18px;
       vertical-align:middle;
-      color:#1e293b;
-      border-bottom:1px solid #e2e8f0;
     }
-
-    /* Hilangkan garis bawah terakhir */
-    .table-custom tbody tr:last-child td {
-      border-bottom:none;
+    .table-custom thead th {
+      background:#f8fafc;
+      font-weight:700;
+      color:#0f172a;
+      text-align:center;
+    }
+    .table-custom tbody td {
+      color:#1e293b;
+      text-align:center;
+    }
+    /* Kolom Mahasiswa */
+    .table-custom tbody td.mahasiswa-cell {
+      text-align:left;
     }
 
     /* Kolom Aksi */
     .action-cell {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      border-bottom:none !important; /* ✅ Hilangkan garis bawah di kolom Aksi */
+      text-align:center;
+      vertical-align:middle;
+      white-space:nowrap;
     }
 
-    /* Tombol Aksi */
+    /* Tombol */
     .btn-edit {
       background:#facc15;
       color:#000;
@@ -61,7 +114,6 @@
       transition:0.2s;
     }
     .btn-edit:hover {background:#eab308;}
-
     .btn-delete {
       background:#ef4444;
       color:#fff;
@@ -80,7 +132,6 @@
     .mahasiswa-list {
       display:flex;
       flex-direction:column;
-      align-items:flex-start;
       gap:3px;
     }
     .mahasiswa-item {
@@ -93,96 +144,38 @@
     @media (max-width:992px){
       .container-page {width:100%!important;margin-left:0!important;margin-top:100px;padding:0 15px;}
       .table-custom thead{display:none;}
-      .table-custom tbody tr{display:block;margin-bottom:15px;border-radius:10px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.08);}
-      .table-custom tbody td{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #e2e8f0;}
-      .table-custom tbody td::before{content:attr(data-label);font-weight:700;color:#475569;}
+      .table-custom tbody tr{
+        display:block;
+        margin-bottom:15px;
+        border-radius:10px;
+        background:#fff;
+        box-shadow:0 2px 6px rgba(0,0,0,0.08);
+      }
+      .table-custom tbody td{
+        display:flex;
+        justify-content:space-between;
+        padding:10px 14px;
+        border-bottom:1px solid #e2e8f0;
+        text-align:left!important;
+      }
+      .table-custom tbody td::before{
+        content:attr(data-label);
+        font-weight:700;
+        color:#475569;
+      }
+      .action-cell {
+        justify-content:flex-start;
+      }
     }
   </style>
 </head>
 <body>
 
 {{-- HEADER --}}
-<div class="header">
-  <div class="header-left">
-    <div class="logo">
-      <img src="https://i.ibb.co/yYtHbDP/logo.png" alt="Logo PKL JOZZ">
-      <span>PKL JOZZ</span>
-    </div>
-    <i class="fa fa-bars menu-toggle"></i>
-  </div>
-  <div class="menu-right">
-    <a href="#">Ajukan Proposal</a>
-    <a href="#">Akademik</a>
-    <div class="user-profile-wrapper">
-      <div class="user-info">
-        <span>Nama User</span>
-        <div class="avatar"><img src="https://i.ibb.co/L8f3XnS/user-avatar.png" alt="User Avatar"></div>
-      </div>
-    </div>
-  </div>
-</div>
+@include('layouts.header')
 
 {{-- SIDEBAR --}}
-<div class="sidebar">
-        <div class="menu-list">
-            <h4>General</h4>
-            <ul>
-                <li class="active"><a href="#"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-            </ul>
-
-            <h4>Mahasiswa</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-file-alt"></i> <span>Ajukan Proposal</span></a></li>
-                <li><a href="#"><i class="fa fa-tasks"></i> <span>Status Proposal</span></a></li>
-                <li><a href="#"><i class="fa fa-calendar"></i> <span>Jadwal Bimbingan</span></a></li>
-                <li><a href="#"><i class="fa fa-chart-bar"></i> <span>Statistik Perusahaan</span></a></li>
-                <li><a href="#"><i class="fa fa-user"></i> <span>Profil Mahasiswa</span></a></li>
-            </ul>
-
-            <h4>Dosen Pembimbing</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-users"></i> <span>Daftar Mahasiswa Bimbingan</span></a></li>
-                <li><a href="#"><i class="fa fa-calendar-check"></i> <span>Jadwal Bimbingan</span></a></li>
-                <li><a href="#"><i class="fa fa-edit"></i> <span>Input Nilai</span></a></li>
-                <li><a href="#"><i class="fa fa-building"></i> <span>Statistik Perusahaan</span></a></li>
-                <li><a href="#"><i class="fa fa-user-tie"></i> <span>Profil Dosen</span></a></li>
-            </ul>
-
-            <h4>Perusahaan</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-id-badge"></i> <span>Daftar Mahasiswa PKL</span></a></li>
-                <li><a href="#"><i class="fa fa-chart-line"></i> <span>Statistik Perusahaan</span></a></li>
-                <li><a href="#"><i class="fa fa-building"></i> <span>Profil Perusahaan</span></a></li>
-            </ul>
-
-            <h4>Rating & Review</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-star"></i> <span>Beri Rating</span></a></li>
-                <li><a href="/ratingperusahaan"><i class="fa fa-ranking-star"></i> <span>Ranking Perusahaan</span></a></li>
-            </ul>
-
-            <h4>Admin / Koordinator</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-users-cog"></i> <span>Manajemen User</span></a></li>
-                <li><a href="#"><i class="fa fa-database"></i> <span>Data Perusahaan</span></a></li>
-                <li><a href="#"><i class="fa fa-check-circle"></i> <span>Validasi Mahasiswa</span></a></li>
-                <li><a href="#"><i class="fa fa-clock"></i> <span>Penjadwalan Otomatis</span></a></li>
-                <li><a href="#"><i class="fa fa-envelope-open-text"></i> <span>Surat Pengantar</span></a></li>
-                <li><a href="#"><i class="fa fa-download"></i> <span>Backup & Laporan</span></a></li>
-            </ul>
-
-            <h4>Panduan & Kontak</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-book"></i> <span>Panduan Sistem</span></a></li>
-                <li><a href="#"><i class="fa fa-headset"></i> <span>Kontak / Helpdesk</span></a></li>
-            </ul>
-
-            <h4>Akun</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a></li>
-            </ul>
-        </div>
-    </div>
+@include('layouts.sidebar')
 
 {{-- MAIN CONTENT --}}
 <div class="container-page">
@@ -190,7 +183,9 @@
     <div class="card-main">
       <div class="card-header-custom">
         <h4>Daftar Data Dosen Pembimbing</h4>
-        <a href="{{ route('datadosenpembimbing.create') }}" class="btn-add"><i class="fa fa-plus"></i> Tambah</a>
+        <a href="{{ route('datadosenpembimbing.create') }}" class="btn-add">
+          <i class="fa fa-plus"></i> Tambah
+        </a>
       </div>
       <div class="p-0">
         <div class="table-responsive">
@@ -207,10 +202,10 @@
             <tbody>
               @forelse($data as $row)
                 <tr>
-                  <td>{{ $row->NIP }}</td>
-                  <td>{{ $row->nama }}</td>
-                  <td>{{ $row->email }}</td>
-                  <td>
+                  <td data-label="NIP">{{ $row->NIP }}</td>
+                  <td data-label="Nama">{{ $row->nama }}</td>
+                  <td data-label="Email">{{ $row->email }}</td>
+                  <td data-label="Mahasiswa" class="mahasiswa-cell">
                     @if($row->nama_mahasiswa)
                       <div class="mahasiswa-list">
                         @foreach(explode(',', $row->nama_mahasiswa) as $mahasiswa)
@@ -221,16 +216,22 @@
                       <span class="text-muted">-</span>
                     @endif
                   </td>
-                  <td class="action-cell">
-                    <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn-edit"><i class="fa fa-pen"></i> Edit</a>
+                  <td data-label="Aksi" class="action-cell">
+                    <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn-edit">
+                      <i class="fa fa-pen"></i> Edit
+                    </a>
                     <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline">
                       @csrf @method('DELETE')
-                      <button type="submit" class="btn-delete" onclick="return confirm('Yakin hapus data ini?')"><i class="fa fa-trash"></i> Hapus</button>
+                      <button type="submit" class="btn-delete" onclick="return confirm('Yakin hapus data ini?')">
+                        <i class="fa fa-trash"></i> Hapus
+                      </button>
                     </form>
                   </td>
                 </tr>
               @empty
-                <tr><td colspan="5" class="text-center text-muted py-4">Belum ada data dosen pembimbing</td></tr>
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-4">Belum ada data dosen pembimbing</td>
+                </tr>
               @endforelse
             </tbody>
           </table>

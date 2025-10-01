@@ -48,9 +48,13 @@
   <form action="{{ route('datadosenpembimbing.store') }}" method="POST">
     @csrf
 
+    <!-- Input NIP -->
     <div class="mb-3">
       <label class="form-label">NIP</label>
-      <input type="text" name="NIP" class="form-control" required>
+      <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18" required>
+      <div id="nipError" class="text-danger mt-1" style="display:none;">
+        NIP harus 18 angka.
+      </div>
     </div>
 
     <div class="mb-3">
@@ -77,6 +81,30 @@
 </div>
 
 <script>
+  // =========================
+  // Validasi NIP real-time
+  // =========================
+  const nipInput = document.getElementById("NIP");
+  const nipError = document.getElementById("nipError");
+
+  nipInput.addEventListener("input", function () {
+    // Hanya angka yang boleh
+    this.value = this.value.replace(/\D/g, "");
+    // Maksimal 18 digit
+    if (this.value.length > 18) {
+      this.value = this.value.slice(0, 18);
+    }
+    // Tampilkan error jika kurang dari 18 digit
+    if (this.value.length > 0 && this.value.length < 18) {
+      nipError.style.display = "block";
+    } else {
+      nipError.style.display = "none";
+    }
+  });
+
+  // =========================
+  // Tag Input Nama Mahasiswa
+  // =========================
   const tagContainer = document.getElementById('tagInputContainer');
   const tagInput = document.getElementById('tagInput');
   const hiddenInput = document.getElementById('hiddenNamaMahasiswa');
