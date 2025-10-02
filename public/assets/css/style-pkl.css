@@ -3,12 +3,12 @@
 
 /* --- Palet Warna Sinkron dengan Desain Login --- */
 :root {
-    --color-primary-blue: #5b8ad2;
-    --color-light-blue-bg: #eaf1f8;
-    --color-text-dark: #333333;
-    --color-text-gray: #6b6b6b;
+    --color-primary-blue: #5b8ad2; /* Warna biru utama pada tombol */
+    --color-light-blue-bg: #eaf1f8; /* Warna latar belakang gradasi */
+    --color-text-dark: #333333; /* Warna teks gelap */
+    --color-text-gray: #6b6b6b; /* Warna teks abu-abu */
     --color-white: #ffffff;
-    --color-shadow: rgba(0, 0, 0, 0.08);
+    --color-shadow: rgba(0, 0, 0, 0.08); /* Warna bayangan */
 }
 
 /* --- General Styling --- */
@@ -72,7 +72,6 @@ body {
     align-items: center;
     gap: 20px;
     flex-shrink: 0;
-    /* Menambahkan margin-right untuk memberi ruang di ujung kanan */
     margin-right: 20px;
 }
 
@@ -95,6 +94,7 @@ body {
 .user-info {
     display: flex;
     align-items: center;
+    gap: 10px;
     gap: 10px;
     flex-shrink: 0;
 }
@@ -119,6 +119,7 @@ body {
 .profile-dropdown-menu {
     position: absolute;
     top: 100%;
+    right: 0;
     right: 0;
     background-color: var(--color-white);
     border-radius: 8px;
@@ -233,15 +234,6 @@ body.sidebar-closed .sidebar ul li a i {
 
 .sidebar ul li a span {
     white-space: nowrap;
-}
-
-.sidebar.menu-closed ul li a span {
-    display: none;
-}
-
-.sidebar.menu-closed ul li a i {
-    margin: 0;
-    width: 100%;
 }
 
 /* --- Main Content Wrapper --- */

@@ -54,12 +54,12 @@
                     <span>Daftar Mahasiswa Bimbingan</span>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-calendar-check"></i>
-                    <span>Jadwal Bimbingan</span>
-                </a>
-            </li>
+        <li>
+            <a href="{{ route('jadwal.index') }}">
+                <i class="fa fa-calendar"></i>
+                <span>Jadwal Bimbingan</span>
+            </a>
+        </li>
             <li>
                 <a href="#">
                     <i class="fa fa-edit"></i>

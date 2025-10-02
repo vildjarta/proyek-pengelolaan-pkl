@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PerusahaanController;
+use App\Http\Controllers\JadwalBimbinganController;
+
+Route::resource('jadwal', JadwalBimbinganController::class);
+
 use App\Http\Controllers\RatingDanReviewController;
 use App\Http\Controllers\DataDosenPembimbingController;
 /*
@@ -49,6 +54,7 @@ Route::get('/', function () {
     return view('login');
 });
 
+
 // Halaman registrasi
 Route::get('/registrasi', function () {
     return view('registrasi');
@@ -58,6 +64,7 @@ Route::get('/registrasi', function () {
 Route::get('/home', function () {
     return view('home');
 });
+
 
 // Halaman about
 Route::get('/about', function () {
@@ -75,6 +82,10 @@ Route::get('/profile', function () {
     // folder.profile
     return view('profile');
 });
+
+
+Route::resource('perusahaan', PerusahaanController::class);
+
 
 Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
 
