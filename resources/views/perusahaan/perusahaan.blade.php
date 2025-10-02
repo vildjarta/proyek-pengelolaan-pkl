@@ -52,7 +52,6 @@
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title">{{ $prs->nama }}</h5>
                                     <p class="card-text mb-1"><strong>Alamat:</strong> {{ $prs->alamat }}</p>
-                                    <p class="card-text mb-1"><strong>Bidang Usaha:</strong> {{ $prs->bidang_usaha }}
                                     </p>
                                     <p class="card-text">
                                         <strong>Status:</strong>
