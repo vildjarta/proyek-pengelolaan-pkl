@@ -267,6 +267,111 @@ body.sidebar-closed .main-content-wrapper {
     color: var(--color-text-gray);
 }
 
+/* --- Table Styling --- */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--color-shadow);
+    margin-top: 20px;
+}
+
+.table thead {
+    background-color: var(--color-primary-blue);
+    color: var(--color-white);
+}
+
+.table thead th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: var(--color-light-blue-bg);
+}
+
+.table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table tbody td {
+    padding: 15px;
+    color: var(--color-text-dark);
+    font-size: 0.9rem;
+    border: none;
+}
+
+.table-bordered {
+    border: 1px solid #e0e0e0;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #e0e0e0;
+}
+
+/* --- Status Badge Styling --- */
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.status-layak {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-tidak-layak {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* --- Result Card Styling --- */
+.result-card {
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px var(--color-shadow);
+    margin-bottom: 20px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.info-text {
+    color: var(--color-text-gray);
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--color-text-gray);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: var(--color-primary-blue);
+    margin-bottom: 15px;
+    display: block;
+}
+
 /* --- Responsiveness --- */
 @media (max-width: 768px) {
     .sidebar {
@@ -283,5 +388,36 @@ body.sidebar-closed .main-content-wrapper {
 
     .header-left .user-profile-wrapper {
         display: none;
+    }
+
+    /* Responsive Table */
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    .table tbody td {
+        display: block;
+        text-align: right;
+        padding: 8px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: var(--color-primary-blue);
     }
 }
