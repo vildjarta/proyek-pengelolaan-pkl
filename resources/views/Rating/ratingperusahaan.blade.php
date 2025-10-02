@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking Perusahaan - Sistem PKL JOZZ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
+    <style>
+        /* CSS khusus konten halaman Ranking Perusahaan */
+        .page-title {color: var(--color-text-dark);font-weight: 600;margin-bottom: 20px;}
+        .ranking-container {background: #fff;padding: 30px;border-radius: 10px;box-shadow: 0 4px 15px var(--color-shadow);overflow-x: auto;}
+        table {width: 100%;border-collapse: collapse;margin-top: 20px;}
+        th, td {text-align: left;padding: 15px;border-bottom: 1px solid #e0e6ef;}
+        th {background: #f8f9fa;color: #6c757d;font-weight: 600;text-transform: uppercase;font-size: 0.9em;}
+        tr:hover {background: #f0f4f8;}
+        .stars {color: #ffc107;}
+        .stars .fa-star:not(.filled) {color: #e0e0e0;}
+        .action-btn {background: #3b5998;color: #fff;border: none;padding: 10px 15px;border-radius: 5px;cursor: pointer;transition: 0.3s;font-size: 0.9em;min-width: 150px;}
+        .action-btn:hover {background: #2e4a86;}
+        .btn-view {background: #28a745;}
+        .btn-view:hover {background: #1f8b36;}
+        .search-box {margin-bottom: 15px;}
+        .search-box input {padding: 10px;width: 100%;max-width: 350px;border: 1px solid #ccc;border-radius: 5px;}
+        th:first-child, td:first-child {text-align: center;vertical-align: middle;font-weight: bold;width: 100px;}
+        th:last-child, td:last-child {text-align: center;vertical-align: middle;}
+        td:last-child {display: flex;justify-content: center;gap: 10px;}
+    </style>
+</head>
+<body>
+    {{-- HEADER --}}
+    @include('layouts.header')
+
+    {{-- SIDEBAR --}}
+    @include('layouts.sidebar')
+
+    <!-- Main Content -->
+    <div class="main-content-wrapper">
+        <div class="content">
+            <h2 class="page-title">Ranking Perusahaan</h2>
+
+            <!-- 🔎 Input Pencarian -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari perusahaan...">
+            </div>
+
+            <div class="ranking-container">
+                <table id="rankingTable">
+                    <thead>
+                        <tr>
+                            <th>Peringkat</th>
+                            <th>ID Perusahaan</th>
+                            <th>Rata-rata Rating</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($reviews as $index => $review)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $review->id_perusahaan }}</td>
+                                <td>
+                                    <span class="stars">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star {{ $i <= round($review->avg_rating) ? 'filled' : '' }}"></i>
+                                        @endfor
+                                    </span>
+                                    ({{ number_format($review->avg_rating, 1) }})
+                                </td>
+                                <td>
+                                    <a href="{{ route('tambahratingdanreview') }}">
+                                        <button class="action-btn">Rating & Review</button>
+                                    </a>
+                                    <a href="{{ route('lihatratingdanreview') }}">
+                                        <button class="action-btn btn-view">Lihat Rating & Review</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" style="text-align:center">Belum ada data perusahaan yang dirating</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.querySelector('.menu-toggle');
+            const body = document.body;
+            const profileWrapper = document.querySelector('.user-profile-wrapper');
+            const userinfo = document.querySelector('.user-info');
+
+            if (toggleButton) {
+                toggleButton.addEventListener('click', function() {
+                    body.classList.toggle('sidebar-closed');
+                });
+            }
+
+            if (userinfo) {
+                userinfo.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    profileWrapper.classList.toggle('active');
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                        profileWrapper.classList.remove('active');
+                    }
+                });
+            }
+            
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                const filter = this.value.toLowerCase();
+                const rows = document.querySelectorAll("#rankingTable tbody tr");
+                rows.forEach(row => {
+                    const namaPerusahaan = row.cells[1].textContent.toLowerCase();
+                    row.style.display = namaPerusahaan.includes(filter) ? "" : "none";
+                });
+            });
+        });
+    </script>
+</body>
+</html>
