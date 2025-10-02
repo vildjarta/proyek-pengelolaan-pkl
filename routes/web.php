@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\MahasiswaController;
-
+use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 
 Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcript.index');
@@ -57,3 +57,5 @@ Route::get('/transkrip', function () {
 
 // Resource untuk Mahasiswa (CRUD otomatis)
 Route::resource('mahasiswa', MahasiswaController::class);
+
+Route::resource('penilaian', PenilaianPengujiController::class);
