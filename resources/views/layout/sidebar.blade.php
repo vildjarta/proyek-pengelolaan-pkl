@@ -95,7 +95,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/perusahaan">
                     <i class="fa fa-building"></i>
                     <span>Profil Perusahaan</span>
                 </a>
@@ -186,6 +186,7 @@
 
     </div>
 </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.querySelector('.menu-toggle');

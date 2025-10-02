@@ -34,11 +34,15 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 
+// return control('transkrip');
 Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcript.index');
 Route::post('/transcript/analyze', [TranscriptController::class, 'analyze'])->name('transcript.analyze');
 Route::get('/transkrip', [TranscriptController::class, 'index']);
 Route::post('/transkrip/save', [TranscriptController::class, 'save']);
 Route::get('/transkrip_result', [TranscriptController::class, 'results'])->name('transkrip_result');
+
+// return control('perusahaan');
+Route::resource('/perusahaan', PerusahaanController::class);
 
 // Halaman utama -> login
 Route::get('/', function () {
