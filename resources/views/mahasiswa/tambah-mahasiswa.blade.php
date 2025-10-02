@@ -1,6 +1,16 @@
-@extends('layouts.app')
+@extends('layout.app')
 
 @section('content')
+<div class="d-flex">
+    {{-- header --}}
+    @include('layout.header')
+</div>
+
+<div class="d-flex">
+    {{-- sidebar --}}
+    @include('layout.sidebar')
+</div>
+
 <div class="card shadow border-0 rounded-3">
     <div class="card-header bg-primary text-white py-3">
         <h4 class="mb-0 fw-bold">
@@ -35,7 +45,7 @@
                            value="{{ old('nim') }}"
                            class="form-control"
                            required min="1000000000" max="999999999999"
-                           title="NIM harus terdiri dari 10-12 digit angka.">
+                           title="NIM harus terdiri dari 10 digit angka.">
                 </div>
 
                 {{-- Nama hanya huruf --}}
@@ -68,23 +78,29 @@
                            title="Nomor HP harus terdiri dari 10-15 digit angka.">
                 </div>
 
-                {{-- Prodi hanya huruf --}}
+                {{-- Prodi dropdown --}}
                 <div class="col-md-4">
                     <label for="prodi" class="form-label fw-bold">Prodi</label>
-                    <input type="text" name="prodi" id="prodi"
-                           value="{{ old('prodi') }}"
-                           class="form-control"
-                           required pattern="[A-Za-z\s]+"
-                           title="Prodi hanya boleh berisi huruf dan spasi.">
+                    <select name="prodi" id="prodi" class="form-select" required>
+                        <option value="">-- Pilih Prodi --</option>
+                        <option value="Akuntansi" {{ old('prodi') == 'Akuntansi' ? 'selected' : '' }}>Akuntansi</option>
+                        <option value="Agroindustri" {{ old('prodi') == 'Agroindustri' ? 'selected' : '' }}>Agroindustri</option>
+                        <option value="Teknologi Informasi" {{ old('prodi') == 'Teknologi Informasi' ? 'selected' : '' }}>Teknologi Informasi</option>
+                        <option value="Teknologi Otomotif" {{ old('prodi') == 'Teknologi Otomotif' ? 'selected' : '' }}>Teknologi Otomotif</option>
+                        <option value="Akuntansi Perpajakan (D4)" {{ old('prodi') == 'Akuntansi Perpajakan (D4)' ? 'selected' : '' }}>Akuntansi Perpajakan (D4)</option>
+                        <option value="Teknologi Pakan Ternak (D4)" {{ old('prodi') == 'Teknologi Pakan Ternak (D4)' ? 'selected' : '' }}>Teknologi Pakan Ternak (D4)</option>
+                        <option value="Teknologi Rekayasa Komputer Jaringan (D4)" {{ old('prodi') == 'Teknologi Rekayasa Komputer Jaringan (D4)' ? 'selected' : '' }}>Teknologi Rekayasa Komputer Jaringan (D4)</option>
+                        <option value="Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)" {{ old('prodi') == 'Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)' ? 'selected' : '' }}>Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)</option>
+                    </select>
                 </div>
 
-                {{-- Angkatan hanya angka --}}
+                {{-- Angkatan hanya angka mulai dari 2009 --}}
                 <div class="col-md-4">
                     <label for="angkatan" class="form-label fw-bold">Angkatan</label>
                     <input type="number" name="angkatan" id="angkatan"
                            value="{{ old('angkatan') }}"
                            class="form-control"
-                           required min="1990" max="{{ date('Y') + 1 }}">
+                           required min="2009" max="{{ date('Y') + 1 }}">
                 </div>
 
                 {{-- IPK desimal 0.00 - 4.00 --}}

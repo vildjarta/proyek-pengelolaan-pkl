@@ -1,6 +1,16 @@
-@extends('layouts.app')
+@extends('layout.app')
 
 @section('content')
+<div class="d-flex">
+    {{-- header --}}
+    @include('layout.header')
+</div>
+
+<div class="d-flex">
+    {{-- sidebar --}}
+    @include('layout.sidebar')
+</div>
+
 <div class="card shadow border-0 rounded-3">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h4 class="mb-0 fw-bold">

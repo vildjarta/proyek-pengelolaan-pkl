@@ -1,6 +1,16 @@
-@extends('layouts.app')
+@extends('layout.app')
 
 @section('content')
+<div class="d-flex">
+    {{-- header --}}
+    @include('layout.header')
+</div>
+
+<div class="d-flex">
+    {{-- sidebar --}}
+    @include('layout.sidebar')
+</div>
+
 <div class="card shadow border-0 rounded-3">
     <div class="card-header bg-warning text-dark py-3">
         <h4 class="mb-0 fw-bold">
@@ -36,7 +46,7 @@
                            value="{{ old('nim', $mahasiswa->nim) }}"
                            class="form-control"
                            required min="1000000000" max="999999999999"
-                           title="NIM harus terdiri dari 10-12 digit angka.">
+                           title="NIM harus terdiri dari 10 digit angka.">
                 </div>
 
                 {{-- Nama hanya huruf --}}
