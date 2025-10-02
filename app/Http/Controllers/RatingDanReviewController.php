@@ -4,90 +4,80 @@ namespace App\Http\Controllers;
 
 use App\Models\RatingDanReview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RatingDanReviewController extends Controller
 {
-    /**
-     * ✅ Tampilkan semua review (halaman daftar review)
-     */
     public function index(Request $request)
     {
-        // Ambil semua data review
         $reviews = RatingDanReview::query();
 
-        // Jika ada parameter 'search', filter data berdasarkan ID mahasiswa
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $reviews->where('id_mahasiswa', 'like', '%' . $request->input('search') . '%');
         }
 
-        // Ambil data yang sudah difilter dan tambahkan paginasi
-        $reviews = $reviews->paginate(10); // Menampilkan 10 item per halaman
+        $reviews = $reviews->paginate(10);
 
-        // pastikan file view: resources/views/Rating/lihatratingdanreview.blade.php
         return view('Rating.lihatratingdanreview', compact('reviews'));
     }
 
-    /**
-     * ✅ Form tambah review
-     */
-    public function create()
+    // ✅ Form tambah rating & review
+    public function create($id_perusahaan, $nama_perusahaan)
     {
-        // pastikan file view: resources/views/Rating/ratingdanreview.blade.php
-        return view('Rating.ratingdanreview');
+        return view('Rating.ratingdanreview', compact('id_perusahaan', 'nama_perusahaan'));
     }
 
-    /**
-     * ✅ Simpan review baru
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'id_mahasiswa' => 'required|integer',
-            'id_perusahaan' => 'required|integer',
-            'rating' => 'required|integer|min:1|max:5',
-            'review' => 'required|string|max:500',
-            'tanggal_review' => 'date', // Validasi tanggal
+            'id_mahasiswa'   => 'required|integer',
+            'id_perusahaan'  => 'required|integer',
+            'rating'         => 'required|integer|min:1|max:5',
+            'review'         => 'required|string|max:500',
+            'tanggal_review' => 'nullable|date',
         ]);
 
-        RatingDanReview::create($request->all());
+        RatingDanReview::create($request->only([
+            'id_mahasiswa',
+            'id_perusahaan',
+            'rating',
+            'review',
+            'tanggal_review',
+        ]));
 
-        // setelah simpan langsung ke daftar review
         return redirect()->route('lihatratingdanreview')
             ->with('success', 'Review berhasil ditambahkan!');
     }
 
-    /**
-     * ✅ Form edit review
-     */
     public function edit(RatingDanReview $ratingdanreview)
     {
-        // pastikan file view: resources/views/Rating/editratingdanreview.blade.php
         return view('Rating.editratingdanreview', [
             'review' => $ratingdanreview
         ]);
     }
 
-    /**
-     * ✅ Update review
-     */
     public function update(Request $request, RatingDanReview $ratingdanreview)
     {
         $request->validate([
-            'id_mahasiswa' => 'required|integer',
-            'id_perusahaan' => 'required|integer',
-            'rating' => 'required|integer|min:1|max:5',
-            'review' => 'required|string|max:500',
+            'id_mahasiswa'   => 'required|integer',
+            'id_perusahaan'  => 'required|integer',
+            'rating'         => 'required|integer|min:1|max:5',
+            'review'         => 'required|string|max:500',
+            'tanggal_review' => 'nullable|date',
         ]);
 
-        $ratingdanreview->update($request->all());
+        $ratingdanreview->update($request->only([
+            'id_mahasiswa',
+            'id_perusahaan',
+            'rating',
+            'review',
+            'tanggal_review',
+        ]));
 
         return redirect()->route('lihatratingdanreview')
             ->with('success', 'Review berhasil diperbarui!');
     }
 
-    /**
-     * ✅ Hapus review
-     */
     public function destroy(RatingDanReview $ratingdanreview)
     {
         $ratingdanreview->delete();
@@ -96,17 +86,21 @@ class RatingDanReviewController extends Controller
             ->with('success', 'Review berhasil dihapus!');
     }
 
-    /**
-     * ✅ Ranking perusahaan berdasarkan rata-rata rating
-     */
+    // ✅ Ranking perusahaan
     public function showRanking()
     {
-        $reviews = RatingDanReview::selectRaw('id_perusahaan, AVG(rating) as avg_rating')
-            ->groupBy('id_perusahaan')
+        $reviews = DB::table('perusahaan')
+            ->leftJoin('rating_dan_reviews', 'perusahaan.id_perusahaan', '=', 'rating_dan_reviews.id_perusahaan')
+            ->select(
+                'perusahaan.id_perusahaan',
+                'perusahaan.nama as nama_perusahaan',
+                DB::raw('COALESCE(AVG(rating_dan_reviews.rating), 0) as avg_rating'),
+                DB::raw('COUNT(rating_dan_reviews.id_review) as total_reviews')
+            )
+            ->groupBy('perusahaan.id_perusahaan', 'perusahaan.nama')
             ->orderByDesc('avg_rating')
             ->get();
 
-        // pastikan file view: resources/views/Rating/ratingperusahaan.blade.php
         return view('Rating.ratingperusahaan', compact('reviews'));
     }
 }

@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>Ranking Perusahaan - Sistem PKL JOZZ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome & custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
+
     <style>
-        /* CSS khusus konten halaman Ranking Perusahaan */
         .page-title {color: var(--color-text-dark);font-weight: 600;margin-bottom: 20px;}
         .ranking-container {background: #fff;padding: 30px;border-radius: 10px;box-shadow: 0 4px 15px var(--color-shadow);overflow-x: auto;}
         table {width: 100%;border-collapse: collapse;margin-top: 20px;}
@@ -34,7 +36,6 @@
     {{-- SIDEBAR --}}
     @include('layouts.sidebar')
 
-    <!-- Main Content -->
     <div class="main-content-wrapper">
         <div class="content">
             <h2 class="page-title">Ranking Perusahaan</h2>
@@ -45,36 +46,45 @@
             </div>
 
             <div class="ranking-container">
-                <table id="rankingTable">
+                <table id="rankingTable" class="table">
                     <thead>
                         <tr>
                             <th>Peringkat</th>
-                            <th>ID Perusahaan</th>
+                            <th>Nama Perusahaan</th>
                             <th>Rata-rata Rating</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($reviews as $index => $review)
+                            @php
+                                // fallback jika controller mengembalikan kolom bernama 'nama' atau 'nama_perusahaan'
+                                $companyName = $review->nama_perusahaan ?? $review->nama ?? '-';
+                                // pastikan avg_rating numeric
+                                $avg = isset($review->avg_rating) ? floatval($review->avg_rating) : 0;
+                                $avgStars = (int) round($avg);
+                            @endphp
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $review->id_perusahaan }}</td>
+                                <td>{{ $companyName }}</td>
                                 <td>
-                                    <span class="stars">
+                                    <span class="stars" aria-hidden="true">
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <i class="fas fa-star {{ $i <= round($review->avg_rating) ? 'filled' : '' }}"></i>
+                                            <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}" aria-hidden="true"></i>
                                         @endfor
                                     </span>
-                                    ({{ number_format($review->avg_rating, 1) }})
+                                    <span class="visually-hidden">Rata-rata: {{ number_format($avg, 1) }}</span>
+                                    ({{ number_format($avg, 1) }})
                                 </td>
                                 <td>
-                                    <a href="{{ route('tambahratingdanreview') }}">
-                                        <button class="action-btn">Rating & Review</button>
-                                    </a>
-                                    <a href="{{ route('lihatratingdanreview') }}">
-                                        <button class="action-btn btn-view">Lihat Rating & Review</button>
-                                    </a>
-                                </td>
+    <a href="{{ route('tambahratingdanreview', ['id_perusahaan' => $review->id_perusahaan, 'nama_perusahaan' => $companyName]) }}">
+        <button class="action-btn">Rating & Review</button>
+    </a>
+    <a href="{{ route('lihatratingdanreview') }}">
+        <button class="action-btn btn-view">Lihat Rating & Review</button>
+    </a>
+</td>
+
                             </tr>
                         @empty
                             <tr>
@@ -90,18 +100,18 @@
     <!-- Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // toggle sidebar/profile (jika ada)
             const toggleButton = document.querySelector('.menu-toggle');
-            const body = document.body;
             const profileWrapper = document.querySelector('.user-profile-wrapper');
             const userinfo = document.querySelector('.user-info');
 
             if (toggleButton) {
                 toggleButton.addEventListener('click', function() {
-                    body.classList.toggle('sidebar-closed');
+                    document.body.classList.toggle('sidebar-closed');
                 });
             }
 
-            if (userinfo) {
+            if (userinfo && profileWrapper) {
                 userinfo.addEventListener('click', function(e) {
                     e.preventDefault();
                     profileWrapper.classList.toggle('active');
@@ -113,15 +123,23 @@
                     }
                 });
             }
-            
-            document.getElementById('searchInput').addEventListener('keyup', function () {
-                const filter = this.value.toLowerCase();
-                const rows = document.querySelectorAll("#rankingTable tbody tr");
-                rows.forEach(row => {
-                    const namaPerusahaan = row.cells[1].textContent.toLowerCase();
-                    row.style.display = namaPerusahaan.includes(filter) ? "" : "none";
+
+            // 🔎 Filter pencarian perusahaan (defensive: cek keberadaan elemen)
+            const searchEl = document.getElementById('searchInput');
+            const table = document.getElementById('rankingTable');
+            if (searchEl && table) {
+                searchEl.addEventListener('keyup', function () {
+                    const filter = this.value.toLowerCase();
+                    const rows = table.querySelectorAll("tbody tr");
+                    rows.forEach(row => {
+                        // pastikan ada sel kedua (nama perusahaan)
+                        const cell = row.cells[1];
+                        if (!cell) return;
+                        const namaPerusahaan = (cell.textContent || cell.innerText).toLowerCase();
+                        row.style.display = namaPerusahaan.includes(filter) ? "" : "none";
+                    });
                 });
-            });
+            }
         });
     </script>
 </body>
