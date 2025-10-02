@@ -1,5 +1,16 @@
+    <div class="d-flex">
+        {{-- header --}}
+        @include('layout.header')
+    </div>
+
+    <div class="d-flex">
+        {{-- sidebar --}}
+        @include('layout.sidebar')
+    </div>
+
+<div class="main-content-wrapper">
 <h2>Hasil Analisa Tersimpan</h2>
-<table border="1" cellpadding="8">
+'<table class="table table-bordered"><thead><tr>
     <tr>
         <th>Nama</th>
         <th>NIM</th>
@@ -10,7 +21,7 @@
         <th>Tanggal</th>
     </tr>
     @foreach($data as $row)
-    <tr>
+    <tr >
         <td>{{ $row->nama_mahasiswa }}</td>
         <td>{{ $row->nim }}</td>
         <td>{{ $row->ipk }}</td>
@@ -21,3 +32,4 @@
     </tr>
     @endforeach
 </table>
+</div>
