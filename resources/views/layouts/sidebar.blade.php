@@ -1,4 +1,4 @@
-<!-- Sidebar Layout -->
+ <!-- Sidebar Layout -->
 <div class="sidebar">
     <div class="menu-list">
 

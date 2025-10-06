@@ -5,28 +5,108 @@
     <title>Ranking Perusahaan - Sistem PKL JOZZ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Font Awesome & custom CSS -->
+    <!-- Font Awesome & Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
 
     <style>
-        .page-title {color: var(--color-text-dark);font-weight: 600;margin-bottom: 20px;}
-        .ranking-container {background: #fff;padding: 30px;border-radius: 10px;box-shadow: 0 4px 15px var(--color-shadow);overflow-x: auto;}
-        table {width: 100%;border-collapse: collapse;margin-top: 20px;}
-        th, td {text-align: left;padding: 15px;border-bottom: 1px solid #e0e6ef;}
-        th {background: #f8f9fa;color: #6c757d;font-weight: 600;text-transform: uppercase;font-size: 0.9em;}
-        tr:hover {background: #f0f4f8;}
-        .stars {color: #ffc107;}
-        .stars .fa-star:not(.filled) {color: #e0e0e0;}
-        .action-btn {background: #3b5998;color: #fff;border: none;padding: 10px 15px;border-radius: 5px;cursor: pointer;transition: 0.3s;font-size: 0.9em;min-width: 150px;}
-        .action-btn:hover {background: #2e4a86;}
-        .btn-view {background: #28a745;}
-        .btn-view:hover {background: #1f8b36;}
-        .search-box {margin-bottom: 15px;}
-        .search-box input {padding: 10px;width: 100%;max-width: 350px;border: 1px solid #ccc;border-radius: 5px;}
-        th:first-child, td:first-child {text-align: center;vertical-align: middle;font-weight: bold;width: 100px;}
-        th:last-child, td:last-child {text-align: center;vertical-align: middle;}
-        td:last-child {display: flex;justify-content: center;gap: 10px;}
+        .page-title {
+            color: var(--color-text-dark);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .ranking-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--color-shadow);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid #e0e6ef;
+        }
+        th {
+            background: #f8f9fa;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        tr:hover {
+            background: #f0f4f8;
+        }
+        .stars {
+            color: #ffc107;
+        }
+        .stars .fa-star:not(.filled) {
+            color: #e0e0e0;
+        }
+        .rating-text {
+            margin-left: 8px;
+            color: #555;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .action-btn {
+            background: #3b5998;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9em;
+            min-width: 150px;
+        }
+        .action-btn:hover {
+            background: #2e4a86;
+        }
+        .btn-view {
+            background: #28a745;
+        }
+        .btn-view:hover {
+            background: #1f8b36;
+        }
+        .btn-add {
+            background: #ffc107;
+            color: #000;
+        }
+        .btn-add:hover {
+            background: #e0a800;
+            color: #000;
+        }
+        .search-box {
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            padding: 10px;
+            width: 100%;
+            max-width: 350px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        th:first-child, td:first-child {
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            width: 100px;
+        }
+        th:last-child, td:last-child {
+            text-align: center;
+            vertical-align: middle;
+        }
+        td:last-child {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -45,6 +125,7 @@
                 <input type="text" id="searchInput" placeholder="Cari perusahaan...">
             </div>
 
+            <!-- 📊 Tabel Ranking -->
             <div class="ranking-container">
                 <table id="rankingTable" class="table">
                     <thead>
@@ -56,12 +137,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($reviews as $index => $review)
+                        @forelse($perusahaans as $index => $perusahaan)
                             @php
-                                // fallback jika controller mengembalikan kolom bernama 'nama' atau 'nama_perusahaan'
-                                $companyName = $review->nama_perusahaan ?? $review->nama ?? '-';
-                                // pastikan avg_rating numeric
-                                $avg = isset($review->avg_rating) ? floatval($review->avg_rating) : 0;
+                                $companyName = $perusahaan->nama_perusahaan ?? $perusahaan->nama ?? '-';
+                                $avg = isset($perusahaan->avg_rating) ? floatval($perusahaan->avg_rating) : 0;
                                 $avgStars = (int) round($avg);
                             @endphp
                             <tr>
@@ -70,21 +149,26 @@
                                 <td>
                                     <span class="stars" aria-hidden="true">
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}" aria-hidden="true"></i>
+                                            <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
                                         @endfor
                                     </span>
-                                    <span class="visually-hidden">Rata-rata: {{ number_format($avg, 1) }}</span>
-                                    ({{ number_format($avg, 1) }})
+                                    <span class="rating-text">Rata-rata: {{ number_format($avg, 1) }}</span>
                                 </td>
                                 <td>
-    <a href="{{ route('tambahratingdanreview', ['id_perusahaan' => $review->id_perusahaan, 'nama_perusahaan' => $companyName]) }}">
-        <button class="action-btn">Rating & Review</button>
-    </a>
-    <a href="{{ route('lihatratingdanreview') }}">
-        <button class="action-btn btn-view">Lihat Rating & Review</button>
-    </a>
-</td>
+                                    <!-- Lihat rating & review perusahaan ini -->
+                                    <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $perusahaan->id_perusahaan]) }}">
+                                        <button class="action-btn btn-view">
+                                            <i class="fas fa-eye"></i> Lihat Review
+                                        </button>
+                                    </a>
 
+                                    <!-- Tambah rating & review perusahaan ini -->
+                                    <a href="{{ route('tambahratingdanreview', $perusahaan->id_perusahaan) }}">
+                                        <button class="action-btn btn-add">
+                                            <i class="fas fa-plus"></i> Tambah Review
+                                        </button>
+                                    </a>
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -100,31 +184,7 @@
     <!-- Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // toggle sidebar/profile (jika ada)
-            const toggleButton = document.querySelector('.menu-toggle');
-            const profileWrapper = document.querySelector('.user-profile-wrapper');
-            const userinfo = document.querySelector('.user-info');
-
-            if (toggleButton) {
-                toggleButton.addEventListener('click', function() {
-                    document.body.classList.toggle('sidebar-closed');
-                });
-            }
-
-            if (userinfo && profileWrapper) {
-                userinfo.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    profileWrapper.classList.toggle('active');
-                });
-
-                document.addEventListener('click', function(e) {
-                    if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
-                        profileWrapper.classList.remove('active');
-                    }
-                });
-            }
-
-            // 🔎 Filter pencarian perusahaan (defensive: cek keberadaan elemen)
+            // 🔎 Filter pencarian perusahaan
             const searchEl = document.getElementById('searchInput');
             const table = document.getElementById('rankingTable');
             if (searchEl && table) {
@@ -132,7 +192,6 @@
                     const filter = this.value.toLowerCase();
                     const rows = table.querySelectorAll("tbody tr");
                     rows.forEach(row => {
-                        // pastikan ada sel kedua (nama perusahaan)
                         const cell = row.cells[1];
                         if (!cell) return;
                         const namaPerusahaan = (cell.textContent || cell.innerText).toLowerCase();

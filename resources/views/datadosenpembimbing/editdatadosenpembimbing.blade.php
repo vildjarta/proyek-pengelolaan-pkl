@@ -6,36 +6,6 @@
   <title>Edit Dosen Pembimbing</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    .tag-container {
-      border: 1px solid #ced4da;
-      padding: 6px;
-      border-radius: 6px;
-      min-height: 46px;
-      display: flex;
-      flex-wrap: wrap;
-      cursor: text;
-    }
-    .tag {
-      background-color: #0d6efd;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      margin: 3px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .tag i {
-      cursor: pointer;
-    }
-    .tag-input {
-      border: none;
-      flex: 1;
-      min-width: 120px;
-      outline: none;
-    }
-  </style>
 </head>
 <body>
 <div class="container mt-4">
@@ -49,118 +19,145 @@
     @csrf
     @method('PUT')
 
-    <!-- Input NIP -->
+    <!-- NIP -->
     <div class="mb-3">
       <label class="form-label">NIP</label>
-      <input type="text" name="NIP" id="NIP" value="{{ $item->NIP }}" 
-             class="form-control"
-             maxlength="18" pattern="\d{18}"
-             title="NIP harus 18 digit angka" required>
-      <!-- Peringatan merah -->
-      <div id="nipWarning" class="form-text text-danger" style="display:none;">
-        NIP harus 18 angka.
-      </div>
+      <input type="text" name="NIP" class="form-control" value="{{ old('NIP', $item->NIP) }}" required minlength="18" maxlength="18" pattern="\d{18}" title="NIP harus 18 digit angka">
     </div>
 
+    <!-- Nama Dosen -->
     <div class="mb-3">
       <label class="form-label">Nama Dosen</label>
-      <input type="text" name="nama" value="{{ $item->nama }}" class="form-control" required>
+      <input type="text" name="nama" class="form-control" value="{{ old('nama', $item->nama) }}" required>
     </div>
 
+    <!-- Email -->
     <div class="mb-3">
       <label class="form-label">Email</label>
-      <input type="email" name="email" value="{{ $item->email }}" class="form-control" required>
+      <input type="email" name="email" class="form-control" value="{{ old('email', $item->email) }}" required>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Nama Mahasiswa</label>
-      <div id="tagInputContainer" class="tag-container">
-        <input type="text" id="tagInput" class="tag-input" placeholder="Ketik nama lalu tekan Enter...">
-      </div>
-      <input type="hidden" name="nama_mahasiswa" id="hiddenNamaMahasiswa">
+    <!-- Input NIM Mahasiswa -->
+    <label class="form-label">NIM Mahasiswa</label>
+    <div id="mahasiswa-list">
+      @foreach($item->mahasiswa as $i => $mhs)
+        <div class="mahasiswa-item mb-2">
+          <div class="d-flex align-items-center">
+            <input type="text" name="nim[]" class="form-control nimInput" 
+                   value="{{ old('nim.' . $i, $mhs->nim) }}" 
+                   placeholder="Masukkan NIM Mahasiswa" required>
+            <button type="button" class="btn btn-danger btn-sm ms-2 remove-mahasiswa" 
+                    style="{{ $i == 0 ? 'display:none;' : '' }}">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+
+          <!-- Pesan custom (AJAX) -->
+          <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">
+            NIM tidak ditemukan.
+          </div>
+          <div class="nimSuccess alert alert-success py-1 px-2 mt-2 mb-0" style="display:none;">
+            NIM valid. Nama mahasiswa: <span class="namaTampil fw-bold">{{ $mhs->nama ?? '' }}</span>
+          </div>
+        </div>
+      @endforeach
+
+      @if($item->mahasiswa->isEmpty())
+        <div class="mahasiswa-item mb-2">
+          <div class="d-flex align-items-center">
+            <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa" required>
+            <button type="button" class="btn btn-danger btn-sm ms-2 remove-mahasiswa" style="display:none;">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+          <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">
+            NIM tidak ditemukan.
+          </div>
+          <div class="nimSuccess alert alert-success py-1 px-2 mt-2 mb-0" style="display:none;">
+            NIM valid. Nama mahasiswa: <span class="namaTampil fw-bold"></span>
+          </div>
+        </div>
+      @endif
     </div>
 
-    <button type="submit" class="btn btn-success">Update</button>
-    <a href="{{ route('datadosenpembimbing.index') }}" class="btn btn-secondary">Batal</a>
+    <button type="button" id="add-mahasiswa" class="btn btn-primary btn-sm my-2">
+      <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
+    </button>
+
+    <!-- Tombol aksi -->
+    <div class="mt-4 d-flex gap-2">
+      <button type="submit" class="btn btn-success">Update</button>
+      <a href="{{ route('datadosenpembimbing.index') }}" class="btn btn-secondary">Batal</a>
+    </div>
   </form>
 </div>
 
 <script>
-  // =========================
-  // Validasi NIP real-time
-  // =========================
-  const nipInput = document.getElementById("NIP");
-  const nipWarning = document.getElementById("nipWarning");
+function setupMahasiswaItem(item) {
+  const nimInput = item.querySelector('.nimInput');
+  const nimError = item.querySelector('.nimError');
+  const nimSuccess = item.querySelector('.nimSuccess');
+  const namaTampil = item.querySelector('.namaTampil');
 
-  nipInput.addEventListener("input", function () {
-    // Hanya angka yang boleh
-    this.value = this.value.replace(/\D/g, "");
-    // Maksimal 18 digit
-    if (this.value.length > 18) {
-      this.value = this.value.slice(0, 18);
+  nimInput.addEventListener('blur', function() {
+    const nim = this.value.trim();
+    if (nim === "") {
+      nimError.style.display = "none";
+      nimSuccess.style.display = "none";
+      namaTampil.textContent = "";
+      return;
     }
-    // Tampilkan peringatan kalau belum 18 digit
-    if (this.value.length > 0 && this.value.length < 18) {
-      nipWarning.style.display = "block";
-    } else {
-      nipWarning.style.display = "none";
-    }
+
+    fetch(`/cek-nim/${nim}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.exists) {
+          nimError.style.display = "none";
+          nimSuccess.style.display = "block";
+          namaTampil.textContent = data.nama_mahasiswa;
+        } else {
+          nimError.style.display = "block";
+          nimSuccess.style.display = "none";
+          namaTampil.textContent = "";
+        }
+      })
+      .catch(() => {
+        nimError.style.display = "block";
+        nimSuccess.style.display = "none";
+        namaTampil.textContent = "";
+      });
   });
+}
 
-  // =========================
-  // Tag Input Nama Mahasiswa
-  // =========================
-  const tagContainer = document.getElementById('tagInputContainer');
-  const tagInput = document.getElementById('tagInput');
-  const hiddenInput = document.getElementById('hiddenNamaMahasiswa');
-  let tags = [];
+// Setup awal
+document.querySelectorAll('.mahasiswa-item').forEach(setupMahasiswaItem);
 
-  // Ambil data lama dari database
-  const existingData = "{{ $item->nama_mahasiswa ?? '' }}";
-  if (existingData) {
-    tags = existingData.split(',').map(t => t.trim()).filter(Boolean);
-  }
+// Tambah Mahasiswa
+document.getElementById('add-mahasiswa').addEventListener('click', function() {
+  const list = document.getElementById('mahasiswa-list');
+  const newItem = list.firstElementChild.cloneNode(true);
 
-  function updateHiddenInput() {
-    hiddenInput.value = tags.join(',');
-  }
+  // Reset isi input
+  newItem.querySelector('.nimInput').value = '';
+  newItem.querySelector('.nimError').style.display = 'none';
+  newItem.querySelector('.nimSuccess').style.display = 'none';
+  newItem.querySelector('.namaTampil').textContent = '';
+  newItem.querySelector('.remove-mahasiswa').style.display = 'inline-block';
 
-  function addTag(text) {
-    if (text && !tags.includes(text)) {
-      tags.push(text);
-      renderTags();
-      updateHiddenInput();
+  setupMahasiswaItem(newItem);
+  list.appendChild(newItem);
+});
+
+// Hapus Mahasiswa
+document.getElementById('mahasiswa-list').addEventListener('click', function(e) {
+  let btn = e.target;
+  if (btn.classList.contains('remove-mahasiswa') || btn.closest('.remove-mahasiswa')) {
+    if (!btn.classList.contains('remove-mahasiswa')) {
+      btn = btn.closest('.remove-mahasiswa');
     }
+    btn.closest('.mahasiswa-item').remove();
   }
-
-  function removeTag(index) {
-    tags.splice(index, 1);
-    renderTags();
-    updateHiddenInput();
-  }
-
-  function renderTags() {
-    tagContainer.innerHTML = '';
-    tags.forEach((tag, index) => {
-      const tagEl = document.createElement('span');
-      tagEl.className = 'tag';
-      tagEl.innerHTML = `${tag} <i class="bi bi-x-circle" onclick="removeTag(${index})"></i>`;
-      tagContainer.appendChild(tagEl);
-    });
-    tagContainer.appendChild(tagInput);
-    tagInput.value = '';
-    updateHiddenInput();
-  }
-
-  renderTags();
-
-  tagInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const text = tagInput.value.trim();
-      if (text) addTag(text);
-    }
-  });
+});
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

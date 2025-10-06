@@ -46,7 +46,7 @@
       text-align: center;
       margin-bottom: 30px;
     }
-    .form-control, .form-select {
+    .form-control {
       border-radius: 50px;
       padding: 12px 20px;
     }
@@ -113,22 +113,22 @@
     {{-- Form --}}
     <form action="{{ route('ratingdanreview.store') }}" method="POST">
       @csrf
+
+      {{-- NIM Mahasiswa --}}
       <div class="mb-3">
-        <label for="id_mahasiswa" class="form-label">ID Mahasiswa</label>
-        <input type="number" class="form-control" id="id_mahasiswa" name="id_mahasiswa"
-          value="{{ old('id_mahasiswa') }}" required>
+        <label for="nim" class="form-label">NIM Mahasiswa</label>
+        <input type="text" class="form-control" id="nim" name="nim"
+          value="{{ old('nim') }}" maxlength="10" minlength="10"
       </div>
 
       {{-- Perusahaan --}}
-<div class="mb-3">
-  <label class="form-label">Perusahaan</label>
-  <input type="text" class="form-control" 
-         value="{{ $nama_perusahaan ?? old('nama_perusahaan') }}" 
-         readonly>
-  <input type="hidden" name="id_perusahaan" 
-         value="{{ $id_perusahaan ?? old('id_perusahaan') }}">
-</div>
-
+      <div class="mb-3">
+        <label class="form-label">Perusahaan</label>
+        <input type="text" class="form-control" 
+               value="{{ $perusahaan->nama }}" readonly>
+        <input type="hidden" name="id_perusahaan" 
+               value="{{ $perusahaan->id_perusahaan }}">
+      </div>
 
       {{-- Rating --}}
       <div class="mb-3">
@@ -148,7 +148,7 @@
         <textarea class="form-control" id="review" name="review" rows="3" required>{{ old('review') }}</textarea>
       </div>
 
-      {{-- Tanggal --}}
+      {{-- Tanggal Review --}}
       <div class="mb-3">
         <label for="tanggal_review" class="form-label">Tanggal Review</label>
         <input type="date" class="form-control" id="tanggal_review" name="tanggal_review"

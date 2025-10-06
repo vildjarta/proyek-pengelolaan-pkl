@@ -6,110 +6,26 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
-    /* Background gradasi */
-    body {
-      background: linear-gradient(135deg, #F7FBFC 0%, #D6E6F2 35%, #B9D7EA 70%, #769FCD 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #343a40;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-
-    /* Container */
-    .form-container {
-      background-color: #fff;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      width: 100%;
-      max-width: 600px;
-      position: relative;
-    }
-
-    /* Back button */
-    .back-button-small {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      color: #007bff;
-      font-size: 1.6rem;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    .back-button-small:hover {
-      color: #0056b3;
-      transform: translateX(-3px);
-    }
-
-    /* Title */
-    .header-title {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #007bff;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    /* Form controls */
-    .form-control, .form-select {
-      border-radius: 50px;
-      padding: 12px 20px;
-    }
-
-    /* Button */
-    .btn-primary {
-      background-color: #007bff;
-      border-color: #007bff;
-      font-weight: bold;
-      border-radius: 50px;
-      padding: 12px 20px;
-      transition: 0.3s;
-    }
-    .btn-primary:hover {
-      background-color: #0056b3;
-      border-color: #0056b3;
-    }
-
-    /* Rating stars */
-    .rating-stars {
-      unicode-bidi: bidi-override;
-      direction: rtl;
-      text-align: center;
-      margin-top: 5px;
-    }
-    .rating-stars > input {
-      display: none;
-    }
-    .rating-stars > label {
-      display: inline-block;
-      position: relative;
-      width: 1.3em;
-      cursor: pointer;
-      font-size: 2.5rem;
-      color: #ccc;
-      transition: 0.3s;
-    }
-    .rating-stars > label:hover,
-    .rating-stars > label:hover ~ label {
-      color: #ffc107;
-    }
-    .rating-stars > input:checked ~ label {
-      color: #ffc107;
-    }
-
-    .alert ul {
-      margin-bottom: 0;
-    }
+    /* (styling sama seperti sebelumnya) */
+    body { background: linear-gradient(135deg,#F7FBFC 0%,#D6E6F2 35%,#B9D7EA 70%,#769FCD 100%); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#343a40; display:flex; justify-content:center; align-items:center; min-height:100vh; margin:0; padding:20px; }
+    .form-container { background:#fff; padding:40px 30px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.15); width:100%; max-width:600px; position:relative; }
+    .back-button-small { position:absolute; top:15px; left:15px; color:#007bff; font-size:1.6rem; text-decoration:none; transition:0.3s; }
+    .back-button-small:hover { color:#0056b3; transform:translateX(-3px); }
+    .header-title { font-size:2rem; font-weight:bold; color:#007bff; text-align:center; margin-bottom:30px; }
+    .form-control, .form-select { border-radius:50px; padding:12px 20px; }
+    .btn-primary { background:#007bff; border-color:#007bff; font-weight:bold; border-radius:50px; padding:12px 20px; transition:0.3s; }
+    .btn-primary:hover { background:#0056b3; border-color:#0056b3; }
+    .rating-stars { unicode-bidi:bidi-override; direction:rtl; text-align:center; margin-top:5px; }
+    .rating-stars > input { display:none; }
+    .rating-stars > label { display:inline-block; position:relative; width:1.3em; cursor:pointer; font-size:2.2rem; color:#ccc; transition:0.15s; margin:0 4px; }
+    .rating-stars > label:hover, .rating-stars > label:hover ~ label, .rating-stars > input:checked ~ label { color:#ffc107; }
+    .alert ul { margin-bottom:0; }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <!-- tombol kembali ke daftar -->
-    <a href="{{ route('lihatratingdanreview') }}" class="back-button-small">
+    <!-- tombol kembali ke daftar (pakai id perusahaan dari $ratingdanreview agar route memiliki param) -->
+    <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $ratingdanreview->id_perusahaan]) }}" class="back-button-small" title="Kembali ke daftar">
       <i class="fas fa-arrow-left"></i>
     </a>
 
@@ -127,42 +43,46 @@
     @endif
 
     {{-- Form Edit Review --}}
-    <form action="{{ route('ratingdanreview.update', $review) }}" method="POST">
+    <form action="{{ route('ratingdanreview.update', $ratingdanreview) }}" method="POST">
       @csrf
       @method('PUT')
 
+      {{-- ID Mahasiswa (boleh diedit) --}}
       <div class="mb-3">
-        <label for="id_mahasiswa" class="form-label">ID Mahasiswa</label>
-        <input type="number" class="form-control" id="id_mahasiswa" name="id_mahasiswa"
-          value="{{ old('id_mahasiswa', $review->id_mahasiswa) }}" required>
+        <label for="nim" class="form-label">NIM Mahasiswa</label>
+<input type="text" class="form-control" id="nim" name="nim"
+  value="{{ old('nim', $ratingdanreview->mahasiswa->nim ?? '') }}" required>
       </div>
 
+      {{-- Nama Perusahaan (readonly) + hidden id_perusahaan --}}
       <div class="mb-3">
-        <label for="id_perusahaan" class="form-label">ID Perusahaan</label>
-        <input type="number" class="form-control" id="id_perusahaan" name="id_perusahaan"
-          value="{{ old('id_perusahaan', $review->id_perusahaan) }}" required>
+        <label class="form-label">Perusahaan</label>
+        <input type="text" class="form-control" value="{{ $perusahaan->nama ?? '—' }}" readonly>
+        <input type="hidden" name="id_perusahaan" value="{{ $ratingdanreview->id_perusahaan }}">
       </div>
 
+      {{-- Rating --}}
       <div class="mb-3">
         <label for="rating" class="form-label d-block text-center">Rating</label>
-        <div class="rating-stars">
-          <input type="radio" id="star5" name="rating" value="5" {{ old('rating', $review->rating)==5?'checked':'' }} required><label for="star5" title="5 Bintang"><i class="fas fa-star"></i></label>
-          <input type="radio" id="star4" name="rating" value="4" {{ old('rating', $review->rating)==4?'checked':'' }}><label for="star4" title="4 Bintang"><i class="fas fa-star"></i></label>
-          <input type="radio" id="star3" name="rating" value="3" {{ old('rating', $review->rating)==3?'checked':'' }}><label for="star3" title="3 Bintang"><i class="fas fa-star"></i></label>
-          <input type="radio" id="star2" name="rating" value="2" {{ old('rating', $review->rating)==2?'checked':'' }}><label for="star2" title="2 Bintang"><i class="fas fa-star"></i></label>
-          <input type="radio" id="star1" name="rating" value="1" {{ old('rating', $review->rating)==1?'checked':'' }}><label for="star1" title="1 Bintang"><i class="fas fa-star"></i></label>
+        <div class="rating-stars" aria-label="Rating">
+          @for ($i = 5; $i >= 1; $i--)
+            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" {{ (int) old('rating', $ratingdanreview->rating) === $i ? 'checked' : '' }} {{ $i === 1 ? 'required' : '' }}>
+            <label for="star{{ $i }}" title="{{ $i }} Bintang"><i class="fas fa-star"></i></label>
+          @endfor
         </div>
       </div>
 
+      {{-- Review --}}
       <div class="mb-3">
         <label for="review" class="form-label">Review</label>
-        <textarea class="form-control" id="review" name="review" rows="3" required>{{ old('review', $review->review) }}</textarea>
+        <textarea class="form-control" id="review" name="review" rows="3" required>{{ old('review', $ratingdanreview->review) }}</textarea>
       </div>
 
+      {{-- Tanggal Review --}}
       <div class="mb-3">
         <label for="tanggal_review" class="form-label">Tanggal Review</label>
         <input type="date" class="form-control" id="tanggal_review" name="tanggal_review"
-          value="{{ old('tanggal_review', $review->tanggal_review) }}" required>
+          value="{{ old('tanggal_review', \Carbon\Carbon::parse($ratingdanreview->tanggal_review)->toDateString()) }}" required>
       </div>
 
       <div class="d-grid">
