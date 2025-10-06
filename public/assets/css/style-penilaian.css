@@ -1,0 +1,112 @@
+:root {
+    --sidebar-blue: #4a90e2;
+    --sidebar-blue-dark: #357ab8;
+    --label-color: #2d3e50;
+    --input-bg: #f6f9fc;
+    --input-border: #b5d0ee;
+    --input-focus: #4a90e2;
+    --btn-gradient: linear-gradient(90deg, #4a90e2 60%, #357ab8 100%);
+    --btn-gradient-hover: linear-gradient(90deg, #357ab8 60%, #2d3e50 100%);
+    --btn-text: #fff;
+}
+body {
+    font-family: 'Poppins', 'Open Sans', Arial, sans-serif;
+    background: #f6f9fc;
+    color: var(--label-color);
+    margin: 0;
+}
+.main-content-wrapper {
+    min-height: 100vh;
+    padding: 32px 0 0 0;
+}
+.content {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+.content h2 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--sidebar-blue-dark);
+    margin-bottom: 32px;
+}
+.form-group {
+    margin-bottom: 22px;
+}
+.form-group label {
+    font-weight: 600;
+    color: var(--label-color);
+    margin-bottom: 10px;
+    display: block;
+    font-size: 1.08rem;
+}
+.form-control {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 1.08rem;
+    background: var(--input-bg);
+    color: var(--label-color);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+.form-control:focus {
+    border-color: var(--input-focus);
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 2px #4a90e222;
+}
+.form-actions {
+    display: flex;
+    gap: 24px;
+    margin-top: 18px;
+}
+.btn-success {
+    background: var(--btn-gradient);
+    color: var(--btn-text);
+    border: none;
+    border-radius: 14px;
+    padding: 16px 0;
+    font-weight: 700;
+    font-size: 1.18rem;
+    cursor: pointer;
+    width: 220px;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    text-align: center;
+}
+.btn-success:hover {
+    background: var(--btn-gradient-hover);
+    color: #fff;
+}
+.btn-secondary {
+    background: #e3eaf2;
+    color: #357ab8;
+    border: none;
+    border-radius: 14px;
+    padding: 16px 0;
+    font-weight: 700;
+    font-size: 1.18rem;
+    cursor: pointer;
+    width: 140px;
+    text-align: center;
+    text-decoration: none;
+}
+.btn-secondary:hover {
+    background: #d0dcec;
+    color: #2d3e50;
+    text-decoration: none;
+}
+@media (max-width: 900px) {
+    .content {
+        padding: 0 8px;
+    }
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .btn-success, .btn-secondary {
+        width: 100%;
+    }
+}

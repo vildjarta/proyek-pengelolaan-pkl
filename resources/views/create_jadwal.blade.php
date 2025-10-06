@@ -1,5 +1,6 @@
-@extends('layout.header')
-@extends('layout.sidebar')
+@include('layout.header')
+@include('layout.sidebar')
+<link rel="stylesheet" href="{{ asset('assets/css/style-create-jadwal.css') }}">
 
 <div class="main-content-wrapper">
     <div class="content">
@@ -46,6 +47,33 @@
             <button type="submit" class="btn btn-success">Simpan Jadwal</button>
         </form>
     </div>
+            <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.querySelector('.menu-toggle');
+        const body = document.body;
+        const profileWrapper = document.querySelector('.user-profile-wrapper');
+        const userinfo = document.querySelector('.user-info');
+        
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                body.classList.toggle('sidebar-closed');
+            });
+        }
+        
+        if (userinfo) {
+            userinfo.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                profileWrapper.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                    profileWrapper.classList.remove('active');
+                }
+            });
+        }
+    });
+</script>
 </div>
 
 <script>

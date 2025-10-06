@@ -60,11 +60,11 @@
                 <span>Jadwal Bimbingan</span>
             </a>
         </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-edit"></i>
-                    <span>Input Nilai</span>
-                </a>
+            <li class="">
+            <a href="{{ route('penilaian.index') }}">
+                <i class="fa fa-edit"></i>
+                <span>Input Nilai/Kajian</span>
+            </a>
             </li>
             <li>
                 <a href="#">

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PerusahaanController;
 use App\Http\Controllers\JadwalBimbinganController;
+use App\Http\Controllers\PenilaianDospemController;
 
 Route::resource('jadwal', JadwalBimbinganController::class);
 
@@ -37,6 +38,6 @@ Route::get('/profile', function () {
     return view('profile');
 });
 
-
 Route::resource('perusahaan', PerusahaanController::class);
 
+Route::resource('penilaian', PenilaianDospemController::class);

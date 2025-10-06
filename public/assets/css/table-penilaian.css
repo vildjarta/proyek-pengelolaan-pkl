@@ -1,0 +1,155 @@
+:root {
+    --primary-blue: #4a90e2;
+    --primary-blue-dark: #357ab8;
+    --text-dark: #2d3e50;
+    --background-light: #f6f9fc;
+    --button-text: #ffffff;
+    --border-color: #dee2e6;
+    --header-bg: #f8f9fa;
+}
+
+body {
+    font-family: 'Poppins', 'Open Sans', Arial, sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.main-content-wrapper {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.content {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-blue-dark);
+    margin-bottom: 20px;
+}
+
+/* Tombol Tambah Penilaian */
+a.btn-success {
+    display: inline-block;
+    background-color: var(--primary-blue);
+    color: var(--button-text);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    margin-bottom: 24px;
+    transition: all 0.2s ease-in-out;
+}
+
+a.btn-success:hover {
+    background-color: var(--primary-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Styling utama untuk tabel */
+.table-container {
+    overflow-x: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table th {
+    background-color: var(--header-bg);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #495057;
+}
+
+.table td form {
+    display: inline-block;
+    margin: 0;
+}
+
+/* Pesan jika tabel kosong */
+.table td.text-center {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 30px 0;
+}
+
+/* Pesan Sukses */
+.alert.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 1rem;
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+}
+
+
+/* ================================================== */
+/* GAYA UNTUK TOMBOL AKSI (IKON)              */
+/* ================================================== */
+
+.action-buttons {
+    display: flex;
+    gap: 8px; /* Jarak antar tombol */
+    justify-content: flex-start;
+}
+
+/* Mengubah .btn di dalam .action-buttons menjadi ikon persegi */
+.action-buttons .btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    min-width: 0;
+    max-width: none;
+    font-size: 16px;   /* Ukuran ikon */
+    color: #fff !important; /* Warna ikon menjadi putih */
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    /* Memusatkan ikon di tengah tombol */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Gaya khusus untuk tombol Edit */
+.btn-edit-custom {
+    background-color: #00A19D; /* Warna hijau toska */
+}
+
+.btn-edit-custom:hover {
+    background-color: #00847E; /* Warna lebih gelap saat hover */
+}
+
+/* Gaya khusus untuk tombol Hapus */
+.action-buttons .btn-danger {
+    background-color: #dc3545; /* Warna merah */
+}
+
+.action-buttons .btn-danger:hover {
+    background-color: #c82333; /* Warna merah lebih gelap saat hover */
+}

@@ -1,0 +1,115 @@
+/* public/assets/css/form-penilaian.css */
+
+/* Variabel Warna & Font Utama */
+:root {
+    --primary-blue: #4a90e2;
+    --primary-blue-dark: #357ab8;
+    --text-dark: #2d3e50;
+    --background-light: #f6f9fc;
+    --input-border: #b5d0ee;
+    --button-text: #ffffff;
+}
+
+body {
+    font-family: 'Poppins', 'Open Sans', Arial, sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.main-content-wrapper {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-blue-dark);
+    margin-bottom: 32px;
+}
+
+/* Styling untuk Form Group */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    color: var(--text-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box; /* Pastikan padding tidak menambah lebar */
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+/* Tombol Aksi Form */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 30px;
+}
+
+.btn-success, .btn-secondary {
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-success {
+    background-color: var(--primary-blue);
+    color: var(--button-text);
+}
+
+.btn-success:hover {
+    background-color: var(--primary-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-secondary {
+    background-color: #e3eaf2;
+    color: var(--primary-blue-dark);
+}
+
+.btn-secondary:hover {
+    background-color: #d0dcec;
+}
+
+/* Alert untuk validasi error */
+.alert.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+}
