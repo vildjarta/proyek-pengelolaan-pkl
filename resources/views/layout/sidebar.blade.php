@@ -4,7 +4,7 @@
 
         <h4>General</h4>
         <ul>
-            <li class="active">
+            <li>
                 <a href="#">
                     <i class="fa fa-home"></i>
                     <span>Dashboard</span>
@@ -54,17 +54,17 @@
                     <span>Daftar Mahasiswa Bimbingan</span>
                 </a>
             </li>
-        <li>
-            <a href="{{ route('jadwal.index') }}">
-                <i class="fa fa-calendar"></i>
-                <span>Jadwal Bimbingan</span>
-            </a>
-        </li>
-            <li class="">
-            <a href="{{ route('penilaian.index') }}">
-                <i class="fa fa-edit"></i>
-                <span>Input Nilai/Kajian</span>
-            </a>
+            <li class="{{ Route::is('jadwal.*') ? 'active' : '' }}">
+                <a href="{{ route('jadwal.index') }}">
+                    <i class="fa fa-calendar"></i>
+                    <span>Jadwal Bimbingan</span>
+                </a>
+            </li>
+            <li class="{{ Route::is('penilaian.*') ? 'active' : '' }}">
+                <a href="{{ route('penilaian.index') }}">
+                    <i class="fa fa-edit"></i>
+                    <span>Input Nilai/Kajian</span>
+                </a>
             </li>
             <li>
                 <a href="#">

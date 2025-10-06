@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\jadwal_bimbingan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Pastikan ini ditambahkan
 
 class JadwalBimbinganController extends Controller
 {
@@ -37,6 +36,9 @@ class JadwalBimbinganController extends Controller
             case 'dosen':
                 $query->orderBy('dosen', 'asc');
                 break;
+            case 'waktu':
+                $query->orderBy('waktu_mulai', 'asc');
+                break;
             default: // default ke 'waktu_terdekat'
                 // Mengurutkan berdasarkan tanggal dan waktu mulai terdekat
                 $query->orderBy('tanggal', 'asc')->orderBy('waktu_mulai', 'asc');
@@ -57,6 +59,9 @@ class JadwalBimbinganController extends Controller
         return view('create_jadwal');
     }
     
+    /**
+     * Menyimpan resource baru.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -83,7 +88,7 @@ class JadwalBimbinganController extends Controller
     }
 
     /**
-     * Memperbarui resource yang ada di storage.
+     * Memperbarui resource yang ada.
      */
     public function update(Request $request, jadwal_bimbingan $jadwal)
     {
@@ -103,7 +108,7 @@ class JadwalBimbinganController extends Controller
     }
 
     /**
-     * Menghapus resource dari storage.
+     * Menghapus resource.
      */
     public function destroy(jadwal_bimbingan $jadwal)
     {
