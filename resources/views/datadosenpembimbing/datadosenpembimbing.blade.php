@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="{{ asset('assets/css/datadosenpembimbing.css') }}">
 </head>
 <body>
-
+ 
 {{-- HEADER --}}
 @include('layouts.header')
 
@@ -29,9 +29,21 @@
     <div class="card-main">
       <div class="card-header-custom">
         <h4>Daftar Data Dosen Pembimbing</h4>
-        <a href="{{ route('datadosenpembimbing.create') }}" class="btn-add">
-          <i class="fa fa-plus"></i> Tambah
-        </a>
+
+        <div class="d-flex align-items-center gap-2">
+          <!-- 🔍 Form Pencarian -->
+          <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="search-form d-flex">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Cari nama dosen...">
+            <button type="submit" class="btn btn-primary btn-sm ms-2">
+              <i class="fa fa-search"></i>
+            </button>
+          </form>
+
+          <!-- ➕ Tombol Tambah -->
+          <a href="{{ route('datadosenpembimbing.create') }}" class="btn-add">
+            <i class="fa fa-plus"></i> Tambah
+          </a>
+        </div>
       </div>
 
       <div class="p-0">
@@ -77,7 +89,13 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="5" class="text-center text-muted py-4">Belum ada data dosen pembimbing</td>
+                  <td colspan="5" class="text-center text-muted py-4">
+                    @if(request('search'))
+                      Tidak ditemukan dosen dengan nama "<strong>{{ request('search') }}</strong>"
+                    @else
+                      Belum ada data dosen pembimbing
+                    @endif
+                  </td>
                 </tr>
               @endforelse
             </tbody>

@@ -9,11 +9,19 @@ use Illuminate\Http\Request;
 class DataDosenPembimbingController extends Controller
 {
     /**
-     * 📋 Tampilkan semua dosen pembimbing
+     * 📋 Tampilkan semua dosen pembimbing (dengan fitur pencarian)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = DataDosenPembimbing::with('mahasiswa')->get();
+        $query = DataDosenPembimbing::with('mahasiswa');
+
+        // 🔍 Fitur pencarian nama dosen
+        if ($request->filled('search')) {
+            $query->where('nama', 'LIKE', '%' . $request->search . '%');
+        }
+
+        $data = $query->get();
+
         return view('datadosenpembimbing.datadosenpembimbing', compact('data'));
     }
 
@@ -22,7 +30,8 @@ class DataDosenPembimbingController extends Controller
      */
     public function create()
     {
-        return view('datadosenpembimbing.tambahdatadosenpembimbing');
+        $mahasiswa = Mahasiswa::all(); // Untuk dropdown pemilihan mahasiswa
+        return view('datadosenpembimbing.tambahdatadosenpembimbing', compact('mahasiswa'));
     }
 
     /**
@@ -31,26 +40,27 @@ class DataDosenPembimbingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'NIP'   => 'required|digits:18',
-            'nama'  => 'required',
-            'email' => 'required|email',
+            'NIP'   => 'required|digits:18|unique:data_dosen_pembimbing,NIP',
+            'nama'  => 'required|string|max:100',
+            'email' => 'required|email|unique:data_dosen_pembimbing,email',
             'nim'   => 'required|array|min:1',
             'nim.*' => 'required|exists:mahasiswa,nim',
         ]);
 
+        // Simpan data dosen baru
         $dosen = DataDosenPembimbing::create([
             'NIP'   => $request->NIP,
             'nama'  => $request->nama,
             'email' => $request->email,
         ]);
 
-        // Update mahasiswa: set id_pembimbing sesuai dosen yang baru dibuat
+        // Hubungkan mahasiswa ke dosen pembimbing
         foreach ($request->nim as $nim) {
             Mahasiswa::where('nim', $nim)->update(['id_pembimbing' => $dosen->id_pembimbing]);
         }
 
         return redirect()->route('datadosenpembimbing.index')
-            ->with('success', 'Data dosen pembimbing berhasil ditambahkan.');
+            ->with('success', '✅ Data dosen pembimbing berhasil ditambahkan.');
     }
 
     /**
@@ -59,7 +69,7 @@ class DataDosenPembimbingController extends Controller
     public function edit($id)
     {
         $item = DataDosenPembimbing::with('mahasiswa')->findOrFail($id);
-        $mahasiswa = Mahasiswa::all(); // Ambil semua mahasiswa untuk pilihan di form edit
+        $mahasiswa = Mahasiswa::all(); // Semua mahasiswa untuk pilihan edit
         return view('datadosenpembimbing.editdatadosenpembimbing', compact('item', 'mahasiswa'));
     }
 
@@ -71,23 +81,24 @@ class DataDosenPembimbingController extends Controller
         $item = DataDosenPembimbing::findOrFail($id);
 
         $request->validate([
-            'NIP'   => 'required|digits:18',
-            'nama'  => 'required',
-            'email' => 'required|email',
+            'NIP'   => 'required|digits:18|unique:data_dosen_pembimbing,NIP,' . $item->id_pembimbing . ',id_pembimbing',
+            'nama'  => 'required|string|max:100',
+            'email' => 'required|email|unique:data_dosen_pembimbing,email,' . $item->id_pembimbing . ',id_pembimbing',
             'nim'   => 'required|array|min:1',
             'nim.*' => 'required|exists:mahasiswa,nim',
         ]);
 
+        // Update data dosen
         $item->update([
             'NIP'   => $request->NIP,
             'nama'  => $request->nama,
             'email' => $request->email,
         ]);
 
-        // Reset semua mahasiswa yang sebelumnya di bawah dosen ini
+        // Reset mahasiswa sebelumnya
         Mahasiswa::where('id_pembimbing', $item->id_pembimbing)->update(['id_pembimbing' => null]);
 
-        // Set mahasiswa baru ke dosen pembimbing ini
+        // Hubungkan mahasiswa baru
         foreach ($request->nim as $nim) {
             Mahasiswa::where('nim', $nim)->update(['id_pembimbing' => $item->id_pembimbing]);
         }
@@ -103,7 +114,7 @@ class DataDosenPembimbingController extends Controller
     {
         $item = DataDosenPembimbing::findOrFail($id);
 
-        // Hapus relasi mahasiswa
+        // Lepas hubungan dengan mahasiswa
         Mahasiswa::where('id_pembimbing', $item->id_pembimbing)
             ->update(['id_pembimbing' => null]);
 
@@ -123,7 +134,7 @@ class DataDosenPembimbingController extends Controller
         if ($mahasiswa) {
             return response()->json([
                 'exists' => true,
-                'nama_mahasiswa' => $mahasiswa->nama_mahasiswa
+                'nama' => $mahasiswa->nama,
             ]);
         }
 

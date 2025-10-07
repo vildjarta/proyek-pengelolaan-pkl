@@ -37,12 +37,35 @@ body.sidebar-closed .container-page {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .card-header-custom h4 {
   margin: 0;
   font-weight: 700;
   color: #1e3a8a;
+}
+
+/* ====== Form Pencarian ====== */
+.search-form input[type="text"] {
+  border-radius: 8px;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+.search-form button {
+  background-color: #2563eb;
+  border: none;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.search-form button:hover {
+  background-color: #1d4ed8;
 }
 
 /* ====== Tombol Tambah ====== */
