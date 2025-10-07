@@ -5,27 +5,14 @@
   <title>Edit Rating & Review</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <style>
-    /* (styling sama seperti sebelumnya) */
-    body { background: linear-gradient(135deg,#F7FBFC 0%,#D6E6F2 35%,#B9D7EA 70%,#769FCD 100%); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#343a40; display:flex; justify-content:center; align-items:center; min-height:100vh; margin:0; padding:20px; }
-    .form-container { background:#fff; padding:40px 30px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.15); width:100%; max-width:600px; position:relative; }
-    .back-button-small { position:absolute; top:15px; left:15px; color:#007bff; font-size:1.6rem; text-decoration:none; transition:0.3s; }
-    .back-button-small:hover { color:#0056b3; transform:translateX(-3px); }
-    .header-title { font-size:2rem; font-weight:bold; color:#007bff; text-align:center; margin-bottom:30px; }
-    .form-control, .form-select { border-radius:50px; padding:12px 20px; }
-    .btn-primary { background:#007bff; border-color:#007bff; font-weight:bold; border-radius:50px; padding:12px 20px; transition:0.3s; }
-    .btn-primary:hover { background:#0056b3; border-color:#0056b3; }
-    .rating-stars { unicode-bidi:bidi-override; direction:rtl; text-align:center; margin-top:5px; }
-    .rating-stars > input { display:none; }
-    .rating-stars > label { display:inline-block; position:relative; width:1.3em; cursor:pointer; font-size:2.2rem; color:#ccc; transition:0.15s; margin:0 4px; }
-    .rating-stars > label:hover, .rating-stars > label:hover ~ label, .rating-stars > input:checked ~ label { color:#ffc107; }
-    .alert ul { margin-bottom:0; }
-  </style>
+  <link rel="stylesheet" href="{{ asset('assets/css/editratingdanreview.css') }}">
 </head>
+
 <body>
   <div class="form-container">
-    <!-- tombol kembali ke daftar (pakai id perusahaan dari $ratingdanreview agar route memiliki param) -->
-    <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $ratingdanreview->id_perusahaan]) }}" class="back-button-small" title="Kembali ke daftar">
+    <!-- Tombol kembali ke daftar -->
+    <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $ratingdanreview->id_perusahaan]) }}" 
+       class="back-button-small" title="Kembali ke daftar">
       <i class="fas fa-arrow-left"></i>
     </a>
 
@@ -47,18 +34,20 @@
       @csrf
       @method('PUT')
 
-      {{-- ID Mahasiswa (boleh diedit) --}}
+      {{-- NIM Mahasiswa --}}
       <div class="mb-3">
         <label for="nim" class="form-label">NIM Mahasiswa</label>
-<input type="text" class="form-control" id="nim" name="nim"
-  value="{{ old('nim', $ratingdanreview->mahasiswa->nim ?? '') }}" required>
+        <input type="text" class="form-control" id="nim" name="nim"
+          value="{{ old('nim', $ratingdanreview->mahasiswa->nim ?? '') }}" required>
       </div>
 
-      {{-- Nama Perusahaan (readonly) + hidden id_perusahaan --}}
+      {{-- Nama Perusahaan --}}
       <div class="mb-3">
         <label class="form-label">Perusahaan</label>
-        <input type="text" class="form-control" value="{{ $perusahaan->nama ?? '—' }}" readonly>
-        <input type="hidden" name="id_perusahaan" value="{{ $ratingdanreview->id_perusahaan }}">
+        <input type="text" class="form-control" 
+               value="{{ $perusahaan->nama ?? '—' }}" readonly>
+        <input type="hidden" name="id_perusahaan" 
+               value="{{ $ratingdanreview->id_perusahaan }}">
       </div>
 
       {{-- Rating --}}
@@ -66,7 +55,9 @@
         <label for="rating" class="form-label d-block text-center">Rating</label>
         <div class="rating-stars" aria-label="Rating">
           @for ($i = 5; $i >= 1; $i--)
-            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" {{ (int) old('rating', $ratingdanreview->rating) === $i ? 'checked' : '' }} {{ $i === 1 ? 'required' : '' }}>
+            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
+              {{ (int) old('rating', $ratingdanreview->rating) === $i ? 'checked' : '' }}
+              {{ $i === 1 ? 'required' : '' }}>
             <label for="star{{ $i }}" title="{{ $i }} Bintang"><i class="fas fa-star"></i></label>
           @endfor
         </div>

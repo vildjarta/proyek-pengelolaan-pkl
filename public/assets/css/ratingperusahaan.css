@@ -1,0 +1,167 @@
+/* ================================
+   RATING PERUSAHAAN PAGE STYLE
+   ================================ */
+
+/* 🏷️ Judul Halaman */
+.page-title {
+    color: var(--color-text-dark);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* 📦 Container Utama */
+.ranking-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px var(--color-shadow);
+    overflow-x: auto;
+}
+
+/* 📊 Tabel Umum */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #dee2e6;
+}
+
+th, td {
+    text-align: left;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+th {
+    background: #f8f9fa;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+tr:hover td {
+    background: #f0f4f8;
+}
+
+/* ⭐ Rating Stars */
+.stars {
+    color: #ffc107;
+}
+.stars .fa-star:not(.filled) {
+    color: #e0e0e0;
+}
+.rating-text {
+    margin-left: 8px;
+    color: #555;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* 🧭 Tombol Aksi */
+.action-btn {
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.action-btn i {
+    font-size: 0.9em;
+}
+
+/* 🟢 Tombol Lihat Review */
+.btn-view {
+    background: #28a745;
+    color: #fff;
+}
+.btn-view:hover {
+    background: #1f8b36;
+}
+
+/* 🟡 Tombol Tambah Review */
+.btn-add {
+    background: #ffc107;
+    color: #000;
+}
+.btn-add:hover {
+    background: #e0a800;
+    color: #000;
+}
+
+/* 🔍 Kotak Pencarian */
+.search-box {
+    margin-bottom: 15px;
+}
+.search-box input {
+    padding: 10px;
+    width: 100%;
+    max-width: 350px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.3s;
+}
+.search-box input:focus {
+    border-color: #3b5998;
+    box-shadow: 0 0 4px rgba(59, 89, 152, 0.4);
+}
+
+/* 📏 Layout Kolom */
+th:first-child,
+td:first-child {
+    text-align: center;
+    font-weight: bold;
+    width: 100px;
+}
+
+th:nth-child(2) {
+    width: 30%;
+}
+
+th:nth-child(3) {
+    width: 35%;
+}
+
+th:last-child,
+td:last-child {
+    text-align: center;
+    width: 35%;
+}
+
+/* 🧱 Kolom Aksi */
+td:last-child {
+    white-space: nowrap;
+}
+
+/* 🔧 Flex hanya di dalam container tombol, bukan td */
+.action-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 📱 Responsif */
+@media (max-width: 768px) {
+    .action-btn {
+        font-size: 0.8em;
+        padding: 8px 10px;
+    }
+    th, td {
+        padding: 10px;
+    }
+    .rating-text {
+        display: block;
+        margin-top: 5px;
+    }
+}
