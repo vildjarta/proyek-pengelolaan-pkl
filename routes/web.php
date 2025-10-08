@@ -100,7 +100,7 @@ Route::resource('jadwal', JadwalController::class);
 
 Route::get('/transkrip', function () {
     // return view('menu');
-    return view('transkrip');
+    return view('transkrip.transkrip');
 });
 
 // Resource untuk Mahasiswa (CRUD otomatis)

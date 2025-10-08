@@ -8,7 +8,7 @@ class TranscriptController extends Controller
 {
     public function index()
     {
-        return view('transkrip');
+        return view('transkrip.transkrip');
     }
 
 public function analyze(Request $req)
@@ -80,6 +80,6 @@ public function analyze(Request $req)
     public function results()
     {
         $data = Transcript::latest()->get();
-        return view('transkrip_result', compact('data'));
+        return view('transkrip.transkrip_result', compact('data'));
     }
 }
