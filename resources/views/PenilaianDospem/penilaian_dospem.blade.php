@@ -1,46 +1,48 @@
 @include('layout.header')
 @include('layout.sidebar')
-<link rel="stylesheet" href="{{ asset('assets/css/table-penilaian.css') }}">
 
-<div class="main-content-wrapper">
-    <div class="content">
-        <h2>Daftar Penilaian Mahasiswa PKL / Seminar</h2>
+    <link rel="stylesheet" href="{{ asset('assets/css/table-penilaian.css') }}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-        <a href="{{ route('penilaian.create') }}" class="btn btn-success" style="margin-bottom: 20px;">+ Tambah Penilaian</a>
-        
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+    <div class="main-content-wrapper">
+        <div class="table-card">
+            <div class="table-header">
+                <a href="{{ route('penilaian.create') }}" class="btn btn-primary">Tambah Penilaian</a>
+                <div class="search-container">
+                    <form action="{{ route('penilaian.index') }}" method="GET">
+                        <input type="text" name="search" class="form-control search-input" placeholder="Cari Mahasiswa/NIM..." value="{{ $search ?? '' }}">
+                    </form>
+                </div>
             </div>
-        @endif
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>NIM</th>
-                    <th>Nama Mahasiswa</th>
-                    <th>Judul</th>
-                    <th>Laporan</th>
-                    <th>Presentasi</th>
-                    <th>Penguasaan</th>
-                    <th>Sikap</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($penilaian as $item)
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>NIM</th>
+                        <th><a href="{{ route('penilaian.index', ['sort' => 'mahasiswa', 'search' => $search ?? '']) }}">Nama Mahasiswa @if(isset($sort) && $sort == 'mahasiswa')<i class="fas fa-sort-amount-up"></i>@endif</a></th>
+                        
+                        <th><a href="{{ route('penilaian.index', ['sort' => 'nilai_internal', 'search' => $search ?? '']) }}">Nilai (100) @if(isset($sort) && $sort == 'nilai_internal')<i class="fas fa-sort-alpha-down"></i>@endif</a></th>
+                        
+                        <th><a href="{{ route('penilaian.index', ['sort' => 'nilai', 'search' => $search ?? '']) }}">Nilai Akhir (30%) @if(isset($sort) && $sort == 'nilai')<i class="fas fa-sort-alpha-down"></i>@endif</a></th>
+                        <th><a href="{{ route('penilaian.index', ['sort' => 'grade', 'search' => $search ?? '']) }}">Grade @if(isset($sort) && $sort == 'grade')<i class="fas fa-sort-alpha-down"></i>@endif</a></th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($penilaian as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->mahasiswa->nim ?? 'N/A' }}</td>
                         <td>{{ $item->nama_mahasiswa }}</td>
-                        <td>{{ $item->judul }}</td>
-                        <td>{{ $item->laporan }}</td>
-                        <td>{{ $item->presentasi }}</td>
-                        <td>{{ $item->penguasaan }}</td>
-                        <td>{{ $item->sikap }}</td>
-                        <td>
-                            {{-- KODE TOMBOL AKSI DIUBAH DI SINI --}}
+                        <td>{{ $item->nilai_dospem_internal }}</td>
+                        <td>{{ $item->nilai_akhir }}</td>
+                        <td>{{ $item->grade }}</td>
+                        <td class="text-center">
                             <div class="action-buttons">
                                 <a href="{{ route('penilaian.edit', $item->id) }}" class="btn btn-edit-custom" title="Edit">
                                     <i class="fa fa-edit"></i>
@@ -55,14 +57,20 @@
                             </div>
                         </td>
                     </tr>
-                @empty
+                    @empty
                     <tr>
-                        <td colspan="9" class="text-center">Belum ada data penilaian.</td>
+                        <td colspan="7" style="text-align: center;">
+                            @if(request('search'))
+                                Tidak ada data penilaian yang cocok dengan kata kunci "{{ request('search') }}".
+                            @else
+                                Belum ada data penilaian yang ditambahkan.
+                            @endif
+                        </td>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
                 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const toggleButton = document.querySelector('.menu-toggle');
@@ -91,3 +99,8 @@
     });
 </script>
 </div>
+<script>
+    function confirmSubmit() {
+        return confirm("Apakah Anda yakin ingin Mengedit Penilaian ini?");
+    }
+</script>

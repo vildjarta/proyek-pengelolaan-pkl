@@ -58,7 +58,7 @@
 
                 <div class="form-actions">
                     <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Batal</a>
-                    <button type="submit" class="btn btn-success">Update Jadwal</button>
+                    <button type="submit" class="btn btn-success">Edit Jadwal</button>
                 </div>
             </form>
         </div>

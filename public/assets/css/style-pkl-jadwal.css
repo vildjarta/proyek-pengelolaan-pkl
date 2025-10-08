@@ -90,13 +90,7 @@ h2.title {
 .btn-primary:hover {
     background-color: #4a75b3; /* Warna hover dibuat sedikit lebih gelap */
 }
-/* ...existing code... */
 
-/* ================================================== */
-/* == GAYA BARU UNTUK TOMBOL AKSI (IKON SEPERTI GAMBAR) == */
-/* ================================================== */
-
-/* Mengatur container agar jarak antar tombol lebih pas */
 .action-buttons {
     display: flex;
     gap: 8px; /* Atur jarak antar tombol */

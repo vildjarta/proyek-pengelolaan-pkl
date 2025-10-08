@@ -1,5 +1,5 @@
-@extends('layout.header')
-@extends('layout.sidebar')
+@include('layout.header')
+@include('layout.sidebar')
     <link rel="stylesheet" href="{{ asset('assets/css/style-pkl-jadwal.css') }}">
     {{-- Pastikan Font Awesome sudah ada di layout utama Anda --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
@@ -119,8 +119,3 @@
             });
         </script>
     </div>
-    <script>
-    function confirmSubmit() {
-        return confirm("Apakah Anda yakin ingin menyimpan jadwal ini?");
-    }
-</script>
