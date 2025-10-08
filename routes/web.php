@@ -8,6 +8,10 @@ Route::resource('jadwal', JadwalBimbinganController::class);
 
 use App\Http\Controllers\RatingDanReviewController;
 use App\Http\Controllers\DataDosenPembimbingController;
+use App\Http\Controllers\PengujianController;
+use App\Http\Controllers\DosenPengujiController;
+use App\Http\Controllers\TempatPengujianController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -83,7 +87,7 @@ Route::get('/profile', function () {
     return view('profile');
 });
 
-
+// Resource untuk perusahaan (CRUD otomatis)
 Route::resource('perusahaan', PerusahaanController::class);
 
 
@@ -107,3 +111,11 @@ Route::get('/transkrip', function () {
 Route::resource('mahasiswa', MahasiswaController::class);
 
 Route::resource('penilaian', PenilaianPengujiController::class);
+
+// Resource untuk pengujian (CRUD otomatis)
+
+Route::resource('pengujian', PengujianController::class);
+
+Route::resource('dosen_penguji', DosenPengujiController::class);
+
+Route::resource('tempat_pengujian', TempatPengujianController::class);

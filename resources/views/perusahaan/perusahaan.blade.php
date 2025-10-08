@@ -21,6 +21,10 @@
             padding: 5px 10px;
             border-radius: 12px;
         }
+
+        .map-container {
+            height: 300px;
+        }
     </style>
 </head>
 
@@ -52,12 +56,10 @@
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title">{{ $prs->nama }}</h5>
                                     <p class="card-text mb-1"><strong>Alamat:</strong> {{ $prs->alamat }}</p>
-                                    </p>
                                     <p class="card-text">
                                         <strong>Status:</strong>
                                         <span
-                                            class="status-badge 
-                                {{ $prs->status == 'Aktif' ? 'bg-success text-white' : 'bg-secondary text-white' }}">
+                                            class="status-badge {{ $prs->status == 'Aktif' ? 'bg-success text-white' : 'bg-secondary text-white' }}">
                                             {{ $prs->status }}
                                         </span>
                                     </p>
@@ -75,8 +77,46 @@
                                                 Hapus
                                             </button>
                                         </form>
-                                        <a href="{{ route('perusahaan.show', $prs->id_perusahaan) }}"
-                                            class="btn btn-info btn-sm">Detail</a>
+
+                                        <!-- Tombol Detail Modal -->
+                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#detailModal{{ $prs->id_perusahaan }}">
+                                            Detail
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Detail Perusahaan -->
+                        <div class="modal fade" id="detailModal{{ $prs->id_perusahaan }}" tabindex="-1"
+                            aria-labelledby="detailModalLabel{{ $prs->id_perusahaan }}" aria-hidden="true">
+                            <div class="modal-dialog modal-md">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Tutup"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                                <h4 class="card-title">{{ $prs->nama }}</h4>
+                                                <p class="card-text"><strong>Alamat:</strong> {{ $prs->alamat }}</p>
+                                                <p class="card-text"><strong>Bidang Usaha:</strong> {{ $prs->bidang_usaha }}</p>
+                                                <p class="card-text">
+                                                    <strong>Status:</strong>
+                                                    <span class="status-badge {{ $prs->status == 'Aktif' ? 'bg-success text-white' : 'bg-secondary text-white' }}">
+                                                        {{ $prs->status }}
+                                                    </span>
+                                                </p>
+                                                <p class="card-text"><strong>Latitude:</strong> {{ $prs->lat }}</p>
+                                                <p class="card-text"><strong>Longitude:</strong> {{ $prs->lng }}</p>
+
+                                                <div id="map{{ $prs->id_perusahaan }}" class="map-container"></div>
+                                            
+                                            <div class="card-footer text-end">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                    data-bs-dismiss="modal">Tutup</button>
+                                            </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -87,8 +127,33 @@
                         </div>
                     @endforelse
                 </div>
+            </main>
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM6yhmdJP1BPXmzo852fIlEc4GlZtXtXU"></script>
+    <script>
+        @foreach($perusahaans as $prs)
+            var modal{{ $prs->id_perusahaan }} = document.getElementById('detailModal{{ $prs->id_perusahaan }}');
+            modal{{ $prs->id_perusahaan }}.addEventListener('shown.bs.modal', function () {
+                var lokasi = { lat: parseFloat('{{ $prs->lat }}'), lng: parseFloat('{{ $prs->lng }}') };
+                var map = new google.maps.Map(document.getElementById('map{{ $prs->id_perusahaan }}'), {
+                    center: lokasi,
+                    zoom: 15
+                });
+                new google.maps.Marker({
+                    position: lokasi,
+                    map: map,
+                    title: '{{ $prs->nama }}'
+                });
+            });
+        @endforeach
+    </script>
+
     <script src="{{ asset('assets/js/hhd.js') }}"></script>
 </body>
 
