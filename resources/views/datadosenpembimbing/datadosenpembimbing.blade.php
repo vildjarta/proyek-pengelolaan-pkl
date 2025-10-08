@@ -28,7 +28,7 @@
   <div class="container-fluid">
     <div class="card-main">
       <div class="card-header-custom">
-        <h4>Daftar Data Dosen Pembimbing</h4>
+        <h4>Daftar Dosen Pembimbing</h4>
 
         <div class="d-flex align-items-center gap-2">
           <!-- 🔍 Form Pencarian -->
