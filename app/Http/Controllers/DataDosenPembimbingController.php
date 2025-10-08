@@ -81,9 +81,9 @@ class DataDosenPembimbingController extends Controller
         $item = DataDosenPembimbing::findOrFail($id);
 
         $request->validate([
-            'NIP'   => 'required|digits:18|unique:data_dosen_pembimbing,NIP,' . $item->id_pembimbing . ',id_pembimbing',
+            'NIP'   => 'required|digits:18|unique:dosen_pembimbing,NIP,' . $id . ',id_pembimbing',
             'nama'  => 'required|string|max:100',
-            'email' => 'required|email|unique:data_dosen_pembimbing,email,' . $item->id_pembimbing . ',id_pembimbing',
+            'email' => 'required|email|unique:dosen_pembimbing,email,' . $item->id_pembimbing . ',id_pembimbing',
             'nim'   => 'required|array|min:1',
             'nim.*' => 'required|exists:mahasiswa,nim',
         ]);

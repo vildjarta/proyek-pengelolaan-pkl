@@ -11,10 +11,10 @@
 </head>
 <body>
     {{-- HEADER --}}
-    @include('layouts.header')
+    @include('layout.header')
 
     {{-- SIDEBAR --}}
-    @include('layouts.sidebar')
+    @include('layout.sidebar')
 
     <div class="main-content-wrapper">
         <div class="content">

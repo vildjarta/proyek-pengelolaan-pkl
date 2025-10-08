@@ -11,9 +11,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/tambahdatadosenpembimbing.css') }}">
 </head>
 <body>
+
+{{-- HEADER --}}
+@include('layout.header')
+
+{{-- SIDEBAR --}}
+@include('layout.sidebar')
 
 <div class="container my-5">
   <div class="row justify-content-center">
@@ -106,8 +113,9 @@
   </div>
 </div>
 
-<!-- ✅ Validasi NIP -->
+@push('scripts')
 <script>
+  // Validasi NIP
   const nipInput = document.getElementById("NIP");
   const nipError = document.getElementById("nipError");
 
@@ -116,88 +124,86 @@
     if (this.value.length > 18) this.value = this.value.slice(0, 18);
     nipError.style.display = this.value.length > 0 && this.value.length < 18 ? "block" : "none";
   });
-</script>
 
-<!-- 🔍 Fungsi Dinamis Mahasiswa -->
-<script>
-function setupMahasiswaItem(item, isClone = false) {
-  const nimInput = item.querySelector('.nimInput');
-  const nimError = item.querySelector('.nimError');
-  const nimSuccess = item.querySelector('.nimSuccess');
-  const namaTampil = item.querySelector('.namaTampil');
-  const namaInput = item.querySelector('.namaInput');
+  // Fungsi Dinamis Mahasiswa
+  function setupMahasiswaItem(item, isClone = false) {
+    const nimInput = item.querySelector('.nimInput');
+    const nimError = item.querySelector('.nimError');
+    const nimSuccess = item.querySelector('.nimSuccess');
+    const namaTampil = item.querySelector('.namaTampil');
+    const namaInput = item.querySelector('.namaInput');
 
-  // Jika item hasil clone, tambahkan tombol hapus
-  if (isClone && !item.querySelector('.remove-mahasiswa')) {
-    const btnRemove = document.createElement('button');
-    btnRemove.type = 'button';
-    btnRemove.className = 'btn btn-danger btn-sm remove-mahasiswa';
-    btnRemove.innerHTML = '<i class="bi bi-trash"></i> Hapus';
-    item.appendChild(btnRemove);
-  }
-
-  // Event blur NIM (cek nim ke backend)
-  nimInput.addEventListener('blur', function() {
-    const nim = this.value.trim();
-    if (!nim) {
-      nimError.style.display = "none";
-      nimSuccess.style.display = "none";
-      namaTampil.textContent = "";
-      namaInput.value = "";
-      return;
+    // Jika item hasil clone, tambahkan tombol hapus
+    if (isClone && !item.querySelector('.remove-mahasiswa')) {
+      const btnRemove = document.createElement('button');
+      btnRemove.type = 'button';
+      btnRemove.className = 'btn btn-danger btn-sm remove-mahasiswa';
+      btnRemove.innerHTML = '<i class="bi bi-trash"></i> Hapus';
+      item.appendChild(btnRemove);
     }
 
-    fetch(`/cek-nim/${nim}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.exists) {
-          nimError.style.display = "none";
-          nimSuccess.style.display = "block";
-          namaTampil.textContent = data.nama_mahasiswa;
-          namaInput.value = data.nama_mahasiswa;
-        } else {
+    nimInput.addEventListener('blur', function() {
+      const nim = this.value.trim();
+      if (!nim) {
+        nimError.style.display = "none";
+        nimSuccess.style.display = "none";
+        namaTampil.textContent = "";
+        namaInput.value = "";
+        return;
+      }
+      fetch(`/cek-nim/${nim}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.exists) {
+            nimError.style.display = "none";
+            nimSuccess.style.display = "block";
+            namaTampil.textContent = data.nama_mahasiswa;
+            namaInput.value = data.nama_mahasiswa;
+          } else {
+            nimError.style.display = "block";
+            nimSuccess.style.display = "none";
+            namaTampil.textContent = "";
+            namaInput.value = "";
+          }
+        })
+        .catch(() => {
           nimError.style.display = "block";
           nimSuccess.style.display = "none";
           namaTampil.textContent = "";
           namaInput.value = "";
-        }
-      })
-      .catch(() => {
-        nimError.style.display = "block";
-        nimSuccess.style.display = "none";
-        namaTampil.textContent = "";
-        namaInput.value = "";
-      });
-  });
-}
-
-// Setup item pertama
-document.querySelectorAll('.mahasiswa-item').forEach(item => setupMahasiswaItem(item));
-
-// Tambah mahasiswa
-document.getElementById('add-mahasiswa').addEventListener('click', function() {
-  const list = document.getElementById('mahasiswa-list');
-  const firstItem = list.firstElementChild;
-  const newItem = firstItem.cloneNode(true);
-
-  // Kosongkan semua field
-  newItem.querySelectorAll('input').forEach(input => input.value = '');
-  newItem.querySelector('.nimError').style.display = 'none';
-  newItem.querySelector('.nimSuccess').style.display = 'none';
-  newItem.querySelector('.namaTampil').textContent = '';
-
-  setupMahasiswaItem(newItem, true);
-  list.appendChild(newItem);
-});
-
-// Hapus mahasiswa
-document.getElementById('mahasiswa-list').addEventListener('click', function(e) {
-  if (e.target.closest('.remove-mahasiswa')) {
-    e.target.closest('.mahasiswa-item').remove();
+        });
+    });
   }
-});
-</script>
 
+  // Setup item pertama
+  document.querySelectorAll('.mahasiswa-item').forEach(item => setupMahasiswaItem(item));
+
+  // Tambah mahasiswa
+  document.getElementById('add-mahasiswa').addEventListener('click', function() {
+    const list = document.getElementById('mahasiswa-list');
+    const firstItem = list.firstElementChild;
+    const newItem = firstItem.cloneNode(true);
+
+    // Kosongkan semua field
+    newItem.querySelectorAll('input').forEach(input => input.value = '');
+    newItem.querySelector('.nimError').style.display = 'none';
+    newItem.querySelector('.nimSuccess').style.display = 'none';
+    newItem.querySelector('.namaTampil').textContent = '';
+
+    setupMahasiswaItem(newItem, true);
+    list.appendChild(newItem);
+  });
+
+  // Hapus mahasiswa
+  document.getElementById('mahasiswa-list').addEventListener('click', function(e) {
+    if (e.target.closest('.remove-mahasiswa')) {
+      e.target.closest('.mahasiswa-item').remove();
+    }
+  });
+</script>
+@endpush
+
+<!-- Bootstrap JS (jika belum ada di header) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
