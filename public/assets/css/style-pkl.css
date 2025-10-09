@@ -657,3 +657,262 @@ body.sidebar-closed .main-content-wrapper {
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+/* --- Nilai Form Styling --- */
+.form-section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h3 {
+    color: var(--color-primary-blue);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-light-blue-bg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.required {
+    color: red;
+}
+
+.subtotal-box {
+    background: var(--color-light-blue-bg);
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    text-align: right;
+    font-size: 1.1em;
+}
+
+.total-nilai-box {
+    background: linear-gradient(135deg, var(--color-primary-blue), #4a7bc4);
+    color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.total-row:last-child {
+    border-bottom: none;
+}
+
+.nilai-besar {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* --- Detail Card Styling --- */
+.detail-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detail-card h3 {
+    color: var(--color-primary-blue);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-light-blue-bg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.detail-item {
+    padding: 10px;
+    background: var(--color-light-blue-bg);
+    border-radius: 5px;
+}
+
+.detail-item strong {
+    display: block;
+    color: var(--color-text-gray);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.detail-item span {
+    font-size: 1.1em;
+    color: var(--color-text-dark);
+    font-weight: 500;
+}
+
+.catatan-box {
+    background: #fff9e6;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+
+.catatan-box strong {
+    color: #856404;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.catatan-box p {
+    margin: 0;
+    color: #856404;
+}
+
+.subtotal-row {
+    background: var(--color-light-blue-bg);
+    font-weight: bold;
+}
+
+/* --- Total Nilai Card --- */
+.total-nilai-card {
+    background: linear-gradient(135deg, var(--color-primary-blue), #4a7bc4);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.total-nilai-card h3 {
+    color: white;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.total-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.total-item {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.total-label {
+    font-size: 0.9em;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.total-value {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+/* --- Badge Nilai --- */
+.badge-nilai {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.badge-a {
+    background: #28a745;
+    color: white;
+}
+
+.badge-b\+ {
+    background: #5cb85c;
+    color: white;
+}
+
+.badge-b {
+    background: #17a2b8;
+    color: white;
+}
+
+.badge-c\+ {
+    background: #ffc107;
+    color: #333;
+}
+
+.badge-c {
+    background: #fd7e14;
+    color: white;
+}
+
+.badge-d {
+    background: #dc3545;
+    color: white;
+}
+
+.badge-e {
+    background: #6c757d;
+    color: white;
+}
+
+/* --- Empty State --- */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--color-text-gray);
+}
+
+.empty-state i {
+    font-size: 4em;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+/* --- Print Styling --- */
+@media print {
+    .header, .sidebar, .form-actions, .btn {
+        display: none !important;
+    }
+
+    .main-content-wrapper {
+        margin: 0 !important;
+        padding: 20px !important;
+    }
+
+    .detail-card, .total-nilai-card {
+        break-inside: avoid;
+    }
+}

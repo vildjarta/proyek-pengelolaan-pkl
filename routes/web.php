@@ -38,6 +38,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
+use App\Http\Controllers\NilaiController;
 
 // return control('transkrip');
 Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcript.index');
@@ -48,6 +49,9 @@ Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMulti
 Route::get('/transkrip_result', [TranscriptController::class, 'results'])->name('transkrip_result');
 Route::put('/transkrip/update/{id}', [TranscriptController::class, 'update'])->name('transcript.update');
 Route::delete('/transkrip/delete/{id}', [TranscriptController::class, 'delete'])->name('transcript.delete');
+
+// CRUD Nilai Mahasiswa
+Route::resource('nilai', NilaiController::class);
 
 // return control('perusahaan');
 Route::resource('/perusahaan', PerusahaanController::class);
