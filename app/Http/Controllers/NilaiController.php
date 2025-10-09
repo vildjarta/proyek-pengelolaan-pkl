@@ -37,7 +37,7 @@ class NilaiController extends Controller
         ]);
 
         // Hitung total nilai
-        $nilaiTotal = 
+        $nilaiTotal =
             // Pembimbing Lapangan (50%)
             ($request->disiplin ?? 0) +
             ($request->komunikasi ?? 0) +
@@ -131,7 +131,7 @@ class NilaiController extends Controller
         ]);
 
         // Hitung total nilai
-        $nilaiTotal = 
+        $nilaiTotal =
             // Pembimbing Lapangan (50%)
             ($request->disiplin ?? 0) +
             ($request->komunikasi ?? 0) +

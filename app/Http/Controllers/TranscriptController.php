@@ -6,9 +6,67 @@ use App\Models\Transcript;
 
 class TranscriptController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return view('transkrip.transkrip');
+        $data = Transcript::latest()->get();
+        return view('transkrip.index', compact('data'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('transkrip.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nim' => 'required|unique:transcripts,nim',
+            'nama_mahasiswa' => 'required',
+            'ipk' => 'required|numeric|min:0|max:4',
+            'total_sks_d' => 'required|integer|min:0',
+            'has_e' => 'required|boolean',
+        ]);
+
+        // Hitung kelayakan
+        $eligible = ($request->ipk >= 2.5 && $request->total_sks_d <= 6 && !$request->has_e);
+
+        Transcript::create([
+            'nim' => $request->nim,
+            'nama_mahasiswa' => $request->nama_mahasiswa,
+            'ipk' => $request->ipk,
+            'total_sks_d' => $request->total_sks_d,
+            'has_e' => $request->has_e,
+            'eligible' => $eligible,
+        ]);
+
+        return redirect()->route('transkrip.index')->with('success', 'Data transkrip berhasil ditambahkan.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $transkrip = Transcript::findOrFail($id);
+        return view('transkrip.show', compact('transkrip'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $transkrip = Transcript::findOrFail($id);
+        return view('transkrip.edit', compact('transkrip'));
     }
 
 public function analyze(Request $req)
@@ -128,35 +186,52 @@ public function analyze(Request $req)
         return view('transkrip.transkrip_result', compact('data'));
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
-        try {
-            $transcript = Transcript::findOrFail($id);
-            
-            $transcript->update([
-                'nama_mahasiswa' => $request->nama_mahasiswa,
-                'nim' => $request->nim,
-                'ipk' => $request->ipk,
-                'total_sks_d' => $request->total_sks_d,
-                'has_e' => $request->has_e,
-                'eligible' => $request->eligible,
-            ]);
+        $transkrip = Transcript::findOrFail($id);
 
-            return redirect()->route('transkrip_result')->with('success', 'Data transkrip berhasil diperbarui.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
-        }
+        $request->validate([
+            'nim' => 'required|unique:transcripts,nim,' . $id,
+            'nama_mahasiswa' => 'required',
+            'ipk' => 'required|numeric|min:0|max:4',
+            'total_sks_d' => 'required|integer|min:0',
+            'has_e' => 'required|boolean',
+        ]);
+
+        // Hitung kelayakan
+        $eligible = ($request->ipk >= 2.5 && $request->total_sks_d <= 6 && !$request->has_e);
+
+        $transkrip->update([
+            'nim' => $request->nim,
+            'nama_mahasiswa' => $request->nama_mahasiswa,
+            'ipk' => $request->ipk,
+            'total_sks_d' => $request->total_sks_d,
+            'has_e' => $request->has_e,
+            'eligible' => $eligible,
+        ]);
+
+        return redirect()->route('transkrip.index')->with('success', 'Data transkrip berhasil diperbarui.');
     }
 
-    public function delete($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
-        try {
-            $transcript = Transcript::findOrFail($id);
-            $transcript->delete();
+        $transkrip = Transcript::findOrFail($id);
+        $transkrip->delete();
 
-            return redirect()->route('transkrip_result')->with('success', 'Data transkrip berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
-        }
+        return redirect()->route('transkrip.index')->with('success', 'Data transkrip berhasil dihapus.');
+    }
+
+    /**
+     * Analyze transcript from pasted text
+     */
+    public function analyzeTranscript()
+    {
+        return view('transkrip.analyze');
     }
 }

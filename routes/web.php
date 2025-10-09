@@ -40,15 +40,11 @@ use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
 
-// return control('transkrip');
-Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcript.index');
-Route::post('/transcript/analyze', [TranscriptController::class, 'analyze'])->name('transcript.analyze');
-Route::get('/transkrip', [TranscriptController::class, 'index']);
-Route::post('/transkrip/save', [TranscriptController::class, 'save']);
-Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transcript.save.multiple');
-Route::get('/transkrip_result', [TranscriptController::class, 'results'])->name('transkrip_result');
-Route::put('/transkrip/update/{id}', [TranscriptController::class, 'update'])->name('transcript.update');
-Route::delete('/transkrip/delete/{id}', [TranscriptController::class, 'delete'])->name('transcript.delete');
+// CRUD Transkrip (Kelayakan PKL)
+Route::resource('transkrip', TranscriptController::class);
+Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
+Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
+Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
 
 // CRUD Nilai Mahasiswa
 Route::resource('nilai', NilaiController::class);
@@ -103,11 +99,6 @@ Route::get('/daftar-jadwal', function () {
 
 // Resource untuk Jadwal (CRUD otomatis)
 Route::resource('jadwal', JadwalController::class);
-
-Route::get('/transkrip', function () {
-    // return view('menu');
-    return view('transkrip.transkrip');
-});
 
 // Resource untuk Mahasiswa (CRUD otomatis)
 Route::resource('mahasiswa', MahasiswaController::class);
