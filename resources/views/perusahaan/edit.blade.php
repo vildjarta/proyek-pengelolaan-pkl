@@ -82,9 +82,12 @@
 
         {{-- Total Jam Operasi (integer) --}}
         <div class="mb-3">
-            <label for="total_jam_operasi" class="form-label">Total Jam Operasi</label>
-            <input type="number" name="total_jam_operasi" id="total_jam_operasi" class="form-control"
-                value="{{ old('total_jam_operasi') }}" min="0" required>
+            <label for="total_jam_operasi" class="form-label">Total Jam Operasi (jumlah total hari)</label>
+            <div class="input-group">
+                <input type="number" name="total_jam_operasi" id="total_jam_operasi" class="form-control"
+                    value="{{ old('total_jam_operasi') }}" min="0" required>
+                <span class="input-group-text">hari</span>
+            </div>
         </div>
 
         {{-- Jumlah Mahasiswa (integer) --}}
