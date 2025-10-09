@@ -41,6 +41,3 @@ Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
 
 // 🔍 AJAX untuk cari mahasiswa berdasarkan NIM
 Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNim']);
-
-
-

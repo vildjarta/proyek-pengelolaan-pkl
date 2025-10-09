@@ -1,103 +1,119 @@
-/* ================================
-   STYLE: Lihat Rating & Review
-   ================================ */
+/* =========================================
+   STYLE: Lihat Rating & Review - PKL JOZZ
+   ========================================= */
 
 body {
-  background: linear-gradient(135deg, #F7FBFC 0%, #D6E6F2 35%, #B9D7EA 70%, #769FCD 100%);
+  background-color: #f4f7f9;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
-  padding: 30px 15px;
+  color: #444;
   margin: 0;
 }
 
-/* 📦 Container */
-.container {
-  max-width: 850px;
-  margin: 0 auto;
+/* ====== Wrapper utama ====== */
+.main-content-wrapper {
+  margin-top: 60px;
+  margin-left: 260px;
+  padding: 0;
+  transition: margin-left 0.3s ease;
+}
+body.sidebar-closed .main-content-wrapper {
+  margin-left: 70px;
 }
 
-/* 🔙 Tombol kembali */
-.back-button-small {
+/* ====== Konten ====== */
+.content {
+  background-color: #fff;
+  min-height: 100vh;
+  padding: 30px 40px;
+}
+
+/* ====== Tombol Kembali ====== */
+.btn-back {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  background-color: #ffffff;
-  color: #769FCD;
+  width: 45px;
+  height: 45px;
+  background-color: #5b8ad2;
+  color: #fff;
   border-radius: 50%;
   text-decoration: none;
   font-size: 1.2rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: 0.3s;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
-.back-button-small:hover {
-  background-color: #f0f0f0;
-  color: #5f88b2;
+.btn-back:hover {
+  background-color: #4777c3;
   transform: translateX(-3px);
 }
 
-/* 🏷️ Judul Halaman */
-.page-title {
-  color: #4169E1;
+/* ====== Header ====== */
+.table-header {
+  border-bottom: 2px solid #5b8ad2;
+  margin-bottom: 25px;
+  padding-bottom: 8px;
+}
+.table-header .title {
+  color: #5b8ad2;
   font-weight: 700;
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  letter-spacing: 0.5px;
+  font-size: 22px;
 }
 
-/* 💬 Kartu Review */
+/* ====== Grid Review ====== */
+.review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* ====== Kartu Review ====== */
 .review-card {
   background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  border: none;
-  padding: 25px 25px 15px 25px;
-  margin-bottom: 20px;
-  transition: all 0.2s ease-in-out;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 20px 25px;
+  transition: 0.3s;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-height: 230px;
 }
 .review-card:hover {
-  transform: scale(1.01);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
 }
 
-/* 🧍 Header Reviewer */
+/* ====== Header Review ====== */
 .review-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 10px;
 }
-
-/* 🟦 Avatar Bulat */
 .avatar {
-  width: 45px;
-  height: 45px;
-  background-color: #B9D7EA;
+  width: 50px;
+  height: 50px;
+  background-color: #5b8ad2;
   color: #fff;
   font-weight: 600;
-  font-size: 1.1rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-transform: uppercase;
+  font-size: 1.2rem;
 }
-
-/* 👤 Info Reviewer */
 .reviewer-info {
   display: flex;
   flex-direction: column;
 }
 .reviewer-name {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: #007bff;
-}
-.review-rating {
-  margin-top: 3px;
+  color: #333;
 }
 .review-rating i {
   color: #ffc107;
@@ -105,64 +121,92 @@ body {
   margin-right: 2px;
 }
 
-/* 📝 Isi Review */
+/* ====== Isi Review ====== */
 .review-text {
-  font-size: 1rem;
-  color: #444;
-  margin-top: 15px;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: #555;
   line-height: 1.5;
+  max-height: 90px;
+  overflow-y: auto;
+  padding-right: 5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-/* 🕒 Footer */
+/* Scroll bar dalam review */
+.review-text::-webkit-scrollbar {
+  width: 5px;
+}
+.review-text::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+/* ====== Footer Review ====== */
 .review-footer {
-  margin-top: 12px;
+  margin-top: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.review-date {
+  color: #6c757d;
   font-size: 0.9rem;
-  color: #777;
 }
 
-/* ✏️ Tombol Edit & 🗑️ Hapus */
+/* ====== Tombol Aksi ====== */
 .action-buttons {
-  position: absolute;
-  bottom: 10px;
-  right: 15px;
   display: flex;
   gap: 8px;
 }
-.action-buttons .btn {
-  border-radius: 30px;
-  font-size: 0.85rem;
-  padding: 6px 14px;
-  background-color: #e9ecef;
+.btn-edit, .btn-delete {
   border: none;
-  color: #333;
-  transition: 0.2s;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  color: #fff;
 }
-.action-buttons .btn:hover {
-  background-color: #d6dee8;
+.btn-edit {
+  background-color: #ffc107;
   color: #000;
 }
+.btn-edit:hover {
+  background-color: #e0a800;
+}
+.btn-delete {
+  background-color: #dc3545;
+}
+.btn-delete:hover {
+  background-color: #bb2d3b;
+}
 
-/* ℹ️ Alert Kosong */
+/* ====== Alert Kosong ====== */
 .alert-info {
   background-color: #eaf3ff;
-  color: #4169E1;
+  color: #5b8ad2;
   border: none;
   font-weight: 500;
 }
 
-/* 📱 Responsif */
-@media (max-width: 576px) {
-  .review-card {
-    padding: 20px 15px;
+/* ====== Responsif ====== */
+@media (max-width: 992px) {
+  .main-content-wrapper {
+    margin-left: 0;
   }
-  .page-title {
-    font-size: 1.6rem;
+  .content {
+    padding: 20px;
   }
-  .avatar {
+  .review-list {
+    grid-template-columns: 1fr;
+  }
+  .btn-back {
     width: 40px;
     height: 40px;
+    font-size: 1rem;
   }
 }

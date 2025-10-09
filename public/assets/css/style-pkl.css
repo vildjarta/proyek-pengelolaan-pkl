@@ -15,7 +15,7 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: var(--color-light-blue-bg);
+    background-color: #f4f7f9;
     transition: all 0.3s ease;
 }
 

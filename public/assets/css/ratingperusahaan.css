@@ -1,167 +1,196 @@
-/* ================================
+/* ==============================
    RATING PERUSAHAAN PAGE STYLE
-   ================================ */
+   ============================== */
 
-/* 🏷️ Judul Halaman */
-.page-title {
-    color: var(--color-text-dark);
-    font-weight: 600;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #444;
+    margin: 0;
+}
+
+/* ====== Wrapper utama ====== */
+.main-content-wrapper {
+    margin-top: 60px;
+    margin-left: 260px;
+    padding: 0;
+    transition: margin-left 0.3s ease;
+}
+
+body.sidebar-closed .main-content-wrapper {
+    margin-left: 70px;
+}
+
+/* ====== Konten utama ====== */
+.content {
+    background-color: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px 30px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ====== Header Tabel ====== */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #5b8ad2;
     margin-bottom: 20px;
+    padding-bottom: 10px;
 }
 
-/* 📦 Container Utama */
-.ranking-container {
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px var(--color-shadow);
-    overflow-x: auto;
+.table-header .title {
+    color: #5b8ad2;
+    font-weight: 700;
+    font-size: 22px;
 }
 
-/* 📊 Tabel Umum */
-table {
+/* ====== Pencarian ====== */
+.search-container {
+    width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.search-input:focus {
+    border-color: #5b8ad2;
+    outline: none;
+}
+
+/* ====== Tabel ====== */
+.table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-th, td {
-    text-align: left;
-    padding: 15px;
-    border: 1px solid #dee2e6;
+.table thead tr {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
     vertical-align: middle;
 }
 
-th {
-    background: #f8f9fa;
-    color: #6c757d;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.9em;
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
 }
 
-tr:hover td {
-    background: #f0f4f8;
+.table tbody tr:hover {
+    background-color: #e2e6ea;
 }
 
-/* ⭐ Rating Stars */
-.stars {
-    color: #ffc107;
-}
-.stars .fa-star:not(.filled) {
-    color: #e0e0e0;
-}
-.rating-text {
-    margin-left: 8px;
-    color: #555;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
-/* 🧭 Tombol Aksi */
-.action-btn {
-    border: none;
-    padding: 10px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 0.9em;
-    display: inline-flex;
+/* ====== Rating ====== */
+.rating-wrapper {
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+}
+
+.stars {
+    color: #ffc107;
+}
+
+.stars .fa-star:not(.filled) {
+    color: #e0e0e0;
+}
+
+.rating-text {
     font-weight: 500;
-    white-space: nowrap;
+    color: #555;
 }
 
-.action-btn i {
-    font-size: 0.9em;
+/* ====== Tombol Aksi ====== */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
 }
 
-/* 🟢 Tombol Lihat Review */
-.btn-view {
-    background: #28a745;
+.btn {
+    border: none;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
     color: #fff;
 }
+
+.btn-view {
+    background-color: #28a745;
+}
 .btn-view:hover {
-    background: #1f8b36;
+    background-color: #218838;
 }
 
-/* 🟡 Tombol Tambah Review */
 .btn-add {
-    background: #ffc107;
+    background-color: #ffc107;
     color: #000;
 }
 .btn-add:hover {
-    background: #e0a800;
+    background-color: #e0a800;
     color: #000;
 }
 
-/* 🔍 Kotak Pencarian */
-.search-box {
-    margin-bottom: 15px;
-}
-.search-box input {
-    padding: 10px;
-    width: 100%;
-    max-width: 350px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    transition: 0.3s;
-}
-.search-box input:focus {
-    border-color: #3b5998;
-    box-shadow: 0 0 4px rgba(59, 89, 152, 0.4);
-}
-
-/* 📏 Layout Kolom */
-th:first-child,
-td:first-child {
-    text-align: center;
-    font-weight: bold;
-    width: 100px;
-}
-
-th:nth-child(2) {
-    width: 30%;
-}
-
-th:nth-child(3) {
-    width: 35%;
-}
-
-th:last-child,
-td:last-child {
-    text-align: center;
-    width: 35%;
-}
-
-/* 🧱 Kolom Aksi */
-td:last-child {
-    white-space: nowrap;
-}
-
-/* 🔧 Flex hanya di dalam container tombol, bukan td */
-.action-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-/* 📱 Responsif */
-@media (max-width: 768px) {
-    .action-btn {
-        font-size: 0.8em;
-        padding: 8px 10px;
+/* ====== Responsif ====== */
+@media (max-width: 992px) {
+    .main-content-wrapper {
+        margin-left: 0;
     }
-    th, td {
+
+    .content {
+        padding: 15px;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        background: #fff;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         padding: 10px;
     }
-    .rating-text {
-        display: block;
-        margin-top: 5px;
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #5b8ad2;
+    }
+
+    .action-buttons {
+        justify-content: flex-start;
     }
 }

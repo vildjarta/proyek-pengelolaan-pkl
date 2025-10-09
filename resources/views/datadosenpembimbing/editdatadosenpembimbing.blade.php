@@ -10,20 +10,21 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- File CSS eksternal -->
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/editdatadosenpembimbing.css') }}">
 </head>
 <body>
 
-<div class="container my-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card p-4 p-md-5">
+  {{-- HEADER --}}
+  @include('layout.header')
 
-        <!-- Tombol Back -->
-        <a href="{{ route('datadosenpembimbing.index') }}" class="btn-back">
-          <i class="bi bi-arrow-left"></i>
-        </a>
+  {{-- SIDEBAR --}}
+  @include('layout.sidebar')
+
+  <div class="main-wrapper">
+    <div class="content-container">
+      <div class="content-card shadow-sm">
 
         <h3 class="text-center mb-4 page-header">Edit Dosen Pembimbing</h3>
         <hr>
@@ -32,35 +33,35 @@
           @csrf
           @method('PUT')
 
-          <!-- Dosen Section -->
-          <div class="mb-4">
-            <div class="mb-3">
-              <label class="form-label">NIP</label>
-              <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18"
-                     placeholder="Masukkan 18 digit NIP" value="{{ old('NIP', $item->NIP) }}" required>
-              <div id="nipError" class="text-danger mt-1" style="display:none;">NIP harus 18 angka.</div>
-              @error('NIP')
-                <div class="text-danger mt-1">{{ $message }}</div>
-              @enderror
-            </div>
+          <!-- NIP -->
+          <div class="mb-3">
+            <label class="form-label">NIP</label>
+            <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18"
+                   placeholder="Masukkan 18 digit NIP" value="{{ old('NIP', $item->NIP) }}" required>
+            <div id="nipError" class="text-danger mt-1" style="display:none;">NIP harus 18 angka.</div>
+            @error('NIP')
+              <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label">Nama Dosen</label>
-              <input type="text" name="nama" class="form-control" placeholder="Masukkan nama dosen"
-                     value="{{ old('nama', $item->nama) }}" required>
-              @error('nama')
-                <div class="text-danger mt-1">{{ $message }}</div>
-              @enderror
-            </div>
+          <!-- Nama Dosen -->
+          <div class="mb-3">
+            <label class="form-label">Nama Dosen</label>
+            <input type="text" name="nama" class="form-control" placeholder="Masukkan nama dosen"
+                   value="{{ old('nama', $item->nama) }}" required>
+            @error('nama')
+              <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" name="email" class="form-control" placeholder="contoh@email.com"
-                     value="{{ old('email', $item->email) }}" required>
-              @error('email')
-                <div class="text-danger mt-1">{{ $message }}</div>
-              @enderror
-            </div>
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="contoh@email.com"
+                   value="{{ old('email', $item->email) }}" required>
+            @error('email')
+              <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
           </div>
 
           <!-- Mahasiswa Section -->
@@ -69,8 +70,12 @@
 
             <div id="mahasiswa-list">
               @forelse($item->mahasiswa as $i => $mhs)
-              <div class="mahasiswa-item mb-3">
-                <div class="mb-3">
+              <div class="mahasiswa-item mb-3 p-3 border rounded position-relative">
+                <button type="button" class="btn btn-danger btn-sm remove-mahasiswa position-absolute top-0 end-0 mt-2 me-2">
+                  <i class="bi bi-trash"></i> Hapus
+                </button>
+
+                <div class="mb-3 mt-3">
                   <label class="form-label">NIM Mahasiswa</label>
                   <input type="text" name="nim[]" class="form-control nimInput"
                          value="{{ old('nim.' . $i, $mhs->nim) }}" placeholder="Masukkan NIM Mahasiswa" required>
@@ -80,21 +85,20 @@
                   </div>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2">
                   <label class="form-label">Nama Mahasiswa</label>
                   <input type="text" name="nama_mahasiswa[]" class="form-control namaInput"
-                         value="{{ old('nama_mahasiswa.' . $i, $mhs->nama) }}" placeholder="Otomatis terisi dari NIM" readonly required>
+                         value="{{ old('nama_mahasiswa.' . $i, $mhs->nama) }}"
+                         placeholder="Nama Mahasiswa Terisi Otomatis" readonly required>
                 </div>
-
-                @if($i > 0)
-                  <button type="button" class="btn btn-danger btn-sm remove-mahasiswa">
-                    <i class="bi bi-trash"></i> Hapus
-                  </button>
-                @endif
               </div>
               @empty
-              <div class="mahasiswa-item mb-3">
-                <div class="mb-3">
+              <div class="mahasiswa-item mb-3 p-3 border rounded position-relative">
+                <button type="button" class="btn btn-danger btn-sm remove-mahasiswa position-absolute top-0 end-0 mt-2 me-2" style="display:none;">
+                  <i class="bi bi-trash"></i> Hapus
+                </button>
+
+                <div class="mb-3 mt-3">
                   <label class="form-label">NIM Mahasiswa</label>
                   <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa" required>
                   <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">NIM tidak ditemukan.</div>
@@ -103,10 +107,10 @@
                   </div>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2">
                   <label class="form-label">Nama Mahasiswa</label>
                   <input type="text" name="nama_mahasiswa[]" class="form-control namaInput"
-                         placeholder="Otomatis terisi dari NIM" readonly required>
+                         placeholder="Nama Mahasiswa Terisi Otomatis" readonly required>
                 </div>
               </div>
               @endforelse
@@ -131,13 +135,11 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- ✅ Validasi NIP -->
+<!-- JS Validasi NIP -->
 <script>
   const nipInput = document.getElementById("NIP");
   const nipError = document.getElementById("nipError");
-
   nipInput.addEventListener("input", function () {
     this.value = this.value.replace(/\D/g, "");
     if (this.value.length > 18) this.value = this.value.slice(0, 18);
@@ -145,7 +147,7 @@
   });
 </script>
 
-<!-- 🔍 Fungsi Dinamis Mahasiswa -->
+<!-- JS Mahasiswa Dinamis -->
 <script>
 function setupMahasiswaItem(item, isClone = false) {
   const nimInput = item.querySelector('.nimInput');
@@ -153,14 +155,9 @@ function setupMahasiswaItem(item, isClone = false) {
   const nimSuccess = item.querySelector('.nimSuccess');
   const namaTampil = item.querySelector('.namaTampil');
   const namaInput = item.querySelector('.namaInput');
+  const btnRemove = item.querySelector('.remove-mahasiswa');
 
-  if (isClone && !item.querySelector('.remove-mahasiswa')) {
-    const btnRemove = document.createElement('button');
-    btnRemove.type = 'button';
-    btnRemove.className = 'btn btn-danger btn-sm remove-mahasiswa';
-    btnRemove.innerHTML = '<i class="bi bi-trash"></i> Hapus';
-    item.appendChild(btnRemove);
-  }
+  if (isClone) btnRemove.style.display = 'block';
 
   nimInput.addEventListener('blur', function() {
     const nim = this.value.trim();

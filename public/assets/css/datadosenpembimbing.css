@@ -1,220 +1,194 @@
-/* ====== Halaman Data Dosen Pembimbing ====== */
+/* ====== Halaman Data Dosen Pembimbing - Full Width Layout ====== */
 
 body {
-  background-color: #eef6ff;
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  transition: margin-left 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #444;
+    margin: 0;
 }
 
-/* ====== Layout ====== */
-.container-page {
-  width: calc(100% - 260px);
-  margin-left: 260px;
-  margin-top: 120px;
-  padding: 0 25px 40px;
-  transition: all 0.3s ease;
+/* ====== Wrapper utama ====== */
+.main-content-wrapper {
+    margin-top: 60px;
+    margin-left: 260px;
+    padding: 0;
+    transition: margin-left 0.3s ease;
 }
 
-body.sidebar-closed .container-page {
-  width: calc(100% - 80px);
-  margin-left: 80px;
+body.sidebar-closed .main-content-wrapper {
+    margin-left: 70px;
 }
 
-/* ====== Card ====== */
-.card-main {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  background: #fff;
-  padding-bottom: 20px;
+/* ====== Konten utama ====== */
+.content {
+    background-color: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px 30px;
+    min-height: 100vh;
+    width: 100%;
 }
 
-.card-header-custom {
-  background: #e6f0ff;
-  padding: 18px 24px 10px;
-  border-bottom: 2px solid #dbeafe;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.card-header-custom h4 {
-  margin: 0;
-  font-weight: 700;
-  color: #1e3a8a;
-}
-
-/* ====== Form Pencarian ====== */
-.search-form input[type="text"] {
-  border-radius: 8px;
-  padding: 6px 10px;
-  border: 1px solid #cbd5e1;
-  font-size: 14px;
-}
-
-.search-form button {
-  background-color: #2563eb;
-  border: none;
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 8px;
-  transition: 0.2s;
-}
-
-.search-form button:hover {
-  background-color: #1d4ed8;
-}
-
-/* ====== Tombol Tambah ====== */
-.btn-add {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none !important;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);
-  transition: 0.2s;
-}
-
-.btn-add:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px);
-}
-
-/* ====== Table ====== */
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.table-custom {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0;
-}
-
-.table-custom th,
-.table-custom td {
-  border: 1px solid #e2e8f0;
-  padding: 14px 18px;
-  vertical-align: middle;
-}
-
-.table-custom thead th {
-  background: #f8fafc;
-  font-weight: 700;
-  color: #0f172a;
-  text-align: center;
-}
-
-.table-custom tbody td {
-  color: #1e293b;
-  text-align: center;
-}
-
-.table-custom tbody td.mahasiswa-cell {
-  text-align: left;
-}
-
-/* ====== Mahasiswa list ====== */
-.mahasiswa-item {
-  font-size: 14px;
-  color: #1e293b;
-  font-weight: 500;
-  padding: 4px 0;
-  border-bottom: 1px dashed #e5e7eb;
-}
-
-.mahasiswa-item:last-child {
-  border-bottom: none;
-}
-
-/* ====== Tombol Edit & Hapus ====== */
-.action-cell {
-  text-align: center;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-.btn-edit {
-  background: #facc15;
-  color: #000;
-  border: 0;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none !important;
-  transition: 0.2s;
-}
-
-.btn-edit:hover {
-  background: #eab308;
-}
-
-.btn-delete {
-  background: #ef4444;
-  color: #fff;
-  border: 0;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.2s;
-}
-
-.btn-delete:hover {
-  background: #dc2626;
-}
-
-/* ====== Responsive ====== */
-@media (max-width: 992px) {
-  .container-page {
-    width: 100% !important;
-    margin-left: 0 !important;
-    margin-top: 100px;
-    padding: 0 15px;
-  }
-
-  .table-custom thead {
-    display: none;
-  }
-
-  .table-custom tbody tr {
-    display: block;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  }
-
-  .table-custom tbody td {
+/* ====== Header Tabel ====== */
+.table-header {
     display: flex;
     justify-content: space-between;
-    padding: 10px 14px;
-    border-bottom: 1px solid #e2e8f0;
-    text-align: left !important;
-  }
+    align-items: center;
+    border-bottom: 2px solid #5b8ad2;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
 
-  .table-custom tbody td::before {
-    content: attr(data-label);
+.table-header .title {
+    color: #5b8ad2;
     font-weight: 700;
-    color: #475569;
-  }
+    font-size: 22px;
+}
 
-  .action-cell {
-    justify-content: flex-start;
-  }
+/* ====== Tombol ====== */
+.btn {
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #4a75b3;
+}
+
+/* ====== Tombol Aksi Persegi ====== */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-buttons .btn {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 15px;
+}
+
+.btn-edit-custom {
+    background-color: #00A19D;
+}
+
+.btn-edit-custom:hover {
+    background-color: #00847E;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* ====== Pencarian ====== */
+.search-container {
+    width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* ====== Tabel ====== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead tr {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table th:first-child,
+.table td:first-child {
+    border-left: none;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+/* Membuat kolom mahasiswa teks rata kiri agar mudah dibaca */
+.table td.text-start {
+    text-align: left;
+}
+
+/* ====== Responsif ====== */
+@media (max-width: 992px) {
+    .main-content-wrapper {
+        margin-left: 0;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        background: #fff;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        padding: 10px;
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #5b8ad2;
+    }
+
+    .action-buttons {
+        justify-content: flex-start;
+    }
 }

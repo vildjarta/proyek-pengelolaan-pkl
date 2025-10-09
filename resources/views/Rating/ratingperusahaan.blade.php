@@ -2,11 +2,17 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Ranking Perusahaan - Sistem PKL JOZZ</title>
+    <title>Ranking Perusahaan - PKL JOZZ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Font Awesome & Custom CSS -->
+    <!-- Font Awesome & Bootstrap -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    {{-- CSS Global Layout --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/style-header-sidebar.css') }}">
+
+    {{-- CSS Halaman Ini --}}
     <link rel="stylesheet" href="{{ asset('assets/css/ratingperusahaan.css') }}">
 </head>
 <body>
@@ -16,24 +22,29 @@
     {{-- SIDEBAR --}}
     @include('layout.sidebar')
 
+    {{-- MAIN CONTENT --}}
     <div class="main-content-wrapper">
-        <div class="content">
-            <h2 class="page-title">Ranking Perusahaan</h2>
+        <div class="content container-fluid">
+            <div class="content">
+                <div class="table-header">
+                    <h2 class="title">Ranking Perusahaan</h2>
 
-            <!-- 🔎 Input Pencarian -->
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Cari perusahaan...">
-            </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Form Pencarian -->
+                        <form action="{{ route('ratingperusahaan') }}" method="GET" class="d-flex search-container">
+                            <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="search-input" placeholder="Cari perusahaan...">
+                            <button type="submit" class="btn btn-primary ms-2"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                </div>
 
-            <!-- 📊 Tabel Ranking -->
-            <div class="ranking-container">
-                <table id="rankingTable" class="table">
+                <table class="table table-striped" id="rankingTable">
                     <thead>
                         <tr>
                             <th>Peringkat</th>
                             <th>Nama Perusahaan</th>
-                            <th>Rata-rata Rating</th>
-                            <th>Aksi</th>
+                            <th>Rata-Rata Rating</th>
+                            <th style="text-align:center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,33 +58,35 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $companyName }}</td>
                                 <td>
-                                    <span class="stars">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
-                                        @endfor
-                                    </span>
-                                    <span class="rating-text">Rata-rata: {{ number_format($avg, 1) }}</span>
+                                    <div class="rating-wrapper">
+                                        <span class="stars">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
+                                            @endfor
+                                        </span>
+                                        <span class="rating-text">({{ number_format($avg, 1) }})</span>
+                                    </div>
                                 </td>
                                 <td>
-    <div class="action-group">
-        <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $perusahaan->id_perusahaan]) }}">
-            <button class="action-btn btn-view">
-                <i class="fas fa-eye"></i> Lihat Review
-            </button>
-        </a>
-
-        <a href="{{ route('tambahratingdanreview', $perusahaan->id_perusahaan) }}">
-            <button class="action-btn btn-add">
-                <i class="fas fa-plus"></i> Tambah Review
-            </button>
-        </a>
-    </div>
-</td>
-
+                                    <div class="action-buttons">
+                                        <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $perusahaan->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('tambahratingdanreview', $perusahaan->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" style="text-align:center">Belum ada data perusahaan yang dirating</td>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    @if(request('search'))
+                                        Tidak ditemukan perusahaan dengan nama "<strong>{{ request('search') }}</strong>"
+                                    @else
+                                        Belum ada data perusahaan yang dirating.
+                                    @endif
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -82,23 +95,22 @@
         </div>
     </div>
 
-    <!-- Script -->
     <script>
+        // Filter pencarian dinamis tanpa reload
         document.addEventListener('DOMContentLoaded', function() {
-            const searchEl = document.getElementById('searchInput');
+            const searchInput = document.getElementById('searchInput');
             const table = document.getElementById('rankingTable');
-            if (searchEl && table) {
-                searchEl.addEventListener('keyup', function () {
-                    const filter = this.value.toLowerCase();
-                    const rows = table.querySelectorAll("tbody tr");
-                    rows.forEach(row => {
-                        const cell = row.cells[1];
-                        if (!cell) return;
-                        const namaPerusahaan = (cell.textContent || cell.innerText).toLowerCase();
-                        row.style.display = namaPerusahaan.includes(filter) ? "" : "none";
-                    });
+
+            searchInput.addEventListener('keyup', function() {
+                const filter = searchInput.value.toLowerCase();
+                const rows = table.querySelectorAll("tbody tr");
+                rows.forEach(row => {
+                    const namaCell = row.cells[1];
+                    if (!namaCell) return;
+                    const nama = (namaCell.textContent || namaCell.innerText).toLowerCase();
+                    row.style.display = nama.includes(filter) ? "" : "none";
                 });
-            }
+            });
         });
     </script>
 </body>
