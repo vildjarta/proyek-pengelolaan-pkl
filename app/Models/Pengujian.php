@@ -5,23 +5,32 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pengujian extends Model
+class pengujian extends Model
 {
     use HasFactory;
 
-    protected $table = 'Pengujian';
-    protected $primaryKey = 'id_tempat';
+    protected $table = 'pengujian';
+    protected $primaryKey = 'id_pengujian';
     public $incrementing = true; // kalau id_tempat auto increment
     protected $keyType = 'int'; // default int, kalau string ubah ke 'string'
+    public $timestamps = true; // pastikan timestamps aktif
 
     protected $fillable = [
-        'id_pengujian',
-        'id_dosen',
-        'id_penilaianpenguji',
+        'id_penguji',
         'id_tempat',
         'jam',
         'tanggal',
         'created_at',
         'updated_at',
     ];
+    public function dosen()
+    {
+        return $this->belongsTo(dosen_penguji::class, 'id_penguji', 'id_penguji');
+    }
+
+
+    public function tempat()
+    {
+        return $this->belongsTo(tempat_pengujian::class, 'id_tempat', 'id_tempat');
+    }
 }

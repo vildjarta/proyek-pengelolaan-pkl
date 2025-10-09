@@ -46,12 +46,12 @@ class TempatPengujianController extends Controller
         $tempat = tempat_pengujian::findOrFail($id);
 
         $validated = $request->validate([
-            'tempat_pengujian' => 'required|string|max:255',
+            'tempat' => 'required|string|max:255',
         ]);
 
         $tempat->update($validated);
 
-        return redirect()->route('tempat.index')
+        return redirect()->route('tempat_pengujian.index')
             ->with('success', 'Tempat pengujian berhasil diperbarui!');
     }
 

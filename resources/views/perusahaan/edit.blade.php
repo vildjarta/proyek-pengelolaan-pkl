@@ -54,6 +54,46 @@
             </select>
         </div>
 
+        {{-- Dropdown Fasilitas 1-5 --}}
+        <div class="mb-3">
+            <label for="fasilitas" class="form-label">Fasilitas (Bintang)</label>
+            <select name="fasilitas" id="fasilitas" class="form-control" required>
+                <option value="">-- Pilih Fasilitas --</option>
+                @for ($i = 1; $i <= 5; $i++)
+                    <option value="{{ $i }}" {{ old('fasilitas') == $i ? 'selected' : '' }}>Bintang
+                        {{ $i }}</option>
+                @endfor
+            </select>
+        </div>
+
+        {{-- Dropdown Level Legalitas (semakin besar semakin bagus) --}}
+        <div class="mb-3">
+            <label for="level_legalitas" class="form-label">Level Legalitas</label>
+            <select name="level_legalitas" id="level_legalitas" class="form-control" required>
+                <option value="">-- Pilih Level Legalitas --</option>
+                <option value="1" {{ old('level_legalitas') == 1 ? 'selected' : '' }}>CV / Lokal</option>
+                <option value="2" {{ old('level_legalitas') == 2 ? 'selected' : '' }}>Tingkat Kabupaten</option>
+                <option value="3" {{ old('level_legalitas') == 3 ? 'selected' : '' }}>Tingkat Provinsi</option>
+                <option value="4" {{ old('level_legalitas') == 4 ? 'selected' : '' }}>Tingkat Nasional</option>
+                <option value="5" {{ old('level_legalitas') == 5 ? 'selected' : '' }}>Tingkat Internasional
+                </option>
+            </select>
+        </div>
+
+        {{-- Total Jam Operasi (integer) --}}
+        <div class="mb-3">
+            <label for="total_jam_operasi" class="form-label">Total Jam Operasi</label>
+            <input type="number" name="total_jam_operasi" id="total_jam_operasi" class="form-control"
+                value="{{ old('total_jam_operasi') }}" min="0" required>
+        </div>
+
+        {{-- Jumlah Mahasiswa (integer) --}}
+        <div class="mb-3">
+            <label for="jumlah_mahasiswa" class="form-label">Jumlah Mahasiswa</label>
+            <input type="number" name="jumlah_mahasiswa" id="jumlah_mahasiswa" class="form-control"
+                value="{{ old('jumlah_mahasiswa') }}" min="0" required>
+        </div>
+
         <div class="mb-3">
             <label for="lat" class="form-label">Latitude</label>
             <input type="text" name="lat" id="lat" class="form-control"

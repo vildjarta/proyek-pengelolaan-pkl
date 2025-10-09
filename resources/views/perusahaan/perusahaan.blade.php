@@ -107,6 +107,10 @@
                                                         {{ $prs->status }}
                                                     </span>
                                                 </p>
+                                                <p class="card-text"><strong>Fasilitas:</strong> {{ $prs->fasilitas }}</p>
+                                                <p class="card-text"><strong>Level Legalitas:</strong> {{ $prs->fasilitas }}</p>
+                                                <p class="card-text"><strong>Jumlah Mahasiswa:</strong> {{ $prs->jumlah_mahasiswa }}</p>
+                                                <p class="card-text"><strong>Jam Operasi:</strong> {{ $prs->fasilitas }}</p>
                                                 <p class="card-text"><strong>Latitude:</strong> {{ $prs->lat }}</p>
                                                 <p class="card-text"><strong>Longitude:</strong> {{ $prs->lng }}</p>
 
