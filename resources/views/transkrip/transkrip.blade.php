@@ -33,15 +33,16 @@
 
         <div id="result" style="margin-top:20px;"></div> <!-- hasil analisis ringkas -->
 
-        <form id="saveForm" method="POST" action="/transkrip/save" style="display:none; margin-top:20px;"> <!-- form hidden simpan ke DB -->
+        <form id="saveForm" method="POST" action="/transkrip/save-multiple" style="display:none; margin-top:20px;"> <!-- form hidden simpan ke DB -->
             @csrf <!-- token keamanan Laravel -->
-            <input type="hidden" name="nama_mahasiswa" value="Contoh Mahasiswa"> <!-- sementara statis -->
-            <input type="hidden" name="nim" value="123456789"> <!-- sementara statis -->
-            <input type="hidden" name="ipk" id="ipkInput"> <!-- nilai IPK hasil analisis -->
-            <input type="hidden" name="total_sks_d" id="sksDInput"> <!-- jumlah SKS D -->
-            <input type="hidden" name="has_e" id="hasEInput"> <!-- flag ada nilai E -->
-            <input type="hidden" name="eligible" id="eligibleInput"> <!-- hasil layak/tidak -->
-            <button type="submit" class="btn btn-success">Simpan Hasil</button> <!-- tombol submit -->
+            <div id="transcriptEntries">
+                <!-- Dynamic entries will be added here -->
+            </div>
+            <button type="button" id="addEntryBtn" class="btn btn-secondary" style="margin-bottom: 10px;">
+                <i class="fa fa-plus"></i> Tambah Data Mahasiswa
+            </button>
+            <br>
+            <button type="submit" class="btn btn-success">Simpan Semua Data</button> <!-- tombol submit -->
         </form>
     </div>
 
@@ -83,6 +84,9 @@
         preview.innerHTML = html; // tampilkan
     }
 
+    let entryCounter = 0;
+    let analysisResults = [];
+
     // tombol analisa ditekan
     document.getElementById('analyzeBtn').addEventListener('click', () => {
         const table = preview.querySelector('table'); // ambil tabel hasil paste
@@ -108,16 +112,93 @@
                         <strong>Status:</strong> ${data.eligible ? '<span style="color:green">Layak</span>' : '<span style="color:red">Tidak Layak</span>'}
                     </div>
                 `;
-                // isi hidden input agar bisa disimpan
-                document.getElementById('ipkInput').value = data.ipk;
-                document.getElementById('sksDInput').value = data.total_sks_d;
-                document.getElementById('hasEInput').value = data.has_e ? 1 : 0;
-                document.getElementById('eligibleInput').value = data.eligible ? 1 : 0;
-                // tampilkan tombol simpan
+                // simpan hasil analisis sementara
+                analysisResults = data;
+                // tampilkan form simpan
                 document.getElementById('saveForm').style.display = 'block';
             }
         });
     });
+
+    // fungsi untuk menambah entry baru
+    function addTranscriptEntry(data = null) {
+        const container = document.getElementById('transcriptEntries');
+        const entryId = entryCounter++;
+        
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'transcript-entry';
+        entryDiv.style.cssText = 'border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; background: #f9f9f9;';
+        entryDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h4 style="margin: 0;">Data Mahasiswa #${entryId + 1}</h4>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeEntry(${entryId})">
+                    <i class="fa fa-trash"></i> Hapus
+                </button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label>Nama Mahasiswa:</label>
+                    <input type="text" name="entries[${entryId}][nama_mahasiswa]" class="form-control" value="${data?.nama_mahasiswa || ''}" required>
+                </div>
+                <div>
+                    <label>NIM:</label>
+                    <input type="text" name="entries[${entryId}][nim]" class="form-control" value="${data?.nim || ''}" required>
+                </div>
+                <div>
+                    <label>IPK:</label>
+                    <input type="number" step="0.01" name="entries[${entryId}][ipk]" class="form-control" value="${data?.ipk || analysisResults.ipk || ''}" required>
+                </div>
+                <div>
+                    <label>Total SKS D:</label>
+                    <input type="number" name="entries[${entryId}][total_sks_d]" class="form-control" value="${data?.total_sks_d || analysisResults.total_sks_d || 0}" required>
+                </div>
+                <div>
+                    <label>Ada Nilai E:</label>
+                    <select name="entries[${entryId}][has_e]" class="form-control" required>
+                        <option value="0" ${(data?.has_e === false || analysisResults.has_e === false) ? 'selected' : ''}>Tidak</option>
+                        <option value="1" ${(data?.has_e === true || analysisResults.has_e === true) ? 'selected' : ''}>Ya</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Status Kelayakan:</label>
+                    <select name="entries[${entryId}][eligible]" class="form-control" required>
+                        <option value="0" ${(data?.eligible === false || analysisResults.eligible === false) ? 'selected' : ''}>Tidak Layak</option>
+                        <option value="1" ${(data?.eligible === true || analysisResults.eligible === true) ? 'selected' : ''}>Layak</option>
+                    </select>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(entryDiv);
+    }
+
+    // fungsi untuk menghapus entry
+    window.removeEntry = function(entryId) {
+        const entries = document.querySelectorAll('.transcript-entry');
+        if (entries.length > 1) {
+            entries[entryId].remove();
+        } else {
+            alert('Minimal harus ada satu data mahasiswa.');
+        }
+    };
+
+    // tombol tambah entry
+    document.getElementById('addEntryBtn').addEventListener('click', () => {
+        addTranscriptEntry();
+    });
+
+    // auto-add first entry when form is shown
+    const saveForm = document.getElementById('saveForm');
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'style' && saveForm.style.display === 'block') {
+                if (document.getElementById('transcriptEntries').children.length === 0) {
+                    addTranscriptEntry();
+                }
+            }
+        });
+    });
+    observer.observe(saveForm, { attributes: true });
     </script>
 
     <script>

@@ -77,6 +77,51 @@ public function analyze(Request $req)
         return redirect()->route('transkrip_result')->with('success', 'Hasil analisa tersimpan.');
     }
 
+    public function saveMultiple(Request $request)
+    {
+        $entries = $request->input('entries', []);
+        
+        if (empty($entries)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang disimpan.');
+        }
+
+        $savedCount = 0;
+        $errors = [];
+
+        foreach ($entries as $entry) {
+            try {
+                // Validasi data entry
+                if (empty($entry['nim']) || empty($entry['nama_mahasiswa'])) {
+                    continue;
+                }
+
+                Transcript::updateOrCreate(
+                    ['nim' => $entry['nim']], // jika sudah ada → update
+                    [
+                        'nama_mahasiswa' => $entry['nama_mahasiswa'],
+                        'ipk' => $entry['ipk'] ?? 0,
+                        'total_sks_d' => $entry['total_sks_d'] ?? 0,
+                        'has_e' => $entry['has_e'] ?? 0,
+                        'eligible' => $entry['eligible'] ?? 0,
+                    ]
+                );
+                $savedCount++;
+            } catch (\Exception $e) {
+                $errors[] = "Error menyimpan NIM {$entry['nim']}: " . $e->getMessage();
+            }
+        }
+
+        if ($savedCount > 0) {
+            $message = "Berhasil menyimpan {$savedCount} data transkrip.";
+            if (!empty($errors)) {
+                $message .= " Namun ada beberapa error: " . implode(', ', $errors);
+            }
+            return redirect()->route('transkrip_result')->with('success', $message);
+        } else {
+            return redirect()->back()->with('error', 'Gagal menyimpan data. ' . implode(', ', $errors));
+        }
+    }
+
     public function results()
     {
         $data = Transcript::latest()->get();

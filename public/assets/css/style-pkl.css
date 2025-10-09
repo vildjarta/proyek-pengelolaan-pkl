@@ -421,3 +421,65 @@ body.sidebar-closed .main-content-wrapper {
         color: var(--color-primary-blue);
     }
 }
+
+/* --- Transcript Entry Styling --- */
+.transcript-entry {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.transcript-entry:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary-blue);
+}
+
+.transcript-entry h4 {
+    color: var(--color-primary-blue);
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+}
+
+.transcript-entry label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    font-size: 0.9em;
+}
+
+.transcript-entry .form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.95em;
+    transition: border-color 0.3s ease;
+}
+
+.transcript-entry .form-control:focus {
+    outline: none;
+    border-color: var(--color-primary-blue);
+    box-shadow: 0 0 0 3px rgba(91, 138, 210, 0.1);
+}
+
+#addEntryBtn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#addEntryBtn:hover {
+    background-color: #5a6268;
+}
+
+#addEntryBtn i {
+    margin-right: 5px;
+}

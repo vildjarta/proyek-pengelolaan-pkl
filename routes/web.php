@@ -44,6 +44,7 @@ Route::get('/transcript', [TranscriptController::class, 'index'])->name('transcr
 Route::post('/transcript/analyze', [TranscriptController::class, 'analyze'])->name('transcript.analyze');
 Route::get('/transkrip', [TranscriptController::class, 'index']);
 Route::post('/transkrip/save', [TranscriptController::class, 'save']);
+Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transcript.save.multiple');
 Route::get('/transkrip_result', [TranscriptController::class, 'results'])->name('transkrip_result');
 
 // return control('perusahaan');
@@ -80,7 +81,6 @@ Route::get('/menu', function () {
 Route::get('/profile', function () {
     return view('profile.profile');
     // folder.profile
-    return view('profile');
 });
 
 
