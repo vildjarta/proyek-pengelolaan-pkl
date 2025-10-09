@@ -46,6 +46,8 @@ Route::get('/transkrip', [TranscriptController::class, 'index']);
 Route::post('/transkrip/save', [TranscriptController::class, 'save']);
 Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transcript.save.multiple');
 Route::get('/transkrip_result', [TranscriptController::class, 'results'])->name('transkrip_result');
+Route::put('/transkrip/update/{id}', [TranscriptController::class, 'update'])->name('transcript.update');
+Route::delete('/transkrip/delete/{id}', [TranscriptController::class, 'delete'])->name('transcript.delete');
 
 // return control('perusahaan');
 Route::resource('/perusahaan', PerusahaanController::class);

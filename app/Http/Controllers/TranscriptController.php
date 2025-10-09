@@ -127,4 +127,36 @@ public function analyze(Request $req)
         $data = Transcript::latest()->get();
         return view('transkrip.transkrip_result', compact('data'));
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $transcript = Transcript::findOrFail($id);
+            
+            $transcript->update([
+                'nama_mahasiswa' => $request->nama_mahasiswa,
+                'nim' => $request->nim,
+                'ipk' => $request->ipk,
+                'total_sks_d' => $request->total_sks_d,
+                'has_e' => $request->has_e,
+                'eligible' => $request->eligible,
+            ]);
+
+            return redirect()->route('transkrip_result')->with('success', 'Data transkrip berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $transcript = Transcript::findOrFail($id);
+            $transcript->delete();
+
+            return redirect()->route('transkrip_result')->with('success', 'Data transkrip berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
 }
