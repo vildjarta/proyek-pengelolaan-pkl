@@ -1,0 +1,130 @@
+/* ===========================
+   STYLE: Edit Rating & Review
+   =========================== */
+
+body {
+  background-color: #f4f7f9;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  color: #333;
+}
+
+/* Area Utama */
+.main-content-wrapper {
+  margin-left: 260px;
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
+  background-color: #f4f7f9;
+  padding: 0;
+  transition: margin-left 0.3s ease;
+}
+body.sidebar-closed .main-content-wrapper {
+  margin-left: 80px;
+}
+
+/* Container Full */
+.full-container {
+  width: 100%;
+  height: calc(100vh - 70px);
+  padding: 40px 60px;
+  background-color: #ffffff;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Judul Halaman */
+.page-title {
+  color: #5b8ad2;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+/* Form Control */
+.form-control {
+  border-radius: 8px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  transition: 0.3s;
+}
+.form-control:focus {
+  border-color: #5b8ad2;
+  box-shadow: 0 0 6px rgba(91, 138, 210, 0.4);
+}
+
+/* Rating Bintang */
+.rating-stars {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  display: inline-block;
+}
+.rating-stars input {
+  display: none;
+}
+.rating-stars label {
+  font-size: 2.5rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.rating-stars label:hover,
+.rating-stars label:hover ~ label,
+.rating-stars input:checked ~ label {
+  color: #FFD700;
+}
+
+/* Tombol */
+.btn {
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.btn-primary {
+  background-color: #5b8ad2;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #466fb4;
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background-color: #adb5bd;
+  border: none;
+}
+.btn-secondary:hover {
+  background-color: #868e96;
+  transform: translateY(-2px);
+}
+
+/* Alert */
+.alert {
+  border-radius: 8px;
+  padding: 15px;
+}
+
+/* Responsif */
+@media (max-width: 992px) {
+  .main-content-wrapper {
+    margin-left: 0;
+  }
+
+  .full-container {
+    padding: 20px;
+    height: auto;
+  }
+
+  .page-title {
+    text-align: center;
+    font-size: 1.6rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .d-flex.justify-content-end {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

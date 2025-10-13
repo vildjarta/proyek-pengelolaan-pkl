@@ -55,12 +55,10 @@
                 </a>
             </li>
         <li>
-            <li>
-                <a href="{{ route('jadwal.index') }}">
-                    <i class="fa fa-calendar"></i>
-                    <span>Jadwal Bimbingan</span>
+            <a href="#">
+                <i class="fa fa-calendar"></i>
+                <span>Jadwal Bimbingan</span>
             </a>
-            </li>
         </li>
             <li>
                 <a href="#">

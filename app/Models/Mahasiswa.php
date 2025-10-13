@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,8 +9,10 @@ class Mahasiswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'mahasiswa';             // nama tabel
-    protected $primaryKey = 'id_mahasiswa';     // primary key custom
+    protected $table = 'mahasiswa'; // atau sesuaikan kalau tabel kamu 'tbl_mahasiswa'
+    protected $primaryKey = 'id_mahasiswa'; // ← ini wajib disesuaikan
+    public $incrementing = true; // karena id_mahasiswa biasanya AUTO_INCREMENT
+    protected $keyType = 'int';
 
     protected $fillable = [
         'nim',
@@ -22,15 +25,8 @@ class Mahasiswa extends Model
         'id_pembimbing'
     ];
 
-    // relasi ke user (sementara dimatikan karena belum dipakai)
-    // public function user()
-    // {
-    //     return $this->belongsTo(\App\Models\User::class, 'id_user');
-    // }
-
-    // relasi ke dosen pembimbing (belum ada modelnya, jadi sementara dimatikan)
-    // public function pembimbing()
-    // {
-    //     return $this->belongsTo(\App\Models\DosenPembimbing::class, 'id_pembimbing');
-    // }
+    public function pembimbing()
+    {
+        return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
+    }
 }

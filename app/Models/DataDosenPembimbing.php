@@ -11,7 +11,18 @@ class DataDosenPembimbing extends Model
 
     protected $table = 'dosen_pembimbing';
     protected $primaryKey = 'id_pembimbing';
+    public $timestamps = false;
 
-    protected $fillable = ['NIP', 'nama', 'email', 'nama_mahasiswa', 'id_user'];
+    protected $fillable = [
+        'NIP',
+        'nama',
+        'email',
+        'nama_mahasiswa',
+        'id_user'
+    ];
 
+    public function mahasiswa()
+    {
+        return $this->hasMany(Mahasiswa::class, 'id_pembimbing', 'id_pembimbing');
+    }
 }

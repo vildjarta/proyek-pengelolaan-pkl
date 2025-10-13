@@ -3,152 +3,177 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tambah Dosen Pembimbing</title>
+  <title>Tambah Dosen Pembimbing | Sistem PKL JOZZ</title>
+
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    .tag-container {
-      border: 1px solid #ced4da;
-      padding: 6px;
-      border-radius: 6px;
-      min-height: 46px;
-      display: flex;
-      flex-wrap: wrap;
-      cursor: text;
-    }
-    .tag {
-      background-color: #0d6efd;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      margin: 3px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .tag i {
-      cursor: pointer;
-    }
-    .tag-input {
-      border: none;
-      flex: 1;
-      min-width: 120px;
-      outline: none;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ asset('assets/css/tambahdatadosenpembimbing.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
 </head>
 <body>
-<div class="container mt-4">
-  <a href="{{ route('datadosenpembimbing.index') }}" class="text-decoration-none text-dark">
-    <i class="bi bi-arrow-left-circle fs-3"></i>
-  </a>
 
-  <h2 class="mb-3 mt-3">Tambah Dosen Pembimbing</h2>
+@include('layout.header')
+@include('layout.sidebar')
 
-  <form action="{{ route('datadosenpembimbing.store') }}" method="POST">
-    @csrf
+<div class="main-wrapper">
+  <div class="content-container">
+    <div class="content-card shadow-sm">
 
-    <!-- Input NIP -->
-    <div class="mb-3">
-      <label class="form-label">NIP</label>
-      <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18" required>
-      <div id="nipError" class="text-danger mt-1" style="display:none;">
-        NIP harus 18 angka.
-      </div>
+      <h3 class="text-center mb-4 page-header">Tambah Dosen Pembimbing</h3>
+      <hr>
+
+      <form action="{{ route('datadosenpembimbing.store') }}" method="POST" id="formDosenPembimbing">
+        @csrf
+
+        <!-- NIP -->
+        <div class="mb-3">
+          <label class="form-label">NIP</label>
+          <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18"
+                 placeholder="Masukkan 18 digit NIP" value="{{ old('NIP') }}" required>
+          <div id="nipError" class="text-danger mt-1" style="display:none;">NIP harus 18 angka.</div>
+          @error('NIP')
+            <div class="text-danger mt-1">{{ $message }}</div>
+          @enderror
+        </div>
+
+        <!-- Nama Dosen -->
+        <div class="mb-3">
+          <label class="form-label">Nama Dosen</label>
+          <input type="text" name="nama" class="form-control" placeholder="Masukkan nama dosen"
+                 value="{{ old('nama') }}" required>
+          @error('nama')
+            <div class="text-danger mt-1">{{ $message }}</div>
+          @enderror
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" placeholder="contoh@email.com"
+                 value="{{ old('email') }}" required>
+          @error('email')
+            <div class="text-danger mt-1">{{ $message }}</div>
+          @enderror
+        </div>
+
+        <!-- Mahasiswa -->
+        <div class="mb-3">
+          <h5 class="fw-bold text-primary mb-3">Daftar Mahasiswa Bimbingan</h5>
+          <div id="mahasiswa-list">
+            <div class="mahasiswa-item mb-3 p-3 border rounded">
+              <div class="mb-3">
+                <label class="form-label">NIM Mahasiswa</label>
+                <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa" required>
+                <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">NIM tidak ditemukan.</div>
+                <div class="nimSuccess alert alert-success py-1 px-2 mt-2 mb-0" style="display:none;">
+                  NIM valid. Nama mahasiswa: <span class="namaTampil fw-bold"></span>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Nama Mahasiswa</label>
+                <input type="text" name="nama_mahasiswa[]" class="form-control namaInput"
+                       placeholder="Nama Mahasiswa Terisi Otomatis" readonly required>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="add-mahasiswa" class="btn btn-primary btn-sm mt-2">
+            <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
+          </button>
+        </div>
+
+        <!-- Tombol Simpan dan Batal -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-4 me-2">
+            <i class="bi bi-check-circle"></i> Simpan
+          </button>
+          <a href="{{ route('datadosenpembimbing.index') }}" class="btn btn-secondary px-4">
+            <i class="bi bi-x-circle"></i> Batal
+          </a>
+        </div>
+      </form>
+
     </div>
-
-    <div class="mb-3">
-      <label class="form-label">Nama Dosen</label>
-      <input type="text" name="nama" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Email</label>
-      <input type="email" name="email" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Nama Mahasiswa</label>
-      <div id="tagInputContainer" class="tag-container">
-        <input type="text" id="tagInput" class="tag-input" placeholder="Ketik nama lalu tekan Enter...">
-      </div>
-      <input type="hidden" name="nama_mahasiswa" id="hiddenNamaMahasiswa">
-    </div>
-
-    <button type="submit" class="btn btn-success">Simpan</button>
-    <a href="{{ route('datadosenpembimbing.index') }}" class="btn btn-secondary">Batal</a>
-  </form>
+  </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // =========================
-  // Validasi NIP real-time
-  // =========================
+  // Validasi NIP
   const nipInput = document.getElementById("NIP");
   const nipError = document.getElementById("nipError");
-
   nipInput.addEventListener("input", function () {
-    // Hanya angka yang boleh
     this.value = this.value.replace(/\D/g, "");
-    // Maksimal 18 digit
-    if (this.value.length > 18) {
-      this.value = this.value.slice(0, 18);
-    }
-    // Tampilkan error jika kurang dari 18 digit
-    if (this.value.length > 0 && this.value.length < 18) {
-      nipError.style.display = "block";
-    } else {
-      nipError.style.display = "none";
-    }
+    if (this.value.length > 18) this.value = this.value.slice(0, 18);
+    nipError.style.display = this.value.length > 0 && this.value.length < 18 ? "block" : "none";
   });
 
-  // =========================
-  // Tag Input Nama Mahasiswa
-  // =========================
-  const tagContainer = document.getElementById('tagInputContainer');
-  const tagInput = document.getElementById('tagInput');
-  const hiddenInput = document.getElementById('hiddenNamaMahasiswa');
-  let tags = [];
+  // Setup Mahasiswa Item
+  function setupMahasiswaItem(item, isClone = false) {
+    const nimInput = item.querySelector('.nimInput');
+    const nimError = item.querySelector('.nimError');
+    const nimSuccess = item.querySelector('.nimSuccess');
+    const namaTampil = item.querySelector('.namaTampil');
+    const namaInput = item.querySelector('.namaInput');
 
-  function updateHiddenInput() {
-    hiddenInput.value = tags.join(',');
-  }
-
-  function addTag(text) {
-    if (text && !tags.includes(text)) {
-      tags.push(text);
-      renderTags();
-      updateHiddenInput();
+    if (isClone && !item.querySelector('.remove-mahasiswa')) {
+      const btnRemove = document.createElement('button');
+      btnRemove.type = 'button';
+      btnRemove.className = 'btn btn-danger btn-sm remove-mahasiswa mt-2';
+      btnRemove.innerHTML = '<i class="bi bi-trash"></i> Hapus';
+      item.appendChild(btnRemove);
     }
-  }
 
-  function removeTag(index) {
-    tags.splice(index, 1);
-    renderTags();
-    updateHiddenInput();
-  }
-
-  function renderTags() {
-    tagContainer.innerHTML = '';
-    tags.forEach((tag, index) => {
-      const tagEl = document.createElement('span');
-      tagEl.className = 'tag';
-      tagEl.innerHTML = `${tag} <i class="bi bi-x-circle" onclick="removeTag(${index})"></i>`;
-      tagContainer.appendChild(tagEl);
+    nimInput.addEventListener('blur', function() {
+      const nim = this.value.trim();
+      if (!nim) {
+        nimError.style.display = "none";
+        nimSuccess.style.display = "none";
+        namaTampil.textContent = "";
+        namaInput.value = "";
+        return;
+      }
+      fetch(`/cek-nim/${nim}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.exists) {
+            nimError.style.display = "none";
+            nimSuccess.style.display = "block";
+            namaTampil.textContent = data.nama_mahasiswa;
+            namaInput.value = data.nama_mahasiswa;
+          } else {
+            nimError.style.display = "block";
+            nimSuccess.style.display = "none";
+            namaTampil.textContent = "";
+            namaInput.value = "";
+          }
+        });
     });
-    tagContainer.appendChild(tagInput);
-    tagInput.value = '';
   }
 
-  tagInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const text = tagInput.value.trim();
-      if (text) addTag(text);
-    }
+  document.querySelectorAll('.mahasiswa-item').forEach(item => setupMahasiswaItem(item));
+
+  document.getElementById('add-mahasiswa').addEventListener('click', function() {
+    const list = document.getElementById('mahasiswa-list');
+    const firstItem = list.firstElementChild;
+    const newItem = firstItem.cloneNode(true);
+    newItem.querySelectorAll('input').forEach(input => input.value = '');
+    newItem.querySelector('.nimError').style.display = 'none';
+    newItem.querySelector('.nimSuccess').style.display = 'none';
+    newItem.querySelector('.namaTampil').textContent = '';
+    setupMahasiswaItem(newItem, true);
+    list.appendChild(newItem);
+  });
+
+  document.getElementById('mahasiswa-list').addEventListener('click', function(e) {
+    if (e.target.closest('.remove-mahasiswa')) e.target.closest('.mahasiswa-item').remove();
   });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
