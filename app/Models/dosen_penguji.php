@@ -28,10 +28,4 @@ class dosen_penguji extends Model
         'created_at',
         'updated_at',
     ];
-
-    // Relasi: satu dosen bisa menguji banyak mahasiswa (pengujian PKL)
-    public function pengujianPkl()
-    {
-        return $this->hasMany(Pengujian::class, 'id_penguji', 'id_penguji');
-    }
 }
