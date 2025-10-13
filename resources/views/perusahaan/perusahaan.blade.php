@@ -15,9 +15,10 @@
 
         .company-card {
             transition: transform 0.3s, box-shadow 0.3s;
-            border: none;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
         .company-card:hover {
