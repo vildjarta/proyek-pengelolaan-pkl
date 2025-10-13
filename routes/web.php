@@ -8,8 +8,6 @@ Route::resource('jadwal', JadwalBimbinganController::class);
 
 use App\Http\Controllers\RatingDanReviewController;
 use App\Http\Controllers\DataDosenPembimbingController;
-use App\Http\Controllers\MahasiswaController;
-
 use App\Http\Controllers\DosenPengujiController;
 
 /*
