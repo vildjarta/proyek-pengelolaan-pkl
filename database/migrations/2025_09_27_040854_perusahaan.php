@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('alamat', 255);
             $table->string('status', 50);
             $table->string('bidang_usaha', 100);
+            $table->string('fasilitas', 100);
+            $table->string('level_legalitas', 100);
+            $table->string('jumlah_mahasiswa', 100);
+            $table->string('jam_operasi', 100);
             $table->string('lat', 50);
             $table->string('lng', 50);
             $table->timestamps();

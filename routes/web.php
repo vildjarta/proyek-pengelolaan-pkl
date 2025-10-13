@@ -10,6 +10,8 @@ use App\Http\Controllers\RatingDanReviewController;
 use App\Http\Controllers\DataDosenPembimbingController;
 use App\Http\Controllers\MahasiswaController;
 
+use App\Http\Controllers\DosenPengujiController;
+
 /*
 |--------------------------------------------------------------------------
 | WEB ROUTES
@@ -36,6 +38,7 @@ Route::resource('ratingdanreview', RatingDanReviewController::class)->names([
     'index' => 'lihatratingdanreview',     // alias index
     'create' => 'tambahratingdanreview',   // alias create
 ]);
+
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
@@ -87,8 +90,8 @@ Route::get('/profile', function () {
     // folder.profile
 });
 
-
-Route::resource('perusahaan', PerusahaanController::class);
+// Resource untuk perusahaan (CRUD otomatis)
+Route::resource('/perusahaan', PerusahaanController::class);
 
 
 // ⭐ ============================
@@ -124,3 +127,10 @@ Route::resource('penilaian', PenilaianPengujiController::class);
 
 // 🔍 AJAX untuk cari mahasiswa berdasarkan NIM
 Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNim']);
+
+// Resource untuk pengujian (CRUD otomatis)
+
+Route::resource('/dosen_penguji', DosenPengujiController::class);
+
+// route('get', '/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
