@@ -131,7 +131,7 @@
     function addTranscriptEntry(data = null) {
         const container = document.getElementById('transcriptEntries');
         const entryId = entryCounter++;
-        
+
         const entryDiv = document.createElement('div');
         entryDiv.className = 'transcript-entry';
         entryDiv.style.cssText = 'border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; background: #f9f9f9;';
@@ -175,7 +175,7 @@
                 </div>
             </div>
         `;
-        
+
         container.appendChild(entryDiv);
     }
 

@@ -132,13 +132,13 @@ public function analyze(Request $req)
             ]
         );
 
-        return redirect()->route('transkrip_result')->with('success', 'Hasil analisa tersimpan.');
+        return redirect()->route('transkrip.index')->with('success', 'Hasil analisa tersimpan.');
     }
 
     public function saveMultiple(Request $request)
     {
         $entries = $request->input('entries', []);
-        
+
         if (empty($entries)) {
             return redirect()->back()->with('error', 'Tidak ada data yang disimpan.');
         }
@@ -174,17 +174,12 @@ public function analyze(Request $req)
             if (!empty($errors)) {
                 $message .= " Namun ada beberapa error: " . implode(', ', $errors);
             }
-            return redirect()->route('transkrip_result')->with('success', $message);
+            return redirect()->route('transkrip.index')->with('success', $message);
         } else {
             return redirect()->back()->with('error', 'Gagal menyimpan data. ' . implode(', ', $errors));
         }
     }
 
-    public function results()
-    {
-        $data = Transcript::latest()->get();
-        return view('transkrip.transkrip_result', compact('data'));
-    }
 
     /**
      * Update the specified resource in storage.
