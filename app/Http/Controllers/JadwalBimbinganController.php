@@ -10,11 +10,45 @@ class JadwalBimbinganController extends Controller
     /**
      * Menampilkan daftar resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil semua jadwal secara langsung tanpa mencoba memuat relasi yang tidak ada.
-        $jadwals = jadwal_bimbingan::all();
-        return view('jadwal_bimbingan', compact('jadwals'));
+        // Ambil input untuk search dan sort
+        $search = $request->query('search');
+        $sort = $request->query('sort', 'waktu_terdekat'); // Default sort: waktu terdekat
+
+        // Mulai query builder
+        $query = jadwal_bimbingan::query();
+
+        // --- LOGIKA PENCARIAN ---
+        if ($search) {
+            // Cari di kolom 'mahasiswa' atau 'dosen'
+            $query->where(function($q) use ($search) {
+                $q->where('mahasiswa', 'like', "%{$search}%")
+                  ->orWhere('dosen', 'like', "%{$search}%");
+            });
+        }
+
+        // --- LOGIKA SORTING ---
+        switch ($sort) {
+            case 'mahasiswa':
+                $query->orderBy('mahasiswa', 'asc');
+                break;
+            case 'dosen':
+                $query->orderBy('dosen', 'asc');
+                break;
+            case 'waktu':
+                $query->orderBy('waktu_mulai', 'asc');
+                break;
+            default: // default ke 'waktu_terdekat'
+                // Mengurutkan berdasarkan tanggal dan waktu mulai terdekat
+                $query->orderBy('tanggal', 'asc')->orderBy('waktu_mulai', 'asc');
+                break;
+        }
+
+        $jadwals = $query->get();
+
+        // Kirim data ke view
+        return view('jadwal_bimbingan', compact('jadwals', 'sort', 'search'));
     }
 
     /**
@@ -22,22 +56,20 @@ class JadwalBimbinganController extends Controller
      */
     public function create()
     {
-        // Tidak perlu mengirim data user karena form menggunakan input teks biasa.
         return view('create_jadwal');
     }
-
+    
     /**
-     * Menyimpan resource yang baru dibuat.
+     * Menyimpan resource baru.
      */
     public function store(Request $request)
     {
-        // Lakukan validasi request berdasarkan input form yang sebenarnya.
         $request->validate([
             'mahasiswa' => 'nullable|string|max:255',
             'dosen' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
-            'waktu_mulai' => 'required|date_format:H:i',
-            'waktu_selesai' => 'required|date_format:H:i',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
         ]);
@@ -52,33 +84,31 @@ class JadwalBimbinganController extends Controller
      */
     public function edit(jadwal_bimbingan $jadwal)
     {
-        // DIUBAH: Memanggil view 'edit_jadwal' yang sesuai dengan nama file
         return view('edit_jadwal', compact('jadwal'));
     }
 
     /**
-     * Memperbarui resource yang ada di storage.
+     * Memperbarui resource yang ada.
      */
     public function update(Request $request, jadwal_bimbingan $jadwal)
     {
-        dd($jadwal, $request->all());
-        // Validasi yang benar untuk memperbarui data.
         $request->validate([
             'mahasiswa' => 'nullable|string|max:255',
             'dosen' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
-            'waktu_mulai' => 'required|date_format:H:i',
-            'waktu_selesai' => 'required|date_format:H:i',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
         ]);
 
         $jadwal->update($request->all());
-
-        return redirect()->route('jadwal.edit', $jadwal->id)->with('success', 'Jadwal berhasil diupdate!');    }
+            
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate!');
+    }
 
     /**
-     * Menghapus resource dari storage.
+     * Menghapus resource.
      */
     public function destroy(jadwal_bimbingan $jadwal)
     {

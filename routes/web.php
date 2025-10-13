@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PerusahaanController;
 use App\Http\Controllers\JadwalBimbinganController;
+use App\Http\Controllers\PenilaianDospemController;
 
 Route::resource('jadwal', JadwalBimbinganController::class);
 
@@ -114,6 +115,10 @@ Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
 Route::get('/daftar-jadwal', function () {
     return view('daftar-jadwal');
 });
+
+Route::resource('perusahaan', PerusahaanController::class);
+
+Route::resource('penilaian', PenilaianDospemController::class);
 
 // Resource untuk Jadwal (CRUD otomatis)
 Route::resource('jadwal', JadwalController::class);

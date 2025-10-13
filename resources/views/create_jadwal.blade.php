@@ -1,5 +1,6 @@
-@extends('layout.header')
-@extends('layout.sidebar')
+@include('layout.header')
+@include('layout.sidebar')
+<link rel="stylesheet" href="{{ asset('assets/css/style-create-jadwal.css') }}">
 
 <div class="main-content-wrapper">
     <div class="content">
@@ -46,6 +47,55 @@
             <button type="submit" class="btn btn-success">Simpan Jadwal</button>
         </form>
     </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const toggleButton = document.querySelector('.menu-toggle');
+                const body = document.body;
+
+                function updateSortingLinks() {
+                    const sortingLinks = document.querySelectorAll('.table thead a');
+                    const isSidebarClosed = body.classList.contains('sidebar-closed');
+
+                    sortingLinks.forEach(link => {
+                        let url = new URL(link.href);
+                        if (isSidebarClosed) {
+                            url.searchParams.set('sidebar', 'closed');
+                        } else {
+                            url.searchParams.delete('sidebar');
+                        }
+                        link.href = url.toString();
+                    });
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('sidebar') === 'closed') {
+                    body.classList.add('sidebar-closed');
+                }
+
+                updateSortingLinks();
+
+                if (toggleButton) {
+                    toggleButton.addEventListener('click', function() {
+                        body.classList.toggle('sidebar-closed');
+                        updateSortingLinks();
+                    });
+                }
+                
+                const profileWrapper = document.querySelector('.user-profile-wrapper');
+                const userinfo = document.querySelector('.user-info');
+                if (userinfo) {
+                    userinfo.addEventListener('click', function(e) {
+                        e.preventDefault(); 
+                        profileWrapper.classList.toggle('active');
+                    });
+                    document.addEventListener('click', function(e) {
+                        if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                            profileWrapper.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        </script>
 </div>
 
 <script>
