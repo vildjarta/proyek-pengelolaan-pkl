@@ -2,22 +2,36 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Perusahaan extends Model
 {
-    protected $table = 'perusahaan';
-    protected $primaryKey = 'id_perusahaan';
-    public $incrementing = false; // karena NIM biasanya bukan auto-increment
-    protected $keyType = 'string'; // kalau NIM berupa string, bukan integer
+    use HasFactory;
+
+    protected $table = 'perusahaan';           // nama tabel di database
+    protected $primaryKey = 'id_perusahaan';   // primary key
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
-        'id_perusahaan',
         'nama',
         'alamat',
-        'status',
         'bidang_usaha',
-        'created_at',
-        'updated_at',
+        'status',
+        'fasilitas',
+        'level_legalitas',
+        'jumlah_mahasiswa',
+        'jam_operasi',
+        'lat',
+        'lng',
     ];
+
+    /**
+     * 🔗 Relasi ke RatingDanReview
+     */
+    public function reviews()
+    {
+        return $this->hasMany(RatingDanReview::class, 'id_perusahaan', 'id_perusahaan');
+    }
 }

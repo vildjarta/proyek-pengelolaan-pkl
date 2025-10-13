@@ -1,0 +1,168 @@
+/* ====== Halaman Data Dosen Pembimbing ====== */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #444;
+    margin: 0;
+}
+
+/* ====== Wrapper ====== */
+.main-content-wrapper {
+    margin-top: 60px;
+    margin-left: 260px;
+    transition: margin-left 0.3s ease;
+}
+
+body.sidebar-closed .main-content-wrapper {
+    margin-left: 70px;
+}
+
+/* ====== Konten ====== */
+.content {
+    background-color: #fff;
+    padding: 25px 30px;
+    min-height: 100vh;
+}
+
+/* ====== Header Tabel ====== */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #5b8ad2;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.table-header .title {
+    color: #5b8ad2;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+/* ====== Pencarian ====== */
+.search-container {
+    width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #5b8ad2;
+    box-shadow: 0 0 4px rgba(91, 138, 210, 0.4);
+}
+
+/* ====== Tabel ====== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.table thead tr {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* ====== Kolom Mahasiswa ====== */
+.mahasiswa-bimbingan ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mahasiswa-bimbingan li {
+    background-color: #f7f9fc;
+    margin-bottom: 5px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    border: 1px solid #e0e0e0;
+}
+
+.mahasiswa-bimbingan li .nomor {
+    font-weight: bold;
+    color: #5b8ad2;
+    margin-right: 6px;
+}
+
+.mahasiswa-bimbingan li .nim {
+    color: #5b8ad2;
+    font-weight: 500;
+}
+
+/* ====== Tombol Aksi ====== */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn {
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #4a75b3;
+}
+
+.btn-edit-custom {
+    background-color: #00A19D;
+    color: #fff;
+}
+
+.btn-edit-custom:hover {
+    background-color: #00847E;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* ====== Responsif ====== */
+@media (max-width: 992px) {
+    .main-content-wrapper {
+        margin-left: 0;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+}

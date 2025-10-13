@@ -54,13 +54,13 @@
                     <span>Daftar Mahasiswa Bimbingan</span>
                 </a>
             </li>
-            <li class="{{ Route::is('jadwal.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('jadwal.*') ? 'active' : '' }}">
                 <a href="{{ route('jadwal.index') }}">
                     <i class="fa fa-calendar"></i>
                     <span>Jadwal Bimbingan</span>
                 </a>
             </li>
-            <li class="{{ Route::is('penilaian.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('penilaian.*') ? 'active' : '' }}">
                 <a href="{{ route('penilaian.index') }}">
                     <i class="fa fa-edit"></i>
                     <span>Input Nilai/Kajian</span>
@@ -95,7 +95,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/perusahaan">
                     <i class="fa fa-building"></i>
                     <span>Profil Perusahaan</span>
                 </a>
@@ -186,3 +186,31 @@
 
     </div>
 </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.querySelector('.menu-toggle');
+            const body = document.body;
+            const profileWrapper = document.querySelector('.user-profile-wrapper');
+            const userinfo = document.querySelector('.user-info');
+
+            if (toggleButton) {
+                toggleButton.addEventListener('click', function() {
+                    body.classList.toggle('sidebar-closed');
+                });
+            }
+
+            if (userinfo) {
+                userinfo.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    profileWrapper.classList.toggle('active');
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                        profileWrapper.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>

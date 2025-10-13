@@ -1,0 +1,114 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Wrapper utama */
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: 250px; /* sesuaikan dengan sidebar */
+  min-height: 100vh;
+  background-color: #fff;
+  overflow-x: hidden;
+  padding-top: 90px; /* beri jarak dari header agar tidak menempel */
+}
+
+/* Kontainer konten */
+.content-container {
+  flex: 1;
+  width: 100%;
+  padding: 30px 40px;
+  box-sizing: border-box;
+}
+
+/* Kartu form */
+.content-card {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 30px 40px;
+  width: 100%;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+/* Judul Halaman */
+.page-header {
+  font-weight: 700;
+  color: #113d92;
+  margin-top: 10px;
+}
+
+/* Label dan Input */
+.form-label {
+  font-weight: 600;
+  color: #222;
+}
+.form-control {
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  transition: all 0.2s;
+}
+.form-control:focus {
+  border-color: #5b8ad2;
+  box-shadow: 0 0 0 0.2rem rgba(91, 138, 210, 0.25);
+}
+
+/* Mahasiswa Item */
+.mahasiswa-item {
+  background-color: #f9fafc;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 15px;
+}
+.remove-mahasiswa {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Tombol */
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+}
+.btn-primary {
+  background-color: #5b8ad2;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #4a75b3;
+}
+.btn-success {
+  background-color: #3bb273;
+  border: none;
+}
+.btn-success:hover {
+  background-color: #319763;
+}
+.btn-secondary {
+  background-color: #adb5bd;
+  border: none;
+}
+.btn-secondary:hover {
+  background-color: #9ca3af;
+}
+
+/* Responsif */
+@media (max-width: 992px) {
+  .main-wrapper {
+    margin-left: 0;
+    padding-top: 80px;
+  }
+  .content-container {
+    padding: 15px;
+  }
+  .content-card {
+    padding: 20px;
+  }
+}

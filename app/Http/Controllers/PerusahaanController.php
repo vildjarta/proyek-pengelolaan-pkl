@@ -24,11 +24,16 @@ class PerusahaanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_perusahaan' => 'required|string|max:20|unique:perusahaan,id_perusahaan',
             'nama'          => 'required|string|max:255',
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
+            'fasilitas'     => 'required|string|max:100',
+            'level_legalitas' => 'required|string|max:100',
+            'jumlah_mahasiswa' => 'required|string|max:100',
+            'jam_operasi'   => 'required|string|max:100',
+            'lat'           => 'required|string|max:50',
+            'lng'           => 'required|string|max:50',
         ]);
 
         Perusahaan::create($validated);
@@ -43,6 +48,11 @@ class PerusahaanController extends Controller
         $perusahaan = Perusahaan::findOrFail($id);
         return view('perusahaan.edit', compact('perusahaan'));
     }
+    public function show($id)
+    {
+        $perusahaan = Perusahaan::findOrFail($id);
+        return view('perusahaan.show', compact('perusahaan'));
+    }
 
     // Proses update perusahaan
     public function update(Request $request, $id)
@@ -50,11 +60,16 @@ class PerusahaanController extends Controller
         $perusahaan = Perusahaan::findOrFail($id);
 
         $validated = $request->validate([
-            'id_perusahaan' => 'required|string|max:20|unique:perusahaan,id_perusahaan',
             'nama'          => 'required|string|max:255',
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
+            'fasilitas'     => 'required|string|max:100',
+            'level_legalitas' => 'required|string|max:100',
+            'jumlah_mahasiswa' => 'required|string|max:100',
+            'jam_operasi'   => 'required|string|max:100',
+            'lat'           => 'required|string|max:50',
+            'lng'           => 'required|string|max:50',
         ]);
 
         $perusahaan->update($validated);
