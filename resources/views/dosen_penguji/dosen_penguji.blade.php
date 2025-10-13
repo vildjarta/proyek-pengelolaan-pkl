@@ -91,28 +91,30 @@
 
     <div class="main-content-wrapper">
         <div class="content">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="text-center flex-grow-1">Daftar Dosen Penguji</h1>
-                <a href="{{ route('dosen_penguji.create') }}" class="btn btn-primary shadow-sm">
-                    <i class="bi bi-person-plus-fill"></i> Tambah
-                </a>
-            </div>
+            {{-- Baris atas: Judul, Pencarian, dan Tombol Tambah --}}
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h1 class="mb-0">Daftar Dosen Penguji</h1>
 
-            {{-- Kolom Pencarian --}}
-
-            {{-- Tabel Data Dosen Penguji --}}
-            <div class="table-responsive table-wrapper">
-                <form action="{{ route('dosen_penguji.search') }}" method="get">
-                    <div class="d-flex justify-content-end mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <form action="{{ route('dosen_penguji.search') }}" method="get" class="d-flex align-items-center">
                         <div class="input-group search-bar">
                             <input type="text" id="searchInput" name="q" class="form-control"
                                 placeholder="Cari dosen...">
+                            {{-- Jika ingin tombol search aktif, tinggal hapus komentar di bawah --}}
                             {{-- <button class="btn btn-primary" id="searchBtn">
-                                <i class="bi bi-search"></i> Search
-                            </button> --}}
+                            <i class="bi bi-search"></i> Search
+                        </button> --}}
                         </div>
-                    </div>
-                </form>
+                    </form>
+
+                    <a href="{{ route('dosen_penguji.create') }}" class="btn btn-primary shadow-sm">
+                        <i class="bi bi-person-plus-fill"></i> Tambah
+                    </a>
+                </div>
+            </div>
+
+            {{-- Tabel Data Dosen Penguji --}}
+            <div class="table-responsive table-wrapper">
                 <table class="table table-bordered align-middle text-center table-sm" id="dosenTable">
                     <thead>
                         <tr>
@@ -158,6 +160,7 @@
             </div>
         </div>
     </div>
+
 
     <script>
         // Pencarian sederhana di sisi client
