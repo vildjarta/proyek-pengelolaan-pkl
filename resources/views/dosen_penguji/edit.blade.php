@@ -8,58 +8,70 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
-<body class="container py-4">
+<div class="d-flex">
+    {{-- header --}}
+    @include('layout.header')
+</div>
 
-    <h1 class="mb-4 text-center">Edit Dosen Penguji</h1>
+<div class="d-flex">
+    {{-- sidebar --}}
+    @include('layout.sidebar')
+</div>
 
-    {{-- Tampilkan error validasi --}}
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
+<div class="main-content-wrapper">
 
-    {{-- Pastikan variabel $dosenPenguji tersedia --}}
-    <form action="{{ route('dosen_penguji.update', $dosenPenguji->id_penguji) }}" method="POST">
-        @csrf
-        @method('PUT')
+    <body class="container py-4">
 
-        {{-- NIP --}}
-        <div class="mb-3">
-            <label for="nip" class="form-label">NIP</label>
-            <input type="text" name="nip" id="nip" class="form-control"
-                value="{{ old('nip', $dosenPenguji->nip) }}" required>
-        </div>
+        <h1 class="mb-4 text-center">Edit Dosen Penguji</h1>
 
-        {{-- Nama Dosen --}}
-        <div class="mb-3">
-            <label for="nama_dosen" class="form-label">Nama Dosen</label>
-            <input type="text" name="nama_dosen" id="nama_dosen" class="form-control"
-                value="{{ old('nama_dosen', $dosenPenguji->nama_dosen) }}" required>
-        </div>
+        {{-- Tampilkan error validasi --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        {{-- Email --}}
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" id="email" class="form-control"
-                value="{{ old('email', $dosenPenguji->email) }}" required>
-        </div>
+        {{-- Pastikan variabel $dosenPenguji tersedia --}}
+        <form action="{{ route('dosen_penguji.update', $dosenPenguji->id_penguji) }}" method="POST">
+            @csrf
+            @method('PUT')
 
-        {{-- Nomor HP --}}
-        <div class="mb-3">
-            <label for="no_hp" class="form-label">Nomor HP</label>
-            <input type="text" name="no_hp" id="no_hp" class="form-control"
-                value="{{ old('no_hp', $dosenPenguji->no_hp) }}">
-        </div>
+            {{-- NIP --}}
+            <div class="mb-3">
+                <label for="nip" class="form-label">NIP</label>
+                <input type="text" name="nip" id="nip" class="form-control"
+                    value="{{ old('nip', $dosenPenguji->nip) }}" required>
+            </div>
 
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('dosen_penguji.index') }}" class="btn btn-secondary">Batal</a>
-    </form>
+            {{-- Nama Dosen --}}
+            <div class="mb-3">
+                <label for="nama_dosen" class="form-label">Nama Dosen</label>
+                <input type="text" name="nama_dosen" id="nama_dosen" class="form-control"
+                    value="{{ old('nama_dosen', $dosenPenguji->nama_dosen) }}" required>
+            </div>
 
-</body>
+            {{-- Email --}}
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" id="email" class="form-control"
+                    value="{{ old('email', $dosenPenguji->email) }}" required>
+            </div>
+
+            {{-- Nomor HP --}}
+            <div class="mb-3">
+                <label for="no_hp" class="form-label">Nomor HP</label>
+                <input type="text" name="no_hp" id="no_hp" class="form-control"
+                    value="{{ old('no_hp', $dosenPenguji->no_hp) }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="{{ route('dosen_penguji.index') }}" class="btn btn-secondary">Batal</a>
+        </form>
+
+    </body>
 
 </html>

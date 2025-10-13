@@ -13,6 +13,18 @@ class DosenPengujiController extends Controller
         $dosenPenguji = dosen_penguji::all();
         return view('dosen_penguji.dosen_penguji', compact('dosenPenguji'));
     }
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+
+        // Kalau kolom kamu nama_dosen, nip, dan email
+        $dosenPenguji = dosen_penguji::where('nama_dosen', 'like', "%{$query}%")
+            ->orWhere('nip', 'like', "%{$query}%")
+            ->orWhere('email', 'like', "%{$query}%")
+            ->get();
+
+        return view('dosen_penguji.dosen_penguji', compact('dosenPenguji', 'query'));
+    }
 
     // Tampilkan form tambah dosen penguji
     public function create()
@@ -49,9 +61,9 @@ class DosenPengujiController extends Controller
         $dosenPenguji = dosen_penguji::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_dosen'=> 'required|string|max:255',
-            'nip'       => 'required|string|max:50'. $id . ',id_penguji',
-            'email'     => 'required|email|max:255'. $id . ',id_penguji',
+            'nama_dosen' => 'required|string|max:255',
+            'nip'       => 'required|string|max:50' . $id . ',id_penguji',
+            'email'     => 'required|email|max:255' . $id . ',id_penguji',
             'no_hp'     => 'nullable|string|max:255',
         ]);
 

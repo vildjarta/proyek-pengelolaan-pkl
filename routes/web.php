@@ -8,9 +8,7 @@ Route::resource('jadwal', JadwalBimbinganController::class);
 
 use App\Http\Controllers\RatingDanReviewController;
 use App\Http\Controllers\DataDosenPembimbingController;
-use App\Http\Controllers\PengujianController;
 use App\Http\Controllers\DosenPengujiController;
-use App\Http\Controllers\TempatPengujianController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +36,7 @@ Route::resource('ratingdanreview', RatingDanReviewController::class)->names([
     'index' => 'lihatratingdanreview',     // alias index
     'create' => 'tambahratingdanreview',   // alias create
 ]);
+
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
@@ -88,7 +87,7 @@ Route::get('/profile', function () {
 });
 
 // Resource untuk perusahaan (CRUD otomatis)
-Route::resource('perusahaan', PerusahaanController::class);
+Route::resource('/perusahaan', PerusahaanController::class);
 
 
 Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
@@ -114,8 +113,7 @@ Route::resource('penilaian', PenilaianPengujiController::class);
 
 // Resource untuk pengujian (CRUD otomatis)
 
-Route::resource('pengujian', PengujianController::class);
+Route::resource('/dosen_penguji', DosenPengujiController::class);
 
-Route::resource('dosen_penguji', DosenPengujiController::class);
-
-Route::resource('tempat_pengujian', TempatPengujianController::class);
+// route('get', '/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
