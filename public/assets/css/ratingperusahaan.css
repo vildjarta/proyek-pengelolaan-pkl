@@ -1,7 +1,3 @@
-/* ==============================
-   RATING PERUSAHAAN PAGE STYLE
-   ============================== */
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f7f9;
@@ -9,7 +5,6 @@ body {
     margin: 0;
 }
 
-/* ====== Wrapper utama ====== */
 .main-content-wrapper {
     margin-top: 60px;
     margin-left: 260px;
@@ -21,7 +16,6 @@ body.sidebar-closed .main-content-wrapper {
     margin-left: 70px;
 }
 
-/* ====== Konten utama ====== */
 .content {
     background-color: #fff;
     border-radius: 0;
@@ -31,7 +25,7 @@ body.sidebar-closed .main-content-wrapper {
     width: 100%;
 }
 
-/* ====== Header Tabel ====== */
+/* Header tabel */
 .table-header {
     display: flex;
     justify-content: space-between;
@@ -47,7 +41,7 @@ body.sidebar-closed .main-content-wrapper {
     font-size: 22px;
 }
 
-/* ====== Pencarian ====== */
+/* Pencarian */
 .search-container {
     width: 250px;
 }
@@ -64,7 +58,7 @@ body.sidebar-closed .main-content-wrapper {
     outline: none;
 }
 
-/* ====== Tabel ====== */
+/* Tabel utama */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -92,28 +86,60 @@ body.sidebar-closed .main-content-wrapper {
     background-color: #e2e6ea;
 }
 
-/* ====== Rating ====== */
+/* Rating visual baru */
 .rating-wrapper {
     display: flex;
+    flex-direction: column; /* bintang di atas, teks di bawah */
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    text-align: center;
+    gap: 4px;
 }
 
 .stars {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
     color: #ffc107;
+    font-size: 20px;
+}
+
+.stars .fa-star {
+    transition: color 0.3s ease;
+}
+
+.stars .fa-star.filled {
+    color: #ffc107; /* kuning */
 }
 
 .stars .fa-star:not(.filled) {
-    color: #e0e0e0;
+    color: #e0e0e0; /* abu terang */
 }
+
+.rating-label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
 
 .rating-text {
     font-weight: 500;
     color: #555;
 }
 
-/* ====== Tombol Aksi ====== */
+/* Badge jumlah rating */
+.badge-rating-count {
+    background-color: #5b8ad2;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Tombol aksi */
 .action-buttons {
     display: flex;
     justify-content: center;
@@ -148,7 +174,7 @@ body.sidebar-closed .main-content-wrapper {
     color: #000;
 }
 
-/* ====== Responsif ====== */
+/* Responsif */
 @media (max-width: 992px) {
     .main-content-wrapper {
         margin-left: 0;

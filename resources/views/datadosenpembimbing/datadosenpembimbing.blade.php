@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datadosenpembimbing.css') }}">
 </head>
 <body>
-    
+
     {{-- HEADER --}}
     @include('layout.header')
 
@@ -25,86 +25,105 @@
 
     {{-- MAIN CONTENT --}}
     <div class="main-content-wrapper">
-  <div class="content container-fluid">
-        <div class="content">
-            <div class="table-header">
-                <h2 class="title">Daftar Dosen Pembimbing</h2>
+        <div class="content container-fluid">
+            <div class="content">
+                <div class="table-header">
+                    <h2 class="title">Daftar Dosen Pembimbing</h2>
 
-                <div class="d-flex align-items-center gap-2">
-                    <!-- Form Pencarian -->
-                    <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="d-flex search-container">
-                        <input type="text" name="search" value="{{ request('search') }}" class="search-input" placeholder="Cari dosen...">
-                        <button type="submit" class="btn btn-primary ms-2"><i class="fa fa-search"></i></button>
-                    </form>
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Form Pencarian -->
+                        <div class="search-container d-flex align-items-center">
+                            <input type="text" id="searchInput" class="search-input" placeholder="Cari dosen...">
+                            <button class="btn btn-primary ms-2"><i class="fa fa-search"></i></button>
+                        </div>
 
-                    <!-- Tombol Tambah -->
-                    <a href="{{ route('datadosenpembimbing.create') }}" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Tambah
-                    </a>
+                        <!-- Tombol Tambah -->
+                        <a href="{{ route('datadosenpembimbing.create') }}" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Tambah
+                        </a>
+                    </div>
                 </div>
-            </div>
 
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>NIP</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>Mahasiswa Bimbingan</th>
-                        <th style="text-align:center;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($data as $row)
+                <table class="table table-striped" id="dosenTable">
+                    <thead>
                         <tr>
-                            <td>{{ $row->NIP }}</td>
-                            <td>{{ $row->nama }}</td>
-                            <td>{{ $row->email }}</td>
-                            <td class="text-start">
-                                @if($row->mahasiswa->count() > 0)
-                                    @foreach($row->mahasiswa as $mhs)
-                                        <div>{{ $loop->iteration }}. {{ $mhs->nama }} - {{ $mhs->nim }}</div>
-                                    @endforeach
-                                @else
-                                    <span class="text-muted">Belum memiliki mahasiswa</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
-                                        <i class="fa fa-pen"></i>
-                                    </a>
-                                    <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin hapus data ini?')" title="Hapus">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                            <th>NIP</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Mahasiswa Bimbingan</th>
+                            <th style="text-align:center;">Aksi</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                @if(request('search'))
-                                    Tidak ditemukan dosen dengan nama "<strong>{{ request('search') }}</strong>"
-                                @else
+                    </thead>
+                    <tbody>
+                        @forelse($data as $row)
+                            <tr>
+                                <td>{{ $row->NIP }}</td>
+                                <td class="nama-dosen">{{ $row->nama }}</td>
+                                <td>{{ $row->email }}</td>
+                                <td class="mahasiswa-bimbingan">
+                                    @if($row->mahasiswa->count() > 0)
+                                        <ul>
+                                            @foreach($row->mahasiswa as $mhs)
+                                                <li>
+                                                    <span class="nomor">{{ $loop->iteration }}.</span> 
+                                                    {{ $mhs->nama }} 
+                                                    <span class="nim">({{ $mhs->nim }})</span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <span class="text-muted">Belum memiliki mahasiswa</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
+                                            <i class="fa fa-pen"></i>
+                                        </a>
+                                        <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin hapus data ini?')" title="Hapus">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
                                     Belum ada data dosen pembimbing.
-                                @endif
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
+    // === Toggle sidebar ===
     document.addEventListener('DOMContentLoaded', function(){
         const toggleButton = document.querySelector('.menu-toggle');
         const body = document.body;
         toggleButton?.addEventListener('click', () => {
             body.classList.toggle('sidebar-closed');
+        });
+    });
+
+    // === Live Search tanpa Enter ===
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#dosenTable tbody tr');
+
+        rows.forEach(row => {
+            let namaDosen = row.querySelector('.nama-dosen').textContent.toLowerCase();
+            if (namaDosen.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
         });
     });
     </script>

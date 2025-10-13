@@ -1,4 +1,4 @@
-/* ====== Halaman Data Dosen Pembimbing - Full Width Layout ====== */
+/* ====== Halaman Data Dosen Pembimbing ====== */
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -7,11 +7,10 @@ body {
     margin: 0;
 }
 
-/* ====== Wrapper utama ====== */
+/* ====== Wrapper ====== */
 .main-content-wrapper {
     margin-top: 60px;
     margin-left: 260px;
-    padding: 0;
     transition: margin-left 0.3s ease;
 }
 
@@ -19,14 +18,11 @@ body.sidebar-closed .main-content-wrapper {
     margin-left: 70px;
 }
 
-/* ====== Konten utama ====== */
+/* ====== Konten ====== */
 .content {
     background-color: #fff;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 20px 30px;
+    padding: 25px 30px;
     min-height: 100vh;
-    width: 100%;
 }
 
 /* ====== Header Tabel ====== */
@@ -45,7 +41,81 @@ body.sidebar-closed .main-content-wrapper {
     font-size: 22px;
 }
 
-/* ====== Tombol ====== */
+/* ====== Pencarian ====== */
+.search-container {
+    width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #5b8ad2;
+    box-shadow: 0 0 4px rgba(91, 138, 210, 0.4);
+}
+
+/* ====== Tabel ====== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.table thead tr {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* ====== Kolom Mahasiswa ====== */
+.mahasiswa-bimbingan ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mahasiswa-bimbingan li {
+    background-color: #f7f9fc;
+    margin-bottom: 5px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    border: 1px solid #e0e0e0;
+}
+
+.mahasiswa-bimbingan li .nomor {
+    font-weight: bold;
+    color: #5b8ad2;
+    margin-right: 6px;
+}
+
+.mahasiswa-bimbingan li .nim {
+    color: #5b8ad2;
+    font-weight: 500;
+}
+
+/* ====== Tombol Aksi ====== */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
 .btn {
     border: none;
     border-radius: 6px;
@@ -63,25 +133,9 @@ body.sidebar-closed .main-content-wrapper {
     background-color: #4a75b3;
 }
 
-/* ====== Tombol Aksi Persegi ====== */
-.action-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.action-buttons .btn {
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 15px;
-}
-
 .btn-edit-custom {
     background-color: #00A19D;
+    color: #fff;
 }
 
 .btn-edit-custom:hover {
@@ -96,64 +150,10 @@ body.sidebar-closed .main-content-wrapper {
     background-color: #c82333;
 }
 
-/* ====== Pencarian ====== */
-.search-container {
-    width: 250px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-/* ====== Tabel ====== */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.table thead tr {
-    background-color: #5b8ad2;
-    color: #fff;
-}
-
-.table th, .table td {
-    padding: 14px 18px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.table th:first-child,
-.table td:first-child {
-    border-left: none;
-}
-
-.table tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
-
-.table tbody tr:hover {
-    background-color: #e2e6ea;
-}
-
-/* Membuat kolom mahasiswa teks rata kiri agar mudah dibaca */
-.table td.text-start {
-    text-align: left;
-}
-
 /* ====== Responsif ====== */
 @media (max-width: 992px) {
     .main-content-wrapper {
         margin-left: 0;
-    }
-
-    .content {
-        padding: 15px;
     }
 
     .table-header {
@@ -162,33 +162,7 @@ body.sidebar-closed .main-content-wrapper {
         gap: 10px;
     }
 
-    .table thead {
-        display: none;
-    }
-
-    .table tbody tr {
-        display: block;
-        background: #fff;
-        margin-bottom: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        padding: 10px;
-    }
-
-    .table tbody td {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 10px;
-        border: none;
-    }
-
-    .table tbody td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #5b8ad2;
-    }
-
-    .action-buttons {
-        justify-content: flex-start;
+    .search-container {
+        width: 100%;
     }
 }

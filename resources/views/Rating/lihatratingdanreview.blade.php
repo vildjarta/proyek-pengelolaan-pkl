@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/lihatratingdanreview.css') }}">
 </head>
 <body>
-    {{-- HEADER & SIDEBAR --}}
     @include('layout.header')
     @include('layout.sidebar')
 
@@ -30,6 +29,21 @@
             <div class="table-header">
                 <h2 class="title">Rating & Review Perusahaan</h2>
             </div>
+
+            {{-- Notifikasi Sukses --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-custom">
+                    <i class="fas fa-check-circle"></i> {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Notifikasi Error --}}
+            @if($errors->any())
+                <div class="alert alert-danger alert-custom">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {{ $errors->first() }}
+                </div>
+            @endif
 
             {{-- LIST REVIEW --}}
             <div class="review-list">

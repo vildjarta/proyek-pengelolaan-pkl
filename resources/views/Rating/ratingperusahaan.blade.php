@@ -30,7 +30,6 @@
                     <h2 class="title">Ranking Perusahaan</h2>
 
                     <div class="d-flex align-items-center gap-2">
-                        <!-- Form Pencarian -->
                         <form action="{{ route('ratingperusahaan') }}" method="GET" class="d-flex search-container">
                             <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="search-input" placeholder="Cari perusahaan...">
                             <button type="submit" class="btn btn-primary ms-2"><i class="fa fa-search"></i></button>
@@ -44,52 +43,61 @@
                             <th>Peringkat</th>
                             <th>Nama Perusahaan</th>
                             <th>Rata-Rata Rating</th>
+                            <th>Jumlah Rating</th>
                             <th style="text-align:center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($perusahaans as $index => $perusahaan)
-                            @php
-                                $companyName = $perusahaan->nama_perusahaan ?? $perusahaan->nama ?? '-';
-                                $avg = isset($perusahaan->avg_rating) ? floatval($perusahaan->avg_rating) : 0;
-                                $avgStars = (int) round($avg);
-                            @endphp
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $companyName }}</td>
-                                <td>
-                                    <div class="rating-wrapper">
-                                        <span class="stars">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
-                                            @endfor
-                                        </span>
-                                        <span class="rating-text">({{ number_format($avg, 1) }})</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $perusahaan->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('tambahratingdanreview', $perusahaan->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-4">
-                                    @if(request('search'))
-                                        Tidak ditemukan perusahaan dengan nama "<strong>{{ request('search') }}</strong>"
-                                    @else
-                                        Belum ada data perusahaan yang dirating.
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
+    @forelse($perusahaans as $index => $p)
+        @php
+            $companyName = $p->nama_perusahaan ?? '-';
+            $avg = floatval($p->avg_rating ?? 0);
+            $count = intval($p->total_reviews ?? 0);
+            $avgStars = (int) round($avg);
+        @endphp
+        <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ $companyName }}</td>
+            <td>
+    <div class="rating-wrapper">
+        <div class="stars">
+            @for ($i = 1; $i <= 5; $i++)
+                <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
+            @endfor
+        </div>
+        <div class="rating-label">
+            Rata-rata rating {{ number_format($avg, 1) }}
+        </div>
+    </div>
+</td>
+
+            <td>
+                <span class="badge-rating-count">{{ $count }}</span> orang
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $p->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a href="{{ route('tambahratingdanreview', $p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="5" class="text-center text-muted py-4">
+                @if(request('search'))
+                    Tidak ditemukan perusahaan dengan nama "<strong>{{ request('search') }}</strong>"
+                @else
+                    Belum ada data perusahaan yang dirating.
+                @endif
+            </td>
+        </tr>
+    @endforelse
+</tbody>
+
                 </table>
             </div>
         </div>

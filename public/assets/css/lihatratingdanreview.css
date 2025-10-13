@@ -60,6 +60,19 @@ body.sidebar-closed .main-content-wrapper {
   font-size: 22px;
 }
 
+/* ====== ALERT ====== */
+.alert-custom {
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.alert-custom i {
+  font-size: 18px;
+}
+
 /* ====== Grid Review ====== */
 .review-list {
   display: grid;
