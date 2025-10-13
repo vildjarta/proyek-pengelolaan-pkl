@@ -54,13 +54,13 @@
                     <span>Daftar Mahasiswa Bimbingan</span>
                 </a>
             </li>
-            <li class="{{ Route::is('jadwal.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('jadwal.*') ? 'active' : '' }}">
                 <a href="{{ route('jadwal.index') }}">
                     <i class="fa fa-calendar"></i>
                     <span>Jadwal Bimbingan</span>
                 </a>
             </li>
-            <li class="{{ Route::is('penilaian.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('penilaian.*') ? 'active' : '' }}">
                 <a href="{{ route('penilaian.index') }}">
                     <i class="fa fa-edit"></i>
                     <span>Input Nilai/Kajian</span>
