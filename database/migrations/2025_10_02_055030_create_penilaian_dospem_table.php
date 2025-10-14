@@ -18,12 +18,17 @@ return new class extends Migration
             $table->integer('penguasaan');
             $table->integer('sikap');
             $table->text('catatan')->nullable();
-            $table->unsignedBigInteger('dospem_id');
+            
+            // Kolom Foreign Key untuk dosen
+            $table->unsignedBigInteger('id_pembimbing'); 
+            
             $table->timestamps();
 
-            $table->foreign('mahasiswa_id')->references('id')->on('mahasiswa')->onDelete('cascade');
-            // PASTIKAN INI JUGA MERUJUK KE 'dospem'
-            $table->foreign('dospem_id')->references('id')->on('dospem')->onDelete('cascade');
+            // Relasi ke tabel mahasiswa
+            $table->foreign('mahasiswa_id')->references('id_mahasiswa')->on('mahasiswa')->onDelete('cascade');
+            
+            // Relasi ke tabel dosen_pembimbing (Ini sudah sesuai dengan tabel Anda)
+            $table->foreign('id_pembimbing')->references('id_pembimbing')->on('dosen_pembimbing')->onDelete('cascade');
         });
     }
 

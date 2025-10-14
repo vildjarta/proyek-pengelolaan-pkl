@@ -2,118 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\jadwal_bimbingan;
+use App\Models\JadwalBimbingan;
+use App\Models\Mahasiswa;
+use App\Models\DataDosenPembimbing;
 use Illuminate\Http\Request;
 
 class JadwalBimbinganController extends Controller
 {
-    /**
-     * Menampilkan daftar resource.
-     */
-    public function index(Request $request)
+    public function index()
     {
-        // Ambil input untuk search dan sort
-        $search = $request->query('search');
-        $sort = $request->query('sort', 'waktu_terdekat'); // Default sort: waktu terdekat
-
-        // Mulai query builder
-        $query = jadwal_bimbingan::query();
-
-        // --- LOGIKA PENCARIAN ---
-        if ($search) {
-            // Cari di kolom 'mahasiswa' atau 'dosen'
-            $query->where(function($q) use ($search) {
-                $q->where('mahasiswa', 'like', "%{$search}%")
-                  ->orWhere('dosen', 'like', "%{$search}%");
-            });
-        }
-
-        // --- LOGIKA SORTING ---
-        switch ($sort) {
-            case 'mahasiswa':
-                $query->orderBy('mahasiswa', 'asc');
-                break;
-            case 'dosen':
-                $query->orderBy('dosen', 'asc');
-                break;
-            case 'waktu':
-                $query->orderBy('waktu_mulai', 'asc');
-                break;
-            default: // default ke 'waktu_terdekat'
-                // Mengurutkan berdasarkan tanggal dan waktu mulai terdekat
-                $query->orderBy('tanggal', 'asc')->orderBy('waktu_mulai', 'asc');
-                break;
-        }
-
-        $jadwals = $query->get();
-
-        // Kirim data ke view
-        return view('jadwal_bimbingan', compact('jadwals', 'sort', 'search'));
+        // Ambil semua jadwal dan muat relasi mahasiswa dan dosen
+        $jadwals = JadwalBimbingan::with(['mahasiswa', 'dosen'])->latest()->get();
+        return view('jadwal_bimbingan', compact('jadwals'));
     }
 
-    /**
-     * Menampilkan form untuk membuat resource baru.
-     */
     public function create()
     {
-        return view('create_jadwal');
+        // Ambil semua data mahasiswa dan dosen untuk dropdown di form
+        $mahasiswas = Mahasiswa::all();
+        $dosens = DataDosenPembimbing::all();
+        return view('create_jadwal', compact('mahasiswas', 'dosens'));
     }
-    
-    /**
-     * Menyimpan resource baru.
-     */
+
     public function store(Request $request)
     {
         $request->validate([
-            'mahasiswa' => 'nullable|string|max:255',
-            'dosen' => 'nullable|string|max:255',
+            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
+            'id_pembimbing' => 'required|exists:dosen_pembimbing,id_pembimbing',
             'tanggal' => 'required|date',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required',
+            'waktu_mulai' => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
         ]);
 
-        jadwal_bimbingan::create($request->all());
+        JadwalBimbingan::create($request->all());
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal bimbingan berhasil ditambahkan!');
     }
 
-    /**
-     * Menampilkan form untuk mengedit resource.
-     */
-    public function edit(jadwal_bimbingan $jadwal)
+    public function edit(JadwalBimbingan $jadwal)
     {
-        return view('edit_jadwal', compact('jadwal'));
+        $mahasiswas = Mahasiswa::all();
+        $dosens = DataDosenPembimbing::all();
+        return view('edit_jadwal', compact('jadwal', 'mahasiswas', 'dosens'));
     }
 
-    /**
-     * Memperbarui resource yang ada.
-     */
-    public function update(Request $request, jadwal_bimbingan $jadwal)
+    public function update(Request $request, JadwalBimbingan $jadwal)
     {
         $request->validate([
-            'mahasiswa' => 'nullable|string|max:255',
-            'dosen' => 'nullable|string|max:255',
+            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
+            'id_pembimbing' => 'required|exists:dosen_pembimbing,id_pembimbing',
             'tanggal' => 'required|date',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required',
+            'waktu_mulai' => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
         ]);
 
         $jadwal->update($request->all());
             
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate!');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal bimbingan berhasil diupdate!');
     }
 
-    /**
-     * Menghapus resource.
-     */
-    public function destroy(jadwal_bimbingan $jadwal)
+    public function destroy(JadwalBimbingan $jadwal)
     {
         $jadwal->delete();
-
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal bimbingan berhasil dihapus!');
     }
 }

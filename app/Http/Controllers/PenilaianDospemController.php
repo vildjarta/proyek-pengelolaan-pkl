@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PenilaianDospem;
 use App\Models\Mahasiswa;
+use App\Models\DataDosenPembimbing; // Menggunakan nama Model yang benar
 use Illuminate\Http\Request;
 
 class PenilaianDospemController extends Controller
@@ -18,16 +19,11 @@ class PenilaianDospemController extends Controller
         $search = $request->query('search');
 
         // 2. Mulai query builder
-        $query = PenilaianDospem::with('mahasiswa');
+        $query = PenilaianDospem::query();
 
         // 3. Terapkan filter pencarian jika ada
         if ($search) {
-            $query->where(function($q) use ($search) {
-                $q->where('nama_mahasiswa', 'like', '%' . $search . '%')
-                  ->orWhereHas('mahasiswa', function($subq) use ($search) {
-                      $subq->where('nim', 'like', '%' . $search . '%');
-                  });
-            });
+            $query->where('nama_mahasiswa', 'like', '%' . $search . '%');
         }
 
         // Definisikan formula perhitungan nilai mentah
@@ -86,10 +82,24 @@ class PenilaianDospemController extends Controller
         // 2. Cari Mahasiswa berdasarkan nama yang diinput
         $mahasiswa = Mahasiswa::where('nama', $request->nama_mahasiswa)->first();
 
+        // Pastikan mahasiswa memiliki data dosen pembimbing
+        if (!$mahasiswa || !$mahasiswa->id_pembimbing) {
+            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Mahasiswa yang dipilih belum memiliki Dosen Pembimbing.']);
+        }
+        
+        // Cari Dosen Pembimbing berdasarkan NIP yang ada di tabel mahasiswa
+        $dosenPembimbing = DataDosenPembimbing::where('NIP', $mahasiswa->id_pembimbing)->first();
+
+        // Jika dosen dengan NIP tersebut tidak ditemukan, kembalikan error
+        if (!$dosenPembimbing) {
+            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Data Dosen Pembimbing tidak valid atau tidak ditemukan.']);
+        }
+
+
         // 3. Buat record baru di database dengan data yang sudah divalidasi
         PenilaianDospem::create([
-            'mahasiswa_id' => $mahasiswa->id,
-            'nama_mahasiswa' => $mahasiswa->nama, // Ambil nama dari data master
+            'id_mahasiswa' => $mahasiswa->id_mahasiswa, // Menggunakan kolom yang benar dari tabel mahasiswa
+            'nama_mahasiswa' => $mahasiswa->nama,
             'judul' => $request->judul,
             'penguasaan_teori' => $request->penguasaan_teori,
             'analisis_pemecahan_masalah' => $request->analisis_pemecahan_masalah,
@@ -97,7 +107,7 @@ class PenilaianDospemController extends Controller
             'penulisan_laporan' => $request->penulisan_laporan,
             'sikap' => $request->sikap,
             'catatan' => $request->catatan,
-            'dospem_id' => $mahasiswa->dospem_id, // Ambil ID dospem dari data master
+            'id_pembimbing' => $dosenPembimbing->id_pembimbing, // Gunakan ID yang benar
         ]);
 
         // 4. Redirect ke halaman index dengan pesan sukses
@@ -138,10 +148,21 @@ class PenilaianDospemController extends Controller
         
         // 3. Cari Mahasiswa berdasarkan nama yang diinput
         $mahasiswa = Mahasiswa::where('nama', $request->nama_mahasiswa)->first();
+
+        // Pastikan mahasiswa memiliki dosen pembimbing
+        if (!$mahasiswa || !$mahasiswa->id_pembimbing) {
+            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Mahasiswa yang dipilih belum memiliki Dosen Pembimbing.']);
+        }
         
+        // Cari Dosen Pembimbing berdasarkan NIP
+        $dosenPembimbing = DataDosenPembimbing::where('NIP', $mahasiswa->id_pembimbing)->first();
+        if (!$dosenPembimbing) {
+            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Data Dosen Pembimbing tidak valid atau tidak ditemukan.']);
+        }
+
         // 4. Update record di database
         $penilaian->update([
-            'mahasiswa_id' => $mahasiswa->id,
+            'id_mahasiswa' => $mahasiswa->id_mahasiswa, // Menggunakan kolom yang benar dari tabel mahasiswa
             'nama_mahasiswa' => $mahasiswa->nama,
             'judul' => $request->judul,
             'penguasaan_teori' => $request->penguasaan_teori,
@@ -150,7 +171,7 @@ class PenilaianDospemController extends Controller
             'penulisan_laporan' => $request->penulisan_laporan,
             'sikap' => $request->sikap,
             'catatan' => $request->catatan,
-            'dospem_id' => $mahasiswa->dospem_id,
+            'id_pembimbing' => $dosenPembimbing->id_pembimbing, // Gunakan ID yang benar
         ]);
 
         // 5. Redirect ke halaman index dengan pesan sukses
@@ -168,3 +189,4 @@ class PenilaianDospemController extends Controller
         return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil dihapus!');
     }
 }
+
