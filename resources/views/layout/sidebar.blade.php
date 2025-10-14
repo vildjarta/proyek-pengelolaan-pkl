@@ -66,6 +66,7 @@
                     <span>Input Nilai/Kajian</span>
                 </a>
             </li>
+            <li class="">
                 <a href="#">
                     <i class="fa fa-building"></i>
                     <span>Statistik Perusahaan</span>
