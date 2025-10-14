@@ -31,7 +31,7 @@ class PerusahaanController extends Controller
             'fasilitas'     => 'required|string|max:100',
             'level_legalitas' => 'required|string|max:100',
             'jumlah_mahasiswa' => 'required|string|max:100',
-            'jam_operasi'   => 'required|string|max:100',
+            'hari_operasi'   => 'required|string|max:100',
             'lat'           => 'required|string|max:50',
             'lng'           => 'required|string|max:50',
         ]);
@@ -67,7 +67,7 @@ class PerusahaanController extends Controller
             'fasilitas'     => 'required|string|max:100',
             'level_legalitas' => 'required|string|max:100',
             'jumlah_mahasiswa' => 'required|string|max:100',
-            'jam_operasi'   => 'required|string|max:100',
+            'hari_operasi'   => 'required|string|max:100',
             'lat'           => 'required|string|max:50',
             'lng'           => 'required|string|max:50',
         ]);

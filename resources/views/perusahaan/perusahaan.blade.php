@@ -179,8 +179,8 @@
                                                     <p class="mb-0 mt-1">{{ $prs->jumlah_mahasiswa }}</p>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <strong><i class="fas fa-clock me-2"></i>Jam Operasi:</strong>
-                                                    <p class="mb-0 mt-1">{{ $prs->jam_operasi }}</p>
+                                                    <strong><i class="fas fa-clock me-2"></i>Hari Operasi:</strong>
+                                                    <p class="mb-0 mt-1">{{ $prs->hari_operasi }}</p>
                                                 </div>
                                             </div>
                                         </div>
