@@ -40,9 +40,9 @@ class DataDosenPembimbingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'NIP'   => 'required|digits:18|unique:data_dosen_pembimbing,NIP',
+            'NIP'   => 'required|digits:18|unique:dosen_pembimbing,NIP',
             'nama'  => 'required|string|max:100',
-            'email' => 'required|email|unique:data_dosen_pembimbing,email',
+            'email' => 'required|email|unique:dosen_pembimbing,email',
             'nim'   => 'required|array|min:1',
             'nim.*' => 'required|exists:mahasiswa,nim',
         ]);

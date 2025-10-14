@@ -6,42 +6,61 @@ body {
   overflow-x: hidden;
 }
 
-/* Wrapper utama */
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 260px;
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar.collapsed .menu-text {
+  display: none;
+}
+
+/* ===== MAIN WRAPPER ===== */
 .main-wrapper {
   display: flex;
   flex-direction: column;
-  margin-left: 250px; /* sesuaikan dengan sidebar */
+  margin-left: 260px;
+  transition: all 0.3s ease;
   min-height: 100vh;
   background-color: #fff;
-  overflow-x: hidden;
-  padding-top: 90px; /* beri jarak dari header agar tidak menempel */
+  padding-top: 90px;
+  width: calc(100% - 260px);
 }
 
-/* Kontainer konten */
+.main-wrapper.collapsed {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+/* ===== CONTENT ===== */
 .content-container {
   flex: 1;
   width: 100%;
-  padding: 30px 40px;
-  box-sizing: border-box;
+  padding: 20px 30px;
 }
 
-/* Kartu form */
 .content-card {
   background-color: #fff;
   border-radius: 16px;
   padding: 30px 40px;
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
-/* Judul Halaman */
+/* ===== JUDUL ===== */
 .page-header {
   font-weight: 700;
   color: #113d92;
-  margin-top: 10px;
 }
 
-/* Label dan Input */
+/* ===== FORM ===== */
 .form-label {
   font-weight: 600;
   color: #222;
@@ -57,33 +76,38 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(91, 138, 210, 0.25);
 }
 
-/* Mahasiswa Item */
+/* ===== MAHASISWA ITEM ===== */
 .mahasiswa-item {
   background-color: #f9fafc;
   border: 1px solid #dee2e6;
   border-radius: 12px;
   padding: 20px;
-  position: relative;
   margin-bottom: 15px;
-}
-.remove-mahasiswa {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  position: relative;
 }
 
-/* Tombol */
-.btn {
-  border-radius: 8px;
+/* Tombol Hapus (pojok kanan atas) */
+.remove-mahasiswa {
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: 600;
+  padding: 6px 10px;
 }
+.remove-mahasiswa i {
+  margin-right: 4px;
+}
+
+/* Tombol Tambah */
 .btn-primary {
   background-color: #5b8ad2;
   border: none;
+  font-weight: 600;
 }
 .btn-primary:hover {
   background-color: #4a75b3;
 }
+
+/* Tombol Simpan & Batal */
 .btn-success {
   background-color: #3bb273;
   border: none;
@@ -99,10 +123,11 @@ body {
   background-color: #9ca3af;
 }
 
-/* Responsif */
+/* RESPONSIF */
 @media (max-width: 992px) {
   .main-wrapper {
     margin-left: 0;
+    width: 100%;
     padding-top: 80px;
   }
   .content-container {

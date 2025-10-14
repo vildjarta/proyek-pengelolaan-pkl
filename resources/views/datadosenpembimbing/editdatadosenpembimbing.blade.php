@@ -15,16 +15,11 @@
   <link rel="stylesheet" href="{{ asset('assets/css/editdatadosenpembimbing.css') }}">
 </head>
 <body>
-
-  {{-- HEADER --}}
   @include('layout.header')
-
-  {{-- SIDEBAR --}}
   @include('layout.sidebar')
-
-  <div class="main-wrapper">
+  <div class="main-wrapper" id="main-wrapper">
     <div class="content-container">
-      <div class="content-card shadow-sm">
+      <div class="content-card">
 
         <h3 class="text-center mb-4 page-header">Edit Dosen Pembimbing</h3>
         <hr>
@@ -136,7 +131,9 @@
     </div>
   </div>
 
-<!-- JS Validasi NIP -->
+<!-- ================== SCRIPT ================== -->
+
+<!-- Validasi NIP -->
 <script>
   const nipInput = document.getElementById("NIP");
   const nipError = document.getElementById("nipError");
@@ -147,7 +144,7 @@
   });
 </script>
 
-<!-- JS Mahasiswa Dinamis -->
+<!-- Dinamis Mahasiswa -->
 <script>
 function setupMahasiswaItem(item, isClone = false) {
   const nimInput = item.querySelector('.nimInput');
@@ -214,6 +211,31 @@ document.getElementById('mahasiswa-list').addEventListener('click', function(e) 
     e.target.closest('.mahasiswa-item').remove();
   }
 });
+</script>
+
+<!-- Sidebar Toggle -->
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const mainWrapper = document.getElementById('main-wrapper');
+  const toggleBtn = document.querySelector('.btn-toggle-sidebar');
+
+  function adjustMainWrapper() {
+    if (sidebar.classList.contains('collapsed')) {
+      mainWrapper.classList.add('sidebar-collapsed');
+    } else {
+      mainWrapper.classList.remove('sidebar-collapsed');
+    }
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      adjustMainWrapper();
+    });
+  }
+
+  window.addEventListener('resize', adjustMainWrapper);
+  window.addEventListener('load', adjustMainWrapper);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
