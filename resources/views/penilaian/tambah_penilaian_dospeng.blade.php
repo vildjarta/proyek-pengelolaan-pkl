@@ -1,345 +1,142 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Penilaian Dosen Penguji - PKL JOZZ</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{{-- ====== PANGGIL HEADER & SIDEBAR SEKALI SAJA ====== --}}
+@include('layout.header')
+@include('layout.sidebar')
 
-    <!-- Icon & CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+{{-- ====== CSS TAMBAHAN ====== --}}
+<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
 
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #3b82f6;
-            color: #fff;
-            padding: 10px 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-        .logo img {
-            height: 35px;
-            margin-right: 10px;
-        }
-        .menu-toggle {
-            margin-left: 20px;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .menu-right a {
-            margin: 0 10px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .menu-right a:hover {
-            text-decoration: underline;
-        }
-
-        /* User profile */
-        .user-profile-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-        .user-info {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .user-info span {
-            margin-right: 10px;
-        }
-        .avatar img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-        }
-        .profile-dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background: #fff;
-            color: #000;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            width: 180px;
-            z-index: 2000;
-        }
-        .profile-dropdown-menu a {
-            display: block;
-            padding: 10px;
-            color: #333;
-            text-decoration: none;
-        }
-        .profile-dropdown-menu a:hover {
-            background: #f0f0f0;
-        }
-        .user-profile-wrapper.active .profile-dropdown-menu {
-            display: block;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            width: 250px;
-            height: calc(100% - 60px);
-            background: #1e40af;
-            color: #fff;
-            overflow-y: auto;
-            transition: all 0.3s;
-            padding: 20px 0;
-        }
-        .sidebar h4 {
-            padding: 10px 20px;
-            font-size: 14px;
-            text-transform: uppercase;
-            color: #a5b4fc;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-        }
-        .sidebar ul li {
-            margin: 5px 0;
-        }
-        .sidebar ul li a {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            color: #fff;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        .sidebar ul li a:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        .sidebar ul li a i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        .sidebar-closed .sidebar {
-            width: 70px;
-        }
-        .sidebar-closed .sidebar h4,
-        .sidebar-closed .sidebar ul li a span {
-            display: none;
-        }
-
-        /* Content */
-        .content {
-            margin-left: 250px;
-            padding: 90px 20px 20px 20px;
-            transition: margin-left 0.3s;
-        }
-        .sidebar-closed .content {
-            margin-left: 70px;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Header -->
-    <div class="header">
-        <div class="header-left">
-            <div class="logo">
-                <img src="https://i.ibb.co/yYtHbDP/logo.png" alt="Logo PKL JOZZ">
-                <span>PKL JOZZ</span>
-            </div>
-            <i class="fa fa-bars menu-toggle"></i>
-        </div>
-        <div class="menu-right">
-            <a href="#">Ajukan Proposal</a>
-            <a href="#">Akademik</a>
-            <div class="user-profile-wrapper">
-                <div class="user-info">
-                    <span>Nama User</span>
-                    <div class="avatar">
-                        <img src="https://i.ibb.co/L8f3XnS/user-avatar.png" alt="User Avatar">
-                    </div>
-                </div>
-                <div class="profile-dropdown-menu">
-                    <a href="#"><i class="fa fa-user-circle"></i> Profil Saya</a>
-                    <a href="#"><i class="fa fa-cog"></i> Pengaturan</a>
-                    <a href="#"><i class="fa fa-sign-out-alt"></i> Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="menu-list">
-            <h4>General</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-            </ul>
-
-            <h4>Penilaian</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-plus-circle"></i> <span>Tambah Penilaian</span></a></li>
-                <li><a href="#"><i class="fa fa-list"></i> <span>Daftar Penilaian</span></a></li>
-            </ul>
-
-            <h4>Akun</h4>
-            <ul>
-                <li><a href="#"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Content -->
+{{-- ====== KONTEN UTAMA ====== --}}
+<div class="main-content-wrapper">
     <div class="content">
         <div class="card shadow border-0 rounded-3">
             <div class="card-header bg-success text-white py-3 d-flex justify-content-between align-items-center">
                 <h4 class="mb-0 fw-bold">
                     <i class="fa fa-plus-circle me-2"></i> Tambah Penilaian Dosen Penguji
                 </h4>
-                <a href="{{ route('penilaian.index') }}" class="btn btn-light btn-sm text-success fw-bold">
-                    <i class="fa fa-list me-1"></i> Daftar Penilaian
+                <a href="{{ route('penilaian.index') }}" class="btn btn-light text-success fw-bold">
+                    <i class="fa fa-arrow-left me-1"></i> Kembali
                 </a>
             </div>
 
             <div class="card-body p-4">
-                {{-- Pesan error --}}
-                @if ($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong><i class="fa fa-exclamation-circle me-2"></i> Terjadi kesalahan!</strong>
-                        <ul class="mb-0 mt-2">
-                            @foreach ($errors->all() as $e)
-                                <li>{{ $e }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                {{-- Form tambah penilaian --}}
-                <form action="{{ route('penilaian.store') }}" method="POST">
+                <form action="{{ route('penilaian.store') }}" method="POST" id="penilaianForm">
                     @csrf
                     <div class="row g-3">
+                        {{-- Data Umum --}}
                         <div class="col-md-6">
                             <label class="form-label fw-bold">NIP</label>
-                            <input type="text" name="nip" value="{{ old('nip') }}" class="form-control" required>
+                            <input type="text" name="nip" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Nama Dosen</label>
-                            <input type="text" name="nama_dosen" value="{{ old('nama_dosen') }}" class="form-control" required>
+                            <input type="text" name="nama_dosen" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Nama Mahasiswa</label>
-                            <input type="text" name="nama_mahasiswa" value="{{ old('nama_mahasiswa') }}" class="form-control" required>
+                            <input type="text" name="nama_mahasiswa" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Tanggal Ujian</label>
-                            <input type="date" name="tanggal_ujian" value="{{ old('tanggal_ujian') }}" class="form-control" required>
+                            <input type="date" name="tanggal_ujian" class="form-control" required>
+                        </div>
+
+                        {{-- Komponen Penilaian --}}
+                        <h5 class="fw-bold mt-4">Komponen Penilaian Dosen Penguji</h5>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Penyajian Presentasi (10%)</label>
+                            <input type="number" name="presentasi" class="form-control nilai" id="presentasi" min="0" max="100" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Jenis Ujian</label>
-                            <select name="jenis_ujian" class="form-select" required>
-                                <option value="">-- Pilih Jenis Ujian --</option>
-                                <option value="Seminar Proposal">Seminar Proposal</option>
-                                <option value="Seminar Hasil">Seminar Hasil</option>
-                                <option value="Sidang Akhir">Sidang Akhir</option>
-                            </select>
+                            <label class="form-label">Pemahaman Materi (15%)</label>
+                            <input type="number" name="materi" class="form-control nilai" id="materi" min="0" max="100" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Nilai</label>
-                            <input type="number" step="0.01" min="0" max="100" name="nilai" value="{{ old('nilai') }}" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">Judul</label>
-                            <textarea name="judul" class="form-control" rows="2" required>{{ old('judul') }}</textarea>
+                            <label class="form-label">Hasil yang Dicapai (40%)</label>
+                            <input type="number" name="hasil" class="form-control nilai" id="hasil" min="0" max="100" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Sikap</label>
-                            <textarea name="sikap" class="form-control" rows="2">{{ old('sikap') }}</textarea>
+                            <label class="form-label">Objektivitas Menanggapi Pertanyaan (20%)</label>
+                            <input type="number" name="objektif" class="form-control nilai" id="objektif" min="0" max="100" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Penguasaan</label>
-                            <textarea name="penguasaan" class="form-control" rows="2">{{ old('penguasaan') }}</textarea>
+                            <label class="form-label">Penulisan Laporan (15%)</label>
+                            <input type="number" name="laporan" class="form-control nilai" id="laporan" min="0" max="100" required>
                         </div>
 
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">Komentar</label>
-                            <textarea name="komentar" class="form-control" rows="3">{{ old('komentar') }}</textarea>
+                        {{-- Hasil Akhir --}}
+                        <div class="col-md-12 mt-4">
+                            <div class="result-box p-3 rounded text-center border border-primary bg-light">
+                                <strong>Nilai Total Dosen Penguji: </strong>
+                                <span id="totalNilai" class="fw-bold text-primary">0</span>
+                                <div class="sub-result mt-2">
+                                    <strong>Nilai Akhir (20% dari total): </strong>
+                                    <span id="nilai20" class="fw-bold text-success">0</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ route('penilaian.index') }}" class="btn btn-secondary rounded-pill px-4">
-                            <i class="fa fa-arrow-left me-2"></i> Kembali
-                        </a>
-                        <button type="submit" class="btn btn-success rounded-pill px-4">
-                            <i class="fa fa-save me-2"></i> Simpan Penilaian
-                        </button>
+                        {{-- Tombol Simpan --}}
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-success rounded-pill px-4">
+                                <i class="fa fa-save me-2"></i> Simpan Penilaian
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{{-- ====== SCRIPT ====== --}}
+<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const toggleButton = document.querySelector('.menu-toggle');
-    const body = document.body;
-    const profileWrapper = document.querySelector('.user-profile-wrapper');
-    const userinfo = document.querySelector('.user-info');
+    const inputFields = document.querySelectorAll('.nilai');
+    const totalDisplay = document.getElementById('totalNilai');
+    const nilai20Display = document.getElementById('nilai20');
 
-    if (toggleButton) {
-        toggleButton.addEventListener('click', function() {
-            body.classList.toggle('sidebar-closed');
-        });
+    function hitungTotal() {
+        const presentasi = parseFloat(document.getElementById('presentasi').value) || 0;
+        const materi = parseFloat(document.getElementById('materi').value) || 0;
+        const hasil = parseFloat(document.getElementById('hasil').value) || 0;
+        const objektif = parseFloat(document.getElementById('objektif').value) || 0;
+        const laporan = parseFloat(document.getElementById('laporan').value) || 0;
+
+        // Hitung total berdasarkan bobot
+        const total = (presentasi * 0.10) +
+                      (materi * 0.15) +
+                      (hasil * 0.40) +
+                      (objektif * 0.20) +
+                      (laporan * 0.15);
+
+        const nilai20 = total * 0.20;
+
+        totalDisplay.textContent = total.toFixed(2);
+        nilai20Display.textContent = nilai20.toFixed(2);
     }
 
-    if (userinfo) {
-        userinfo.addEventListener('click', function(e) {
+    inputFields.forEach(field => {
+        field.addEventListener('input', hitungTotal);
+    });
+
+    document.getElementById('penilaianForm').addEventListener('submit', function(e) {
+        const total = parseFloat(totalDisplay.textContent);
+        const nilai20 = parseFloat(nilai20Display.textContent);
+        if (isNaN(total) || isNaN(nilai20)) {
             e.preventDefault();
-            profileWrapper.classList.toggle('active');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
-                profileWrapper.classList.remove('active');
-            }
-        });
-    }
+            alert('Harap isi semua nilai sebelum menyimpan!');
+        }
+    });
 });
 </script>
-
-</body>
-</html>
