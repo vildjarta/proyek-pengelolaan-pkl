@@ -9,10 +9,8 @@ class JadwalBimbingan extends Model
 {
     use HasFactory;
 
-    // 1. Sesuaikan nama tabel agar cocok dengan migrasi
     protected $table = 'jadwal_bimbingans';
 
-    // 2. Sesuaikan fillable dengan kolom baru di migrasi
     protected $fillable = [
         'id_mahasiswa',
         'id_pembimbing',
@@ -24,14 +22,21 @@ class JadwalBimbingan extends Model
         'status',
     ];
 
-
+    /**
+     * Relasi ke model Mahasiswa.
+     */
     public function mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
     }
 
+    /**
+     * Relasi ke model DataDosenPembimbing.
+     */
     public function dosen()
     {
-        return $this->belongsTo(DosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
+        // Menggunakan nama Model yang benar
+        return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
     }
 }
+
