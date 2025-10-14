@@ -14,10 +14,6 @@ body {
     transition: margin-left 0.3s ease;
 }
 
-body.sidebar-closed .main-content-wrapper {
-    margin-left: 70px;
-}
-
 /* ====== Konten ====== */
 .content {
     background-color: #fff;
@@ -77,36 +73,58 @@ body.sidebar-closed .main-content-wrapper {
     padding: 14px 18px;
     border-bottom: 1px solid #ddd;
     vertical-align: middle;
+}
+
+/* ====== Rata Kiri untuk Nama dan Mahasiswa ====== */
+.table td.text-start,
+.table td.mahasiswa-bimbingan {
+    text-align: left;
+}
+
+/* ====== Kolom Lain Tetap Tengah ====== */
+.table td.text-center {
     text-align: center;
 }
 
-/* ====== Kolom Mahasiswa ====== */
+/* ====== Daftar Mahasiswa ====== */
 .mahasiswa-bimbingan ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.mahasiswa-bimbingan li {
-    background-color: #f7f9fc;
-    margin-bottom: 5px;
-    padding: 6px 10px;
-    border-radius: 6px;
+.mahasiswa-item {
     display: flex;
-    justify-content: space-between;
-    font-size: 14px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    background-color: #f7f9fc;
+    margin-bottom: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
     border: 1px solid #e0e0e0;
+    line-height: 1.4;
 }
 
-.mahasiswa-bimbingan li .nomor {
+/* ====== Nomor Mahasiswa ====== */
+.nomor {
     font-weight: bold;
-    color: #5b8ad2;
+    color: #000;
     margin-right: 6px;
+    flex-shrink: 0;
 }
 
-.mahasiswa-bimbingan li .nim {
-    color: #5b8ad2;
+/* ====== Nama dan NIM ====== */
+.nama {
+    font-weight: 600;
+    color: #000;
+    margin-right: 6px;
+    word-break: break-word;
+}
+
+.nim {
+    color: #000;
     font-weight: 500;
+    font-size: 13px;
 }
 
 /* ====== Tombol Aksi ====== */

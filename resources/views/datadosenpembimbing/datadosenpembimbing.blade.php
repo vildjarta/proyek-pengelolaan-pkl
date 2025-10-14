@@ -24,7 +24,7 @@
     @include('layout.sidebar')
 
     {{-- MAIN CONTENT --}}
-    <div class="main-content-wrapper">
+    <div class="main-content-wrapper" id="mainContent">
         <div class="content container-fluid">
             <div class="content">
                 <div class="table-header">
@@ -47,26 +47,26 @@
                 <table class="table table-striped" id="dosenTable">
                     <thead>
                         <tr>
-                            <th>NIP</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Mahasiswa Bimbingan</th>
-                            <th style="text-align:center;">Aksi</th>
+                            <th class="text-center">NIP</th>
+                            <th class="text-center">Nama</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Mahasiswa Bimbingan</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($data as $row)
                             <tr>
-                                <td>{{ $row->NIP }}</td>
-                                <td class="nama-dosen">{{ $row->nama }}</td>
-                                <td>{{ $row->email }}</td>
+                                <td class="text-center">{{ $row->NIP }}</td>
+                                <td class="text-start">{{ $row->nama }}</td>
+                                <td class="text-center">{{ $row->email }}</td>
                                 <td class="mahasiswa-bimbingan">
                                     @if($row->mahasiswa->count() > 0)
                                         <ul>
                                             @foreach($row->mahasiswa as $mhs)
-                                                <li>
-                                                    <span class="nomor">{{ $loop->iteration }}.</span> 
-                                                    {{ $mhs->nama }} 
+                                                <li class="mahasiswa-item">
+                                                    <span class="nomor">{{ $loop->iteration }}.</span>
+                                                    <span class="nama">{{ $mhs->nama }}</span>
                                                     <span class="nim">({{ $mhs->nim }})</span>
                                                 </li>
                                             @endforeach
@@ -75,7 +75,7 @@
                                         <span class="text-muted">Belum memiliki mahasiswa</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <div class="action-buttons">
                                         <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
                                             <i class="fa fa-pen"></i>
@@ -103,27 +103,14 @@
     </div>
 
     <script>
-    // === Toggle sidebar ===
-    document.addEventListener('DOMContentLoaded', function(){
-        const toggleButton = document.querySelector('.menu-toggle');
-        const body = document.body;
-        toggleButton?.addEventListener('click', () => {
-            body.classList.toggle('sidebar-closed');
-        });
-    });
-
     // === Live Search tanpa Enter ===
     document.getElementById('searchInput').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
         let rows = document.querySelectorAll('#dosenTable tbody tr');
 
         rows.forEach(row => {
-            let namaDosen = row.querySelector('.nama-dosen').textContent.toLowerCase();
-            if (namaDosen.includes(filter)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+            let namaDosen = row.querySelectorAll('td')[1]?.textContent.toLowerCase() || '';
+            row.style.display = namaDosen.includes(filter) ? '' : 'none';
         });
     });
     </script>
