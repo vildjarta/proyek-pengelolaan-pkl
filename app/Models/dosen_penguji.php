@@ -28,4 +28,9 @@ class dosen_penguji extends Model
         'created_at',
         'updated_at',
     ];
+    // Setiap dosen_penguji milik satu nilai_pengujian
+    public function nilaiPengujian()
+    {
+        return $this->belongsTo(PenilaianPenguji::class, 'id_nilai', 'id_nilai');
+    }
 }
