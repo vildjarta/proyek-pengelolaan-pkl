@@ -2,88 +2,98 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PenilaianPenguji;
 use Illuminate\Http\Request;
+use App\Models\PenilaianPenguji;
 
 class PenilaianPengujiController extends Controller
 {
-    /**
-     * Tampilkan daftar penilaian dosen penguji
-     */
     public function index()
     {
         $penilaian = PenilaianPenguji::all();
         return view('penilaian.daftar_penilaian_dospeng', compact('penilaian'));
     }
 
-    /**
-     * Form tambah data penilaian
-     */
     public function create()
     {
         return view('penilaian.tambah_penilaian_dospeng');
     }
 
-    /**
-     * Simpan data baru
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'nip' => 'required|string|max:20',
             'nama_dosen' => 'required|string|max:100',
             'nama_mahasiswa' => 'required|string|max:100',
-            'judul' => 'required|string|max:255',
-            'sikap' => 'nullable|string',
-            'penguasaan' => 'nullable|string',
-            'nilai' => 'nullable|numeric|min:0|max:100',
-            'tanggal_ujian' => 'nullable|date',
-            'jenis_ujian' => 'nullable|string|max:50',
-            'komentar' => 'nullable|string',
+            'presentasi' => 'required|numeric|min:0|max:100',
+            'materi' => 'required|numeric|min:0|max:100',
+            'hasil' => 'required|numeric|min:0|max:100',
+            'objektif' => 'required|numeric|min:0|max:100',
+            'laporan' => 'required|numeric|min:0|max:100',
+            'tanggal_ujian' => 'required|date',
         ]);
 
+        // 🔹 Hitung total dan nilai akhir
+        $total = ($request->presentasi * 0.10) +
+                 ($request->materi * 0.15) +
+                 ($request->hasil * 0.40) +
+                 ($request->objektif * 0.20) +
+                 ($request->laporan * 0.15);
+
+        $validated['total_nilai'] = round($total, 2);
+        $validated['nilai_akhir'] = round($total * 0.20, 2);
+
+        // 🔹 Simpan ke database
         PenilaianPenguji::create($validated);
 
+        // 🔹 Redirect ke halaman daftar + tampilkan pesan sukses
         return redirect()->route('penilaian.index')
-                         ->with('success', 'Data berhasil ditambahkan!');
+                         ->with('success', 'Data penilaian berhasil ditambahkan!');
     }
 
-    /**
-     * Form edit data penilaian
-     */
     public function edit($id)
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
         return view('penilaian.edit_penilaian_dospeng', compact('penilaian'));
     }
 
-    /**
-     * Update data penilaian
-     */
     public function update(Request $request, $id)
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
 
         $validated = $request->validate([
-            'nilai' => 'nullable|numeric|min:0|max:100',
-            'komentar' => 'nullable|string',
+            'nip' => 'required|string|max:20',
+            'nama_dosen' => 'required|string|max:100',
+            'nama_mahasiswa' => 'required|string|max:100',
+            'judul' => 'nullable|string|max:255',
+            'presentasi' => 'required|numeric|min:0|max:100',
+            'materi' => 'required|numeric|min:0|max:100',
+            'hasil' => 'required|numeric|min:0|max:100',
+            'objektif' => 'required|numeric|min:0|max:100',
+            'laporan' => 'required|numeric|min:0|max:100',
+            'tanggal_ujian' => 'required|date',
         ]);
+
+        $total = ($request->presentasi * 0.10) +
+                 ($request->materi * 0.15) +
+                 ($request->hasil * 0.40) +
+                 ($request->objektif * 0.20) +
+                 ($request->laporan * 0.15);
+
+        $validated['total_nilai'] = round($total, 2);
+        $validated['nilai_akhir'] = round($total * 0.20, 2);
 
         $penilaian->update($validated);
 
         return redirect()->route('penilaian.index')
-                         ->with('success', 'Data berhasil diperbarui!');
+                         ->with('success', 'Data penilaian berhasil diperbarui!');
     }
 
-    /**
-     * Hapus data penilaian
-     */
     public function destroy($id)
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
         $penilaian->delete();
 
         return redirect()->route('penilaian.index')
-                         ->with('success', 'Data berhasil dihapus!');
+                         ->with('success', 'Data penilaian berhasil dihapus!');
     }
 }
