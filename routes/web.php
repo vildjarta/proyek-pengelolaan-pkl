@@ -11,14 +11,8 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
-use App\Http\Controllers\JadwalController;
-use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\PenilaianPengujiController;
-use App\Http\Controllers\TranscriptController;
-use App\Http\Controllers\NilaiController;
 
 Route::resource('jadwal', JadwalBimbinganController::class);
-
 
 // Route dasar menggunakan Route::view untuk efisiensi
 Route::view('/', 'login')->name('login');
@@ -31,7 +25,6 @@ Route::view('/profile', 'profile.profile')->name('profile');
 // Halaman daftar jadwal (jika ini halaman statis)
 Route::view('/daftar-jadwal', 'daftar-jadwal')->name('daftar-jadwal');
 
-
 // ⭐ RATING & REVIEW PERUSAHAAN
 Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 // Menggunakan resource controller yang lebih rapi
@@ -42,9 +35,6 @@ Route::resource('ratingdanreview', RatingDanReviewController::class)->names([
     'edit'    => 'ratingdanreview.edit',
     'update'  => 'ratingdanreview.update',
     'destroy' => 'ratingdanreview.destroy',
-]);
-    'index' => 'lihatratingdanreview',     // alias index
-    'create' => 'tambahratingdanreview',   // alias create
 ]);
 
 
@@ -118,9 +108,6 @@ Route::resource('jadwal', JadwalBimbinganController::class);
 Route::resource('perusahaan', PerusahaanController::class);
 
 Route::resource('penilaian', PenilaianDospemController::class);
-
-// Resource untuk Jadwal (CRUD otomatis)
-Route::resource('jadwal', JadwalController::class);
 
 // 🧑‍🎓 DATA MAHASISWA (CRUD)
 Route::resource('mahasiswa', MahasiswaController::class);
