@@ -97,12 +97,12 @@
                         </select>
                     </div>
 
-                    {{-- Total Jam Operasi (integer) --}}
+                    {{-- Total Hari Operasi (integer) --}}
                     <div class="mb-3">
-                        <label for="jam_operasi" class="form-label">Total Jam Operasi (jumlah total hari)</label>
+                        <label for="hari_operasi" class="form-label">Total Hari Operasi (jumlah total hari)</label>
                         <div class="input-group">
-                            <input type="number" name="jam_operasi" id="jam_operasi" class="form-control"
-                                value="{{ old('jam_operasi') }}" min="0" required>
+                            <input type="number" name="hari_operasi" id="hari_operasi" class="form-control"
+                                value="{{ old('hari_operasi') }}" min="0" required>
                             <span class="input-group-text">hari</span>
                         </div>
                     </div>
