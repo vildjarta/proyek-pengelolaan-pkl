@@ -19,7 +19,7 @@
   {{-- SIDEBAR --}}
   @include('layout.sidebar')
 
-  {{-- Konten Utama --}}
+  {{-- KONTEN UTAMA --}}
   <div class="main-content-wrapper">
     <div class="full-container">
       <h1 class="page-title">Tambah Rating & Review</h1>
@@ -35,27 +35,28 @@
         </div>
       @endif
 
-      {{-- Form --}}
+      {{-- Form Input --}}
       <form action="{{ route('ratingdanreview.store') }}" method="POST" class="rating-form">
         @csrf
 
+        {{-- Baris NIM & Perusahaan --}}
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="nim" class="form-label">NIM Mahasiswa</label>
+            <label for="nim" class="form-label required">NIM Mahasiswa</label>
             <input type="text" id="nim" name="nim" class="form-control"
                    value="{{ old('nim') }}" maxlength="10" minlength="10" required>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Perusahaan</label>
+            <label class="form-label required">Perusahaan</label>
             <input type="text" class="form-control" value="{{ $perusahaan->nama }}" readonly>
             <input type="hidden" name="id_perusahaan" value="{{ $perusahaan->id_perusahaan }}">
           </div>
         </div>
 
-        {{-- Rating --}}
+        {{-- Rating Bintang --}}
         <div class="mb-4 text-center">
-          <label for="rating" class="form-label d-block">Rating</label>
+          <label for="rating" class="form-label d-block required">Rating</label>
           <div class="rating-stars">
             @for ($i = 5; $i >= 1; $i--)
               <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
@@ -65,20 +66,20 @@
           </div>
         </div>
 
-        {{-- Review --}}
+        {{-- Kolom Review --}}
         <div class="mb-3">
-          <label for="review" class="form-label">Review</label>
+          <label for="review" class="form-label required">Review</label>
           <textarea id="review" name="review" class="form-control" rows="4" required>{{ old('review') }}</textarea>
         </div>
 
-        {{-- Tanggal --}}
+        {{-- Tanggal Review --}}
         <div class="mb-4">
-          <label for="tanggal_review" class="form-label">Tanggal Review</label>
+          <label for="tanggal_review" class="form-label required">Tanggal Review</label>
           <input type="date" id="tanggal_review" name="tanggal_review" class="form-control"
                  value="{{ old('tanggal_review', now()->toDateString()) }}" required>
         </div>
 
-        {{-- Tombol --}}
+        {{-- Tombol Aksi --}}
         <div class="d-flex justify-content-end gap-3">
           <a href="{{ route('ratingperusahaan') }}" class="btn btn-secondary">
             <i class="fas fa-times-circle me-1"></i> Batal

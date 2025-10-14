@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     {{-- CSS Global Layout --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/style-header-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
 
     {{-- CSS Halaman Ini --}}
     <link rel="stylesheet" href="{{ asset('assets/css/ratingperusahaan.css') }}">

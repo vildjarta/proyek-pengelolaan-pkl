@@ -2,15 +2,16 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Rating & Review</title>
+  <title>Edit Rating & Review | Sistem PKL JOZZ</title>
 
   {{-- Bootstrap & FontAwesome --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-  {{-- CSS --}}
+  {{-- CSS Custom --}}
   <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/editratingdanreview.css') }}">
+
 </head>
 
 <body>
@@ -42,14 +43,17 @@
         @method('PUT')
 
         <div class="row">
+          {{-- NIM MAHASISWA --}}
           <div class="col-md-6 mb-3">
-            <label for="nim" class="form-label">NIM Mahasiswa</label>
+            <label for="nim" class="form-label required">NIM Mahasiswa</label>
             <input type="text" id="nim" name="nim" class="form-control"
-                   value="{{ old('nim', $ratingdanreview->mahasiswa->nim ?? '') }}" maxlength="10" minlength="10" required>
+                   value="{{ old('nim', $ratingdanreview->mahasiswa->nim ?? '') }}"
+                   maxlength="10" minlength="10" required>
           </div>
 
+          {{-- PERUSAHAAN --}}
           <div class="col-md-6 mb-3">
-            <label class="form-label">Perusahaan</label>
+            <label class="form-label required">Perusahaan</label>
             <input type="text" class="form-control" value="{{ $perusahaan->nama ?? '—' }}" readonly>
             <input type="hidden" name="id_perusahaan" value="{{ $ratingdanreview->id_perusahaan }}">
           </div>
@@ -57,7 +61,7 @@
 
         {{-- RATING --}}
         <div class="mb-4 text-center">
-          <label for="rating" class="form-label d-block">Rating</label>
+          <label for="rating" class="form-label required d-block">Rating</label>
           <div class="rating-stars">
             @for ($i = 5; $i >= 1; $i--)
               <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
@@ -69,13 +73,13 @@
 
         {{-- REVIEW --}}
         <div class="mb-3">
-          <label for="review" class="form-label">Review</label>
+          <label for="review" class="form-label required">Review</label>
           <textarea id="review" name="review" class="form-control" rows="4" required>{{ old('review', $ratingdanreview->review) }}</textarea>
         </div>
 
-        {{-- TANGGAL --}}
+        {{-- TANGGAL REVIEW --}}
         <div class="mb-4">
-          <label for="tanggal_review" class="form-label">Tanggal Review</label>
+          <label for="tanggal_review" class="form-label required">Tanggal Review</label>
           <input type="date" id="tanggal_review" name="tanggal_review" class="form-control"
                  value="{{ old('tanggal_review', \Carbon\Carbon::parse($ratingdanreview->tanggal_review)->toDateString()) }}" required>
         </div>
@@ -92,5 +96,8 @@
       </form>
     </div>
   </div>
+
+  {{-- Script Bootstrap --}}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
