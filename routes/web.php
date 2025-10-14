@@ -4,12 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PerusahaanController;
 use App\Http\Controllers\JadwalBimbinganController;
 use App\Http\Controllers\PenilaianDospemController;
-
-Route::resource('jadwal', JadwalBimbinganController::class);
-
 use App\Http\Controllers\RatingDanReviewController;
 use App\Http\Controllers\DataDosenPembimbingController;
 use App\Http\Controllers\DosenPengujiController;
+use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PenilaianPengujiController;
+use App\Http\Controllers\TranscriptController;
+use App\Http\Controllers\NilaiController;
+
+Route::resource('jadwal', JadwalBimbinganController::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -38,11 +42,6 @@ Route::resource('ratingdanreview', RatingDanReviewController::class)->names([
     'create' => 'tambahratingdanreview',   // alias create
 ]);
 
-use App\Http\Controllers\JadwalController;
-use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\PenilaianPengujiController;
-use App\Http\Controllers\TranscriptController;
-use App\Http\Controllers\NilaiController;
 
 // CRUD Transkrip (Kelayakan PKL)
 Route::resource('transkrip', TranscriptController::class);
@@ -61,7 +60,6 @@ Route::get('/', function () {
     return view('login');
 });
 
-
 // Halaman registrasi
 Route::get('/registrasi', function () {
     return view('registrasi');
@@ -71,7 +69,6 @@ Route::get('/registrasi', function () {
 Route::get('/home', function () {
     return view('home');
 });
-
 
 // Halaman about
 Route::get('/about', function () {
@@ -92,7 +89,6 @@ Route::get('/profile', function () {
 // Resource untuk perusahaan (CRUD otomatis)
 Route::resource('/perusahaan', PerusahaanController::class);
 
-
 // ⭐ ============================
 //    RATING & REVIEW PERUSAHAAN
 // ============================
@@ -104,17 +100,8 @@ Route::get('/ratingdanreview/edit/{id_review}', [RatingDanReviewController::clas
 Route::put('/ratingdanreview/update/{id_review}', [RatingDanReviewController::class, 'update'])->name('ratingdanreview.update');
 Route::delete('/ratingdanreview/delete/{id_review}', [RatingDanReviewController::class, 'destroy'])->name('ratingdanreview.destroy');
 
-
-// 🎓 ============================
 //   DATA DOSEN PEMBIMBING (CRUD)
-// ============================
 Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
-
-
-// Halaman daftar jadwal
-Route::get('/daftar-jadwal', function () {
-    return view('daftar-jadwal');
-});
 
 Route::resource('perusahaan', PerusahaanController::class);
 
@@ -128,12 +115,11 @@ Route::resource('mahasiswa', MahasiswaController::class);
 
 Route::resource('penilaian', PenilaianPengujiController::class);
 
-// 🔍 AJAX untuk cari mahasiswa berdasarkan NIM
-Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNim']);
-
 // Resource untuk pengujian (CRUD otomatis)
-
 Route::resource('/dosen_penguji', DosenPengujiController::class);
 
 // route('get', '/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
 Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+
+// 🔍 AJAX untuk cari mahasiswa berdasarkan NIM
+Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNim']);
