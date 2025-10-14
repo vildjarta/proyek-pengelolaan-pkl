@@ -2,71 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\jadwal_bimbingan;
+use App\Models\JadwalBimbingan; 
+use App\Models\Mahasiswa;
+use App\Models\DosenPembimbing;
 use Illuminate\Http\Request;
 
 class JadwalBimbinganController extends Controller
 {
-    /**
-     * Menampilkan daftar resource.
-     */
     public function index(Request $request)
     {
-        // Ambil input untuk search dan sort
         $search = $request->query('search');
-        $sort = $request->query('sort', 'waktu_terdekat'); // Default sort: waktu terdekat
+        $sort = $request->query('sort', 'waktu_terdekat');
 
-        // Mulai query builder
-        $query = jadwal_bimbingan::query();
+        // Ganti nama model dan gunakan 'with' untuk eager loading (lebih efisien)
+        $query = JadwalBimbingan::with(['mahasiswa', 'dosen']);
 
-        // --- LOGIKA PENCARIAN ---
         if ($search) {
-            // Cari di kolom 'mahasiswa' atau 'dosen'
-            $query->where(function($q) use ($search) {
-                $q->where('mahasiswa', 'like', "%{$search}%")
-                  ->orWhere('dosen', 'like', "%{$search}%");
+            // Pencarian melalui relasi
+            $query->whereHas('mahasiswa', function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%");
+            })->orWhereHas('dosen', function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%");
             });
         }
 
-        // --- LOGIKA SORTING ---
         switch ($sort) {
             case 'mahasiswa':
-                $query->orderBy('mahasiswa', 'asc');
+                // Sorting melalui relasi (membutuhkan join)
+                $query->select('jadwal_bimbingans.*')
+                      ->leftJoin('mahasiswa', 'jadwal_bimbingans.id_mahasiswa', '=', 'mahasiswa.id_mahasiswa')
+                      ->orderBy('mahasiswa.nama', 'asc');
                 break;
             case 'dosen':
-                $query->orderBy('dosen', 'asc');
+                $query->select('jadwal_bimbingans.*')
+                      ->leftJoin('dosen_pembimbing', 'jadwal_bimbingans.id_pembimbing', '=', 'dosen_pembimbing.id_pembimbing')
+                      ->orderBy('dosen_pembimbing.nama', 'asc');
                 break;
             case 'waktu':
                 $query->orderBy('waktu_mulai', 'asc');
                 break;
-            default: // default ke 'waktu_terdekat'
-                // Mengurutkan berdasarkan tanggal dan waktu mulai terdekat
+            default: // default 'waktu_terdekat'
                 $query->orderBy('tanggal', 'asc')->orderBy('waktu_mulai', 'asc');
                 break;
         }
 
         $jadwals = $query->get();
 
-        // Kirim data ke view
         return view('jadwal_bimbingan', compact('jadwals', 'sort', 'search'));
     }
 
-    /**
-     * Menampilkan form untuk membuat resource baru.
-     */
     public function create()
     {
-        return view('create_jadwal');
+        // Ambil semua data mahasiswa dan dosen untuk ditampilkan di form
+        $mahasiswas = Mahasiswa::orderBy('nama')->get();
+        $dosens = DosenPembimbing::orderBy('nama')->get();
+        return view('create_jadwal', compact('mahasiswas', 'dosens'));
     }
-    
-    /**
-     * Menyimpan resource baru.
-     */
+
     public function store(Request $request)
     {
         $request->validate([
-            'mahasiswa' => 'nullable|string|max:255',
-            'dosen' => 'nullable|string|max:255',
+            'id_mahasiswa' => 'nullable|exists:mahasiswa,id_mahasiswa',
+            'id_pembimbing' => 'nullable|exists:dosen_pembimbing,id_pembimbing',
             'tanggal' => 'required|date',
             'waktu_mulai' => 'required',
             'waktu_selesai' => 'required',
@@ -74,27 +71,24 @@ class JadwalBimbinganController extends Controller
             'catatan' => 'nullable|string',
         ]);
 
-        jadwal_bimbingan::create($request->all());
+        JadwalBimbingan::create($request->all());
 
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
     }
 
-    /**
-     * Menampilkan form untuk mengedit resource.
-     */
-    public function edit(jadwal_bimbingan $jadwal)
+    public function edit(JadwalBimbingan $jadwal) // Type-hinting yang benar
     {
-        return view('edit_jadwal', compact('jadwal'));
+        // Ambil semua data mahasiswa dan dosen untuk dropdown di form edit
+        $mahasiswas = Mahasiswa::orderBy('nama')->get();
+        $dosens = DosenPembimbing::orderBy('nama')->get();
+        return view('edit_jadwal', compact('jadwal', 'mahasiswas', 'dosens'));
     }
 
-    /**
-     * Memperbarui resource yang ada.
-     */
-    public function update(Request $request, jadwal_bimbingan $jadwal)
+    public function update(Request $request, JadwalBimbingan $jadwal)
     {
         $request->validate([
-            'mahasiswa' => 'nullable|string|max:255',
-            'dosen' => 'nullable|string|max:255',
+            'id_mahasiswa' => 'nullable|exists:mahasiswa,id_mahasiswa',
+            'id_pembimbing' => 'nullable|exists:dosen_pembimbing,id_pembimbing',
             'tanggal' => 'required|date',
             'waktu_mulai' => 'required',
             'waktu_selesai' => 'required',
@@ -103,17 +97,13 @@ class JadwalBimbinganController extends Controller
         ]);
 
         $jadwal->update($request->all());
-            
+
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate!');
     }
 
-    /**
-     * Menghapus resource.
-     */
-    public function destroy(jadwal_bimbingan $jadwal)
+    public function destroy(JadwalBimbingan $jadwal)
     {
         $jadwal->delete();
-
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
     }
 }

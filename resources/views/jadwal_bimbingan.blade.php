@@ -1,7 +1,6 @@
 @include('layout.header')
 @include('layout.sidebar')
     <link rel="stylesheet" href="{{ asset('assets/css/style-pkl-jadwal.css') }}">
-    {{-- Pastikan Font Awesome sudah ada di layout utama Anda --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
     <div class="main-content-wrapper">
@@ -10,7 +9,7 @@
                 <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Tambah Jadwal</a>
                 <div class="search-container">
                     <form action="{{ route('jadwal.index') }}" method="GET">
-                        <input type="text" name="search" class="form-control search-input" placeholder="Cari Mahasiswa/Dosen..." value="{{ $search ?? '' }}">
+                        <input type="text" name="search" class="form-control search-input" placeholder="Cari Nama Mahasiswa/Dosen..." value="{{ $search ?? '' }}">
                     </form>
                 </div>
             </div>
@@ -34,8 +33,10 @@
                 <tbody>
                     @forelse($jadwals as $jadwal)
                     <tr>
-                        <td>{{ $jadwal->mahasiswa ?? 'N/A' }}</td>
-                        <td>{{ $jadwal->dosen ?? 'N/A' }}</td>
+                        {{-- Menggunakan relasi untuk menampilkan nama --}}
+                        <td>{{ $jadwal->mahasiswa->nama ?? 'N/A' }}</td>
+                        <td>{{ $jadwal->dosen->nama ?? 'N/A' }}</td>
+
                         <td>{{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->waktu_selesai)->format('H:i') }}</td>
                         <td>{{ $jadwal->topik ?? '-' }}</td>

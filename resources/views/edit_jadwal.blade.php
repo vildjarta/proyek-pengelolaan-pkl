@@ -5,35 +5,41 @@
     <div class="content">
         <div class="form-card">
             <h2>Edit Jadwal Bimbingan</h2>
-
-            {{-- Tampilkan error validasi jika ada --}}
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            
+            {{-- ... error validation ... --}}
 
             <form action="{{ route('jadwal.update', $jadwal->id) }}" method="POST" onsubmit="return confirmSubmit();">
                 @csrf
                 @method('PUT')
                 
                 <div class="form-group">
-                    <label for="mahasiswa">Mahasiswa (Opsional)</label>
-                    <input type="text" name="mahasiswa" id="mahasiswa" class="form-control" placeholder="Ketik nama mahasiswa..." value="{{ old('mahasiswa', $jadwal->mahasiswa) }}">
+                    <label for="id_mahasiswa">Mahasiswa (Opsional)</label>
+                    <select name="id_mahasiswa" id="id_mahasiswa" class="form-control">
+                        <option value="">-- Pilih Mahasiswa --</option>
+                        @foreach($mahasiswas as $mahasiswa)
+                            <option value="{{ $mahasiswa->id_mahasiswa }}" {{ $jadwal->id_mahasiswa == $mahasiswa->id_mahasiswa ? 'selected' : '' }}>
+                                {{ $mahasiswa->nama }} ({{ $mahasiswa->nim }})
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="dosen">Dosen (Opsional)</label>
-                    <input type="text" name="dosen" id="dosen" class="form-control" placeholder="Ketik nama dosen..." value="{{ old('dosen', $jadwal->dosen) }}">
+                    <label for="id_pembimbing">Dosen (Opsional)</label>
+                    <select name="id_pembimbing" id="id_pembimbing" class="form-control">
+                        <option value="">-- Pilih Dosen --</option>
+                        @foreach($dosens as $dosen)
+                            <option value="{{ $dosen->id_pembimbing }}" {{ $jadwal->id_pembimbing == $dosen->id_pembimbing ? 'selected' : '' }}>
+                                {{ $dosen->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
+                {{-- Sisanya sama, hanya value disesuaikan --}}
                 <div class="form-group">
                     <label for="tanggal">Tanggal Bimbingan</label>
-                    <input type="date" name="tanggal" id="tanggal" class="form-control" required value="{{ old('tanggal', $jadwal->tanggal ? date('Y-m-d', strtotime($jadwal->tanggal)) : '') }}">
+                    <input type="date" name="tanggal" id="tanggal" class="form-control" required value="{{ old('tanggal', $jadwal->tanggal) }}">
                 </div>
 
                 <div class="form-group">
@@ -48,12 +54,12 @@
 
                 <div class="form-group">
                     <label for="topik">Topik Bimbingan (Opsional)</label>
-                    <input type="text" name="topik" id="topik" class="form-control" placeholder="Contoh: Revisi Bab 1" value="{{ old('topik', $jadwal->topik) }}">
+                    <input type="text" name="topik" id="topik" class="form-control" value="{{ old('topik', $jadwal->topik) }}">
                 </div>
                 
                 <div class="form-group">
                     <label for="catatan">Aksi / Catatan (Opsional)</label>
-                    <input type="text" name="catatan" id="catatan" class="form-control" placeholder="Contoh: Bawa laptop dan hard copy" value="{{ old('catatan', $jadwal->catatan) }}">
+                    <input type="text" name="catatan" id="catatan" class="form-control" value="{{ old('catatan', $jadwal->catatan) }}">
                 </div>
 
                 <div class="form-actions">
@@ -112,7 +118,7 @@
                 }
             });
         </script>
-</div>
+        </div>
 <script>
     function confirmSubmit() {
         return confirm("Apakah Anda yakin untuk mengubah jadwal ini?");
