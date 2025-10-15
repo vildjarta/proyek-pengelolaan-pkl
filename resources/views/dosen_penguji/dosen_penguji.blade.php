@@ -136,7 +136,7 @@
                                 <td>{{ $dp->no_hp }}</td>
                                 <td>
                                     <a href="{{ route('dosen_penguji.edit', $dp->id_penguji) }}"
-                                        class="btn btn-warning btn-sm me-1">
+                                        class="btn btn-warning btn-sm btn-action text-white">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
                                     <form action="{{ route('dosen_penguji.destroy', $dp->id_penguji) }}" method="POST"
