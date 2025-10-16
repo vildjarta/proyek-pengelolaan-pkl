@@ -68,8 +68,10 @@
                     value="{{ old('no_hp', $dosenPenguji->no_hp) }}">
             </div>
 
-            <button type="submit" class="btn btn-primary">Update</button>
-            <a href="{{ route('dosen_penguji.index') }}" class="btn btn-secondary">Batal</a>
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{{ route('dosen_penguji.index') }}" class="btn btn-secondary">Batal</a>
+            </div>
         </form>
 
     </body>

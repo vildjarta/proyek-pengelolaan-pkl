@@ -158,6 +158,16 @@
             </li>
         </ul>
 
+        <h4>dosen penguji</h4>
+        <ul>
+            <li>
+                <a href="/dosen_penguji">
+                    <i class="fa fa-user-tie"></i>
+                    <span>dosen penguji</span>
+                </a>
+            </li>
+        </ul>
+
         <h4>Panduan & Kontak</h4>
         <ul>
             <li>
@@ -186,3 +196,31 @@
 
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.querySelector('.menu-toggle');
+        const body = document.body;
+        const profileWrapper = document.querySelector('.user-profile-wrapper');
+        const userinfo = document.querySelector('.user-info');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                body.classList.toggle('sidebar-closed');
+            });
+        }
+
+        if (userinfo) {
+            userinfo.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileWrapper.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                    profileWrapper.classList.remove('active');
+                }
+            });
+        }
+    });
+</script>
