@@ -13,10 +13,13 @@
   <!-- CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/editdatadosenpembimbing.css') }}">
+  
 </head>
+
 <body>
   @include('layout.header')
   @include('layout.sidebar')
+
   <div class="main-wrapper" id="main-wrapper">
     <div class="content-container">
       <div class="content-card">
@@ -30,7 +33,7 @@
 
           <!-- NIP -->
           <div class="mb-3">
-            <label class="form-label">NIP</label>
+            <label class="form-label">NIP<span class="required-star">*</span></label>
             <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18"
                    placeholder="Masukkan 18 digit NIP" value="{{ old('NIP', $item->NIP) }}" required>
             <div id="nipError" class="text-danger mt-1" style="display:none;">NIP harus 18 angka.</div>
@@ -41,7 +44,7 @@
 
           <!-- Nama Dosen -->
           <div class="mb-3">
-            <label class="form-label">Nama Dosen</label>
+            <label class="form-label">Nama Dosen<span class="required-star">*</span></label>
             <input type="text" name="nama" class="form-control" placeholder="Masukkan nama dosen"
                    value="{{ old('nama', $item->nama) }}" required>
             @error('nama')
@@ -51,7 +54,7 @@
 
           <!-- Email -->
           <div class="mb-3">
-            <label class="form-label">Email</label>
+            <label class="form-label">Email<span class="required-star">*</span></label>
             <input type="email" name="email" class="form-control" placeholder="contoh@email.com"
                    value="{{ old('email', $item->email) }}" required>
             @error('email')
@@ -71,7 +74,7 @@
                 </button>
 
                 <div class="mb-3 mt-3">
-                  <label class="form-label">NIM Mahasiswa</label>
+                  <label class="form-label">NIM Mahasiswa<span class="required-star">*</span></label>
                   <input type="text" name="nim[]" class="form-control nimInput"
                          value="{{ old('nim.' . $i, $mhs->nim) }}" placeholder="Masukkan NIM Mahasiswa" required>
                   <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">NIM tidak ditemukan.</div>
@@ -81,7 +84,7 @@
                 </div>
 
                 <div class="mb-2">
-                  <label class="form-label">Nama Mahasiswa</label>
+                  <label class="form-label">Nama Mahasiswa<span class="required-star">*</span></label>
                   <input type="text" name="nama_mahasiswa[]" class="form-control namaInput"
                          value="{{ old('nama_mahasiswa.' . $i, $mhs->nama) }}"
                          placeholder="Nama Mahasiswa Terisi Otomatis" readonly required>
@@ -94,7 +97,7 @@
                 </button>
 
                 <div class="mb-3 mt-3">
-                  <label class="form-label">NIM Mahasiswa</label>
+                  <label class="form-label">NIM Mahasiswa<span class="required-star">*</span></label>
                   <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa" required>
                   <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">NIM tidak ditemukan.</div>
                   <div class="nimSuccess alert alert-success py-1 px-2 mt-2 mb-0" style="display:none;">
@@ -103,7 +106,7 @@
                 </div>
 
                 <div class="mb-2">
-                  <label class="form-label">Nama Mahasiswa</label>
+                  <label class="form-label">Nama Mahasiswa<span class="required-star">*</span></label>
                   <input type="text" name="nama_mahasiswa[]" class="form-control namaInput"
                          placeholder="Nama Mahasiswa Terisi Otomatis" readonly required>
                 </div>

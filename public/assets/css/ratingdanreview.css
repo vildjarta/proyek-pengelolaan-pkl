@@ -41,7 +41,19 @@ body.sidebar-closed .main-content-wrapper {
   text-align: left;
 }
 
-/* Form Control */
+/* Form Label dengan tanda wajib */
+.form-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+.form-label.required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+}
+
+/* Input dan Textarea */
 .form-control {
   border-radius: 8px;
   padding: 10px 15px;

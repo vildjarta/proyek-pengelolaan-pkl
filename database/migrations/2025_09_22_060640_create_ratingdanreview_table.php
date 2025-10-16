@@ -14,10 +14,21 @@ return new class extends Migration {
             $table->text('review')->nullable();
             $table->date('tanggal_review');
             $table->timestamps();
+
+            // 🔗 Relasi Foreign Key
+            $table->foreign('id_mahasiswa')
+                  ->references('id_mahasiswa')   // kolom primary key di tabel mahasiswa
+                  ->on('mahasiswa')
+                  ->onDelete('cascade');         // hapus otomatis jika mahasiswa dihapus
+
+            $table->foreign('id_perusahaan')
+                  ->references('id_perusahaan')  // kolom primary key di tabel perusahaan
+                  ->on('perusahaan')
+                  ->onDelete('cascade');         // hapus otomatis jika perusahaan dihapus
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('rating_dan_reviews'); // perbaikan: nama tabel harus sama
+        Schema::dropIfExists('rating_dan_reviews');
     }
 };
