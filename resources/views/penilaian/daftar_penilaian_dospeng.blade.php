@@ -54,8 +54,8 @@
                         <tbody>
                             @forelse ($penilaian as $p)
                             <tr>
-                                <td>{{ $p->nip }}</td>
-                                <td>{{ $p->nama_dosen }}</td>
+                                <td>{{ $p->dosen->nip ?? '-' }}</td>
+                                <td>{{ $p->dosen->nama_dosen ?? '-' }}</td>
                                 <td>{{ $p->nama_mahasiswa }}</td>
                                 <td>{{ $p->judul }}</td>
                                 <td>{{ $p->presentasi }}</td>

@@ -26,14 +26,14 @@
                     @method('PUT')
                     <div class="row g-3">
                         {{-- Data Umum --}}
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">NIP</label>
-                            <input type="text" name="nip" class="form-control" value="{{ $penilaian->nip }}" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Nama Dosen</label>
-                            <input type="text" name="nama_dosen" class="form-control" value="{{ $penilaian->nama_dosen }}" required>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Pilih Dosen Penguji</label>
+                            <select name="id_penguji" class="form-control" required>
+                                <option value="">-- Pilih Dosen --</option>
+                                    <option value="{{ $penilaian->dosen->id_penguji }}">
+                                    {{ $penilaian->dosen->nip }} - {{ $penilaian->dosen->nama_dosen }}
+                                </option>
+                            </select>
                         </div>
 
                         <div class="col-md-6">

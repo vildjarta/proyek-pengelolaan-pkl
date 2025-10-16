@@ -4,25 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PenilaianPenguji;
+use App\Models\dosen_penguji;
 
 class PenilaianPengujiController extends Controller
 {
     public function index()
     {
-        $penilaian = PenilaianPenguji::all();
+        $penilaian = PenilaianPenguji::with(['dosen'])->get();
         return view('penilaian.daftar_penilaian_dospeng', compact('penilaian'));
     }
 
     public function create()
     {
-        return view('penilaian.tambah_penilaian_dospeng');
+        $dosen = dosen_penguji::all();
+        return view('penilaian.tambah_penilaian_dospeng', compact('dosen'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nip' => 'required|string|max:20',
-            'nama_dosen' => 'required|string|max:100',
+            'id_penguji' => 'required|exists:dosen_penguji,id_penguji',
             'nama_mahasiswa' => 'required|string|max:100',
             'presentasi' => 'required|numeric|min:0|max:100',
             'materi' => 'required|numeric|min:0|max:100',
@@ -53,6 +54,7 @@ class PenilaianPengujiController extends Controller
     public function edit($id)
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
+        $dosen = dosen_penguji::all();
         return view('penilaian.edit_penilaian_dospeng', compact('penilaian'));
     }
 
@@ -61,8 +63,7 @@ class PenilaianPengujiController extends Controller
         $penilaian = PenilaianPenguji::findOrFail($id);
 
         $validated = $request->validate([
-            'nip' => 'required|string|max:20',
-            'nama_dosen' => 'required|string|max:100',
+            'id_penguji' => 'required|exists:dosen_penguji,id_penguji',
             'nama_mahasiswa' => 'required|string|max:100',
             'judul' => 'nullable|string|max:255',
             'presentasi' => 'required|numeric|min:0|max:100',
