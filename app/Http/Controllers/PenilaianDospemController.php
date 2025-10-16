@@ -4,50 +4,51 @@ namespace App\Http\Controllers;
 
 use App\Models\PenilaianDospem;
 use App\Models\Mahasiswa;
-use App\Models\DataDosenPembimbing; // Menggunakan nama Model yang benar
 use Illuminate\Http\Request;
 
 class PenilaianDospemController extends Controller
 {
     /**
-     * Menampilkan daftar semua data penilaian dengan fungsi search dan sort.
+     * Menampilkan daftar semua data penilaian.
      */
     public function index(Request $request)
     {
-        // 1. Ambil parameter sort dan search dari URL
         $sort = $request->query('sort');
         $search = $request->query('search');
-
-        // 2. Mulai query builder
         $query = PenilaianDospem::query();
 
-        // 3. Terapkan filter pencarian jika ada
         if ($search) {
-            $query->where('nama_mahasiswa', 'like', '%' . $search . '%');
+            $query->where('nama_mahasiswa', 'like', '%' . $search . '%')
+                  ->orWhereHas('mahasiswa', function ($q) use ($search) {
+                      $q->where('nim', 'like', '%' . $search . '%');
+                  });
+        }
+        
+        // Urutkan berdasarkan data terbaru jika tidak ada sort parameter
+        if (!$sort) {
+            $query->latest();
         }
 
-        // Definisikan formula perhitungan nilai mentah
-        $rawScoreCalculation = '(penguasaan_teori + analisis_pemecahan_masalah + keaktifan_bimbingan + penulisan_laporan + sikap)';
-
-        // 4. Terapkan sorting berdasarkan parameter
-        switch ($sort) {
-            case 'mahasiswa':
-                $query->orderBy('nama_mahasiswa', 'asc');
-                break;
-            case 'nilai_internal':
-            case 'nilai':
-            case 'grade':
-                $query->orderByRaw($rawScoreCalculation . ' desc');
-                break;
-            default:
-                $query->latest(); // Urutan default
-                break;
-        }
-
-        // 5. Ambil data setelah di-filter dan di-sort
         $penilaian = $query->get();
 
-        // 6. Kirim data ke view
+        // Lakukan sorting di collection setelah data diambil untuk accessor
+        if ($sort) {
+            switch ($sort) {
+                case 'mahasiswa':
+                    $penilaian = $penilaian->sortBy('nama_mahasiswa');
+                    break;
+                case 'nilai_internal':
+                    $penilaian = $penilaian->sortByDesc('nilai_dospem_internal');
+                    break;
+                case 'nilai':
+                    $penilaian = $penilaian->sortByDesc('nilai_akhir');
+                    break;
+                case 'grade':
+                    $penilaian = $penilaian->sortBy('grade');
+                    break;
+            }
+        }
+
         return view('PenilaianDospem.penilaian_dospem', compact('penilaian', 'search', 'sort'));
     }
 
@@ -56,8 +57,9 @@ class PenilaianDospemController extends Controller
      */
     public function create()
     {
-        $mahasiswa = Mahasiswa::all();
-        return view('PenilaianDospem.create', compact('mahasiswa'));
+        // Ambil hanya mahasiswa yang memiliki dosen pembimbing
+        $mahasiswas = Mahasiswa::whereNotNull('id_pembimbing')->with('dosen')->get();
+        return view('PenilaianDospem.create', compact('mahasiswas'));
     }
 
     /**
@@ -65,9 +67,9 @@ class PenilaianDospemController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi semua input dari form
         $request->validate([
-            'nama_mahasiswa' => 'required|string|exists:mahasiswa,nama',
+            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa|unique:penilaian_dospem,id_mahasiswa',
+            'id_pembimbing' => 'required|exists:dosen_pembimbing,id_pembimbing',
             'judul' => 'required|string|max:255',
             'penguasaan_teori' => 'required|integer|min:0|max:100',
             'analisis_pemecahan_masalah' => 'required|integer|min:0|max:100',
@@ -76,30 +78,21 @@ class PenilaianDospemController extends Controller
             'sikap' => 'required|integer|min:0|max:100',
             'catatan' => 'nullable|string',
         ], [
-            'nama_mahasiswa.exists' => 'Nama mahasiswa yang Anda input tidak terdaftar di database.'
+            'id_mahasiswa.required' => 'Anda harus memilih mahasiswa dari daftar.',
+            'id_mahasiswa.exists' => 'Mahasiswa yang dipilih tidak valid.',
+            'id_mahasiswa.unique' => 'Penilaian untuk mahasiswa ini sudah ada.',
+            'id_pembimbing.required' => 'Mahasiswa yang dipilih belum memiliki Dosen Pembimbing.',
         ]);
 
-        // 2. Cari Mahasiswa berdasarkan nama yang diinput
-        $mahasiswa = Mahasiswa::where('nama', $request->nama_mahasiswa)->first();
-
-        // Pastikan mahasiswa memiliki data dosen pembimbing
-        if (!$mahasiswa || !$mahasiswa->id_pembimbing) {
-            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Mahasiswa yang dipilih belum memiliki Dosen Pembimbing.']);
-        }
-        
-        // Cari Dosen Pembimbing berdasarkan NIP yang ada di tabel mahasiswa
-        $dosenPembimbing = DataDosenPembimbing::where('NIP', $mahasiswa->id_pembimbing)->first();
-
-        // Jika dosen dengan NIP tersebut tidak ditemukan, kembalikan error
-        if (!$dosenPembimbing) {
-            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Data Dosen Pembimbing tidak valid atau tidak ditemukan.']);
+        $mahasiswa = Mahasiswa::find($request->id_mahasiswa);
+        if (!$mahasiswa) {
+            return back()->withErrors(['id_mahasiswa' => 'Mahasiswa yang dipilih tidak valid.'])->withInput();
         }
 
-
-        // 3. Buat record baru di database dengan data yang sudah divalidasi
         PenilaianDospem::create([
-            'id_mahasiswa' => $mahasiswa->id_mahasiswa, // Menggunakan kolom yang benar dari tabel mahasiswa
-            'nama_mahasiswa' => $mahasiswa->nama,
+            'id_mahasiswa' => $request->id_mahasiswa,
+            'id_pembimbing' => $request->id_pembimbing,
+            'nama_mahasiswa' => $mahasiswa->nama, // Ambil nama dari DB
             'judul' => $request->judul,
             'penguasaan_teori' => $request->penguasaan_teori,
             'analisis_pemecahan_masalah' => $request->analisis_pemecahan_masalah,
@@ -107,10 +100,8 @@ class PenilaianDospemController extends Controller
             'penulisan_laporan' => $request->penulisan_laporan,
             'sikap' => $request->sikap,
             'catatan' => $request->catatan,
-            'id_pembimbing' => $dosenPembimbing->id_pembimbing, // Gunakan ID yang benar
         ]);
 
-        // 4. Redirect ke halaman index dengan pesan sukses
         return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil disimpan!');
     }
 
@@ -120,8 +111,9 @@ class PenilaianDospemController extends Controller
     public function edit($id)
     {
         $penilaian = PenilaianDospem::findOrFail($id);
-        $mahasiswa = Mahasiswa::all();
-        return view('PenilaianDospem.edit', compact('penilaian', 'mahasiswa'));
+        // Untuk form edit, kita mungkin tidak perlu daftar mahasiswa lagi
+        // kecuali jika Anda ingin memperbolehkan mengubah penilaian ke mahasiswa lain
+        return view('PenilaianDospem.edit', compact('penilaian'));
     }
     
     /**
@@ -129,9 +121,10 @@ class PenilaianDospemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // 1. Validasi semua input dari form
+        $penilaian = PenilaianDospem::findOrFail($id);
+
         $request->validate([
-            'nama_mahasiswa' => 'required|string|exists:mahasiswa,nama',
+            // Saat update, kita tidak perlu validasi id_mahasiswa atau id_pembimbing karena tidak diubah
             'judul' => 'required|string|max:255',
             'penguasaan_teori' => 'required|integer|min:0|max:100',
             'analisis_pemecahan_masalah' => 'required|integer|min:0|max:100',
@@ -139,31 +132,11 @@ class PenilaianDospemController extends Controller
             'penulisan_laporan' => 'required|integer|min:0|max:100',
             'sikap' => 'required|integer|min:0|max:100',
             'catatan' => 'nullable|string',
-        ], [
-            'nama_mahasiswa.exists' => 'Nama mahasiswa yang Anda input tidak terdaftar di database.'
         ]);
 
-        // 2. Cari record penilaian yang akan diupdate
-        $penilaian = PenilaianDospem::findOrFail($id);
-        
-        // 3. Cari Mahasiswa berdasarkan nama yang diinput
-        $mahasiswa = Mahasiswa::where('nama', $request->nama_mahasiswa)->first();
-
-        // Pastikan mahasiswa memiliki dosen pembimbing
-        if (!$mahasiswa || !$mahasiswa->id_pembimbing) {
-            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Mahasiswa yang dipilih belum memiliki Dosen Pembimbing.']);
-        }
-        
-        // Cari Dosen Pembimbing berdasarkan NIP
-        $dosenPembimbing = DataDosenPembimbing::where('NIP', $mahasiswa->id_pembimbing)->first();
-        if (!$dosenPembimbing) {
-            return back()->withInput()->withErrors(['nama_mahasiswa' => 'Data Dosen Pembimbing tidak valid atau tidak ditemukan.']);
-        }
-
-        // 4. Update record di database
         $penilaian->update([
-            'id_mahasiswa' => $mahasiswa->id_mahasiswa, // Menggunakan kolom yang benar dari tabel mahasiswa
-            'nama_mahasiswa' => $mahasiswa->nama,
+            // Nama mahasiswa tidak perlu di-update karena sudah terikat dengan ID
+            'nama_mahasiswa' => $request->input('nama_mahasiswa', $penilaian->nama_mahasiswa),
             'judul' => $request->judul,
             'penguasaan_teori' => $request->penguasaan_teori,
             'analisis_pemecahan_masalah' => $request->analisis_pemecahan_masalah,
@@ -171,16 +144,11 @@ class PenilaianDospemController extends Controller
             'penulisan_laporan' => $request->penulisan_laporan,
             'sikap' => $request->sikap,
             'catatan' => $request->catatan,
-            'id_pembimbing' => $dosenPembimbing->id_pembimbing, // Gunakan ID yang benar
         ]);
 
-        // 5. Redirect ke halaman index dengan pesan sukses
         return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil diperbarui!');
     }
     
-    /**
-     * Menghapus data penilaian dari database.
-     */
     public function destroy($id)
     {
         $penilaian = PenilaianDospem::findOrFail($id);
@@ -189,4 +157,3 @@ class PenilaianDospemController extends Controller
         return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil dihapus!');
     }
 }
-

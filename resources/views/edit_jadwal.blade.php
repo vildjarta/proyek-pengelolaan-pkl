@@ -49,15 +49,17 @@
                     <input type="date" name="tanggal" id="tanggal" class="form-control" required value="{{ old('tanggal', $jadwal->tanggal) }}">
                 </div>
 
+                {{-- 👇 PERUBAHAN DI SINI 👇 --}}
                 <div class="form-group">
                     <label for="waktu_mulai">Waktu Mulai</label>
-                    <input type="time" name="waktu_mulai" id="waktu_mulai" class="form-control" required value="{{ old('waktu_mulai', $jadwal->waktu_mulai) }}">
+                    <input type="time" name="waktu_mulai" id="waktu_mulai" class="form-control" value="{{ old('waktu_mulai', $jadwal->waktu_mulai) }}" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="waktu_selesai">Waktu Selesai</label>
-                    <input type="time" name="waktu_selesai" id="waktu_selesai" class="form-control" required value="{{ old('waktu_selesai', $jadwal->waktu_selesai) }}">
+                    <input type="time" name="waktu_selesai" id="waktu_selesai" class="form-control" value="{{ old('waktu_selesai', $jadwal->waktu_selesai) }}" required>
                 </div>
+                {{-- 👆 PERUBAHAN SAMPAI SINI 👆 --}}
 
                 <div class="form-group">
                     <label for="topik">Topik Bimbingan (Opsional)</label>
@@ -76,4 +78,37 @@
             </form>
         </div>
     </div>
+     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.querySelector('.menu-toggle');
+        const body = document.body;
+        const profileWrapper = document.querySelector('.user-profile-wrapper');
+        const userinfo = document.querySelector('.user-info');
+        
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                body.classList.toggle('sidebar-closed');
+            });
+        }
+        
+        if (userinfo) {
+            userinfo.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                profileWrapper.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                    profileWrapper.classList.remove('active');
+                }
+            });
+        }
+    });
+</script>
+</div>
+<script>
+    function confirmSubmit() {
+        return confirm("Apakah Anda yakin ingin Mengedit Penilaian ini?");
+    }
+</script>
 </div>
