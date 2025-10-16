@@ -1,11 +1,11 @@
-/* General Body Styles */
+/* Gaya Umum untuk Body */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f7f9;
     color: #444;
 }
 
-/* Main Layout Wrapper */
+/* Pembungkus Layout Utama */
 .main-content-wrapper {
     margin-top: 60px;
     margin-left: 260px;
@@ -18,14 +18,14 @@ body.sidebar-closed .main-content-wrapper {
     margin-left: 70px;
 }
 
-/* Content */
+/* Konten */
 .content {
     padding: 30px;
     background-color: #fff;
     flex-grow: 1;
 }
 
-/* Header inside the table card */
+/* Header di dalam Kartu Tabel */
 .table-header {
     display: flex;
     justify-content: space-between;
@@ -35,14 +35,14 @@ body.sidebar-closed .main-content-wrapper {
     border-bottom: 2px solid #5b8ad2;
 }
 
-/* Headings */
+/* Judul (Heading) */
 h2.title {
     color: #5b8ad2;
     margin: 0;
     font-size: 1.8rem;
 }
 
-/* Table Styles */
+/* Gaya Tabel */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -68,7 +68,7 @@ h2.title {
     background-color: #e2e6ea;
 }
 
-/* Button Styles */
+/* Gaya Tombol */
 .btn {
     padding: 10px 15px;
     border: none;
@@ -133,7 +133,6 @@ h2.title {
     background-color: #c82333; /* Warna merah lebih gelap saat disentuh cursor */
 }
 
-/* ...existing code... */
 .btn-success {
     background-color: #28a745;
     color: #fff;
@@ -149,7 +148,7 @@ h2.title {
     text-align: center;
 }
 
-/* Form Styles */
+/* Gaya Form */
 .form-group {
     margin-bottom: 15px;
 }
@@ -169,7 +168,7 @@ h2.title {
     font-size: 16px;
 }
 
-/* Alert Message Styles */
+/* Gaya Pesan Peringatan (Alert) */
 .alert {
     padding: 15px;
     margin-bottom: 20px;
@@ -181,15 +180,6 @@ h2.title {
     color: #155724;
     background-color: #d4edda;
     border-color: #c3e6cb;
-}
-
-.table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #5b8ad2;
 }
 
 /* Container untuk input search */
@@ -206,21 +196,87 @@ h2.title {
     font-size: 14px;
 }
 
-/* Membuat link di header tabel terlihat seperti teks biasa */
+/* ===== Perbaikan Gaya Ikon Sorting (Hanya Blok Ini) ===== */
+/* Membuat link header menjadi area inline-flex yang nyaman */
+.table thead th a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Latar belakang hover yang halus untuk menandakan area yang bisa diklik */
+.table thead th a:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+/* Wadah untuk panah bertumpuk (markup: .sort-icon dengan .up/.down) */
+.table thead th a .sort-icon {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+}
+
+/* Tampilan panah netral (berlaku untuk kelas .up/.down dan ikon fa-angle) */
+.table thead th a .up,
+.table thead th a .down,
+.table thead th a i.fa-angle-up,
+.table thead th a i.fa-angle-down {
+    font-size: 11px;
+    color: rgba(255,255,255,0.68);
+    transition: color .12s ease, transform .12s ease, opacity .12s ease;
+    display: block;
+}
+
+/* Sorting 'asc' aktif -> sorot panah atas */
+.table thead th a.active.sort-asc .up,
+.table thead th a.active.sort-asc i.fa-angle-up {
+    color: #ffffff;
+    transform: translateY(-2px) scale(1.05);
+}
+.table thead th a.active.sort-asc .down,
+.table thead th a.active.sort-asc i.fa-angle-down {
+    color: rgba(255,255,255,0.58);
+    opacity: .9;
+}
+
+/* Sorting 'desc' aktif -> sorot panah bawah */
+.table thead th a.active.sort-desc .down,
+.table thead th a.active.sort-desc i.fa-angle-down {
+    color: #ffffff;
+    transform: translateY(2px) scale(1.05);
+}
+.table thead th a.active.sort-desc .up,
+.table thead th a.active.sort-desc i.fa-angle-up {
+    color: rgba(255,255,255,0.58);
+    opacity: .9;
+}
+
+/* Layar kecil: perbesar area sentuh */
+@media (max-width:700px) {
+    .table thead th a { padding: 8px 10px; gap: 6px; }
+    .table thead th a .up, .table thead th a .down,
+    .table thead th a i.fa-angle-up, .table thead th a i.fa-angle-down {
+        font-size: 12px;
+    }
+}
+
+/* Membuat link di header tabel terlihat seperti teks biasa (fallback) */
 .table thead th a {
     color: inherit;
     text-decoration: none;
-    display: inline-block;
 }
 
-.table thead th a:hover {
-    text-decoration: underline;
-}
-
-/* Memberi sedikit jarak antara teks header dan ikon panah */
+/* Memberi sedikit jarak antara teks header dan ikon panah (fallback) */
 .table thead th a i {
     margin-left: 8px;
     font-size: 0.9em; /* Sedikit lebih kecil agar proporsional */
 }
-
-
+/* ===== Akhir Perbaikan Gaya Ikon Sorting ===== */
