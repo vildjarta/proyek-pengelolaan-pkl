@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/style-pkl.css">
+    <link rel="stylesheet" href="/assets/css/transkrip.css">
 </head>
 
 <body>
@@ -25,14 +26,58 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
                 <h2>Analisa Transkrip Kelayakan PKL</h2>
-                <p>Paste transkrip kamu di bawah ini (copy dari KHS/Word/PDF).</p>
+                <p>Paste transkrip kamu di bawah ini untuk mengecek kelayakan PKL.</p>
             </div>
             <a href="{{ route('transkrip.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
         </div>
 
-        <textarea id="pasteArea" class="form-control" rows="8" placeholder="Paste transkrip di sini..."></textarea> <!-- area paste -->
+        <!-- Tutorial Card -->
+        <div class="tutorial-card">
+            <h3>
+                <i class="fas fa-info-circle"></i> Cara Menggunakan Analisa Transkrip
+            </h3>
+            <ol>
+                <li>
+                    <strong>Buka SIPADU</strong> dan login dengan akun mahasiswa Anda
+                </li>
+                <li>
+                    <strong>Cari menu "Hasil Studi"</strong> di dashboard SIPADU
+                </li>
+                <li>
+                    <strong>Klik "Transkrip"</strong> untuk melihat transkrip nilai Anda
+                </li>
+                <li>
+                    <strong>Klik tombol "Cetak Transkrip Sementara"</strong>
+                </li>
+                <li>
+                    <strong>Copy HANYA bagian dalam tabel</strong> (jangan termasuk header atau footer)
+                    <ul>
+                        <li>Pilih dari baris pertama mata kuliah sampai baris terakhir</li>
+                        <li>Pastikan kolom yang tercopy memiliki: Kode MK, Nama MK, SKS, Nilai</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Paste</strong> di kotak di bawah ini
+                </li>
+                <li>
+                    <strong>Klik tombol "Analisa"</strong> untuk melihat hasil kelayakan PKL
+                </li>
+            </ol>
+            <div class="tips-box">
+                <strong style="color: #856404; display: block; margin-bottom: 10px;">
+                    <i class="fas fa-lightbulb"></i> Tips:
+                </strong>
+                <ul style="color: #856404; margin: 0; padding-left: 20px;">
+                    <li>Pastikan format tabel tetap rapi saat di-copy</li>
+                    <li>Jika hasil tidak akurat, coba copy ulang dengan lebih hati-hati</li>
+                    <li>Sistem akan otomatis menghitung IPK, SKS D, dan nilai E</li>
+                </ul>
+            </div>
+        </div>
+
+        <textarea id="pasteArea" class="form-control" rows="8" placeholder="Paste transkrip di sini (hanya bagian tabel dari SIPADU)..."></textarea> <!-- area paste -->
         <br>
         <div id="preview"></div> <!-- preview tabel hasil paste -->
         <br>
@@ -131,18 +176,17 @@
     function addTranscriptEntry(data = null) {
         const container = document.getElementById('transcriptEntries');
         const entryId = entryCounter++;
-        
+
         const entryDiv = document.createElement('div');
         entryDiv.className = 'transcript-entry';
-        entryDiv.style.cssText = 'border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; background: #f9f9f9;';
         entryDiv.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h4 style="margin: 0;">Data Mahasiswa #${entryId + 1}</h4>
+            <div>
+                <h4>Data Mahasiswa #${entryId + 1}</h4>
                 <button type="button" class="btn btn-danger btn-sm" onclick="removeEntry(${entryId})">
                     <i class="fa fa-trash"></i> Hapus
                 </button>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
                 <div>
                     <label>Nama Mahasiswa:</label>
                     <input type="text" name="entries[${entryId}][nama_mahasiswa]" class="form-control" value="${data?.nama_mahasiswa || ''}" required>
@@ -175,7 +219,7 @@
                 </div>
             </div>
         `;
-        
+
         container.appendChild(entryDiv);
     }
 

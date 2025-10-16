@@ -1,124 +1,102 @@
 <!-- Sidebar Layout -->
 <div class="sidebar">
     <div class="menu-list">
+        @php
+            // Dummy role untuk sementara (nanti akan diganti dengan Auth::user()->role)
+            $userRole = 'admin'; // Bisa diganti: 'mahasiswa', 'dosen', 'perusahaan', 'admin'
+            $currentRoute = request()->path();
+        @endphp
 
+        {{-- Dashboard - Semua Role--}}
         <h4>General</h4>
         <ul>
-            <li>
-                <a href="#">
+            <li class="{{ $currentRoute == 'home' ? 'active' : '' }}">
+                <a href="{{ url('/home') }}">
                     <i class="fa fa-home"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
         </ul>
 
+        {{-- Menu Mahasiswa--}}
+        @if(in_array($userRole, ['mahasiswa', 'admin']))
         <h4>Mahasiswa</h4>
         <ul>
-            <li>
-                <a href="#">
+            <li class="{{ $currentRoute == 'transkrip' ? 'active' : '' }}">
+                <a href="{{ url('/transkrip') }}">
                     <i class="fa fa-file-alt"></i>
-                    <span>Ajukan Proposal</span>
+                    <span>Transkrip Kelayakan PKL</span>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-tasks"></i>
-                    <span>Status Proposal</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-calendar"></i>
-                    <span>Jadwal Bimbingan</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-chart-bar"></i>
-                    <span>Statistik Perusahaan</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-user"></i>
-                    <span>Profil Mahasiswa</span>
+            <li class="{{ $currentRoute == 'mahasiswa' ? 'active' : '' }}">
+                <a href="{{ url('/mahasiswa') }}">
+                    <i class="fa fa-user-graduate"></i>
+                    <span>Data Mahasiswa</span>
                 </a>
             </li>
         </ul>
+        @endif
 
+        {{-- Menu Dosen Pembimbing--}}
+        @if(in_array($userRole, ['dosen', 'admin']))
         <h4>Dosen Pembimbing</h4>
         <ul>
-            <li>
-                <a href="#">
-                    <i class="fa fa-users"></i>
-                    <span>Daftar Mahasiswa Bimbingan</span>
+            <li class="{{ $currentRoute == 'datadosenpembimbing' ? 'active' : '' }}">
+                <a href="{{ url('/datadosenpembimbing') }}">
+                    <i class="fa fa-chalkboard-teacher"></i>
+                    <span>Data Dosen Pembimbing</span>
                 </a>
             </li>
-            <li class="{{ request()->routeIs('jadwal.*') ? 'active' : '' }}">
-                <a href="{{ route('jadwal.index') }}">
-                    <i class="fa fa-calendar"></i>
+            <li class="{{ $currentRoute == 'jadwal' ? 'active' : '' }}">
+                <a href="{{ url('/jadwal') }}">
+                    <i class="fa fa-calendar-alt"></i>
                     <span>Jadwal Bimbingan</span>
                 </a>
             </li>
-            <li class="{{ request()->routeIs('penilaian.*') ? 'active' : '' }}">
-                <a href="{{ route('penilaian.index') }}">
-                    <i class="fa fa-edit"></i>
-                    <span>Input Nilai/Kajian</span>
-                </a>
-            </li>
-            <li class="">
-                <a href="#">
-                    <i class="fa fa-building"></i>
-                    <span>Statistik Perusahaan</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
+            <li class="{{ $currentRoute == 'dosen_penguji' ? 'active' : '' }}">
+                <a href="{{ url('/dosen_penguji') }}">
                     <i class="fa fa-user-tie"></i>
-                    <span>Profil Dosen</span>
+                    <span>Dosen Penguji</span>
                 </a>
             </li>
         </ul>
+        @endif
 
+        {{-- Menu Penilaian--}}
+        @if(in_array($userRole, ['dosen', 'perusahaan', 'admin']))
+        <h4>Penilaian</h4>
+        <ul>
+            <li class="{{ $currentRoute == 'penilaian' ? 'active' : '' }}">
+                <a href="{{ url('/penilaian') }}">
+                    <i class="fa fa-clipboard-check"></i>
+                    <span>Nilai Mahasiswa PKL</span>
+                </a>
+            </li>
+        </ul>
+        @endif
+
+        {{-- Menu Perusahaan--}}
+        @if(in_array($userRole, ['perusahaan', 'admin']))
         <h4>Perusahaan</h4>
         <ul>
-            <li>
-                <a href="#">
-                    <i class="fa fa-id-badge"></i>
-                    <span>Daftar Mahasiswa PKL</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-chart-line"></i>
-                    <span>Statistik Perusahaan</span>
-                </a>
-            </li>
-            <li>
-                <a href="/perusahaan">
+            <li class="{{ $currentRoute == 'perusahaan' ? 'active' : '' }}">
+                <a href="{{ url('/perusahaan') }}">
                     <i class="fa fa-building"></i>
-                    <span>Profil Perusahaan</span>
+                    <span>Data Perusahaan</span>
                 </a>
             </li>
-        </ul>
-
-        <h4>Rating & Review</h4>
-        <ul>
-            <li>
-                <a href="#">
+            <li class="{{ $currentRoute == 'ratingperusahaan' ? 'active' : '' }}">
+                <a href="{{ url('/ratingperusahaan') }}">
                     <i class="fa fa-star"></i>
-                    <span>Beri Rating</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-ranking-star"></i>
-                    <span>Ranking Perusahaan</span>
+                    <span>Rating Perusahaan</span>
                 </a>
             </li>
         </ul>
+        @endif
 
-        <h4>Admin / Koordinator</h4>
+        {{-- Menu Admin--}}
+        @if($userRole == 'admin')
+        <h4>Administrasi</h4>
         <ul>
             <li>
                 <a href="#">
@@ -128,37 +106,15 @@
             </li>
             <li>
                 <a href="#">
-                    <i class="fa fa-database"></i>
-                    <span>Data Perusahaan</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-check-circle"></i>
-                    <span>Validasi Mahasiswa</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-clock"></i>
-                    <span>Penjadwalan Otomatis</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-envelope-open-text"></i>
-                    <span>Surat Pengantar</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-download"></i>
-                    <span>Backup & Laporan</span>
+                    <i class="fa fa-file-export"></i>
+                    <span>Laporan & Export</span>
                 </a>
             </li>
         </ul>
+        @endif
 
-        <h4>Panduan & Kontak</h4>
+        {{-- Menu Bantuan - Semua Role--}}
+        <h4>Bantuan</h4>
         <ul>
             <li>
                 <a href="#">
@@ -169,11 +125,12 @@
             <li>
                 <a href="#">
                     <i class="fa fa-headset"></i>
-                    <span>Kontak / Helpdesk</span>
+                    <span>Hubungi Admin</span>
                 </a>
             </li>
         </ul>
 
+        {{-- Logout - Semua Role--}}
         <h4>Akun</h4>
         <ul>
             <li>
