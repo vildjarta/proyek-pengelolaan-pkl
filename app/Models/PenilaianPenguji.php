@@ -11,10 +11,10 @@ class PenilaianPenguji extends Model
 
     //Tambahkan ini supaya pakai tabel 'penguji'
     protected $table = 'penilaian_penguji';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
-        'nip',
-        'nama_dosen',
+        'id_penguji',
         'nama_mahasiswa',
         'presentasi',
         'materi',
@@ -25,4 +25,8 @@ class PenilaianPenguji extends Model
         'nilai_akhir',
         'tanggal_ujian',
     ];
+    public function dosen()
+    {
+        return $this->belongsTo(dosen_penguji::class, 'id_penguji', 'id_penguji');
+    }
 }

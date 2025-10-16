@@ -25,16 +25,17 @@
                     @csrf
                     <div class="row g-3">
                         {{-- Data Umum --}}
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">NIP</label>
-                            <input type="text" name="nip" class="form-control" required>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Pilih Dosen Penguji</label>
+                            <select name="id_penguji" class="form-control" required>
+                                <option value="">-- Pilih Dosen --</option>
+                                @foreach($dosen as $d)
+                                    <option value="{{ $d->id_penguji }}">
+                                    {{ $d->nip }} - {{ $d->nama_dosen }}
+                                </option>
+                                @endforeach
+                            </select>
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Nama Dosen</label>
-                            <input type="text" name="nama_dosen" class="form-control" required>
-                        </div>
-
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Nama Mahasiswa</label>
                             <input type="text" name="nama_mahasiswa" class="form-control" required>

@@ -28,9 +28,9 @@ class dosen_penguji extends Model
         'created_at',
         'updated_at',
     ];
-    // Setiap dosen_penguji milik satu nilai_pengujian
-    public function nilaiPengujian()
+    // One to one: satu dosen_penguji punya satu nilai_pengujian
+    public function penilaian_penguji()
     {
-        return $this->belongsTo(PenilaianPenguji::class, 'id_nilai', 'id_nilai');
+        return $this->hasMany(PenilaianPenguji::class, 'id_penguji', 'id_penguji');
     }
 }
