@@ -15,8 +15,9 @@ return new class extends Migration {
             // Kolom id_mahasiswa: unsignedBigInteger (Sesuai dengan table mahasiswa)
             $table->unsignedBigInteger('id_mahasiswa'); 
             
-            // KOREKSI: Kolom id_perusahaan harus unsignedInteger (Sesuai dengan table perusahaan yang INT)
-            $table->unsignedInteger('id_perusahaan'); 
+            // KOREKSI FINAL: Kolom id_perusahaan diubah kembali menjadi unsignedBigInteger
+            // Agar SAMA DENGAN tipe data baru di table 'perusahaan'
+            $table->unsignedBigInteger('id_perusahaan'); 
             
             $table->tinyInteger('rating')->comment('1-5');
             $table->text('review')->nullable();
@@ -25,13 +26,13 @@ return new class extends Migration {
 
             // 🔗 Relasi Foreign Key MAHASISWA
             $table->foreign('id_mahasiswa')
-                  ->references('id_mahasiswa')   // kolom primary key di tabel mahasiswa (BIGINT)
+                  ->references('id_mahasiswa')   
                   ->on('mahasiswa')
                   ->onDelete('cascade');
 
             // 🔗 Relasi Foreign Key PERUSAHAAN
             $table->foreign('id_perusahaan')
-                  ->references('id_perusahaan')  // kolom primary key di tabel perusahaan (INT)
+                  ->references('id_perusahaan')  
                   ->on('perusahaan')
                   ->onDelete('cascade'); 
         });

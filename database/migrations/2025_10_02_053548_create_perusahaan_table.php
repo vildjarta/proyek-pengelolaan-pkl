@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('perusahaan', function (Blueprint $table) {
-            $table->id('id_perusahaan'); // primary key
+            $table->id('id_perusahaan'); // Membuat PRIMARY KEY id_perusahaan bertipe BIGINT UNSIGNED
             $table->string('nama', 255);
             $table->text('alamat');
             $table->string('bidang_usaha', 150)->nullable();
