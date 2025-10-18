@@ -14,12 +14,16 @@ return new class extends Migration
         Schema::create('perusahaan', function (Blueprint $table) {
             $table->id('id_perusahaan'); // Membuat PRIMARY KEY id_perusahaan bertipe BIGINT UNSIGNED
             $table->string('nama', 255);
-            $table->text('alamat');
-            $table->string('bidang_usaha', 150)->nullable();
-            $table->enum('status', ['Aktif', 'Tidak Aktif'])->default('Aktif');
-            $table->decimal('lat', 15, 10)->nullable(); // latitude
-            $table->decimal('lng', 15, 10)->nullable(); // longitude
-            $table->timestamps(); // created_at & updated_at
+            $table->string('alamat', 255);
+            $table->string('status', 50);
+            $table->string('bidang_usaha', 100);
+            $table->string('fasilitas', 100);
+            $table->string('level_legalitas', 100);
+            $table->string('jumlah_mahasiswa', 100);
+            $table->string('hari_operasi', 100);
+            $table->string('lat', 50);
+            $table->string('lng', 50);
+            $table->timestamps();
         });
     }
 

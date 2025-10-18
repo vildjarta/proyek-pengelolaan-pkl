@@ -19,6 +19,10 @@ class Perusahaan extends Model
         'alamat',
         'bidang_usaha',
         'status',
+        'fasilitas',
+        'level_legalitas',
+        'jumlah_mahasiswa',
+        'hari_operasi',
         'lat',
         'lng',
     ];
