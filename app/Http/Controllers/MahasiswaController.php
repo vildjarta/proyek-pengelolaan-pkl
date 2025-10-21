@@ -139,4 +139,24 @@ class MahasiswaController extends Controller
         return redirect()->route('mahasiswa.index')
                          ->with('success', 'Data mahasiswa berhasil dihapus');
     }
+    /**
+ * 🔍 AJAX: Cek NIM mahasiswa dan kirimkan nama ke form dosen pembimbing
+ */
+public function cekNIM($nim)
+{
+    $mahasiswa = \App\Models\Mahasiswa::where('NIM', $nim)->first();
+
+    if ($mahasiswa) {
+        return response()->json([
+            'exists' => true,
+            'nama_mahasiswa' => $mahasiswa->nama,
+        ]);
+    } else {
+        return response()->json(['exists' => false]);
+    }
 }
+
+
+}
+
+

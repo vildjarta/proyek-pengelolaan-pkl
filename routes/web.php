@@ -140,8 +140,7 @@ Route::resource('penilaian', PenilaianDospemController::class);
 
 // 🧑‍🎓 DATA MAHASISWA (CRUD)
 Route::resource('mahasiswa', MahasiswaController::class);
-// 🔍 AJAX untuk cari mahasiswa berdasarkan NIM
-Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNim']);
+
 
 Route::resource('penilaian', PenilaianPengujiController::class);
 
@@ -165,11 +164,9 @@ Route::resource('/dosen_penguji', DosenPengujiController::class);
 Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
 
 
-// AJAX CEK NIM MAHASISWA
-Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNim'])
-    ->name('cekNim');
-// 🔍 AJAX untuk cari mahasiswa berdasarkan NIM
-Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNim']);
+// 🔍 AJAX: Cek NIM mahasiswa untuk form dosen pembimbing
+Route::get('/cek-nim/{nim}', [App\Http\Controllers\MahasiswaController::class, 'cekNIM']);
+
 
 
 // 📜 TRANSKRIP
