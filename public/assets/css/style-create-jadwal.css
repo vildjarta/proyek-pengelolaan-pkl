@@ -166,3 +166,10 @@ body {
         width: 100%;
     }
 }
+.btn-success,
+.btn-secondary {
+    display: flex;
+    justify-content: center;  /* Menengahkan teks secara HORIZONTAL */
+    align-items: center;      /* Menengahkan teks secara VERTIKAL */
+    text-decoration: none;    /* Menghilangkan garis bawah jika ini tag <a> */
+}
