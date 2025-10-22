@@ -7,20 +7,20 @@
             $currentRoute = request()->path();
         @endphp
 
-        {{-- Dashboard - Semua Role --}}
-        <h4>General</h4>
+        {{-- HALAMAN UTAMA - Semua Role --}}
+        <h4>Halaman Utama</h4>
         <ul>
             <li class="{{ $currentRoute == 'home' ? 'active' : '' }}">
                 <a href="{{ url('/home') }}">
                     <i class="fa fa-home"></i>
-                    <span>Dashboard</span>
+                    <span>Beranda</span>
                 </a>
             </li>
         </ul>
 
         {{-- Menu Admin/Koordinator --}}
         @if(in_array($userRole, ['admin', 'koordinator']))
-            <h4>Manajemen Data</h4>
+            <h4>Data Akademik</h4>
             <ul>
                 <li class="{{ str_contains($currentRoute, 'mahasiswa') ? 'active' : '' }}">
                     <a href="{{ url('/mahasiswa') }}">
@@ -34,6 +34,10 @@
                         <span>Transkrip Kelayakan</span>
                     </a>
                 </li>
+            </ul>
+
+            <h4>Bimbingan & Penguji</h4>
+            <ul>
                 <li class="{{ str_contains($currentRoute, 'datadosenpembimbing') ? 'active' : '' }}">
                     <a href="{{ url('/datadosenpembimbing') }}">
                         <i class="fa fa-chalkboard-teacher"></i>
@@ -46,6 +50,10 @@
                         <span>Dosen Penguji</span>
                     </a>
                 </li>
+            </ul>
+
+            <h4>Perusahaan PKL</h4>
+            <ul>
                 <li class="{{ str_contains($currentRoute, 'perusahaan') ? 'active' : '' }}">
                     <a href="{{ url('/perusahaan') }}">
                         <i class="fa fa-building"></i>
@@ -54,7 +62,7 @@
                 </li>
             </ul>
 
-            <h4>Penjadwalan</h4>
+            <h4>Jadwal & Kegiatan</h4>
             <ul>
                 <li class="{{ str_contains($currentRoute, 'jadwal') ? 'active' : '' }}">
                     <a href="{{ url('/jadwal') }}">
@@ -64,7 +72,7 @@
                 </li>
             </ul>
 
-            <h4>Penilaian</h4>
+            <h4>Penilaian & Hasil</h4>
             <ul>
                 <li class="{{ str_contains($currentRoute, 'penilaian') ? 'active' : '' }}">
                     <a href="{{ url('/penilaian') }}">
@@ -83,7 +91,7 @@
 
         {{-- Menu Mahasiswa --}}
         @if($userRole == 'mahasiswa')
-            <h4>Mahasiswa</h4>
+            <h4>Data Akademik</h4>
             <ul>
                 <li class="{{ str_contains($currentRoute, 'transkrip') ? 'active' : '' }}">
                     <a href="{{ url('/transkrip') }}">
@@ -91,12 +99,20 @@
                         <span>Cek Kelayakan PKL</span>
                     </a>
                 </li>
+            </ul>
+
+            <h4>Jadwal & Kegiatan</h4>
+            <ul>
                 <li class="{{ str_contains($currentRoute, 'jadwal') ? 'active' : '' }}">
                     <a href="{{ url('/jadwal') }}">
                         <i class="fa fa-calendar-alt"></i>
                         <span>Jadwal Bimbingan</span>
                     </a>
                 </li>
+            </ul>
+
+            <h4>Penilaian & Hasil</h4>
+            <ul>
                 <li class="{{ str_contains($currentRoute, 'penilaian') ? 'active' : '' }}">
                     <a href="{{ url('/penilaian') }}">
                         <i class="fa fa-clipboard-check"></i>
@@ -114,7 +130,7 @@
 
         {{-- Menu Dosen --}}
         @if($userRole == 'dosen')
-            <h4>Dosen Pembimbing</h4>
+            <h4>Data Akademik</h4>
             <ul>
                 <li class="{{ str_contains($currentRoute, 'mahasiswa') ? 'active' : '' }}">
                     <a href="{{ url('/mahasiswa') }}">
@@ -122,12 +138,20 @@
                         <span>Mahasiswa Bimbingan</span>
                     </a>
                 </li>
+            </ul>
+
+            <h4>Jadwal & Kegiatan</h4>
+            <ul>
                 <li class="{{ str_contains($currentRoute, 'jadwal') ? 'active' : '' }}">
                     <a href="{{ url('/jadwal') }}">
                         <i class="fa fa-calendar-alt"></i>
                         <span>Jadwal Bimbingan</span>
                     </a>
                 </li>
+            </ul>
+
+            <h4>Penilaian & Hasil</h4>
+            <ul>
                 <li class="{{ str_contains($currentRoute, 'penilaian') ? 'active' : '' }}">
                     <a href="{{ url('/penilaian') }}">
                         <i class="fa fa-clipboard-check"></i>
@@ -139,7 +163,7 @@
 
         {{-- Menu Perusahaan --}}
         @if($userRole == 'perusahaan')
-            <h4>Perusahaan</h4>
+            <h4>Data Akademik</h4>
             <ul>
                 <li class="{{ str_contains($currentRoute, 'mahasiswa') ? 'active' : '' }}">
                     <a href="{{ url('/mahasiswa') }}">
@@ -147,12 +171,10 @@
                         <span>Mahasiswa PKL</span>
                     </a>
                 </li>
-                <li class="{{ str_contains($currentRoute, 'penilaian') ? 'active' : '' }}">
-                    <a href="{{ url('/penilaian') }}">
-                        <i class="fa fa-clipboard-check"></i>
-                        <span>Penilaian Mahasiswa</span>
-                    </a>
-                </li>
+            </ul>
+
+            <h4>Perusahaan PKL</h4>
+            <ul>
                 <li class="{{ str_contains($currentRoute, 'perusahaan') ? 'active' : '' }}">
                     <a href="{{ url('/perusahaan') }}">
                         <i class="fa fa-building"></i>
@@ -160,19 +182,28 @@
                     </a>
                 </li>
             </ul>
+
+            <h4>Penilaian & Hasil</h4>
+            <ul>
+                <li class="{{ str_contains($currentRoute, 'penilaian') ? 'active' : '' }}">
+                    <a href="{{ url('/penilaian') }}">
+                        <i class="fa fa-clipboard-check"></i>
+                        <span>Penilaian Mahasiswa</span>
+                    </a>
+                </li>
+            </ul>
         @endif
 
-        {{-- Logout - Semua Role --}}
+        {{-- AKUN - Semua Role --}}
         <h4>Akun</h4>
         <ul>
             <li>
                 <a href="#" onclick="event.preventDefault(); alert('Logout functionality will be implemented');">
                     <i class="fa fa-sign-out-alt"></i>
-                    <span>Logout</span>
+                    <span>Profil & Pengaturan</span>
                 </a>
             </li>
         </ul>
-
     </div>
 </div>
 
