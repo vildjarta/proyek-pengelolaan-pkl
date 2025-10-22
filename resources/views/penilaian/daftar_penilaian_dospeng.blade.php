@@ -15,7 +15,7 @@
                 <h4 class="mb-0 fw-bold">
                     <i class="fa fa-clipboard me-2"></i> Daftar Penilaian Dosen Penguji
                 </h4>
-                <a href="{{ route('penilaian.create') }}" class="btn btn-light btn-sm text-primary fw-bold">
+                <a href="{{ route('penilaian-penguji.create') }}" class="btn btn-light btn-sm text-primary fw-bold">
                     <i class="fa fa-plus me-1"></i> Tambah Penilaian
                 </a>
             </div>
