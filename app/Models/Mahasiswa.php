@@ -4,16 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// TYPO DIPERBAIKI DI SINI: 'suse' menjadi 'use'
-use App\Models\DataDosenPembimbing;
 
 class Mahasiswa extends Model
 {
     use HasFactory;
 
+    // Nama tabel yang digunakan
     protected $table = 'mahasiswa';
+
+    // Primary key
     protected $primaryKey = 'id_mahasiswa';
 
+    // Aktifkan created_at & updated_at
+    public $timestamps = true;
+
+    // Kolom yang bisa diisi
     protected $fillable = [
         'nim',
         'nama',
@@ -23,9 +28,12 @@ class Mahasiswa extends Model
         'angkatan',
         'ipk',
         'id_pembimbing',
-        'judul_pkl'
+        'judul_pkl',
     ];
- 
+
+    /**
+     * 🔗 Relasi ke tabel dosen_pembimbing (setiap mahasiswa punya satu dosen)
+     */
     public function dosen()
     {
         return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');

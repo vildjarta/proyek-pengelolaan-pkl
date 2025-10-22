@@ -9,15 +9,15 @@ class DataDosenPembimbing extends Model
 {
     use HasFactory;
 
+    // ✅ pastikan ini menunjuk ke tabel yang benar
     protected $table = 'dosen_pembimbing';
     protected $primaryKey = 'id_pembimbing';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'NIP',
         'nama',
         'email',
-        'nama_mahasiswa',
         'id_user'
     ];
 
