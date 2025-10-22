@@ -8,90 +8,94 @@
 <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
 
 {{-- ====== KONTEN UTAMA ====== --}}
-<div class="main-content-wrapper">
+<div class="main-content-wrapper" style="margin-left: 260px; padding: 30px; min-height: 100vh; background-color: #f8f9fa;">
     <div class="content">
         <div class="card shadow border-0 rounded-3">
-            <div class="card-header bg-success text-white py-3 d-flex justify-content-between align-items-center">
+            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
                 <h4 class="mb-0 fw-bold">
                     <i class="fa fa-plus-circle me-2"></i> Tambah Penilaian Dosen Penguji
                 </h4>
-                <a href="{{ route('penilaian.index') }}" class="btn btn-light text-success fw-bold">
+                <a href="{{ route('penilaian.index') }}" class="btn btn-light border fw-bold">
                     <i class="fa fa-arrow-left me-1"></i> Kembali
                 </a>
             </div>
 
             <div class="card-body p-4">
-                <form action="{{ route('penilaian.store') }}" method="POST" id="penilaianForm">
+                <form action="{{ route('penilaian.store') }}" method="POST">
                     @csrf
-                    <div class="row g-3">
-                        {{-- Data Umum --}}
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label fw-bold">Pilih Dosen Penguji</label>
-                            <select name="id_penguji" class="form-control" required>
-                                <option value="">-- Pilih Dosen --</option>
-                                @foreach($dosen as $d)
-                                    <option value="{{ $d->id_penguji }}">
-                                    {{ $d->nip }} - {{ $d->nama_dosen }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Nama Mahasiswa</label>
-                            <input type="text" name="nama_mahasiswa" class="form-control" required>
-                        </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Tanggal Ujian</label>
-                            <input type="date" name="tanggal_ujian" class="form-control" required>
-                        </div>
+                    {{-- PILIH DOSEN DAN DATA MAHASISWA --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Pilih Dosen Penguji</label>
+                        <select name="dosen_id" class="form-select mb-3" required>
+                            <option value="">-- Pilih Dosen --</option>
+                            <option value="1">Contoh Dosen</option>
+                        </select>
 
-                        {{-- Komponen Penilaian --}}
-                        <h5 class="fw-bold mt-4">Komponen Penilaian Dosen Penguji</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tanggal Ujian</label>
+                                <input type="date" name="tanggal_ujian" class="form-control" required>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Penyajian Presentasi (10%)</label>
-                            <input type="number" name="presentasi" class="form-control nilai" id="presentasi" min="0" max="100" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Pemahaman Materi (15%)</label>
-                            <input type="number" name="materi" class="form-control nilai" id="materi" min="0" max="100" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Hasil yang Dicapai (40%)</label>
-                            <input type="number" name="hasil" class="form-control nilai" id="hasil" min="0" max="100" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Objektivitas Menanggapi Pertanyaan (20%)</label>
-                            <input type="number" name="objektif" class="form-control nilai" id="objektif" min="0" max="100" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Penulisan Laporan (15%)</label>
-                            <input type="number" name="laporan" class="form-control nilai" id="laporan" min="0" max="100" required>
-                        </div>
-
-                        {{-- Hasil Akhir --}}
-                        <div class="col-md-12 mt-4">
-                            <div class="result-box p-3 rounded text-center border border-primary bg-light">
-                                <strong>Nilai Total Dosen Penguji: </strong>
-                                <span id="totalNilai" class="fw-bold text-primary">0</span>
-                                <div class="sub-result mt-2">
-                                    <strong>Nilai Akhir (20% dari total): </strong>
-                                    <span id="nilai20" class="fw-bold text-success">0</span>
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Nama Mahasiswa</label>
+                                <input type="text" name="nama_mahasiswa" class="form-control" value="Maulida" readonly>
                             </div>
                         </div>
+                    </div>
 
-                        {{-- Tombol Simpan --}}
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-success rounded-pill px-4">
-                                <i class="fa fa-save me-2"></i> Simpan Penilaian
-                            </button>
+                    <hr>
+
+                    {{-- JUDUL KOMPONEN PENILAIAN --}}
+                    <div class="text-center mb-3">
+                        <h5 class="fw-bold text-dark mb-1">Komponen Penilaian Dosen Penguji</h5>
+                        <div class="mx-auto" style="width: 80px; height: 3px; background-color: #007bff;"></div>
+                    </div>
+
+                    {{-- KOMPONEN PENILAIAN --}}
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Pemahaman Materi (15%)</label>
+                            <input type="number" class="form-control text-center" name="pemahaman_materi" min="0" max="100" placeholder="0 - 100">
                         </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Hasil yang Dicapai (40%)</label>
+                            <input type="number" class="form-control text-center" name="hasil_dicapai" min="0" max="100" placeholder="0 - 100">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Objektivitas Menanggapi Pertanyaan (20%)</label>
+                            <input type="number" class="form-control text-center" name="objektivitas" min="0" max="100" placeholder="0 - 100">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Penulisan Laporan (15%)</label>
+                            <input type="number" class="form-control text-center" name="penulisan_laporan" min="0" max="100" placeholder="0 - 100">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Penyajian Presentasi (10%)</label>
+                            <input type="number" class="form-control text-center" name="penyajian_presentasi" min="0" max="100" placeholder="0 - 100">
+                        </div>
+                    </div>
+
+                    {{-- HASIL PERHITUNGAN --}}
+                    <div class="mt-4 p-3 bg-light border rounded-3 text-center">
+                        <p class="mb-1 fw-bold text-primary">
+                            Nilai Total Dosen Penguji: <span id="total_nilai">0</span>
+                        </p>
+                        <p class="mb-0 fw-bold text-success">
+                            Nilai Akhir (20% dari total): <span id="nilai_akhir">0</span>
+                        </p>
+                    </div>
+
+                    {{-- TOMBOL SIMPAN --}}
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <i class="fa fa-save me-2"></i> Simpan Penilaian
+                        </button>
                     </div>
                 </form>
             </div>
@@ -103,41 +107,13 @@
 <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const inputFields = document.querySelectorAll('.nilai');
-    const totalDisplay = document.getElementById('totalNilai');
-    const nilai20Display = document.getElementById('nilai20');
+    const toggleButton = document.querySelector('.menu-toggle');
+    const body = document.body;
 
-    function hitungTotal() {
-        const presentasi = parseFloat(document.getElementById('presentasi').value) || 0;
-        const materi = parseFloat(document.getElementById('materi').value) || 0;
-        const hasil = parseFloat(document.getElementById('hasil').value) || 0;
-        const objektif = parseFloat(document.getElementById('objektif').value) || 0;
-        const laporan = parseFloat(document.getElementById('laporan').value) || 0;
-
-        // Hitung total berdasarkan bobot
-        const total = (presentasi * 0.10) +
-                      (materi * 0.15) +
-                      (hasil * 0.40) +
-                      (objektif * 0.20) +
-                      (laporan * 0.15);
-
-        const nilai20 = total * 0.20;
-
-        totalDisplay.textContent = total.toFixed(2);
-        nilai20Display.textContent = nilai20.toFixed(2);
+    if (toggleButton) {
+        toggleButton.addEventListener('click', function() {
+            body.classList.toggle('sidebar-closed');
+        });
     }
-
-    inputFields.forEach(field => {
-        field.addEventListener('input', hitungTotal);
-    });
-
-    document.getElementById('penilaianForm').addEventListener('submit', function(e) {
-        const total = parseFloat(totalDisplay.textContent);
-        const nilai20 = parseFloat(nilai20Display.textContent);
-        if (isNaN(total) || isNaN(nilai20)) {
-            e.preventDefault();
-            alert('Harap isi semua nilai sebelum menyimpan!');
-        }
-    });
 });
 </script>
