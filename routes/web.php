@@ -32,9 +32,6 @@ Route::view('/menu', 'menu')->name('menu');
 // Halaman profil pengguna
 Route::view('/profile', 'profile.profile')->name('profile');
 
-// Halaman daftar jadwal (jika ini halaman statis)
-Route::view('/daftar-jadwal', 'daftar-jadwal')->name('daftar-jadwal');
-
 // ⭐ RATING & REVIEW PERUSAHAAN
 Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 // Menggunakan resource controller yang lebih rapi
@@ -142,7 +139,7 @@ Route::resource('penilaian', PenilaianDospemController::class);
 Route::resource('mahasiswa', MahasiswaController::class);
 
 
-Route::resource('penilaian', PenilaianPengujiController::class);
+Route::resource('penilaian-penguji', PenilaianPengujiController::class);
 
 
 // 🏢 DATA PERUSAHAAN (CRUD)
@@ -166,8 +163,6 @@ Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->
 
 // 🔍 AJAX: Cek NIM mahasiswa untuk form dosen pembimbing
 Route::get('/cek-nim/{nim}', [App\Http\Controllers\MahasiswaController::class, 'cekNIM']);
-
-
 
 // 📜 TRANSKRIP
 Route::resource('transkrip', TranscriptController::class);
