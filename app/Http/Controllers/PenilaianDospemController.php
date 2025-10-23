@@ -23,7 +23,7 @@ class PenilaianDospemController extends Controller
                       $q->where('nim', 'like', '%' . $search . '%');
                   });
         }
-
+        
         // Urutkan berdasarkan data terbaru jika tidak ada sort parameter
         if (!$sort) {
             $query->latest();
@@ -49,7 +49,7 @@ class PenilaianDospemController extends Controller
             }
         }
 
-        return view('penilaian_dospeng.daftar_penilaian_dospeng', compact('penilaian', 'search', 'sort'));
+        return view('PenilaianDospem.penilaian_dospem', compact('penilaian', 'search', 'sort'));
     }
 
     /**
@@ -59,7 +59,7 @@ class PenilaianDospemController extends Controller
     {
         // Ambil hanya mahasiswa yang memiliki dosen pembimbing
         $mahasiswas = Mahasiswa::whereNotNull('id_pembimbing')->with('dosen')->get();
-        return view('penilaian_dospeng.tambah_penilaian_dospeng', compact('mahasiswas'));
+        return view('PenilaianDospem.create', compact('mahasiswas'));
     }
 
     /**
@@ -102,7 +102,7 @@ class PenilaianDospemController extends Controller
             'catatan' => $request->catatan,
         ]);
 
-        return redirect()->route('penilaian-dospeng.index')->with('success', 'Data penilaian berhasil disimpan!');
+        return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil disimpan!');
     }
 
     /**
@@ -113,9 +113,9 @@ class PenilaianDospemController extends Controller
         $penilaian = PenilaianDospem::findOrFail($id);
         // Untuk form edit, kita mungkin tidak perlu daftar mahasiswa lagi
         // kecuali jika Anda ingin memperbolehkan mengubah penilaian ke mahasiswa lain
-        return view('penilaian_dospeng.edit_penilaian_dospeng', compact('penilaian'));
+        return view('PenilaianDospem.edit', compact('penilaian'));
     }
-
+    
     /**
      * Memperbarui data penilaian di dalam database.
      */
@@ -146,14 +146,14 @@ class PenilaianDospemController extends Controller
             'catatan' => $request->catatan,
         ]);
 
-        return redirect()->route('penilaian-dospeng.index')->with('success', 'Data penilaian berhasil diperbarui!');
+        return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil diperbarui!');
     }
-
+    
     public function destroy($id)
     {
         $penilaian = PenilaianDospem::findOrFail($id);
         $penilaian->delete();
 
-        return redirect()->route('penilaian-dospeng.index')->with('success', 'Data penilaian berhasil dihapus!');
+        return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil dihapus!');
     }
 }
