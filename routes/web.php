@@ -32,9 +32,6 @@ Route::view('/menu', 'menu')->name('menu');
 // Halaman profil pengguna
 Route::view('/profile', 'profile.profile')->name('profile');
 
-// Halaman daftar jadwal (jika ini halaman statis)
-Route::view('/daftar-jadwal', 'daftar-jadwal')->name('daftar-jadwal');
-
 // ⭐ RATING & REVIEW PERUSAHAAN
 Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 // Menggunakan resource controller yang lebih rapi
