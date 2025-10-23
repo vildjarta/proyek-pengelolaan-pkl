@@ -123,7 +123,6 @@ Route::delete('/ratingperusahaan/delete/{id_review}', [RatingDanReviewController
 
 // DATA DOSEN PEMBIMBING (CRUD)
 // 🎓 DATA DOSEN PEMBIMBING (CRUD)
-//   DATA DOSEN PEMBIMBING (CRUD)
 Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
 
 
