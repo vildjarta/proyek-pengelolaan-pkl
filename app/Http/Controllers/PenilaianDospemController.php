@@ -23,7 +23,7 @@ class PenilaianDospemController extends Controller
                       $q->where('nim', 'like', '%' . $search . '%');
                   });
         }
-        
+
         // Urutkan berdasarkan data terbaru jika tidak ada sort parameter
         if (!$sort) {
             $query->latest();
@@ -115,7 +115,7 @@ class PenilaianDospemController extends Controller
         // kecuali jika Anda ingin memperbolehkan mengubah penilaian ke mahasiswa lain
         return view('penilaian_dospeng.edit_penilaian_dospeng', compact('penilaian'));
     }
-    
+
     /**
      * Memperbarui data penilaian di dalam database.
      */
@@ -148,7 +148,7 @@ class PenilaianDospemController extends Controller
 
         return redirect()->route('penilaian-dospeng.index')->with('success', 'Data penilaian berhasil diperbarui!');
     }
-    
+
     public function destroy($id)
     {
         $penilaian = PenilaianDospem::findOrFail($id);
