@@ -134,23 +134,14 @@ Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
 Route::resource('jadwal', JadwalBimbinganController::class);
 
 
+// 🏢 DATA PERUSAHAAN (CRUD)
 Route::resource('perusahaan', PerusahaanController::class);
-
-Route::resource('penilaian', PenilaianDospemController::class);
 
 // 🧑‍🎓 DATA MAHASISWA (CRUD)
 Route::resource('mahasiswa', MahasiswaController::class);
 
-
-Route::resource('penilaian', PenilaianPengujiController::class);
-
-
-// 🏢 DATA PERUSAHAAN (CRUD)
-Route::resource('perusahaan', PerusahaanController::class);
-
-
 // 💯 PENILAIAN
-Route::resource('penilaian', PenilaianDospemController::class);
+Route::resource('penilaian-dospeng', PenilaianDospemController::class);
 Route::resource('penilaian-penguji', PenilaianPengujiController::class);
 Route::resource('nilai', NilaiController::class); // CRUD Nilai Mahasiswa
 

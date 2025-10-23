@@ -15,13 +15,13 @@
                 <h4 class="mb-0 fw-bold">
                     <i class="fa fa-plus-circle me-2"></i> Tambah Penilaian Dosen Penguji
                 </h4>
-                <a href="{{ route('penilaian.index') }}" class="btn btn-light border fw-bold">
+                <a href="{{ route('penilaian-dospeng.index') }}" class="btn btn-light border fw-bold">
                     <i class="fa fa-arrow-left me-1"></i> Kembali
                 </a>
             </div>
 
             <div class="card-body p-4">
-                <form action="{{ route('penilaian.store') }}" method="POST">
+                <form action="{{ route('penilaian-dospeng.store') }}" method="POST">
                     @csrf
 
                     {{-- PILIH DOSEN DAN DATA MAHASISWA --}}
