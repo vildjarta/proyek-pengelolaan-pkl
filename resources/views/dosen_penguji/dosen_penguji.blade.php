@@ -143,7 +143,7 @@
                                         style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"
+                                        <button type="submit" class="btn btn-warning btn-sm"
                                             onclick="return confirm('Yakin mau hapus data ini?')">
                                             <i class="bi bi-trash3-fill"></i> Hapus
                                         </button>
