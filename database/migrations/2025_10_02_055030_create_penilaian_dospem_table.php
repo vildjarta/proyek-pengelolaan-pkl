@@ -21,7 +21,7 @@ return new class extends Migration
             
             // Kolom Foreign Key untuk dosen
             $table->unsignedBigInteger('id_pembimbing'); 
-            
+    
             $table->timestamps();
 
             // Relasi ke tabel mahasiswa
