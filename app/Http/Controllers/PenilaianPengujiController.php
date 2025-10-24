@@ -11,13 +11,13 @@ class PenilaianPengujiController extends Controller
     public function index()
     {
         $penilaian = PenilaianPenguji::with(['dosen'])->get();
-        return view('penilaian.daftar_penilaian_dospeng', compact('penilaian'));
+        return view('penilaianpenguji.daftar_penilaian_dospeng', compact('penilaian'));
     }
 
     public function create()
     {
         $dosen = dosen_penguji::all();
-        return view('penilaian.tambah_penilaian_dospeng', compact('dosen'));
+        return view('penilaianpenguji.tambah_penilaian_dospeng', compact('dosen'));
     }
 
     public function store(Request $request)
@@ -55,7 +55,7 @@ class PenilaianPengujiController extends Controller
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
         $dosen = dosen_penguji::all();
-        return view('penilaian.edit_penilaian_dospeng', compact('penilaian'));
+        return view('penilaianpenguji.edit_penilaian_dospeng', compact('penilaian'));
     }
 
     public function update(Request $request, $id)
