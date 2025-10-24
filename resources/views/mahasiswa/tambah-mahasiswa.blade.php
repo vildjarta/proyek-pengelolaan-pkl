@@ -27,28 +27,28 @@
         <div class="row g-4">
             <div class="col-lg-6 col-md-12">
                 <label for="nim" class="form-label fw-bold">NIM</label>
-                <input type="number" name="nim" id="nim" 
+                <input type="number" name="nim" id="nim"
                        class="form-control" required placeholder="Masukkan NIM"
                        value="{{ old('nim') }}">
             </div>
 
             <div class="col-lg-6 col-md-12">
                 <label for="nama" class="form-label fw-bold">Nama</label>
-                <input type="text" name="nama" id="nama" 
+                <input type="text" name="nama" id="nama"
                        class="form-control" required placeholder="Masukkan Nama"
                        value="{{ old('nama') }}">
             </div>
 
             <div class="col-lg-6 col-md-12">
                 <label for="email" class="form-label fw-bold">Email</label>
-                <input type="email" name="email" id="email" 
+                <input type="email" name="email" id="email"
                        class="form-control" required placeholder="Masukkan Email"
                        value="{{ old('email') }}">
             </div>
 
             <div class="col-lg-6 col-md-12">
                 <label for="no_hp" class="form-label fw-bold">No HP</label>
-                <input type="number" name="no_hp" id="no_hp" 
+                <input type="number" name="no_hp" id="no_hp"
                        class="form-control" required placeholder="Masukkan Nomor HP"
                        value="{{ old('no_hp') }}">
             </div>
@@ -58,7 +58,7 @@
                 <select name="prodi" id="prodi" class="form-select" required>
                     <option value="">-- Pilih Prodi --</option>
                     <option value="Akuntansi">Akuntansi</option>
-                    <option value="Agroindustri">Agroindustri</option>
+                    <option value="Agroindustri">Agroindustri, tambahan</option>
                     <option value="Teknologi Informasi">Teknologi Informasi</option>
                     <option value="Teknologi Otomotif">Teknologi Otomotif</option>
                     <option value="Akuntansi Perpajakan (D4)">Akuntansi Perpajakan (D4)</option>
