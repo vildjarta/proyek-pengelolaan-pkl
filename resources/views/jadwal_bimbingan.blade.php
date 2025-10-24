@@ -67,9 +67,13 @@
                     <td>{{ $jadwal->catatan ?? '-' }}</td>
                     <td class="text-center">
                         <div class="action-buttons">
-                            <a href="{{ route('jadwal.edit',$jadwal->id) }}" class="btn btn-edit-custom">
-                                <i class="fa fa-pen"></i> Edit
-                            </a>
+                            <form action="{{ route('jadwal.destroy',$jadwal->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin hapus data?')">
+                                    <i class="fa fa-trash"></i> Hapus3
+                                </button>
+                            </form>
                             <form action="{{ route('jadwal.destroy',$jadwal->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')

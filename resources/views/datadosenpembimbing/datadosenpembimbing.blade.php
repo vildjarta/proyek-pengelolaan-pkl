@@ -47,9 +47,6 @@
                 <table class="table table-striped" id="dosenTable">
                     <thead>
                         <tr>
-                            <th class="text-center">NIP</th>
-                            <th class="text-center">Nama</th>
-                            <th class="text-center">Email</th>
                             <th class="text-center">Mahasiswa Bimbingan</th>
                             <th class="text-center">Aksi</th>
                         </tr>

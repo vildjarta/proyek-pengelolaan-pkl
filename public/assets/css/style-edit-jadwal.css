@@ -145,7 +145,16 @@ body {
     text-decoration: none;
 }
 
-/* ...existing code... */
+/* === BLOK INI DIPINDAHKAN KE LUAR @media === */
+.btn-success,
+.btn-secondary {
+    display: flex;
+    justify-content: center;  /* Menengahkan teks secara HORIZONTAL */
+    align-items: center;      /* Menengahkan teks secara VERTIKAL */
+    text-decoration: none;    /* Menghilangkan garis bawah jika ini tag <a> */
+}
+/* === BATAS PERUBAHAN === */
+
 
 .alert-danger {
     background: #ffeaea;
@@ -174,11 +183,5 @@ body {
     .form-actions {
         flex-direction: column;
         gap: 10px;
-    }
-    .btn-success, .btn-secondary {
-    display: flex;
-    justify-content: center;  
-    align-items: center;    
-    text-decoration: none;    
     }
 }
