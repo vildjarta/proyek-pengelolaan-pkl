@@ -99,8 +99,3 @@
     });
 </script>
 </div>
-<script>
-    function confirmSubmit() {
-        return confirm("Apakah Anda yakin ingin Mengedit Penilaian ini?");
-    }
-</script>

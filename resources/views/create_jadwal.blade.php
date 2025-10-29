@@ -16,7 +16,7 @@
             </div>
         @endif
 
-        <form action="{{ route('jadwal.store') }}" method="POST">
+        <form action="{{ route('jadwal.store') }}" method="POST" onsubmit="return confirmSubmit()">
             @csrf
             
             {{-- KODE BARU UNTUK MAHASISWA --}}

@@ -88,9 +88,7 @@
             </tbody>
         </table>
     </div>
-</div>
-
-<script>
+    <script>
 document.addEventListener('DOMContentLoaded', function() {
     const toggleButton = document.querySelector('.menu-toggle');
     const body = document.body;
@@ -117,3 +115,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+</div>
