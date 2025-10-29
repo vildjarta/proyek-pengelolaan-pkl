@@ -114,25 +114,6 @@
                             value="{{ old('jumlah_mahasiswa') }}" min="0" required>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="lat" class="form-label">Latitude</label>
-                            <input type="text" name="lat" id="lat" readonly class="form-control"
-                                value="{{ old('lat') }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="lng" class="form-label">Longitude</label>
-                            <input type="text" name="lng" id="lng" readonly class="form-control"
-                                value="{{ old('lng') }}">
-                        </div>
-                    </div>
-
-                    <!-- Tombol buka peta -->
-                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                        data-bs-target="#mapModal">
-                        Pilih Lokasi di Peta
-                    </button>
-
                     <br>
 
                     <button type="submit" class="btn btn-success">Simpan</button>

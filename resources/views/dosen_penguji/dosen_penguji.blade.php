@@ -136,14 +136,14 @@
                                 <td>{{ $dp->no_hp }}</td>
                                 <td>
                                     <a href="{{ route('dosen_penguji.edit', $dp->id_penguji) }}"
-                                        class="btn btn-warning btn-sm btn-action text-white">
+                                        class="btn btn-warning btn-sm btn-action">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
                                     <form action="{{ route('dosen_penguji.destroy', $dp->id_penguji) }}" method="POST"
                                         style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-warning btn-sm"
+                                        <button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Yakin mau hapus data ini?')">
                                             <i class="bi bi-trash3-fill"></i> Hapus
                                         </button>

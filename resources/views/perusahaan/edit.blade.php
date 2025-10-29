@@ -124,24 +124,7 @@
                             required>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="lat" class="form-label">Latitude</label>
-                            <input type="text" name="lat" id="lat" class="form-control"
-                                value="{{ old('lat', $perusahaan->lat) }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="lng" class="form-label">Longitude</label>
-                            <input type="text" name="lng" id="lng" class="form-control"
-                                value="{{ old('lng', $perusahaan->lng) }}">
-                        </div>
-                    </div>
 
-                    <!-- Tombol buka peta -->
-                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                        data-bs-target="#mapModal">
-                        Pilih Lokasi di Peta
-                    </button>
 
                     <br>
 
