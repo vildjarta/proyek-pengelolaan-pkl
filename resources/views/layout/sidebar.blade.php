@@ -212,7 +212,7 @@
             <li>
                 <a href="#" onclick="event.preventDefault(); alert('Logout functionality will be implemented');">
                     <i class="fa fa-sign-out-alt"></i>
-                    <span>Haris Logout</span>
+                    <span>Logout</span>
                 </a>
             </li>
         </ul>
