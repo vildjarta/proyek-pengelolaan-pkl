@@ -9,7 +9,7 @@ use App\Models\Mahasiswa;
 class NilaiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display daftar resource.
      */
     public function index()
     {
@@ -18,7 +18,7 @@ class NilaiController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show form untuk membuat resource yang baru.
      */
     public function create()
     {
@@ -27,7 +27,7 @@ class NilaiController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store resource yang baru dibuat ke dalam penyimpanan.
      */
     public function store(Request $request)
     {
@@ -100,7 +100,7 @@ class NilaiController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display nilai yang didalam penyimpanan.
      */
     public function show(string $id)
     {
@@ -109,7 +109,7 @@ class NilaiController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show form editing nilai yang didalam penyimpanan.
      */
     public function edit(string $id)
     {
@@ -119,7 +119,7 @@ class NilaiController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Perbarui nilai yang ditentukan dalam penyimpanan.
      */
     public function update(Request $request, string $id)
     {
@@ -193,7 +193,7 @@ class NilaiController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove nilai yang ditentukan dalam penyimpanan.
      */
     public function destroy(string $id)
     {
