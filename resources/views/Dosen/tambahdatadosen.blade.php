@@ -52,9 +52,7 @@
                      placeholder="Masukkan 18 digit NIP"
                      required
                      value="{{ old('nip') }}">
-              <div id="nipHelp" class="text-danger" style="display:none; margin-top:8px; font-size:15px;">
-                NIP harus berisi 18 angka.
-              </div>
+              <div id="nipInvalid" class="invalid-feedback">NIP wajib diisi.</div>
             </div>
 
             <div class="col-12">
@@ -65,8 +63,8 @@
 
             <div class="col-md-6">
               <label class="form-label required">Email</label>
-              <input type="email" name="email" class="form-control" placeholder="contoh@email.com" required value="{{ old('email') }}">
-              <div class="invalid-feedback">Masukkan email valid.</div>
+              <input type="email" id="email" name="email" class="form-control" placeholder="contoh@email.com" required value="{{ old('email') }}">
+              <div id="emailInvalid" class="invalid-feedback">Email Wajib diisi.</div>
             </div>
 
             <div class="col-md-6">
@@ -85,7 +83,6 @@
           </div>
 
           <div class="text-center mt-4">
-            <!-- tombol dengan lingkaran ikon centang di kiri -->
             <button type="submit" class="btn action-accept px-4 me-2">
               <span class="icon-circle"><i class="bi bi-check-lg"></i></span>
               Simpan
@@ -107,9 +104,11 @@
   <script>
   document.addEventListener('DOMContentLoaded', function () {
     const nipEl = document.getElementById('nip');
-    const nipHelp = document.getElementById('nipHelp');
+    const nipInvalid = document.getElementById('nipInvalid');
     const hpEl = document.getElementById('nomor_hp');
     const form = document.getElementById('formTambahDosen');
+    const emailEl = document.getElementById('email');
+    const emailInvalid = document.getElementById('emailInvalid');
 
     function onlyDigits(el) {
       el.value = el.value.replace(/\D/g, '');
@@ -120,11 +119,12 @@
       if (this.value.length > 18) this.value = this.value.slice(0,18);
       const len = this.value.length;
       if (len > 0 && len < 18) {
-        nipHelp.style.display = 'block';
-        this.classList.add('is-invalid');
+        nipInvalid.textContent = 'NIP harus berisi 18 angka.';
+        nipEl.classList.add('is-invalid');
       } else {
-        nipHelp.style.display = 'none';
-        this.classList.remove('is-invalid');
+        nipInvalid.textContent = 'NIP wajib diisi.';
+        nipEl.classList.remove('is-invalid');
+        nipEl.classList.remove('is-valid');
       }
     });
 
@@ -134,17 +134,45 @@
     });
 
     form.addEventListener('submit', function(e){
-      const nipLen = nipEl.value.trim().length;
-      if (nipLen > 0 && nipLen !== 18) {
-        nipHelp.style.display = 'block';
+      let formIsValid = true;
+
+      const nipVal = nipEl.value.trim();
+      if (nipVal === '') {
+        nipInvalid.textContent = 'NIP wajib diisi.';
         nipEl.classList.add('is-invalid');
+        formIsValid = false;
+      } else if (nipVal.length !== 18) {
+        nipInvalid.textContent = 'NIP harus berisi 18 angka.';
+        nipEl.classList.add('is-invalid');
+        formIsValid = false;
+      } else {
+        nipEl.classList.remove('is-invalid');
+        nipEl.classList.add('is-valid');
+      }
+
+      const emailVal = emailEl.value.trim();
+      if (emailVal === '') {
+        emailInvalid.textContent = 'Email Wajib diisi.';
+        emailEl.classList.add('is-invalid');
+        formIsValid = false;
+      } else {
+        if (emailEl.checkValidity()) {
+          emailEl.classList.remove('is-invalid');
+          emailEl.classList.add('is-valid');
+        } else {
+          emailInvalid.textContent = 'Masukkan email valid.';
+          emailEl.classList.add('is-invalid');
+          formIsValid = false;
+        }
+      }
+
+      if (!form.checkValidity()) { formIsValid = false; }
+
+      if (!formIsValid) {
         e.preventDefault();
         e.stopPropagation();
       }
-      if (!form.checkValidity()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+
       form.classList.add('was-validated');
     });
   });

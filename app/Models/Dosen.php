@@ -9,25 +9,11 @@ class Dosen extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel secara eksplisit
     protected $table = 'dosen';
-
     protected $fillable = [
+        'nip',
         'nama',
-        'nidn',
-        'prodi',
-        'email', 
-        'no_hp',
-        'jabatan'
+        'email',
+        'nomor_hp',
     ];
-
-    public function mahasiswaBimbingan()
-    {
-        return $this->hasMany(Mahasiswa::class, 'dospem_id');
-    }
-
-    public function penilaian()
-    {
-        return $this->hasMany(PenilaianDospem::class, 'dospem_id');
-    }
 }

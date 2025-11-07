@@ -11,6 +11,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\DosenController;
 
 Route::resource('jadwal', JadwalBimbinganController::class);
 
@@ -168,3 +169,6 @@ Route::resource('transkrip', TranscriptController::class);
 Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
 Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
 Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
+
+Route::resource('dosen', DosenController::class);
+
