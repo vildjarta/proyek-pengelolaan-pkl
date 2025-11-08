@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
-    <div class="d-flex">
-        {{-- header --}}
-        @include('layout.header')
-    </div>
+<div class="d-flex">
+    {{-- header --}}
+    @include('layout.header')
+</div>
 
-    <div class="d-flex">
-        {{-- sidebar --}}
-        @include('layout.sidebar')
-    </div>
+<div class="d-flex">
+    {{-- sidebar --}}
+    @include('layout.sidebar')
+</div>
 
 <div class="main-content-wrapper">
 
@@ -51,6 +51,23 @@
             </div>
 
             <div class="mb-3">
+                <label for="id_mahasiswa" class="form-label fw-bold">Pilih Mahasiswa</label>
+                <select name="id_mahasiswa" id="id_mahasiswa" class="form-select" required>
+                    <option value="">-- Pilih Mahasiswa --</option>
+                    @foreach ($Mahasiswa as $mhs)
+                        <option value="{{ $mhs->id_mahasiswa }}"
+                            {{ old('id_mahasiswa') == $mhs->id_mahasiswa ? 'selected' : '' }}>
+                            {{ $mhs->nama }} - {{ $mhs->nim ?? 'NIM' }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('id_mahasiswa')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+
+            <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}"
                     required>
@@ -67,7 +84,7 @@
                 <a href="{{ route('dosen_penguji.index') }}" class="btn btn-secondary">Batal</a>
             </div>
         </form>
-    </div>
-    </body>
+</div>
+</body>
 
 </html>

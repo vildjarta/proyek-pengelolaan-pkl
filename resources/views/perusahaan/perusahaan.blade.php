@@ -183,7 +183,7 @@
                                                     <p class="mb-0 mt-1">{{ $prs->hari_operasi }}</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div><!--style="background-color: #0d6efd; color: white;"-->
 
                                     </div>
                                     <div class="modal-footer">

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,6 +12,10 @@ class Mahasiswa extends Model
     protected $table = 'mahasiswa';             // nama tabel
     protected $primaryKey = 'id_mahasiswa';     // primary key custom
 
+    // Aktifkan created_at & updated_at
+    public $timestamps = true;
+
+    // Kolom yang bisa diisi
     protected $fillable = [
         'nim',
         'nama',
@@ -33,4 +38,8 @@ class Mahasiswa extends Model
     // {
     //     return $this->belongsTo(\App\Models\DosenPembimbing::class, 'id_pembimbing');
     // }
+    public function dosen_penguji()
+    {
+        return $this->hasOne(dosen_penguji::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
 }

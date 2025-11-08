@@ -119,8 +119,9 @@
                     <thead>
                         <tr>
                             <th style="width: 5%;">No</th>
-                            <th style="width: 15%;">NIP</th>
-                            <th style="width: 25%;">Nama Dosen</th>
+                            <th style="width: 10%;">NIP</th>
+                            <th style="width: 25%;">nama_dosen</th>
+                            <th style="width: 5%;"> nama_mahasiswa</th>
                             <th style="width: 25%;">Email</th>
                             <th style="width: 15%;">No HP</th>
                             <th style="width: 15%;">Aksi</th>
@@ -131,7 +132,8 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $dp->nip }}</td>
-                                <td class="text-start">{{ $dp->nama_dosen }}</td>
+                                <td>{{ $dp->nama_dosen }}</td>
+                                <td>{{ $dp->nama_mahasiswa ?? 'N/A' }}</td>
                                 <td class="text-start">{{ $dp->email }}</td>
                                 <td>{{ $dp->no_hp }}</td>
                                 <td>

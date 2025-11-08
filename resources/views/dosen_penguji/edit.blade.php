@@ -54,6 +54,22 @@
                     value="{{ old('nama_dosen', $dosenPenguji->nama_dosen) }}" required>
             </div>
 
+            <div class="mb-3">
+                <label for="id_mahasiswa" class="form-label fw-bold">Pilih Mahasiswa</label>
+                <select name="id_mahasiswa" id="id_mahasiswa" class="form-select" required>
+                    <option value="">-- Pilih Mahasiswa --</option>
+                    @foreach ($Mahasiswa as $mhs)
+                        <option value="{{ $mhs->id_mahasiswa }}"
+                            {{ old('id_mahasiswa') == $mhs->id_mahasiswa ? 'selected' : '' }}>
+                            {{ $mhs->nama }} - {{ $mhs->nim ?? 'NIM' }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('id_mahasiswa')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
             {{-- Email --}}
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>

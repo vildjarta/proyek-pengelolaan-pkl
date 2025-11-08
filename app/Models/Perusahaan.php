@@ -20,9 +20,7 @@ class Perusahaan extends Model
         'fasilitas',
         'level_legalitas',
         'jumlah_mahasiswa',
-        'hari_operasi',        
-        'lat',
-        'lng',
+        'hari_operasi',
         'created_at',
         'updated_at',
     ];
