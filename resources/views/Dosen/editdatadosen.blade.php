@@ -42,7 +42,6 @@
               <label class="form-label required">NIP</label>
               <input type="text" name="nip" id="nip" class="form-control" maxlength="18" inputmode="numeric"
                      placeholder="Masukkan 18 digit NIP" required value="{{ old('nip', $dosen->nip) }}">
-              <!-- invalid-feedback untuk NIP; teks akan diatur via JS sesuai kondisi -->
               <div id="nipInvalid" class="invalid-feedback">NIP wajib diisi.</div>
             </div>
 
@@ -55,14 +54,13 @@
             <div class="col-md-6">
               <label class="form-label required">Email</label>
               <input type="email" id="email" name="email" class="form-control" placeholder="contoh@email.com" required value="{{ old('email', $dosen->email) }}">
-              <!-- ubah teks menjadi Email Wajib diisi -->
               <div id="emailInvalid" class="invalid-feedback">Email Wajib diisi.</div>
             </div>
 
             <div class="col-md-6">
               <label class="form-label required">Nomor HP</label>
-              <input type="text" name="nomor_hp" id="nomor_hp" class="form-control" maxlength="13" inputmode="numeric"
-                     placeholder="08xxxxxxxxxxx" required value="{{ old('nomor_hp', $dosen->nomor_hp) }}">
+              <input type="text" name="no_hp" id="no_hp" class="form-control" maxlength="13" inputmode="numeric"
+                     placeholder="08xxxxxxxxxxx" required value="{{ old('no_hp', $dosen->no_hp) }}">
               <div class="invalid-feedback">Nomor HP wajib diisi.</div>
             </div>
           </div>
@@ -90,7 +88,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     const nipEl = document.getElementById('nip');
     const nipInvalid = document.getElementById('nipInvalid');
-    const hpEl = document.getElementById('nomor_hp');
+    const hpEl = document.getElementById('no_hp');
     const form = document.getElementById('formEditDosen');
     const emailEl = document.getElementById('email');
     const emailInvalid = document.getElementById('emailInvalid');
@@ -101,18 +99,14 @@
       onlyDigits(this);
       if (this.value.length > 18) this.value = this.value.slice(0,18);
       const len = this.value.length;
-
-      // jika ada isi tapi kurang dari 18 -> tampilkan pesan length
       if (len > 0 && len < 18) {
         nipInvalid.textContent = 'NIP harus berisi 18 angka.';
         nipEl.classList.add('is-invalid');
       } else {
-        // jika valid panjang 18 -> hapus invalid
         if (len === 18) {
           nipEl.classList.remove('is-invalid');
           nipEl.classList.add('is-valid');
         } else {
-          // kosong -> hapus is-valid/is-invalid supaya bootstrap menampilkan saat submit
           nipEl.classList.remove('is-valid');
           nipEl.classList.remove('is-invalid');
         }
@@ -124,11 +118,9 @@
       if (this.value.length > 13) this.value = this.value.slice(0,13);
     });
 
-    // saat submit, atur pesan yang sesuai dan mencegah submit bila invalid
     form.addEventListener('submit', function(e){
       let formIsValid = true;
 
-      // NIP check: jika kosong -> "NIP wajib diisi"; jika terisi tapi !=18 -> "NIP harus berisi 18 angka."
       const nipVal = nipEl.value.trim();
       if (nipVal === '') {
         nipInvalid.textContent = 'NIP wajib diisi.';
@@ -143,26 +135,22 @@
         nipEl.classList.add('is-valid');
       }
 
-      // Email check: jika kosong -> Email Wajib diisi; jika format salah -> gunakan browser message
       const emailVal = emailEl.value.trim();
       if (emailVal === '') {
         emailInvalid.textContent = 'Email Wajib diisi.';
         emailEl.classList.add('is-invalid');
         formIsValid = false;
       } else {
-        // gunakan HTML5 validity untuk format email
         if (emailEl.checkValidity()) {
           emailEl.classList.remove('is-invalid');
           emailEl.classList.add('is-valid');
         } else {
-          // jika format salah, ubah teks menjadi pesan umum (atau biarkan default)
           emailInvalid.textContent = 'Masukkan email valid.';
           emailEl.classList.add('is-invalid');
           formIsValid = false;
         }
       }
 
-      // Validasi input lain via constraint API
       if (!form.checkValidity()) { formIsValid = false; }
 
       if (!formIsValid) {

@@ -70,14 +70,14 @@
             <div class="col-md-6">
               <label class="form-label required">Nomor HP</label>
               <input type="text"
-                     name="nomor_hp"
-                     id="nomor_hp"
+                     name="no_hp"
+                     id="no_hp"
                      class="form-control"
                      maxlength="13"
                      inputmode="numeric"
                      placeholder="08xxxxxxxxxxx"
                      required
-                     value="{{ old('nomor_hp') }}">
+                     value="{{ old('no_hp') }}">
               <div class="invalid-feedback">Nomor HP wajib diisi.</div>
             </div>
           </div>
@@ -105,7 +105,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     const nipEl = document.getElementById('nip');
     const nipInvalid = document.getElementById('nipInvalid');
-    const hpEl = document.getElementById('nomor_hp');
+    const hpEl = document.getElementById('no_hp');
     const form = document.getElementById('formTambahDosen');
     const emailEl = document.getElementById('email');
     const emailInvalid = document.getElementById('emailInvalid');

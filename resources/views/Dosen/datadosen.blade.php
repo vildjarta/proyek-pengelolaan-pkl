@@ -67,7 +67,7 @@
                                     <!-- Nama di tengah -->
                                     <td class="text-center fw-semibold nama-col">{{ $row->nama }}</td>
                                     <td class="text-center small text-muted">{{ $row->email ?? '-' }}</td>
-                                    <td class="text-center small">{{ $row->nomor_hp ?? '-' }}</td>
+                                    <td class="text-center small">{{ $row->no_hp ?? $row->nomor_hp ?? '-' }}</td>
                                     <td class="text-center">
                                         <div class="action-buttons d-inline-flex gap-2">
                                             <a href="{{ route('dosen.edit', $row->id) }}" class="btn btn-edit-custom btn-sm" title="Edit">

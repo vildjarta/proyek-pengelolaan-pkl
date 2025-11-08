@@ -125,6 +125,12 @@ Route::delete('/ratingperusahaan/delete/{id_review}', [RatingDanReviewController
 // DATA DOSEN PEMBIMBING (CRUD)
 // 🎓 DATA DOSEN PEMBIMBING (CRUD)
 Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+// di routes/web.php — dekat resource datadosenpembimbing
+Route::get('/cek-nip', [App\Http\Controllers\DataDosenPembimbingController::class, 'checkNip'])->name('datadosenpembimbing.checkNip');
+
+// AJAX untuk autocomplete / detail dosen
+Route::get('/cek-dosen-suggest', [App\Http\Controllers\DosenController::class, 'suggestNIP']);
+Route::get('/cek-dosen/{nip}', [App\Http\Controllers\DosenController::class, 'cekNIP']);
 
 
 // 🗓️ JADWAL BIMBINGAN (CRUD) - Ini adalah route yang benar
@@ -163,6 +169,9 @@ Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->
 
 // 🔍 AJAX: Cek NIM mahasiswa untuk form dosen pembimbing
 Route::get('/cek-nim/{nim}', [App\Http\Controllers\MahasiswaController::class, 'cekNIM']);
+
+// AJAX untuk suggestions NIM (autocomplete)
+Route::get('/cek-nim-suggest', [App\Http\Controllers\MahasiswaController::class, 'suggestNIM']);
 
 // 📜 TRANSKRIP
 Route::resource('transkrip', TranscriptController::class);
