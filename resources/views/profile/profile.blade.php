@@ -52,19 +52,10 @@
 
 @include('layout.sidebar')
 
-    {{-- 'content-wrapper' adalah class penting yang akan diatur oleh CSS di atas --}}
     <main class="content-wrapper"> 
 
         <div class="profile-page-container">
             
-            {{-- 
-              BAGIAN INI DIHAPUS 
-              Blok <div class="profile-sidebar">...</div> adalah sumber 
-              munculnya teks "PENGATURAN" dan "Data Diri" 
-              yang membuat halaman tidak full-width.
-            --}}
-            
-            {{-- Konten profil sekarang akan otomatis mengisi lebar penuh --}}
             <div class="profile-content">
                 <div class="profile-card">
                     {{-- Judul "Pengaturan Data Diri" di dalam card tetap ada --}}
