@@ -11,6 +11,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\ProfileController;
 
 Route::resource('jadwal', JadwalBimbinganController::class);
 
@@ -82,11 +83,9 @@ Route::get('/menu', function () {
     return view('menu');
 });
 
-// Halaman profile
-Route::get('/profile', function () {
-    return view('profile.profile');
-    // folder.profile
-});
+// Menampilkan halaman profil pengguna
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 // Resource untuk perusahaan (CRUD otomatis)
 Route::resource('/perusahaan', PerusahaanController::class);
