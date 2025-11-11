@@ -1,189 +1,64 @@
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #fff;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
+/* Tambah Dosen Pembimbing - styling */
+body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0; overflow-x:hidden; }
+.main-wrapper{ padding-top:90px; margin-left:250px; transition:all .3s; }
+.content-container{ padding:30px 40px; max-width:1000px; margin:0 auto; }
+.content-card{ background:#fff; border-radius:16px; padding:30px; box-shadow:0 3px 10px rgba(0,0,0,0.05); }
+.page-header{ font-weight:700; color:#113d92; }
 
-/* MAIN WRAPPER */
-.main-wrapper {
-  flex: 1;
-  min-height: 100vh;
-  background-color: #fff;
-  transition: margin-left 0.3s ease, width 0.3s ease;
-  padding-top: 90px;
-  margin-left: 250px;
-  width: calc(100% - 250px);
-}
+/* form */
+.form-label{ font-weight:600; color:#222; }
+.form-control{ border-radius:10px; padding:10px 12px; border:1px solid #ccc; transition:all .2s; }
+.form-control:focus{ border-color:#5b8ad2; box-shadow:0 0 0 .12rem rgba(91,138,210,0.12); }
 
-/* Kontainer Form */
-.content-container {
-  width: 100%;
-  padding: 30px 40px;
-  box-sizing: border-box;
-  max-width: 800px;
-  margin: 0 auto;
-}
+/* mahasiswa item */
+.mahasiswa-item{ background:#f9fafc; border:1px solid #dee2e6; border-radius:12px; padding:18px; margin-bottom:15px; position:relative; }
+.remove-mahasiswa{ border-radius:6px; font-size:14px; font-weight:600; padding:6px 10px; }
+.remove-mahasiswa i{ margin-right:6px; }
 
-/* Kartu Form */
-.content-card {
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 30px 40px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-  max-width: 800px;
-  margin: 0 auto;
-}
+/* suggestion dropdown */
+.nim-suggest{ position:absolute; z-index:2500; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-height:220px; overflow-y:auto; width:100%; padding:4px 0; margin-top:6px; }
+.nim-suggest .item{ padding:8px 12px; cursor:pointer; font-size:14px; }
+.nim-suggest .item:hover, .nim-suggest .item.active{ background:#f1f7ff; }
 
-/* Judul */
-.page-header {
-  font-weight: 700;
-  color: #113d92;
-}
+/* buttons */
+.btn-primary{ background:#5b8ad2; border:none; font-weight:600; }
+.btn-primary:hover{ background:#4a75b3; }
+.btn-success{ background:#3bb273; border:none; }
+.btn-success:hover{ background:#319763; }
+.btn-secondary{ background:#adb5bd; border:none; }
+.btn-secondary:hover{ background:#9ca3af; }
 
-/* Input & Label */
-.form-label {
-  font-weight: 600;
-  color: #222;
-}
+/* required star */
+.form-label.required::after{ content: " *"; color:red; font-weight:700; margin-left:4px; }
 
-.form-control {
-  border-radius: 10px;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  transition: all 0.2s;
-}
-.form-control:focus {
-  border-color: #5b8ad2;
-  box-shadow: 0 0 0 0.2rem rgba(91, 138, 210, 0.25);
-}
+/* responsive */
+@media (max-width:992px){ .main-wrapper{ margin-left:0; } .content-container{ padding:15px; } }
 
-/* Mahasiswa Item */
-.mahasiswa-item {
-  background-color: #f9fafc;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 15px;
-  position: relative;
-}
+/* --- keep layout stable --- */
+    .content-container { padding: 30px 40px; max-width: 1000px; margin: 0 auto; box-sizing: border-box; }
+    .content-card { padding: 24px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.04); background:#fff; }
 
-/* Tombol Hapus */
-.remove-mahasiswa {
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 6px 10px;
-}
-
-/* Tombol */
-.btn-primary {
-  background-color: #5b8ad2;
-  border: none;
-  font-weight: 600;
-}
-.btn-primary:hover {
-  background-color: #4a75b3;
-}
-.btn-success {
-  background-color: #3bb273;
-  border: none;
-}
-.btn-success:hover {
-  background-color: #319763;
-}
-.btn-secondary {
-  background-color: #adb5bd;
-  border: none;
-}
-.btn-secondary:hover {
-  background-color: #9ca3af;
-}
-
-/* Sidebar default */
-#sidebar {
-  width: 250px;
-  transition: width 0.3s;
-  float: left;
-  height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 100;
-}
-
-/* Sidebar collapsed */
-#sidebar.collapsed {
-  width: 70px;
-}
-
-/* Main wrapper default */
-#main-wrapper {
-  margin-left: 250px;
-  width: calc(100% - 250px);
-  transition: margin-left 0.3s, width 0.3s;
-}
-
-/* Main wrapper saat sidebar collapsed */
-#sidebar.collapsed ~ #main-wrapper,
-#main-wrapper.sidebar-collapsed {
-  margin-left: 70px;
-  width: calc(100% - 70px);
-}
-
- /* Tambahan untuk bintang merah wajib isi */
-    .required-star {
-      color: red;
-      margin-left: 4px;
-      font-weight: bold;
+    .suggest-wrap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 2500;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      max-height: 220px;
+      overflow-y: auto;
+      display: none;
+      margin-top: 6px;
     }
-    
-/* Responsif */
-@media (max-width: 992px) {
-  .main-wrapper {
-    margin-left: 0 !important;
-    width: 100% !important;
-    padding-top: 80px;
-  }
-  .content-container {
-    padding: 15px;
-  }
-  .content-card {
-    padding: 20px;
-  }
-}
+    .suggest-wrap .item { padding: 8px 12px; cursor: pointer; }
+    .suggest-wrap .item:hover, .suggest-wrap .item.active { background: #f1f7ff; }
 
-/* Pastikan main-wrapper mengikuti sidebar */
-#sidebar {
-  width: 250px;
-  transition: width 0.3s;
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  z-index: 100;
-}
+    .form-label.required::after { content: " *"; color: red; margin-left: 4px; font-weight: 700; }
 
-#sidebar.collapsed {
-  width: 70px;
-}
-
-#main-wrapper {
-  margin-left: 250px;
-  width: calc(100% - 250px);
-  transition: margin-left 0.3s, width 0.3s;
-}
-
-#sidebar.collapsed ~ #main-wrapper,
-#main-wrapper.sidebar-collapsed {
-  margin-left: 70px;
-  width: calc(100% - 70px);
-}
-
-/* Hapus pembatas lebar pada konten */
-.content-container,
-.content-card {
-  max-width: none !important;
-  margin: 0 !important;
-}
+    @media (max-width: 992px) {
+      .content-container { padding: 20px; }
+    }
+    .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
+    .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
