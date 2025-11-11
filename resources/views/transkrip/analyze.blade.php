@@ -77,6 +77,20 @@
             </div>
         </div>
 
+        <form action="{{ route('transkrip.uploadPdf') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <label>Upload PDF Transkrip:</label>
+        <input type="file" name="pdfFile" accept="application/pdf" required>
+        <button type="submit" class="btn btn-primary">Upload & Extract</button>
+        </form>
+
+        @if(session('pdfText'))
+            <textarea id="pasteArea" class="form-control" rows="8">{{ session('pdfText') }}</textarea>
+        @else
+            <textarea id="pasteArea" class="form-control" rows="8" placeholder="Paste transkrip di sini..."></textarea>
+        @endif
+                <br>
+
         <textarea id="pasteArea" class="form-control" rows="8" placeholder="Paste transkrip di sini (hanya bagian tabel dari SIPADU)..."></textarea> <!-- area paste -->
         <br>
         <div id="preview"></div> <!-- preview tabel hasil paste -->

@@ -119,6 +119,25 @@ public function analyze(Request $req)
     ]);
 }
 
+public function uploadPdf(Request $request)
+{
+    $request->validate([
+        'pdfFile' => 'required|mimes:pdf|max:2048'
+    ]);
+
+    $parser = new \Smalot\PdfParser\Parser();
+    $pdf = $request->file('pdfFile');
+
+    try {
+        $text = $parser->parseFile($pdf->getRealPath())->getText();
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal membaca PDF: ' . $e->getMessage());
+    }
+
+    return back()->with('pdfText', $text);
+}
+
+
     public function save(Request $request)
     {
         Transcript::updateOrCreate(
