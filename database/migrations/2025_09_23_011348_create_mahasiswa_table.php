@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('prodi');
             $table->string('angkatan');
             $table->decimal('ipk', 3, 2)->nullable();
+            $table->string('perusahaan')->nullable(); // Kolom baru: nama perusahaan
             $table->unsignedBigInteger('id_pembimbing')->nullable();
             $table->timestamps();
 
-            // Jika kamu punya tabel pembimbing, tambahkan FK-nya di sini:
-            // $table->foreign('id_pembimbing')->references('id_pembimbing')->on('pembimbing')->onDelete('set null');
+        
         });
     }
 
