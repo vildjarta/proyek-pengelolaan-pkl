@@ -83,7 +83,9 @@ class JadwalBimbinganController extends Controller
     {
         // Validasi data yang masuk dari form
         $request->validate([
-            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
+            // --- PERUBAHAN DI SINI ---
+            'id_mahasiswa' => 'nullable|exists:mahasiswa,id_mahasiswa',
+            // ------------------------
             'id_pembimbing' => 'required|exists:dosen_pembimbing,id_pembimbing',
             'tanggal' => 'required|date',
             'waktu_mulai' => 'required',
@@ -91,17 +93,20 @@ class JadwalBimbinganController extends Controller
             'topik' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
         ], [
-            'id_mahasiswa.required' => 'Anda harus memilih mahasiswa dari daftar.',
+            // --- Baris 'id_mahasiswa.required' bisa dihapus ---
             'id_pembimbing.required' => 'Anda harus memilih dosen pembimbing dari daftar.',
             'waktu_selesai.after' => 'Waktu selesai harus setelah waktu mulai.'
         ]);
 
         // Validasi kustom untuk memastikan dosen pembimbing sesuai dengan mahasiswa
-        $mahasiswa = Mahasiswa::find($request->id_mahasiswa);
-        if ($mahasiswa && $mahasiswa->id_pembimbing != $request->id_pembimbing) {
-            return back()->withErrors([
-                'id_pembimbing' => 'Dosen Pembimbing yang dipilih tidak sesuai untuk mahasiswa ini.'
-            ])->withInput();
+        // Hanya validasi jika mahasiswa diisi
+        if ($request->id_mahasiswa) {
+            $mahasiswa = Mahasiswa::find($request->id_mahasiswa);
+            if ($mahasiswa && $mahasiswa->id_pembimbing != $request->id_pembimbing) {
+                return back()->withErrors([
+                    'id_pembimbing' => 'Dosen Pembimbing yang dipilih tidak sesuai untuk mahasiswa ini.'
+                ])->withInput();
+            }
         }
 
         // Membuat data baru jika semua validasi berhasil
@@ -135,7 +140,9 @@ class JadwalBimbinganController extends Controller
     {
         // Validasi data yang masuk dari form edit
         $request->validate([
-            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
+            // --- PERUBAHAN DI SINI ---
+            'id_mahasiswa' => 'nullable|exists:mahasiswa,id_mahasiswa',
+            // ------------------------
             'id_pembimbing' => 'required|exists:dosen_pembimbing,id_pembimbing',
             'tanggal' => 'required|date',
             'waktu_mulai' => 'required',
@@ -147,11 +154,14 @@ class JadwalBimbinganController extends Controller
         ]);
 
         // Validasi kustom untuk memastikan dosen pembimbing sesuai dengan mahasiswa
-        $mahasiswa = Mahasiswa::find($request->id_mahasiswa);
-        if ($mahasiswa && $mahasiswa->id_pembimbing != $request->id_pembimbing) {
-            return back()->withErrors([
-                'id_pembimbing' => 'Dosen Pembimbing yang dipilih tidak sesuai untuk mahasiswa ini.'
-            ])->withInput();
+        // Hanya validasi jika mahasiswa diisi
+        if ($request->id_mahasiswa) {
+            $mahasiswa = Mahasiswa::find($request->id_mahasiswa);
+            if ($mahasiswa && $mahasiswa->id_pembimbing != $request->id_pembimbing) {
+                return back()->withErrors([
+                    'id_pembimbing' => 'Dosen Pembimbing yang dipilih tidak sesuai untuk mahasiswa ini.'
+                ])->withInput();
+            }
         }
 
         // Memperbarui data di database
@@ -172,4 +182,3 @@ class JadwalBimbinganController extends Controller
         return redirect()->route('jadwal.index')->with('success', 'Jadwal bimbingan berhasil dihapus!');
     }
 }
-
