@@ -153,13 +153,32 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = \App\Models\Mahasiswa::where('NIM', $nim)->first();
 
-        if ($mahasiswa) {
-            return response()->json([
-                'exists' => true,
-                'nama_mahasiswa' => $mahasiswa->nama,
-            ]);
-        } else {
-            return response()->json(['exists' => false]);
-        }
+    if ($mahasiswa) {
+        return response()->json([
+            'exists' => true,
+            'nama_mahasiswa' => $mahasiswa->nama,
+        ]);
+    } else {
+        return response()->json(['exists' => false]);
     }
+}
+
+
+public function suggestNIM(Request $request)
+{
+    $q = $request->query('q', '');
+    if (trim($q) === '') {
+        return response()->json([]);
+    }
+
+    $results = \App\Models\Mahasiswa::select('nim','nama')
+        ->where('nim', 'LIKE', $q . '%')
+        ->orWhere('nama', 'LIKE', '%' . $q . '%')
+        ->orderBy('nim')
+        ->limit(10)
+        ->get();
+
+    return response()->json($results);
+}
+
 }

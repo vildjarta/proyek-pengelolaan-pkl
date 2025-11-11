@@ -16,7 +16,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('jadwal.update', $jadwal->id) }}" method="POST">
+            <form action="{{ route('jadwal.update', $jadwal->id) }}" method="POST" onsubmit="return confirmSubmit()">
                 @csrf
                 @method('PUT')
                 

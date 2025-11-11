@@ -1,0 +1,149 @@
+/* datadosen.css */
+
+/* halaman umum */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #444;
+    margin: 0;
+}
+
+/* wrapper (header fixed assumed height 60px, sidebar width 260px) */
+.main-content-wrapper {
+    margin-top: 60px;
+    margin-left: 260px;
+    transition: margin-left 0.3s ease;
+}
+
+/* konten utama */
+.content {
+    background-color: #fff;
+    padding: 20px 28px;
+    min-height: calc(100vh - 80px);
+}
+
+/* header tabel (title + controls) */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #5b8ad2;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+}
+
+.table-header .title {
+    color: #5b8ad2;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+/* search */
+.search-container { width: 280px; }
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d7e0;
+    border-radius: 6px;
+    outline: none;
+    background: #fff;
+}
+.search-input:focus {
+    border-color: #5b8ad2;
+    box-shadow: 0 0 6px rgba(91, 138, 210, 0.15);
+}
+.btn-search {
+    background:#4b79c7;
+    color:#fff;
+    border:0;
+    padding:8px 10px;
+    border-radius:6px;
+}
+
+/* tombol tambah */
+.btn-add {
+    background: #5b8ad2;
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    font-weight:600;
+}
+.btn-add:hover { background:#4a75b3; }
+
+/* container card untuk tabel */
+.table-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(31,45,61,0.04);
+}
+
+/* thead */
+.table-head th {
+    background-color: #fbfdfe;
+    color: #111827;
+    padding: 14px 18px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(15,23,42,0.06);
+    text-align: center;
+}
+
+/* header nama */
+.table-head th.nama-head {
+    text-align: center;
+}
+
+/* baris tabel */
+.table-row td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(15,23,42,0.03);
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+/* kolom nama rata tengah juga */
+.table-row td.nama-col {
+    text-align: center;
+}
+
+/* nip overflow handling */
+.nip-col {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+}
+
+/* tombol aksi */
+.action-buttons .btn-edit-custom,
+.btn-edit-custom.btn-sm {
+    background-color: #00A19D;
+    color: #fff;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+.action-buttons .btn-edit-custom:hover { background:#00847E; }
+
+.action-buttons .btn-delete-custom,
+.btn-delete-custom.btn-sm {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+.action-buttons .btn-delete-custom:hover { background:#c82333; }
+
+/* responsive */
+@media (max-width: 992px) {
+    .main-content-wrapper { margin-left: 0; }
+    .table-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .search-container { width: 100%; }
+    .nip-col { max-width: 120px; }
+    .table-row td { padding: 10px 12px; }
+}

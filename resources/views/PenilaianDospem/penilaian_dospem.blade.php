@@ -71,7 +71,7 @@
                 </tbody>
             </table>
         </div>
-                <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         const toggleButton = document.querySelector('.menu-toggle');
         const body = document.body;
@@ -99,8 +99,3 @@
     });
 </script>
 </div>
-<script>
-    function confirmSubmit() {
-        return confirm("Apakah Anda yakin ingin Mengedit Penilaian ini?");
-    }
-</script>

@@ -32,10 +32,10 @@
 
                     <div class="d-flex align-items-center gap-2">
                         <!-- Form Pencarian -->
-                        <div class="search-container d-flex align-items-center">
-                            <input type="text" id="searchInput" class="search-input" placeholder="Cari dosen...">
-                            <button class="btn btn-primary ms-2"><i class="fa fa-search"></i></button>
-                        </div>
+                        <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="d-flex align-items-center">
+                            <input type="text" name="search" id="searchInput" class="search-input" placeholder="Cari dosen..." value="{{ request('search') }}">
+                            <button class="btn btn-primary ms-2" type="submit"><i class="fa fa-search"></i></button>
+                        </form>
 
                         <!-- Tombol Tambah -->
                         <a href="{{ route('datadosenpembimbing.create') }}" class="btn btn-primary">
@@ -44,13 +44,21 @@
                     </div>
                 </div>
 
+                {{-- flash message --}}
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <table class="table table-striped" id="dosenTable">
                     <thead>
                         <tr>
                             <th class="text-center">NIP</th>
-                            <th class="text-center">Nama</th>
+                            <th class="text-start">Nama</th>
                             <th class="text-center">Email</th>
-                            <th class="text-center">Mahasiswa Bimbingan</th>
+                            <th class="text-center">No. HP</th>
+                            <th class="text-start">Mahasiswa Bimbingan</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -60,6 +68,7 @@
                                 <td class="text-center">{{ $row->NIP }}</td>
                                 <td class="text-start">{{ $row->nama }}</td>
                                 <td class="text-center">{{ $row->email }}</td>
+                                <td class="text-center">{{ $row->no_hp ?? '-' }}</td>
                                 <td class="mahasiswa-bimbingan">
                                     @if($row->mahasiswa->count() > 0)
                                         <ul>
@@ -91,7 +100,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-4">
+                                <td colspan="6" class="text-center text-muted py-4">
                                     Belum ada data dosen pembimbing.
                                 </td>
                             </tr>
@@ -103,7 +112,8 @@
     </div>
 
     <script>
-    // === Live Search tanpa Enter ===
+    // === Live Search non-JS fallback: kept but form search will do server-side search. 
+    // Jika ingin live-filter client-side, uncomment dan gunakan bagian ini.
     document.getElementById('searchInput').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
         let rows = document.querySelectorAll('#dosenTable tbody tr');

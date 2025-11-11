@@ -1,0 +1,216 @@
+/* Container Utama */
+.profile-page-container {
+    display: flex;
+    gap: 24px;
+    padding: 20px;
+    background-color: #f9fafb; /* Latar belakang halaman seperti edlink */
+    min-height: calc(100vh - 80px); /* Sesuaikan tinggi */
+}
+
+/* Sidebar Pengaturan (Kolom Kiri) */
+.profile-sidebar {
+    flex: 0 0 250px; /* Lebar tetap 250px */
+}
+
+.profile-sidebar-menu h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280; /* Abu-abu */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 12px 8px 12px;
+}
+
+.profile-sidebar-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-sidebar-menu li a {
+    display: block;
+    padding: 10px 12px;
+    text-decoration: none;
+    color: #374151; /* Teks gelap */
+    font-weight: 500;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.profile-sidebar-menu li.active a,
+.profile-sidebar-menu li a:hover {
+    background-color: #eef2ff; /* Biru muda (sesuai edlink) */
+    color: #3b82f6; /* Biru */
+}
+
+/* Konten Profil (Kolom Kanan) */
+.profile-content {
+    flex: 1;
+}
+
+.profile-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px 30px;
+    max-width: 800px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.profile-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin-top: 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 16px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box; /* Penting */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+.form-group input.is-invalid {
+    border-color: #ef4444; /* Merah */
+}
+
+.error-text {
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Radio Button */
+.radio-group {
+    display: flex;
+    gap: 24px;
+}
+.radio-group label {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+.radio-group input[type="radio"] {
+    accent-color: #3b82f6;
+}
+
+/* Tombol Form */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: #3b82f6; /* Biru */
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-secondary {
+    background-color: #f3f4f6; /* Abu-abu muda */
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+.btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+/* Alert Notifikasi */
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+.alert-danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* Foto Profil */
+.profile-picture-section {
+    padding-bottom: 20px;
+}
+.profile-pic-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.profile-pic-wrapper img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e5e7eb;
+}
+.profile-pic-wrapper input[type="file"] {
+    display: none;
+}
+.profile-pic-wrapper .upload-button {
+    font-size: 14px;
+    font-weight: 500;
+    color: #3b82f6;
+    cursor: pointer;
+    background: #eef2ff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    margin-bottom: 0;
+}
+.profile-pic-wrapper .upload-button:hover {
+    background: #e0e7ff;
+}

@@ -29,7 +29,7 @@
     <form action="{{ route('nilai.update', $nilai->id) }}" method="POST" id="nilaiForm">
         @csrf
         @method('PUT')
-        
+
         <!-- Info Mahasiswa -->
         <div class="form-section">
             <h3><i class="fas fa-user"></i> Informasi Mahasiswa</h3>
@@ -207,34 +207,34 @@
         const penampilan = parseFloat(document.querySelector('[name="penampilan"]').value) || 0;
         const sikap_etika_lapangan = parseFloat(document.querySelector('[name="sikap_etika_lapangan"]').value) || 0;
         const pengetahuan = parseFloat(document.querySelector('[name="pengetahuan"]').value) || 0;
-        
+
         const subtotalPembimbing = disiplin + komunikasi + kerja_tim + kerja_mandiri + penampilan + sikap_etika_lapangan + pengetahuan;
-        
+
         // Dosen Pembimbing
         const penguasaan_teori = parseFloat(document.querySelector('[name="penguasaan_teori"]').value) || 0;
         const kemampuan_analisis = parseFloat(document.querySelector('[name="kemampuan_analisis"]').value) || 0;
         const keaktifan_bimbingan = parseFloat(document.querySelector('[name="keaktifan_bimbingan"]').value) || 0;
         const kemampuan_penulisan_laporan = parseFloat(document.querySelector('[name="kemampuan_penulisan_laporan"]').value) || 0;
         const sikap_etika_dospem = parseFloat(document.querySelector('[name="sikap_etika_dospem"]').value) || 0;
-        
+
         const subtotalDospem = penguasaan_teori + kemampuan_analisis + keaktifan_bimbingan + kemampuan_penulisan_laporan + sikap_etika_dospem;
-        
+
         // Penguji
         const penyajian_presentasi = parseFloat(document.querySelector('[name="penyajian_presentasi"]').value) || 0;
         const pemahaman_materi = parseFloat(document.querySelector('[name="pemahaman_materi"]').value) || 0;
         const hasil_yang_dicapai = parseFloat(document.querySelector('[name="hasil_yang_dicapai"]').value) || 0;
         const objektivitas_menangapi = parseFloat(document.querySelector('[name="objektivitas_menangapi"]').value) || 0;
         const penulisan_laporan = parseFloat(document.querySelector('[name="penulisan_laporan"]').value) || 0;
-        
+
         const subtotalPenguji = penyajian_presentasi + pemahaman_materi + hasil_yang_dicapai + objektivitas_menangapi + penulisan_laporan;
-        
+
         // Total
         const nilaiTotal = subtotalPembimbing + subtotalDospem + subtotalPenguji;
-        
+
         // Konversi nilai huruf
         let nilaiHuruf = '-';
         let skor = 0;
-        
+
         if (nilaiTotal >= 85) { nilaiHuruf = 'A'; skor = 4.0; }
         else if (nilaiTotal >= 80) { nilaiHuruf = 'B+'; skor = 3.5; }
         else if (nilaiTotal >= 75) { nilaiHuruf = 'B'; skor = 3.0; }
@@ -242,7 +242,7 @@
         else if (nilaiTotal >= 65) { nilaiHuruf = 'C'; skor = 2.0; }
         else if (nilaiTotal >= 60) { nilaiHuruf = 'D'; skor = 1.0; }
         else if (nilaiTotal > 0) { nilaiHuruf = 'E'; skor = 0.0; }
-        
+
         // Update display
         document.getElementById('subtotal_pembimbing').textContent = subtotalPembimbing.toFixed(2);
         document.getElementById('subtotal_dospem').textContent = subtotalDospem.toFixed(2);
@@ -251,35 +251,6 @@
         document.getElementById('nilai_huruf').textContent = nilaiHuruf;
         document.getElementById('skor').textContent = skor.toFixed(2);
     }
-
-    // Hitung total saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', function() {
-        hitungTotal();
-        
-        const toggleButton = document.querySelector('.menu-toggle');
-        const body = document.body;
-        const profileWrapper = document.querySelector('.user-profile-wrapper');
-        const userinfo = document.querySelector('.user-info');
-
-        if (toggleButton) {
-            toggleButton.addEventListener('click', function() {
-                body.classList.toggle('sidebar-closed');
-            });
-        }
-
-        if (userinfo) {
-            userinfo.addEventListener('click', function(e) {
-                e.preventDefault();
-                profileWrapper.classList.toggle('active');
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
-                    profileWrapper.classList.remove('active');
-                }
-            });
-        }
-    });
 </script>
 
 </body>

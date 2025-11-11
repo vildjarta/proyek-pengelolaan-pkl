@@ -11,6 +11,8 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DosenController;
 
 Route::resource('jadwal', JadwalBimbinganController::class);
 
@@ -31,9 +33,6 @@ Route::view('/menu', 'menu')->name('menu');
 
 // Halaman profil pengguna
 Route::view('/profile', 'profile.profile')->name('profile');
-
-// Halaman daftar jadwal (jika ini halaman statis)
-Route::view('/daftar-jadwal', 'daftar-jadwal')->name('daftar-jadwal');
 
 // ⭐ RATING & REVIEW PERUSAHAAN
 Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
@@ -85,11 +84,9 @@ Route::get('/menu', function () {
     return view('menu');
 });
 
-// Halaman profile
-Route::get('/profile', function () {
-    return view('profile.profile');
-    // folder.profile
-});
+// Menampilkan halaman profil pengguna
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 // Resource untuk perusahaan (CRUD otomatis)
 Route::resource('/perusahaan', PerusahaanController::class);
@@ -126,8 +123,13 @@ Route::delete('/ratingperusahaan/delete/{id_review}', [RatingDanReviewController
 
 // DATA DOSEN PEMBIMBING (CRUD)
 // 🎓 DATA DOSEN PEMBIMBING (CRUD)
-//   DATA DOSEN PEMBIMBING (CRUD)
 Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+// di routes/web.php — dekat resource datadosenpembimbing
+Route::get('/cek-nip', [App\Http\Controllers\DataDosenPembimbingController::class, 'checkNip'])->name('datadosenpembimbing.checkNip');
+
+// AJAX untuk autocomplete / detail dosen
+Route::get('/cek-dosen-suggest', [App\Http\Controllers\DosenController::class, 'suggestNIP']);
+Route::get('/cek-dosen/{nip}', [App\Http\Controllers\DosenController::class, 'cekNIP']);
 
 
 // 🗓️ JADWAL BIMBINGAN (CRUD) - Ini adalah route yang benar
@@ -142,7 +144,7 @@ Route::resource('penilaian', PenilaianDospemController::class);
 Route::resource('mahasiswa', MahasiswaController::class);
 
 
-Route::resource('penilaian', PenilaianPengujiController::class);
+Route::resource('penilaian-penguji', PenilaianPengujiController::class);
 
 
 // 🏢 DATA PERUSAHAAN (CRUD)
@@ -167,10 +169,14 @@ Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->
 // 🔍 AJAX: Cek NIM mahasiswa untuk form dosen pembimbing
 Route::get('/cek-nim/{nim}', [App\Http\Controllers\MahasiswaController::class, 'cekNIM']);
 
-
+// AJAX untuk suggestions NIM (autocomplete)
+Route::get('/cek-nim-suggest', [App\Http\Controllers\MahasiswaController::class, 'suggestNIM']);
 
 // 📜 TRANSKRIP
 Route::resource('transkrip', TranscriptController::class);
 Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
 Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
 Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
+
+Route::resource('dosen', DosenController::class);
+
