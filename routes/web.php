@@ -180,3 +180,10 @@ Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMulti
 
 Route::resource('dosen', DosenController::class);
 
+use App\Http\Controllers\GoogleDriveController;
+use App\Http\Controllers\Auth\GoogleController;
+
+// ========== ROUTE LOGIN GOOGLE (SSO) ==========
+Route::get('/login', [GoogleController::class, 'redirectToGoogle'])->name('login'); // <--- tambahkan baris ini
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
