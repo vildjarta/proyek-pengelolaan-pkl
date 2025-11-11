@@ -58,7 +58,7 @@
                 <select name="prodi" id="prodi" class="form-select" required>
                     <option value="">-- Pilih Prodi --</option>
                     <option value="Akuntansi">Akuntansi</option>
-                    <option value="Agroindustri">Agroindustri</option>
+                    <option value="Agroindustri">Agroindustr, pengubahan</option>
                     <option value="Teknologi Informasi">Teknologi Informasi</option>
                     <option value="Teknologi Otomotif">Teknologi Otomotif</option>
                     <option value="Akuntansi Perpajakan (D4)">Akuntansi Perpajakan (D4)</option>
