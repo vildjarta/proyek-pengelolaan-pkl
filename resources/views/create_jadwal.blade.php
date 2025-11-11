@@ -21,8 +21,11 @@
             
             {{-- KODE BARU UNTUK MAHASISWA --}}
             <div class="form-group">
-                <label for="mahasiswa_nama">Mahasiswa</label>
-                <input type="text" id="mahasiswa_nama" list="mahasiswa-list" class="form-control" required placeholder="Ketik untuk mencari NIM atau Nama...">
+                <label for="mahasiswa_nama">Mahasiswa (Opsional)</label>
+                
+                {{-- --- PERUBAHAN DI SINI (required dihapus) --- --}}
+                <input type="text" id="mahasiswa_nama" list="mahasiswa-list" class="form-control" placeholder="Ketik untuk mencari NIM atau Nama...">
+                
                 <datalist id="mahasiswa-list">
                     @foreach($mahasiswas as $mahasiswa)
                         <option data-id="{{ $mahasiswa->id_mahasiswa }}" value="{{ $mahasiswa->nim }} - {{ $mahasiswa->nama }}"></option>
@@ -104,7 +107,8 @@
 </div>
 <script>
     function confirmSubmit() {
-        return confirm("Apakah Anda yakin ingin Mengedit Penilaian ini?");
+        // Mengubah pesan konfirmasi agar lebih sesuai
+        return confirm("Apakah Anda yakin ingin menyimpan jadwal ini?");
     }
 </script>
 </div>
@@ -128,6 +132,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     hiddenInput.value = options[i].getAttribute('data-id');
                     return; // Hentikan pencarian jika sudah ketemu
                 }
+            }
+        });
+
+        // Tambahan: Kosongkan hidden input jika text input dikosongkan manual
+        textInput.addEventListener('change', function() {
+            if (this.value === '') {
+                hiddenInput.value = '';
             }
         });
     }
