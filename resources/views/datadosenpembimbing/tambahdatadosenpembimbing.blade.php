@@ -11,11 +11,6 @@
 
   <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/tambahdatadosenpembimbing.css') }}">
-  <style>
-    /* optional quick styles for valid/invalid visuals */
-    .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
-    .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
-  </style>
 </head>
 <body>
 
