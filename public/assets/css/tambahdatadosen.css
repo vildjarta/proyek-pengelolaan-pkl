@@ -1,0 +1,33 @@
+/* EDIT DOSEN - styles (editdatadosen.css), same small-circle buttons */
+body{font-family:'Poppins',sans-serif;background:#fff;margin:0;padding:0;overflow-x:hidden}
+.main-wrapper{margin-left:260px;padding-top:90px;min-height:100vh}
+.content-container{padding:20px 30px}
+.content-card{background:#fff;border-radius:16px;padding:30px 40px;max-width:1000px;margin:0 auto;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+.page-header{font-weight:700;color:#113d92}
+
+.form-label{font-weight:600;color:#222;position:relative}
+.form-label.required::after{content:" *";color:red;font-weight:700;margin-left:2px}
+
+.form-control{border-radius:10px;padding:10px 12px;border:1px solid #d0d7df;transition:all .12s;font-size:15px}
+.form-control:focus{border-color:#5b8ad2;box-shadow:0 0 0 .12rem rgba(91,138,210,.12)}
+.form-control:valid,.was-validated .form-control:valid{background-image:none !important;box-shadow:none !important}
+
+/* jika ingin override warna invalid-feedback agar selalu merah */
+.invalid-feedback{font-size:14px;color:#dc3545}
+
+/* buttons */
+.btn{font-weight:600;border-radius:8px;display:inline-flex;align-items:center;gap:.5rem}
+.action-accept{background:#2fbd56;color:#fff;border:none;padding:9px 18px}
+.action-accept:hover{background:#29a646}
+.action-cancel{background:#6f757b;color:#fff;border:none;padding:9px 18px}
+.action-cancel:hover{background:#5f6569}
+
+/* small circle */
+.icon-circle{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.9);color:#fff;font-size:11px;line-height:1}
+
+/* delete example */
+.btn-delete{background:#e34b4b;color:#fff;border:none;padding:6px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:.4rem}
+.btn-delete .icon-circle{width:18px;height:18px;font-size:10px;border-color:rgba(255,255,255,0.9)}
+
+/* responsive */
+@media (max-width:992px){ .main-wrapper{margin-left:0;padding-top:80px} .content-card{padding:20px} .col-md-6{display:block;width:100%} }

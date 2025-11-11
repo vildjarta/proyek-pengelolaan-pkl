@@ -21,23 +21,26 @@ class dosen_penguji extends Model
 
     // Kolom yang bisa diisi secara mass-assignment
     protected $fillable = [
-        'nip',
         'id_mahasiswa',
-        'nama_dosen',
-        'email',
-        'no_hp',
+        'id_dosen',
         'created_at',
         'updated_at',
     ];
     // One to one: satu dosen_penguji punya satu nilai_pengujian
     public function penilaian_penguji()
     {
-        return $this->hasOne(penilaianPenguji::class, 'id_penguji', 'id_penguji');
+        return $this->hasMany(PenilaianPenguji::class, 'id_penguji', 'id_penguji');
     }
 
     // Di model dosen_penguji, ganti nama method:
     public function Mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
+
+    // Di model dosen_penguji, ganti nama method:
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
 }

@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('dosen_penguji', function (Blueprint $table) {
             $table->id('id_penguji'); // Primary key
             $table->unsignedBigInteger('id_mahasiswa');
-            $table->string('nip', 50)->unique(); // Nomor induk dosen
-            $table->string('nama_dosen', 255);
-            $table->string('email', 255)->unique();
-            $table->string('no_hp', 20)->nullable();
+            $table->unsignedBigInteger('id_dosen');
             $table->timestamps(); // created_at & updated_at
         });
     }

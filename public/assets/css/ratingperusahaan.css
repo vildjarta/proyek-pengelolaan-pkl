@@ -1,0 +1,222 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #444;
+    margin: 0;
+}
+
+.main-content-wrapper {
+    margin-top: 60px;
+    margin-left: 260px;
+    padding: 0;
+    transition: margin-left 0.3s ease;
+}
+
+body.sidebar-closed .main-content-wrapper {
+    margin-left: 70px;
+}
+
+.content {
+    background-color: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px 30px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Header tabel */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #5b8ad2;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.table-header .title {
+    color: #5b8ad2;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+/* Pencarian */
+.search-container {
+    width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.search-input:focus {
+    border-color: #5b8ad2;
+    outline: none;
+}
+
+/* Tabel utama */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead tr {
+    background-color: #5b8ad2;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+/* Rating visual baru */
+.rating-wrapper {
+    display: flex;
+    flex-direction: column; /* bintang di atas, teks di bawah */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    color: #ffc107;
+    font-size: 20px;
+}
+
+.stars .fa-star {
+    transition: color 0.3s ease;
+}
+
+.stars .fa-star.filled {
+    color: #ffc107; /* kuning */
+}
+
+.stars .fa-star:not(.filled) {
+    color: #e0e0e0; /* abu terang */
+}
+
+.rating-label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+
+.rating-text {
+    font-weight: 500;
+    color: #555;
+}
+
+/* Badge jumlah rating */
+.badge-rating-count {
+    background-color: #5b8ad2;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Tombol aksi */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn {
+    border: none;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    color: #fff;
+}
+
+.btn-view {
+    background-color: #28a745;
+}
+.btn-view:hover {
+    background-color: #218838;
+}
+
+.btn-add {
+    background-color: #ffc107;
+    color: #000;
+}
+.btn-add:hover {
+    background-color: #e0a800;
+    color: #000;
+}
+
+/* Responsif */
+@media (max-width: 992px) {
+    .main-content-wrapper {
+        margin-left: 0;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        background: #fff;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        padding: 10px;
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #5b8ad2;
+    }
+
+    .action-buttons {
+        justify-content: flex-start;
+    }
+}

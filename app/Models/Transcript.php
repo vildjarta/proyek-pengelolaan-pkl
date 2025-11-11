@@ -12,4 +12,11 @@ class Transcript extends Model
     protected $fillable = [
         'nama_mahasiswa', 'nim', 'ipk', 'total_sks_d', 'has_e', 'eligible'
     ];
+
+    protected $casts = [
+        'has_e' => 'boolean',
+        'eligible' => 'boolean',
+        'ipk' => 'decimal:2',
+        'total_sks_d' => 'integer',
+    ];
 }

@@ -9,8 +9,11 @@ class Mahasiswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'mahasiswa';             // nama tabel
-    protected $primaryKey = 'id_mahasiswa';     // primary key custom
+    // Nama tabel yang digunakan
+    protected $table = 'mahasiswa';
+
+    // Primary key
+    protected $primaryKey = 'id_mahasiswa';
 
     // Aktifkan created_at & updated_at
     public $timestamps = true;
@@ -24,22 +27,21 @@ class Mahasiswa extends Model
         'prodi',
         'angkatan',
         'ipk',
-        'id_pembimbing'
+        'id_pembimbing',
+        'judul_pkl',
     ];
 
-    // relasi ke user (sementara dimatikan karena belum dipakai)
-    // public function user()
-    // {
-    //     return $this->belongsTo(\App\Models\User::class, 'id_user');
-    // }
 
-    // relasi ke dosen pembimbing (belum ada modelnya, jadi sementara dimatikan)
-    // public function pembimbing()
-    // {
-    //     return $this->belongsTo(\App\Models\DosenPembimbing::class, 'id_pembimbing');
-    // }
     public function dosen_penguji()
     {
         return $this->hasOne(dosen_penguji::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
+
+    /**
+     * 🔗 Relasi ke tabel dosen_pembimbing (setiap mahasiswa punya satu dosen)
+     */
+    public function dosen()
+    {
+        return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
     }
 }

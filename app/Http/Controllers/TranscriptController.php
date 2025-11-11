@@ -6,9 +6,67 @@ use App\Models\Transcript;
 
 class TranscriptController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return view('transkrip');
+        $data = Transcript::latest()->get();
+        return view('transkrip.index', compact('data'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('transkrip.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nim' => 'required|unique:transcripts,nim',
+            'nama_mahasiswa' => 'required',
+            'ipk' => 'required|numeric|min:0|max:4',
+            'total_sks_d' => 'required|integer|min:0',
+            'has_e' => 'required|boolean',
+        ]);
+
+        // Hitung kelayakan
+        $eligible = ($request->ipk >= 2.5 && $request->total_sks_d <= 6 && !$request->has_e);
+
+        Transcript::create([
+            'nim' => $request->nim,
+            'nama_mahasiswa' => $request->nama_mahasiswa,
+            'ipk' => $request->ipk,
+            'total_sks_d' => $request->total_sks_d,
+            'has_e' => $request->has_e,
+            'eligible' => $eligible,
+        ]);
+
+        return redirect()->route('transkrip.index')->with('success', 'Data transkrip berhasil ditambahkan.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $transkrip = Transcript::findOrFail($id);
+        return view('transkrip.show', compact('transkrip'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $transkrip = Transcript::findOrFail($id);
+        return view('transkrip.edit', compact('transkrip'));
     }
 
 public function analyze(Request $req)
@@ -74,12 +132,101 @@ public function analyze(Request $req)
             ]
         );
 
-        return redirect()->route('transkrip_result')->with('success', 'Hasil analisa tersimpan.');
+        return redirect()->route('transkrip.index')->with('success', 'Hasil analisa tersimpan.');
     }
 
-    public function results()
+    public function saveMultiple(Request $request)
     {
-        $data = Transcript::latest()->get();
-        return view('transkrip_result', compact('data'));
+        $entries = $request->input('entries', []);
+
+        if (empty($entries)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang disimpan.');
+        }
+
+        $savedCount = 0;
+        $errors = [];
+
+        foreach ($entries as $entry) {
+            try {
+                // Validasi data entry
+                if (empty($entry['nim']) || empty($entry['nama_mahasiswa'])) {
+                    continue;
+                }
+
+                Transcript::updateOrCreate(
+                    ['nim' => $entry['nim']], // jika sudah ada → update
+                    [
+                        'nama_mahasiswa' => $entry['nama_mahasiswa'],
+                        'ipk' => $entry['ipk'] ?? 0,
+                        'total_sks_d' => $entry['total_sks_d'] ?? 0,
+                        'has_e' => $entry['has_e'] ?? 0,
+                        'eligible' => $entry['eligible'] ?? 0,
+                    ]
+                );
+                $savedCount++;
+            } catch (\Exception $e) {
+                $errors[] = "Error menyimpan NIM {$entry['nim']}: " . $e->getMessage();
+            }
+        }
+
+        if ($savedCount > 0) {
+            $message = "Berhasil menyimpan {$savedCount} data transkrip.";
+            if (!empty($errors)) {
+                $message .= " Namun ada beberapa error: " . implode(', ', $errors);
+            }
+            return redirect()->route('transkrip.index')->with('success', $message);
+        } else {
+            return redirect()->back()->with('error', 'Gagal menyimpan data. ' . implode(', ', $errors));
+        }
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        $transkrip = Transcript::findOrFail($id);
+
+        $request->validate([
+            'nim' => 'required|unique:transcripts,nim,' . $id,
+            'nama_mahasiswa' => 'required',
+            'ipk' => 'required|numeric|min:0|max:4',
+            'total_sks_d' => 'required|integer|min:0',
+            'has_e' => 'required|boolean',
+        ]);
+
+        // Hitung kelayakan
+        $eligible = ($request->ipk >= 2.5 && $request->total_sks_d <= 6 && !$request->has_e);
+
+        $transkrip->update([
+            'nim' => $request->nim,
+            'nama_mahasiswa' => $request->nama_mahasiswa,
+            'ipk' => $request->ipk,
+            'total_sks_d' => $request->total_sks_d,
+            'has_e' => $request->has_e,
+            'eligible' => $eligible,
+        ]);
+
+        return redirect()->route('transkrip.index')->with('success', 'Data transkrip berhasil diperbarui.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $transkrip = Transcript::findOrFail($id);
+        $transkrip->delete();
+
+        return redirect()->route('transkrip.index')->with('success', 'Data transkrip berhasil dihapus.');
+    }
+
+    /**
+     * Analyze transcript from pasted text
+     */
+    public function analyzeTranscript()
+    {
+        return view('transkrip.analyze');
     }
 }

@@ -3,43 +3,90 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataDosenPembimbing;
+use App\Models\Mahasiswa;
+use App\Models\Dosen;
 use Illuminate\Http\Request;
 
 class DataDosenPembimbingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = DataDosenPembimbing::all();
-        // sesuai folder dan nama file kamu sekarang
+        $query = DataDosenPembimbing::with('mahasiswa');
+
+        if ($request->filled('search')) {
+            $query->where('nama', 'LIKE', '%' . $request->search . '%')
+                  ->orWhere('NIP', 'LIKE', '%' . $request->search . '%');
+        }
+
+        $data = $query->get();
+
         return view('datadosenpembimbing.datadosenpembimbing', compact('data'));
     }
 
     public function create()
     {
-        // sesuai folder dan nama file kamu sekarang
-        return view('datadosenpembimbing.tambahdatadosenpembimbing');
+        $mahasiswa = Mahasiswa::orderBy('nama')->get();
+        return view('datadosenpembimbing.tambahdatadosenpembimbing', compact('mahasiswa'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'NIP'   => 'required|unique:dosen_pembimbing,NIP',
-            'nama'  => 'required',
-            'email' => 'required|email|unique:dosen_pembimbing,email'
+            'NIP'   => 'required|digits:18',
+            'nama'  => 'required|string|max:100',
+            'email' => 'nullable|email',
+            'no_hp' => ['nullable','string','max:30'],
+            'nim'   => 'nullable|array',
+            'nim.*' => 'nullable|exists:mahasiswa,nim',
         ]);
 
-        DataDosenPembimbing::create($request->all());
+        // 1) pastikan ada record di tabel dosen (master)
+        $dosen = Dosen::where('nip', $request->NIP)->first();
 
-        // gunakan nama route sesuai resource di web.php
+        if (!$dosen) {
+            $dosen = Dosen::create([
+                'nip' => $request->NIP,
+                'nama' => $request->nama,
+                'email' => $request->email ?? null,
+                'no_hp' => $request->no_hp ?? null,
+            ]);
+        } else {
+            // sinkron data dosen master apabila perlu
+            $dosen->update([
+                'nama' => $request->nama,
+                'email' => $request->email ?? $dosen->email,
+                'no_hp' => $request->no_hp ?? $dosen->no_hp,
+            ]);
+        }
+
+        // 2) buat record dosen_pembimbing dan simpan id_dosen (FK)
+        $dosenPembimbing = DataDosenPembimbing::create([
+            'id_dosen' => $dosen->id_dosen,
+            'NIP' => $request->NIP,
+            'nama' => $request->nama,
+            'email' => $request->email ?? null,
+            'no_hp' => $request->no_hp ?? null,
+            'id_user' => $request->input('id_user', null),
+        ]);
+
+        // 3) pasang relasi mahasiswa -> id_pembimbing
+        if ($request->filled('nim')) {
+            foreach ($request->nim as $nim) {
+                if ($nim) {
+                    Mahasiswa::where('nim', $nim)->update(['id_pembimbing' => $dosenPembimbing->id_pembimbing]);
+                }
+            }
+        }
+
         return redirect()->route('datadosenpembimbing.index')
-                         ->with('success','Data berhasil ditambahkan');
+            ->with('success', 'Data dosen pembimbing berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $item = DataDosenPembimbing::findOrFail($id);
-        // sesuai folder dan nama file kamu sekarang
-        return view('datadosenpembimbing.editdatadosenpembimbing', compact('item'));
+        $item = DataDosenPembimbing::with('mahasiswa')->findOrFail($id);
+        $mahasiswa = Mahasiswa::orderBy('nama')->get();
+        return view('datadosenpembimbing.editdatadosenpembimbing', compact('item', 'mahasiswa'));
     }
 
     public function update(Request $request, $id)
@@ -47,23 +94,70 @@ class DataDosenPembimbingController extends Controller
         $item = DataDosenPembimbing::findOrFail($id);
 
         $request->validate([
-            'nama'  => 'required',
-            // abaikan email yang sekarang dipakai oleh id ini
-            'email' => 'required|email|unique:dosen_pembimbing,email,' . $id . ',id_pembimbing'
+            'NIP'   => 'required|digits:18',
+            'nama'  => 'required|string|max:100',
+            'email' => 'nullable|email',
+            'no_hp' => ['nullable','string','max:30'],
+            'nim'   => 'nullable|array',
+            'nim.*' => 'nullable|exists:mahasiswa,nim',
         ]);
 
-        $item->update($request->all());
+        // sinkron/mencari dosen master
+        $dosen = Dosen::where('nip', $request->NIP)->first();
+        if (!$dosen) {
+            $dosen = Dosen::create([
+                'nip' => $request->NIP,
+                'nama' => $request->nama,
+                'email' => $request->email ?? null,
+                'no_hp' => $request->no_hp ?? null,
+            ]);
+        } else {
+            $dosen->update([
+                'nama' => $request->nama,
+                'email' => $request->email ?? $dosen->email,
+                'no_hp' => $request->no_hp ?? $dosen->no_hp,
+            ]);
+        }
+
+        // update dosen_pembimbing (simpan id_dosen)
+        $item->update([
+            'id_dosen' => $dosen->id_dosen,
+            'NIP' => $request->NIP,
+            'nama' => $request->nama,
+            'email' => $request->email ?? null,
+            'no_hp' => $request->no_hp ?? null,
+        ]);
+
+        // reset mahasiswa yang sebelumnya, lalu pasang yg baru
+        Mahasiswa::where('id_pembimbing', $item->id_pembimbing)->update(['id_pembimbing' => null]);
+
+        if ($request->filled('nim')) {
+            foreach ($request->nim as $nim) {
+                if ($nim) {
+                    Mahasiswa::where('nim', $nim)->update(['id_pembimbing' => $item->id_pembimbing]);
+                }
+            }
+        }
 
         return redirect()->route('datadosenpembimbing.index')
-                         ->with('success','Data berhasil diupdate');
+            ->with('success', 'Data dosen pembimbing berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $item = DataDosenPembimbing::findOrFail($id);
+        Mahasiswa::where('id_pembimbing', $item->id_pembimbing)->update(['id_pembimbing' => null]);
         $item->delete();
 
-        return redirect()->route('datadosenpembimbing.index')
-                         ->with('success','Data berhasil dihapus');
+        return redirect()->route('datadosenpembimbing.index')->with('success', 'Data dosen pembimbing berhasil dihapus.');
+    }
+
+    // optional AJAX cek nip
+    public function checkNip(Request $request)
+    {
+        $nip = $request->query('NIP') ?? $request->NIP ?? null;
+        if (!$nip) return response()->json(['exists' => false]);
+        $exists = DataDosenPembimbing::where('NIP', $nip)->exists();
+        return response()->json(['exists' => $exists]);
     }
 }

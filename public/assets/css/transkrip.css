@@ -1,0 +1,404 @@
+/* ============================================
+   TRANSKRIP KELAYAKAN PKL - SPECIFIC STYLES
+   ============================================ */
+
+/* --- Transcript Entry Styling --- */
+.transcript-entry {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    transition: all 0.3s ease;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.transcript-entry:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary-blue);
+}
+
+.transcript-entry h4 {
+    color: var(--color-primary-blue);
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+}
+
+.transcript-entry > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+}
+
+.transcript-entry > div > div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.transcript-entry label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    font-size: 0.9em;
+}
+
+.transcript-entry .form-control {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9em;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.transcript-entry .form-control:focus {
+    outline: none;
+    border-color: var(--color-primary-blue);
+    box-shadow: 0 0 0 3px rgba(91, 138, 210, 0.1);
+}
+
+.transcript-entry input[type="text"],
+.transcript-entry input[type="number"],
+.transcript-entry select {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#addEntryBtn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95em;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#addEntryBtn:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#addEntryBtn i {
+    font-size: 1em;
+}
+
+/* --- Transcript Entry Header --- */
+.transcript-entry > div:first-child {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    grid-column: 1 / -1;
+}
+
+.transcript-entry .btn-danger.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85em;
+}
+
+/* --- Tutorial Card --- */
+.tutorial-card {
+    background: #fff9e6;
+    border-left: 4px solid #ffc107;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.tutorial-card h3 {
+    color: #856404;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2em;
+}
+
+.tutorial-card ol {
+    color: #856404;
+    line-height: 1.8;
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.tutorial-card ol li {
+    margin-bottom: 10px;
+}
+
+.tutorial-card ol li strong {
+    color: #664d03;
+}
+
+.tutorial-card ul {
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+.tutorial-card .tips-box {
+    background: white;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+    border: 1px solid #ffc107;
+}
+
+/* --- Transkrip Status Badge --- */
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.status-layak {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-tidak-layak {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* --- Transkrip Detail Row --- */
+.detail-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border-left: 4px solid #007bff;
+}
+
+.detail-item strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #495057;
+    font-size: 14px;
+}
+
+.detail-item span {
+    display: block;
+    font-size: 16px;
+    color: #212529;
+    font-weight: 500;
+}
+
+.nilai-display {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: #007bff !important;
+}
+
+/* --- Transkrip Form Styling --- */
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.875em;
+    color: #6c757d;
+}
+
+/* --- Transkrip Kelayakan Box --- */
+#keterangan_kelayakan {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.8;
+}
+
+/* --- Transkrip Analysis Result --- */
+.alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+#result, #saveForm {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.alert-info strong {
+    font-weight: 600;
+}
+
+/* --- Paste Area Styling --- */
+#pasteArea {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+#pasteArea:focus {
+    outline: none;
+    border-color: var(--color-primary-blue);
+    border-style: solid;
+    box-shadow: 0 0 0 3px rgba(91, 138, 210, 0.1);
+}
+
+#preview {
+    margin: 20px 0;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+#preview table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    table-layout: auto;
+}
+
+#preview table th,
+#preview table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#preview table th {
+    background: var(--color-primary-blue);
+    color: white;
+    font-weight: 600;
+}
+
+#preview table td[contenteditable="true"] {
+    background: #fffef0;
+    cursor: text;
+}
+
+#preview table td[contenteditable="true"]:hover {
+    background: #fff9c4;
+}
+
+/* --- Transkrip Button Styling --- */
+#analyzeBtn {
+    background-color: var(--color-primary-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 150px;
+}
+
+#analyzeBtn:hover {
+    background-color: #4a7bc4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#analyzeBtn:active {
+    transform: translateY(0);
+}
+
+/* --- Save Form Button --- */
+#saveForm button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#saveForm button[type="submit"]:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Responsive Transkrip --- */
+@media (max-width: 768px) {
+    .transcript-entry {
+        padding: 12px;
+    }
+
+    .transcript-entry > div {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .detail-row {
+        grid-template-columns: 1fr;
+    }
+
+    #pasteArea {
+        font-size: 0.85em;
+    }
+
+    #analyzeBtn {
+        width: 100%;
+        max-width: none;
+        justify-content: center;
+    }
+
+    .tutorial-card {
+        padding: 15px;
+    }
+
+    .tutorial-card h3 {
+        font-size: 1.1em;
+    }
+
+    .tutorial-card ol,
+    .tutorial-card ul {
+        font-size: 0.9em;
+        padding-left: 15px;
+    }
+}
