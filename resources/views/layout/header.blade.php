@@ -62,11 +62,6 @@
                 <span class="text-link">Ahmad Khairi</span>
                 
                 <div class="avatar">
-                    {{-- 
-                      PERUBAHAN DI SINI:
-                      Link 'ibb.co' diganti dengan path gambar default 
-                      dari file profile.blade.php Anda
-                    --}}
                     <img src="{{ asset('storage/avatars/default.png') }}" alt="User Avatar">
                 </div>
             </div>

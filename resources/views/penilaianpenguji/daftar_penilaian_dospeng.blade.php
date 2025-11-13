@@ -16,8 +16,8 @@
                     <i class="fa fa-clipboard me-2"></i> Daftar Penilaian Dosen Penguji
                 </h4>
                 <a href="{{ route('penilaian-penguji.create') }}" class="btn btn-light btn-sm text-primary fw-bold">
-                    <i class="fa fa-plus me-1"></i> Tambah Penilaian
-                </a>
+    <i class="fa fa-plus me-1"></i> Tambah Penilaian
+</a>
             </div>
 
             <div class="card-body p-4">
@@ -67,10 +67,10 @@
                                 <td>{{ $p->nilai_akhir }}</td>
                                 <td>{{ $p->tanggal_ujian }}</td>
                                 <td>
-                                    <a href="{{ route('penilaian.edit', $p->id) }}" class="btn btn-warning btn-sm">
+                                    <a href="{{ route('penilaian-penguji.edit', $p->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('penilaian.destroy', $p->id) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('penilaian-penguji.destroy', $p->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm"

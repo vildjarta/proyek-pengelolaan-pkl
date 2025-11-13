@@ -10,10 +10,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        /* Hanya styling area konten agar tidak menimpa sidebar/header bawaan */
         .main-content {
-            margin-left: 250px; /* menyesuaikan lebar sidebar kamu */
-            margin-top: 80px;   /* menyesuaikan tinggi header kamu */
+            margin-left: 250px;
+            margin-top: 80px;
             padding: 20px;
             transition: margin-left 0.3s;
         }
@@ -36,7 +35,7 @@
 </head>
 <body>
 
-    {{-- Tarik header & sidebar dari file layout --}}
+    {{-- Tarik header & sidebar --}}
     @include('layout.header')
     @include('layout.sidebar')
 
@@ -53,8 +52,13 @@
             </div>
 
             <div class="card-body p-3">
+                {{-- ALERT jika ada pesan sukses --}}
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
                 <table class="table table-bordered table-hover align-middle text-center">
-                    <thead class="table-dark">
+                    <thead class="table-light">
                         <tr>
                             <th>NIM</th>
                             <th>Nama</th>
@@ -63,19 +67,21 @@
                             <th>Prodi</th>
                             <th>Angkatan</th>
                             <th>IPK</th>
+                            <th>Perusahaan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($mahasiswa as $m)
+                        @forelse ($mahasiswa as $m)
                         <tr>
                             <td>{{ $m->nim }}</td>
                             <td>{{ $m->nama }}</td>
                             <td>{{ $m->email }}</td>
-                            <td>{{ $m->no_hp }}</td>
+                            <td>{{ $m->no_hp ?? '-' }}</td>
                             <td>{{ $m->prodi }}</td>
                             <td>{{ $m->angkatan }}</td>
-                            <td>{{ $m->ipk }}</td>
+                            <td>{{ $m->ipk ?? '-' }}</td>
+                            <td>{{ $m->perusahaan ?? '-' }}</td>
                             <td>
                                 <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-edit"></i>
@@ -90,7 +96,11 @@
                                 </form>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">Belum ada data mahasiswa.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

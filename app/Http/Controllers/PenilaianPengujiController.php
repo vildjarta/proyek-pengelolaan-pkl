@@ -26,14 +26,14 @@ class PenilaianPengujiController extends Controller
             'id_penguji' => 'required|exists:dosen_penguji,id_penguji',
             'nama_mahasiswa' => 'required|string|max:100',
             'presentasi' => 'required|numeric|min:0|max:100',
-            'materi' => 'required|numeric|min:0|max:100',
+            'materi' => 'required|numeric|min:0|max:100', 
             'hasil' => 'required|numeric|min:0|max:100',
             'objektif' => 'required|numeric|min:0|max:100',
             'laporan' => 'required|numeric|min:0|max:100',
             'tanggal_ujian' => 'required|date',
         ]);
 
-        // 🔹 Hitung total dan nilai akhir
+        // Hitung total dan nilai akhir
         $total = ($request->presentasi * 0.10) +
                  ($request->materi * 0.15) +
                  ($request->hasil * 0.40) +
@@ -43,11 +43,11 @@ class PenilaianPengujiController extends Controller
         $validated['total_nilai'] = round($total, 2);
         $validated['nilai_akhir'] = round($total * 0.20, 2);
 
-        // 🔹 Simpan ke database
+        // Simpan ke database
         PenilaianPenguji::create($validated);
 
-        // 🔹 Redirect ke halaman daftar + tampilkan pesan sukses
-        return redirect()->route('penilaian.index')
+        // Redirect ke halaman daftar + tampilkan pesan sukses
+        return redirect()->route('penilaian-penguji.index')
                          ->with('success', 'Data penilaian berhasil ditambahkan!');
     }
 
@@ -55,7 +55,7 @@ class PenilaianPengujiController extends Controller
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
         $dosen = dosen_penguji::all();
-        return view('penilaianpenguji.edit_penilaian_dospeng', compact('penilaian'));
+        return view('penilaianpenguji.edit_penilaian_dospeng', compact('penilaian', 'dosen'));
     }
 
     public function update(Request $request, $id)
@@ -85,7 +85,7 @@ class PenilaianPengujiController extends Controller
 
         $penilaian->update($validated);
 
-        return redirect()->route('penilaian.index')
+        return redirect()->route('penilaian-penguji.index')
                          ->with('success', 'Data penilaian berhasil diperbarui!');
     }
 
@@ -94,7 +94,7 @@ class PenilaianPengujiController extends Controller
         $penilaian = PenilaianPenguji::findOrFail($id);
         $penilaian->delete();
 
-        return redirect()->route('penilaian.index')
+        return redirect()->route('penilaian-penguji.index')
                          ->with('success', 'Data penilaian berhasil dihapus!');
     }
 }
