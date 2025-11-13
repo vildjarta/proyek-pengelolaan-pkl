@@ -59,7 +59,7 @@
         <div class="user-profile-wrapper">
             <div class="user-info">
                 
-                <span class="text-link">Ahmad Khairi</span>
+                <span class="text-link">nama user</span>
                 
                 <div class="avatar">
                     <img src="{{ asset('storage/avatars/default.png') }}" alt="User Avatar">

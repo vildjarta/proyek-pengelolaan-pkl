@@ -28,24 +28,24 @@
 
     /* JADIKAN .profile-content SEBAGAI FLEX CONTAINER VERTIKAL */
     .profile-content {
-        width: 100%; /* (dari jawaban saya sebelumnya) */
-        
-        /* -- KODE TAMBAHAN UNTUK FIX TINGGI -- */
-        display: flex;          /* <-- KUNCI 1: Jadikan flex container */
-        flex-direction: column; /* <-- KUNCI 2: Arah vertikal */
-        /* flex: 1; sudah ada di profile.css, jadi ini akan stretch */
+         width: 100%; /* (dari jawaban saya sebelumnya) */
+         
+         /* -- KODE TAMBAHAN UNTUK FIX TINGGI -- */
+         display: flex;          /* <-- KUNCI 1: Jadikan flex container */
+         flex-direction: column; /* <-- KUNCI 2: Arah vertikal */
+         /* flex: 1; sudah ada di profile.css, jadi ini akan stretch */
     }
 
     /* BUAT .profile-card (area putih) MENGISI .profile-content */
     .profile-card {
-        width: 100%;
-        box-sizing: border-box; 
-        
-        /* -- KODE TAMBAHAN UNTUK FIX TINGGI -- */
-        flex: 1; /* <-- KUNCI 3: Buat card memanjang ke bawah */
-        
-        /* Override max-width dari profile.css */
-        max-width: none !important; 
+         width: 100%;
+         box-sizing: border-box; 
+         
+         /* -- KODE TAMBAHAN UNTUK FIX TINGGI -- */
+         flex: 1; /* <-- KUNCI 3: Buat card memanjang ke bawah */
+         
+         /* Override max-width dari profile.css */
+         max-width: none !important; 
     }
 </style>
 
@@ -132,9 +132,9 @@
                 </div>
                 
                 {{-- 
-                  Script ini sebaiknya dipindah ke layout global (misal: app.blade.php) 
-                  agar tidak ter-load di setiap halaman. 
-                  Tapi tidak masalah tetap di sini, script toggle sudah benar.
+                    Script ini sebaiknya dipindah ke layout global (misal: app.blade.php) 
+                    agar tidak ter-load di setiap halaman. 
+                    Tapi tidak masalah tetap di sini, script toggle sudah benar.
                 --}}
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
@@ -166,8 +166,6 @@
             </div>
 
     </main>
-</div>
-
 <script>
     function previewImage(event) {
         if (event.target.files && event.target.files[0]) {
