@@ -15,13 +15,13 @@
                 <h4 class="mb-0 fw-bold">
                     <i class="fa fa-edit me-2"></i> Edit Penilaian Dosen Penguji
                 </h4>
-                <a href="{{ route('penilaian.index') }}" class="btn btn-light border fw-bold text-warning">
+                <a href="{{ route('penilaian-penguji.index') }}" class="btn btn-light border fw-bold text-warning">
                     <i class="fa fa-arrow-left me-1"></i> Kembali
                 </a>
             </div>
 
             <div class="card-body p-4">
-                <form action="{{ route('penilaian.update', $penilaian->id) }}" method="POST" id="penilaianForm">
+                <form action="{{ route('penilaian-penguji.update', $penilaian->id) }}" method="POST" id="penilaianForm">
                     @csrf
                     @method('PUT')
 
