@@ -11,24 +11,23 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DosenController;
 
-Route::resource('jadwal', JadwalBimbinganController::class);
-
-// Route dasar menggunakan Route::view untuk efisiensi
+// ========================================
+// AUTH & BASIC PAGES
+// ========================================
 Route::view('/', 'login')->name('login');
-
-// Halaman registrasi akun baru
 Route::view('/registrasi', 'registrasi')->name('registrasi');
-
-// Halaman utama (setelah login)
 Route::view('/home', 'home')->name('home');
-
-// Halaman tentang aplikasi
 Route::view('/about', 'about')->name('about');
-
-// Halaman menu utama pengguna
 Route::view('/menu', 'menu')->name('menu');
 
+// ========================================
+// PROFILE
+// ========================================
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 // Halaman profil pengguna
 Route::view('/profile', 'profile.profile')->name('profile');
 
@@ -44,95 +43,71 @@ Route::resource('ratingdanreview', RatingDanReviewController::class)->names([
     'destroy' => 'ratingdanreview.destroy',
 ]);
 
-// CRUD Nilai Mahasiswa
-Route::resource('nilai', NilaiController::class);
+// ========================================
+// MAHASISWA (CRUD)
+// ========================================
+Route::resource('mahasiswa', MahasiswaController::class);
+Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM']);
+Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM']);
 
-// return control('perusahaan');
-Route::resource('/perusahaan', PerusahaanController::class);
+// ========================================
+// DOSEN (CRUD)
+// ========================================
+Route::resource('dosen', DosenController::class);
+Route::get('/cek-dosen-suggest', [DosenController::class, 'suggestNIP']);
+Route::get('/cek-dosen/{nip}', [DosenController::class, 'cekNIP']);
 
-// Halaman utama -> login
-Route::get('/', function () {
-    return view('login');
-});
-
-// Halaman registrasi
-Route::get('/registrasi', function () {
-    return view('registrasi');
-});
-
-// Halaman home
-Route::get('/home', function () {
-    return view('home');
-});
-
-// Halaman about
-Route::get('/about', function () {
-    return view('about');
-});
-
-// Halaman menu
-Route::get('/menu', function () {
-    return view('menu');
-});
-
-// Halaman profile
-Route::get('/profile', function () {
-    return view('profile.profile');
-    // folder.profile
-});
-
-// Resource untuk perusahaan (CRUD otomatis)
-Route::resource('/perusahaan', PerusahaanController::class);
-
-// RATING & REVIEW PERUSAHAAN
-// Menampilkan halaman ranking semua perusahaan berdasarkan rating
-Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])
-    ->name('ratingperusahaan');
-
-// Menampilkan detail rating dan review untuk 1 perusahaan tertentu
-Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])
-    ->name('lihatratingdanreview');
-
-// Menampilkan form tambah review baru untuk perusahaan tertentu
-Route::get('/ratingperusahaan/tambah/{id_perusahaan}', [RatingDanReviewController::class, 'create'])
-    ->name('tambahratingdanreview');
-
-// Menyimpan data review baru ke database
-Route::post('/ratingperusahaan/store', [RatingDanReviewController::class, 'store'])
-    ->name('ratingdanreview.store');
-
-// Menampilkan form edit review berdasarkan id review
-Route::get('/ratingperusahaan/edit/{id_review}', [RatingDanReviewController::class, 'edit'])
-    ->name('ratingdanreview.edit');
-
-// Memperbarui data review yang telah diedit
-Route::put('/ratingperusahaan/update/{id_review}', [RatingDanReviewController::class, 'update'])
-    ->name('ratingdanreview.update');
-
-// Menghapus review dari database
-Route::delete('/ratingperusahaan/delete/{id_review}', [RatingDanReviewController::class, 'destroy'])
-    ->name('ratingdanreview.destroy');
-
-
+// ========================================
 // DATA DOSEN PEMBIMBING (CRUD)
-// 🎓 DATA DOSEN PEMBIMBING (CRUD)
+// ========================================
 Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+Route::get('/cek-nip', [DataDosenPembimbingController::class, 'checkNip'])->name('datadosenpembimbing.checkNip');
 
+// ========================================
+// DOSEN PENGUJI (CRUD)
+// ========================================
+Route::resource('dosen_penguji', DosenPengujiController::class);
+Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
 
-// 🗓️ JADWAL BIMBINGAN (CRUD) - Ini adalah route yang benar
-Route::resource('jadwal', JadwalBimbinganController::class);
-
-
+// ========================================
+// PERUSAHAAN (CRUD)
+// ========================================
 Route::resource('perusahaan', PerusahaanController::class);
 
+// ========================================
+// RATING & REVIEW PERUSAHAAN
+// ========================================
+Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
+Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])->name('lihatratingdanreview');
+Route::get('/ratingperusahaan/tambah/{id_perusahaan}', [RatingDanReviewController::class, 'create'])->name('tambahratingdanreview');
+Route::post('/ratingperusahaan/store', [RatingDanReviewController::class, 'store'])->name('ratingdanreview.store');
+Route::get('/ratingperusahaan/edit/{id_review}', [RatingDanReviewController::class, 'edit'])->name('ratingdanreview.edit');
+Route::put('/ratingperusahaan/update/{id_review}', [RatingDanReviewController::class, 'update'])->name('ratingdanreview.update');
+Route::delete('/ratingperusahaan/delete/{id_review}', [RatingDanReviewController::class, 'destroy'])->name('ratingdanreview.destroy');
+
+// ========================================
+// JADWAL BIMBINGAN (CRUD)
+// ========================================
+Route::resource('jadwal', JadwalBimbinganController::class);
+
+// ========================================
+// PENILAIAN DOSEN PEMBIMBING (CRUD)
+// ========================================
 Route::resource('penilaian', PenilaianDospemController::class);
 
-// 🧑‍🎓 DATA MAHASISWA (CRUD)
-Route::resource('mahasiswa', MahasiswaController::class);
-
-
+// ========================================
+// PENILAIAN PENGUJI (CRUD)
+// ========================================
 Route::resource('penilaian-penguji', PenilaianPengujiController::class);
 
+// ========================================
+// NILAI MAHASISWA (CRUD)
+// ========================================
+Route::resource('nilai', NilaiController::class);
+
+// ========================================
+// TRANSKRIP (CRUD & ANALYSIS)
+// ========================================
 
 // 🏢 DATA PERUSAHAAN (CRUD)
 Route::resource('perusahaan', PerusahaanController::class);
@@ -161,5 +136,6 @@ Route::resource('transkrip', TranscriptController::class);
 Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
 Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
 Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
+
 Route::post('/transkrip/upload-pdf', [TranscriptController::class, 'uploadPdf'])
      ->name('transkrip.uploadPdf');
