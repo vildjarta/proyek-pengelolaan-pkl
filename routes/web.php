@@ -24,6 +24,12 @@ Route::view('/about', 'about')->name('about');
 Route::view('/menu', 'menu')->name('menu');
 
 // ========================================
+// GOOGLE SSO
+// ========================================
+Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback']);
+
+// ========================================
 // PROFILE
 // ========================================
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
