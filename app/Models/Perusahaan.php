@@ -34,4 +34,12 @@ class Perusahaan extends Model
     {
         return $this->hasMany(RatingDanReview::class, 'id_perusahaan', 'id_perusahaan');
     }
+
+    /** 
+     * 🔗 relasi ke kriteria
+    */
+    public function kriteria()
+    {
+        return $this->hasOne(Kriteria::class, 'id_perusahaan', 'id_perusahaan');
+    }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PerusahaanController;
+use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\JadwalBimbinganController;
 use App\Http\Controllers\PenilaianDospemController;
 use App\Http\Controllers\RatingDanReviewController;
@@ -150,6 +151,7 @@ Route::resource('penilaian-penguji', PenilaianPengujiController::class);
 
 // 🏢 DATA PERUSAHAAN (CRUD)
 Route::resource('perusahaan', PerusahaanController::class);
+Route::resource('Kriteria', KriteriaController::class);
 
 
 // 💯 PENILAIAN
