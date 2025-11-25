@@ -106,7 +106,7 @@
                         <label for="email" class="form-label">Email Pengguna</label>
                         <input type="email" class="form-control" id="email" name="email" required autofocus
                             placeholder="nama@email.com" value="{{ old('email') }}">
-                        
+
                         @error('email')
                             <div class="text-danger mt-1" style="font-size: 0.9rem;">
                                 {{ $message }}
