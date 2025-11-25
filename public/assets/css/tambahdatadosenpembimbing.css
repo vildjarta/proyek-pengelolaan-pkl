@@ -16,9 +16,9 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
 .remove-mahasiswa i{ margin-right:6px; }
 
 /* suggestion dropdown */
-.nim-suggest{ position:absolute; z-index:2500; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-height:220px; overflow-y:auto; width:100%; padding:4px 0; margin-top:6px; }
-.nim-suggest .item{ padding:8px 12px; cursor:pointer; font-size:14px; }
-.nim-suggest .item:hover, .nim-suggest .item.active{ background:#f1f7ff; }
+.nim-suggest, .suggest-wrap{ position:absolute; left:0; right:0; z-index:2500; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-height:220px; overflow-y:auto; width:100%; padding:4px 0; margin-top:6px; display:none; }
+.nim-suggest .item, .suggest-wrap .item{ padding:8px 12px; cursor:pointer; font-size:14px; }
+.nim-suggest .item:hover, .nim-suggest .item.active, .suggest-wrap .item:hover, .suggest-wrap .item.active{ background:#f1f7ff; }
 
 /* buttons */
 .btn-primary{ background:#5b8ad2; border:none; font-weight:600; }
@@ -34,34 +34,6 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
 /* responsive */
 @media (max-width:992px){ .main-wrapper{ margin-left:0; } .content-container{ padding:15px; } }
 
-/* keep layout stable: don't touch main wrapper margin (assume sidebar provided by layout) */
-    .content-container { padding: 30px 40px; max-width: 1000px; margin: 0 auto; box-sizing: border-box; }
-
-    /* suggestion dropdowns confined to the input wrapper */
-    .suggest-wrap {
-      position: absolute;
-      left: 0;
-      right: 0;
-      z-index: 2500;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      max-height: 220px;
-      overflow-y: auto;
-      display: none;
-      margin-top: 6px;
-    }
-    .suggest-wrap .item { padding: 8px 12px; cursor: pointer; }
-    .suggest-wrap .item:hover, .suggest-wrap .item.active { background: #f1f7ff; }
-
-    .form-label.required::after { content: " *"; color: red; margin-left: 4px; font-weight: 700; }
-
-    /* small responsiveness to avoid overflow from absolute elements */
-    @media (max-width: 992px) {
-      .content-container { padding: 20px; }
-    }
-
-    /* optional quick styles for valid/invalid visuals */
-    .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
-    .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
+/* optional quick styles for valid/invalid visuals */
+.is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
+.is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }

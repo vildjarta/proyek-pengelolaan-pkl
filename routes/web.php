@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-// Import Semua Controller
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
@@ -20,16 +18,21 @@ use App\Http\Controllers\DosenController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes (bersih & terstruktur)
 |--------------------------------------------------------------------------
+|
+| File ini berisi rute web aplikasi. Pastikan hanya ada SATU deklarasi
+| Route::resource('datadosenpembimbing', ...) seperti di bawah.
+|
 */
 
-// Optional: pastikan parameter resource {ratingdanreview} hanya angka
-// sehingga kata 'tambah' tidak akan tertangkap sebagai id.
 Route::pattern('ratingdanreview', '[0-9]+');
 
-
-// 1. Halaman Login (Tamu only)
+/*
+|--------------------------------------------------------------------------
+| Guest routes (unauthenticated)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('guest')->group(function () {
     Route::view('/', 'login')->name('login');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login.submit');
@@ -39,32 +42,40 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
 
-// 2. Logout (gunakan POST dari form untuk keamanan)
-Route::post('/logout', function(){
+/*
+|--------------------------------------------------------------------------
+| Logout (POST)
+|--------------------------------------------------------------------------
+*/
+Route::post('/logout', function () {
     auth()->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
 
-// Rute yang membutuhkan autentikasi
+/*
+|--------------------------------------------------------------------------
+| Authenticated routes (all logged-in users)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
 
-    // === RUTE UMUM (Semua User Login) ===
+    // Static pages
     Route::view('/home', 'home')->name('home');
     Route::view('/about', 'about')->name('about');
     Route::view('/menu', 'menu')->name('menu');
 
-    // Profil Pengguna
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // RUTE JADWAL BIMBINGAN
+    // Jadwal (role: mahasiswa, dosen_pembimbing, admin, koordinator)
     Route::middleware(['role:mahasiswa,dosen_pembimbing,admin,koordinator'])->group(function () {
         Route::resource('jadwal', JadwalBimbinganController::class);
     });
 
-    // RUTE TRANSKRIP (Mahasiswa & Admin/Koordinator)
+    // Transkrip (role: mahasiswa, admin, koordinator)
     Route::middleware(['role:mahasiswa,admin,koordinator'])->group(function () {
         Route::resource('transkrip', TranscriptController::class);
         Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
@@ -72,62 +83,82 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
     });
 
-    // RUTE PENILAIAN PEMBIMBING (Dospem & Admin/Koordinator)
+    // Penilaian pembimbing (role: dosen_pembimbing, admin, koordinator)
     Route::middleware(['role:dosen_pembimbing,admin,koordinator'])->group(function () {
         Route::resource('penilaian', PenilaianDospemController::class);
     });
 
-    // RUTE PENILAIAN PENGUJI (Penguji & Admin/Koordinator)
+    // Penilaian penguji (role: dosen_penguji, admin, koordinator)
     Route::middleware(['role:dosen_penguji,admin,koordinator'])->group(function () {
         Route::resource('penilaian-penguji', PenilaianPengujiController::class);
     });
 
-    // RUTE ADMIN & KOORDINATOR (Data Master)
-    Route::middleware(['role:admin,koordinator'])->group(function () {
-        Route::resource('perusahaan', PerusahaanController::class);
-        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
-        Route::resource('mahasiswa', MahasiswaController::class);
-
-        // Dosen Penguji & Search
-        Route::resource('dosen_penguji', DosenPengujiController::class);
-        Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
-
-        // Nilai
-        Route::resource('nilai', NilaiController::class);
-    });
-
-    // RUTE RATING & REVIEW (Akses Gabungan)
+    // Rating & review (gabungan roles)
     Route::middleware(['role:mahasiswa,dosen_pembimbing,admin,koordinator'])->group(function () {
-        // Halaman Ranking/Utama Rating
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 
-        // Halaman detail per perusahaan (lihat semua review)
         Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])
             ->name('lihatratingdanreview')
             ->whereNumber('id_perusahaan');
 
-        // Route manual untuk menambah review PERUSAHAAN (HARUS ada {id_perusahaan})
-        // PENTING: letakkan SEBELUM Route::resource agar tidak tertangkap oleh resource param route
+        // manual create per perusahaan (harus disediakan id_perusahaan)
         Route::get('/ratingdanreview/tambah/{id_perusahaan}', [RatingDanReviewController::class, 'create'])
             ->name('tambahratingdanreview')
             ->whereNumber('id_perusahaan');
 
-        // Fallback aman untuk /ratingdanreview/tambah tanpa id -> redirect ke ranking
+        // fallback jika akses tanpa id
         Route::get('/ratingdanreview/tambah', function () {
             return redirect()->route('ratingperusahaan')
                 ->with('error', 'Silakan pilih perusahaan terlebih dahulu untuk menambahkan review.');
         })->name('tambahratingdanreview.fallback');
 
-        // Resource untuk store/edit/update/destroy — kecualikan create & index agar tidak konflik
+        // resource except create & index & show (agar tidak bentrok)
         Route::resource('ratingdanreview', RatingDanReviewController::class)
             ->except(['show', 'index', 'create']);
     });
 
-    // AJAX Cek NIM
-    Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM']);
+    /*
+    |----------------------------------------------------------------------
+    | AJAX endpoints (otentikasi diperlukan)
+    |----------------------------------------------------------------------
+    */
+    // Mahasiswa
+    Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM'])->name('ajax.mahasiswa.suggest');
+    Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM'])->name('ajax.mahasiswa.byNim');
+
+    // Dosen (autocomplete / lookup)
+    Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
+    Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
 });
 
-// sesuaikan group/middleware seperti file web.php-mu
+/*
+|--------------------------------------------------------------------------
+| Admin & Koordinator: Data master
+|--------------------------------------------------------------------------
+| Pastikan user yang menguji memiliki role admin/koordinator untuk mengakses.
+| Hanya satu deklarasi resource datadosenpembimbing ada di sini.
+*/
 Route::middleware(['auth','role:admin,koordinator'])->group(function () {
+    Route::resource('perusahaan', PerusahaanController::class);
+    Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+    Route::resource('mahasiswa', MahasiswaController::class);
+
+    Route::resource('dosen_penguji', DosenPengujiController::class);
+    Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+
+    Route::resource('nilai', NilaiController::class);
     Route::resource('dosen', DosenController::class);
 });
+
+/*
+|--------------------------------------------------------------------------
+| (Optional) Debug or helper routes
+|--------------------------------------------------------------------------
+| Jangan biarkan route debug ini production — hapus jika sudah tidak diperlukan.
+*/
+// Route::get('/debug-clear-all', function () {
+//     \Artisan::call('route:clear');
+//     \Artisan::call('view:clear');
+//     \Artisan::call('cache:clear');
+//     return 'cleared';
+// });
