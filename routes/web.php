@@ -12,7 +12,26 @@ use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DosenController;
+use App\Http\Controllers\GoogleDriveController;
+use App\Http\Controllers\GoogleController;
+
+// ========== ROUTE LOGIN GOOGLE (SSO) ==========
+Route::get('/login', [GoogleController::class, 'redirectToGoogle'])->name('login'); // <--- tambahkan baris ini
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
+// ========== ROUTE GOOGLE DRIVE ==========
+Route::get('/drive/files', [GoogleDriveController::class, 'driveFiles'])
+    ->middleware('auth')
+    ->name('drive.files');
+
+// ========== LOGOUT ==========
+Route::post('logout', function(){
+    auth()->logout();
+    return redirect('/');
+})->name('logout');
+
+Route::resource('jadwal', JadwalBimbinganController::class);
 
 // ========================================
 // AUTH & BASIC PAGES
