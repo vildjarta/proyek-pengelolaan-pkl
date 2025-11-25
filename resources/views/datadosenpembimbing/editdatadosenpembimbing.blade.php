@@ -110,7 +110,7 @@
 
                   <div class="mb-3 mt-3 position-relative">
                     <label class="form-label required">NIM Mahasiswa</label>
-                    <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa (angka saja)" autocomplete="off" required maxlength="12" inputmode="numeric">
+                    <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa" autocomplete="off" required maxlength="12" inputmode="numeric">
                     <div class="suggest-wrap nim-suggest"></div>
 
                     <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">NIM tidak ditemukan.</div>
