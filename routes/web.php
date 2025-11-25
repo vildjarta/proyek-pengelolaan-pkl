@@ -16,6 +16,7 @@ use App\Http\Controllers\DosenPengujiController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,7 @@ use App\Http\Controllers\NilaiController;
 Route::middleware('guest')->group(function () {
     Route::view('/', 'login')->name('login');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login.submit');
-    
+
     // Google SSO
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
@@ -35,12 +36,11 @@ Route::middleware('guest')->group(function () {
 
 // 2. Logout
 Route::post('logout', function(){
-    auth()->logout();
+    Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect('/');
-})->name('logout');
-
+})->middleware('auth')->name('logout');
 /*
 |--------------------------------------------------------------------------
 | Rute Aplikasi (Wajib Login)
@@ -52,7 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/home', 'home')->name('home');
     Route::view('/about', 'about')->name('about');
     Route::view('/menu', 'menu')->name('menu');
-    
+
     // Profil Pengguna
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:mahasiswa,admin,koordinator'])->group(function () {
         // Transkrip
         Route::resource('transkrip', TranscriptController::class);
-        
+
         // Transkrip Analyze
         Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
         Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
@@ -92,11 +92,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
         Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
         Route::resource('mahasiswa', MahasiswaController::class);
-        
+
         // Dosen Penguji & Search
         Route::resource('dosen_penguji', DosenPengujiController::class);
         Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
-        
+
         // Nilai
         Route::resource('nilai', NilaiController::class);
     });
@@ -105,14 +105,14 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:mahasiswa,dosen_pembimbing,admin,koordinator'])->group(function () {
         // Halaman Ranking/Utama Rating
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
-        
+
         // PERBAIKAN: Mendefinisikan rute 'tambahratingdanreview' secara manual
         // Mengarah ke method create (halaman form)
         Route::get('/ratingdanreview/tambah', [RatingDanReviewController::class, 'create'])->name('tambahratingdanreview');
-        
+
         // Rute Resource standar (store, update, destroy, dll)
         Route::resource('ratingdanreview', RatingDanReviewController::class)->except(['show', 'index']);
-        
+
         // Halaman detail per perusahaan
         Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])->name('lihatratingdanreview');
     });
