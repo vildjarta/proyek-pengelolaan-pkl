@@ -16,6 +16,7 @@ use App\Http\Controllers\DosenPengujiController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\DosenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,4 +125,9 @@ Route::middleware(['auth'])->group(function () {
 
     // AJAX Cek NIM
     Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM']);
+});
+
+// sesuaikan group/middleware seperti file web.php-mu
+Route::middleware(['auth','role:admin,koordinator'])->group(function () {
+    Route::resource('dosen', DosenController::class);
 });
