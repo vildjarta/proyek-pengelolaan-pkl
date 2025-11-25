@@ -21,7 +21,8 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('mahasiswa.tambah-mahasiswa');
+        $perusahaan = \App\Models\Perusahaan::orderBy('nama')->get();
+        return view('mahasiswa.tambah-mahasiswa', compact('perusahaan'));
     }
 
     /**
@@ -84,7 +85,8 @@ class MahasiswaController extends Controller
     public function edit(string $id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
-        return view('mahasiswa.edit-mahasiswa', compact('mahasiswa'));
+        $perusahaan = \App\Models\Perusahaan::orderBy('nama')->get();
+        return view('mahasiswa.edit-mahasiswa', compact('mahasiswa', 'perusahaan'));
     }
 
     /**

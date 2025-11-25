@@ -360,10 +360,25 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="perusahaan">Perusahaan (Tempat PKL)</label>
-                        <input type="text" name="perusahaan" id="perusahaan"
-                            class="form-control @error('perusahaan') is-invalid @enderror"
-                            placeholder="Masukkan Nama Perusahaan" value="{{ old('perusahaan', $mahasiswa->perusahaan) }}">
+                        <input type="text" 
+                               name="perusahaan" 
+                               id="perusahaan"
+                               class="form-control @error('perusahaan') is-invalid @enderror"
+                               placeholder="Ketik atau pilih nama perusahaan"
+                               value="{{ old('perusahaan', $mahasiswa->perusahaan) }}"
+                               list="perusahaan-list"
+                               autocomplete="off">
+                        
+                        <datalist id="perusahaan-list">
+                            @foreach($perusahaan as $p)
+                                <option value="{{ $p->nama }}">{{ $p->nama }}</option>
+                            @endforeach
+                        </datalist>
+                        
                         @error('perusahaan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        <small style="color: #6c757d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Ketik untuk mencari atau pilih dari dropdown
+                        </small>
                     </div>
                 </div>
             </div>
