@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PerusahaanController;
 use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\PenilaianPerusahaanController;
 use App\Http\Controllers\JadwalBimbinganController;
 use App\Http\Controllers\PenilaianDospemController;
 use App\Http\Controllers\RatingDanReviewController;
@@ -151,7 +152,8 @@ Route::resource('penilaian-penguji', PenilaianPengujiController::class);
 
 // 🏢 DATA PERUSAHAAN (CRUD)
 Route::resource('perusahaan', PerusahaanController::class);
-Route::resource('Kriteria', KriteriaController::class);
+Route::resource('/kriteria', KriteriaController::class);
+Route::resource('/penilaian_perusahaan', PenilaianPerusahaanController::class);
 
 
 // 💯 PENILAIAN
@@ -182,4 +184,3 @@ Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->nam
 Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
 
 Route::resource('dosen', DosenController::class);
-

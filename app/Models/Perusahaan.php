@@ -36,10 +36,10 @@ class Perusahaan extends Model
     }
 
     /** 
-     * 🔗 relasi ke kriteria
-    */
-    public function kriteria()
+     * 🔗 relasi ke penilaian perusahaan
+     */
+    public function perusahaan()
     {
-        return $this->hasOne(Kriteria::class, 'id_perusahaan', 'id_perusahaan');
+        return $this->hasOne(Penilaian_perusahaan::class, 'id_perusahaan', 'id_perusahaan');
     }
 }

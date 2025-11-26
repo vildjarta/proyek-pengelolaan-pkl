@@ -15,14 +15,15 @@ class Kriteria extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'id_perusahaan',
-        'alternatif',
         'kriteria',
         'bobot',
     ];
 
+    /** 
+     * 🔗 relasi ke penilaian perusahaan
+     */
     public function kriteria()
     {
-        return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
+        return $this->hasOne(Penilaian_perusahaan::class, 'id_kriteria', 'id_kriteria');
     }
 }
