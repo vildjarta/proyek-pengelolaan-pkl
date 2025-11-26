@@ -14,7 +14,7 @@ class PenilaianPenguji extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'id_penguji',
+        'id_dosen',
         'nama_mahasiswa',
         'presentasi',
         'materi',
@@ -25,8 +25,9 @@ class PenilaianPenguji extends Model
         'nilai_akhir',
         'tanggal_ujian',
     ];
+    
     public function dosen()
     {
-        return $this->belongsTo(dosen_penguji::class, 'id_penguji', 'id_penguji');
+        return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
 }
