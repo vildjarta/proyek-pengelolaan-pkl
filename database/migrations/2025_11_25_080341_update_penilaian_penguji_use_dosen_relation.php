@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Hapus data yang id_dosen = 0 (data lama yang tidak valid)
+        \DB::table('penilaian_penguji')->where('id_dosen', 0)->delete();
+        
         Schema::table('penilaian_penguji', function (Blueprint $table) {
             // Cek dan hapus kolom id_penguji jika ada
             if (Schema::hasColumn('penilaian_penguji', 'id_penguji')) {
@@ -27,11 +30,16 @@ return new class extends Migration
                 $table->dropColumn('nama_dosen');
             }
             
-            // Tambah foreign key ke tabel dosen jika belum ada
+            // Jika kolom id_dosen belum ada, tambahkan
             if (!Schema::hasColumn('penilaian_penguji', 'id_dosen')) {
                 $table->unsignedBigInteger('id_dosen')->after('id');
-                $table->foreign('id_dosen')->references('id_dosen')->on('dosen')->onDelete('cascade');
             }
+        });
+        
+        // Tambah foreign key constraint dalam schema terpisah
+        Schema::table('penilaian_penguji', function (Blueprint $table) {
+            // Cek apakah foreign key sudah ada, jika belum tambahkan
+            $table->foreign('id_dosen')->references('id_dosen')->on('dosen')->onDelete('cascade');
         });
     }
 
