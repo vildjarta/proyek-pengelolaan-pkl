@@ -25,7 +25,7 @@
             margin: 0 auto;
         }
 
-        /* Form styling seperti form nilai */
+        /* Form styling seperti form edit mahasiswa */
         .form-section {
             background: #fff;
             border-radius: 12px;
@@ -47,7 +47,7 @@
             font-size: 1.3em;
         }
         
-        /* LAYOUT FORM-ROW SEPERTI FORM NILAI */
+        /* LAYOUT FORM-ROW SEPERTI FORM EDIT */
         .form-row {
             display: flex;
             flex-wrap: wrap;
@@ -270,52 +270,85 @@
             </a>
         </div>
 
-            <div class="card-body p-4">
-    {{-- Form Tambah Mahasiswa --}}
-    <form action="{{ route('mahasiswa.store') }}" method="POST">
-        @csrf
-        <div class="row g-4">
-            <div class="col-lg-6 col-md-12">
-                <label for="nim" class="form-label fw-bold">NIM</label>
-                <input type="number" name="nim" id="nim" 
-                       class="form-control" required placeholder="Masukkan NIM"
-                       value="{{ old('nim') }}">
+        <form action="{{ route('mahasiswa.store') }}" method="POST">
+            @csrf
+
+            <!-- Informasi Mahasiswa -->
+            <div class="form-section">
+                <h3><i class="fas fa-user"></i> Informasi Mahasiswa</h3>
+                
+                <!-- BARIS PERTAMA: NIM dan Nama -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nim">NIM <span class="required">*</span></label>
+                        <input type="number" name="nim" id="nim" class="form-control @error('nim') is-invalid @enderror"
+                            required placeholder="Masukkan NIM" value="{{ old('nim') }}">
+                        @error('nim') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap <span class="required">*</span></label>
+                        <input type="text" name="nama" id="nama" class="form-control @error('nama') is-invalid @enderror"
+                            required placeholder="Masukkan Nama Lengkap" value="{{ old('nama') }}">
+                        @error('nama') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <!-- BARIS KEDUA: Email dan No HP -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
+                            required placeholder="Masukkan Email" value="{{ old('email') }}">
+                        @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="no_hp">No. HP</label>
+                        <input type="number" name="no_hp" id="no_hp" class="form-control @error('no_hp') is-invalid @enderror"
+                            placeholder="Masukkan Nomor HP" value="{{ old('no_hp') }}">
+                        @error('no_hp') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                </div>
             </div>
 
-            <div class="col-lg-6 col-md-12">
-                <label for="nama" class="form-label fw-bold">Nama</label>
-                <input type="text" name="nama" id="nama" 
-                       class="form-control" required placeholder="Masukkan Nama"
-                       value="{{ old('nama') }}">
-            </div>
+            <!-- Akademik -->
+            <div class="form-section">
+                <h3><i class="fas fa-graduation-cap"></i> Data Akademik</h3>
+                
+                <!-- BARIS PERTAMA: Prodi, Angkatan, IPK -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prodi">Program Studi <span class="required">*</span></label>
+                        <select name="prodi" id="prodi" class="form-control @error('prodi') is-invalid @enderror" required>
+                            <option value="">-- Pilih Prodi --</option>
+                            <option value="Akuntansi" {{ old('prodi') == 'Akuntansi' ? 'selected' : '' }}>Akuntansi</option>
+                            <option value="Agroindustri" {{ old('prodi') == 'Agroindustri' ? 'selected' : '' }}>Agroindustri</option>
+                            <option value="Teknologi Informasi" {{ old('prodi') == 'Teknologi Informasi' ? 'selected' : '' }}>Teknologi Informasi</option>
+                            <option value="Teknologi Otomotif" {{ old('prodi') == 'Teknologi Otomotif' ? 'selected' : '' }}>Teknologi Otomotif</option>
+                            <option value="Akuntansi Perpajakan (D4)" {{ old('prodi') == 'Akuntansi Perpajakan (D4)' ? 'selected' : '' }}>Akuntansi Perpajakan (D4)</option>
+                            <option value="Teknologi Pakan Ternak (D4)" {{ old('prodi') == 'Teknologi Pakan Ternak (D4)' ? 'selected' : '' }}>Teknologi Pakan Ternak (D4)</option>
+                            <option value="Teknologi Rekayasa Komputer Jaringan (D4)" {{ old('prodi') == 'Teknologi Rekayasa Komputer Jaringan (D4)' ? 'selected' : '' }}>Teknologi Rekayasa Komputer Jaringan (D4)</option>
+                            <option value="Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)" {{ old('prodi') == 'Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)' ? 'selected' : '' }}>Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)</option>
+                        </select>
+                        @error('prodi') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
 
-            <div class="col-lg-6 col-md-12">
-                <label for="email" class="form-label fw-bold">Email</label>
-                <input type="email" name="email" id="email" 
-                       class="form-control" required placeholder="Masukkan Email"
-                       value="{{ old('email') }}">
-            </div>
+                    <div class="form-group">
+                        <label for="angkatan">Angkatan <span class="required">*</span></label>
+                        <input type="number" name="angkatan" id="angkatan" class="form-control @error('angkatan') is-invalid @enderror"
+                            required placeholder="Masukkan Tahun Angkatan" value="{{ old('angkatan') }}">
+                        @error('angkatan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
 
-            <div class="col-lg-6 col-md-12">
-                <label for="no_hp" class="form-label fw-bold">No HP</label>
-                <input type="number" name="no_hp" id="no_hp" 
-                       class="form-control" required placeholder="Masukkan Nomor HP"
-                       value="{{ old('no_hp') }}">
-            </div>
-
-            <div class="col-lg-4 col-md-12">
-                <label for="prodi" class="form-label fw-bold">Prodi</label>
-                <select name="prodi" id="prodi" class="form-select" required>
-                    <option value="">-- Pilih Prodi --</option>
-                    <option value="Akuntansi">Akuntansi</option>
-                    <option value="Agroindustri">Agroindustri</option>
-                    <option value="Teknologi Informasi">Teknologi Informasi</option>
-                    <option value="Teknologi Otomotif">Teknologi Otomotif</option>
-                    <option value="Akuntansi Perpajakan (D4)">Akuntansi Perpajakan (D4)</option>
-                    <option value="Teknologi Pakan Ternak (D4)">Teknologi Pakan Ternak (D4)</option>
-                    <option value="Teknologi Rekayasa Komputer Jaringan (D4)">Teknologi Rekayasa Komputer Jaringan (D4)</option>
-                    <option value="Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)">Teknologi Rekayasa Konstruksi Jalan dan Jembatan (D4)</option>
-                </select>
+                    <div class="form-group">
+                        <label for="ipk">IPK</label>
+                        <input type="number" step="0.01" min="0" max="4" name="ipk" id="ipk"
+                            class="form-control @error('ipk') is-invalid @enderror"
+                            placeholder="Masukkan IPK (0.00 - 4.00)" value="{{ old('ipk') }}">
+                        @error('ipk') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                </div>
             </div>
 
             <!-- Tempat PKL -->
@@ -326,10 +359,25 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="perusahaan">Perusahaan (Tempat PKL)</label>
-                        <input type="text" name="perusahaan" id="perusahaan"
-                            class="form-control @error('perusahaan') is-invalid @enderror"
-                            placeholder="Masukkan Nama Perusahaan" value="{{ old('perusahaan') }}">
+                        <input type="text" 
+                               name="perusahaan" 
+                               id="perusahaan"
+                               class="form-control @error('perusahaan') is-invalid @enderror"
+                               placeholder="Ketik atau pilih nama perusahaan"
+                               value="{{ old('perusahaan') }}"
+                               list="perusahaan-list"
+                               autocomplete="off">
+                        
+                        <datalist id="perusahaan-list">
+                            @foreach($perusahaan as $p)
+                                <option value="{{ $p->nama }}">{{ $p->nama }}</option>
+                            @endforeach
+                        </datalist>
+                        
                         @error('perusahaan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        <small style="color: #6c757d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Ketik untuk mencari atau pilih dari dropdown
+                        </small>
                     </div>
                 </div>
             </div>

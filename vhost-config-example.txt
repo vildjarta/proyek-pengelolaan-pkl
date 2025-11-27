@@ -1,0 +1,38 @@
+# ============================================
+# Apache Virtual Host Configuration
+# ============================================
+# 
+# File ini berisi contoh konfigurasi Virtual Host
+# untuk aplikasi PKL di Apache XAMPP
+#
+# CARA SETUP:
+# 1. Buka file: C:\xampp\apache\conf\extra\httpd-vhost.conf
+# 2. Copy-paste konfigurasi di bawah ini ke akhir file
+# 3. Save file httpd-vhost.conf
+# 4. Buka file: C:\Windows\System32\drivers\etc\hosts (Run as Administrator)
+# 5. Tambahkan baris: 127.0.0.1    pkl.test
+# 6. Restart Apache dari XAMPP Control Panel
+# 7. Akses: http://pkl.test
+#
+# ============================================
+
+<VirtualHost *:80>
+    ServerName pkl.test
+    DocumentRoot "D:/xampp/htdocs/proyek-pengelolaan-pkl/public"
+    
+    <Directory "D:/xampp/htdocs/proyek-pengelolaan-pkl/public">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    
+    ErrorLog "logs/pkl-error.log"
+    CustomLog "logs/pkl-access.log" common
+</VirtualHost>
+
+# ============================================
+# NOTES:
+# - Pastikan mod_rewrite sudah enabled di Apache
+# - Pastikan AllowOverride All sudah di-set
+# - Restart Apache setiap kali ada perubahan config
+# ============================================

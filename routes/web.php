@@ -14,19 +14,7 @@ use App\Http\Controllers\DosenPengujiController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
-use App\Http\Controllers\DosenController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes (bersih & terstruktur)
-|--------------------------------------------------------------------------
-|
-| File ini berisi rute web aplikasi. Pastikan hanya ada SATU deklarasi
-| Route::resource('datadosenpembimbing', ...) seperti di bawah.
-|
-*/
-
-Route::pattern('ratingdanreview', '[0-9]+');
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,18 +30,13 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Logout (POST)
-|--------------------------------------------------------------------------
-*/
-Route::post('/logout', function () {
-    auth()->logout();
+// 2. Logout
+Route::post('logout', function(){
+    Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect('/');
-})->name('logout');
-
+})->middleware('auth')->name('logout');
 /*
 |--------------------------------------------------------------------------
 | Authenticated routes (all logged-in users)
@@ -66,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/about', 'about')->name('about');
     Route::view('/menu', 'menu')->name('menu');
 
-    // Profile
+    // Profil Pengguna
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
@@ -78,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
     // Transkrip (role: mahasiswa, admin, koordinator)
     Route::middleware(['role:mahasiswa,admin,koordinator'])->group(function () {
         Route::resource('transkrip', TranscriptController::class);
+
+        // Transkrip Analyze
         Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
         Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
         Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
@@ -93,72 +78,35 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('penilaian-penguji', PenilaianPengujiController::class);
     });
 
-    // Rating & review (gabungan roles)
+    // === RUTE ADMIN & KOORDINATOR (Data Master) ===
+    Route::middleware(['role:admin,koordinator'])->group(function () {
+        Route::resource('perusahaan', PerusahaanController::class);
+        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+        Route::resource('mahasiswa', MahasiswaController::class);
+
+        // Dosen Penguji & Search
+        Route::resource('dosen_penguji', DosenPengujiController::class);
+        Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+
+        // Nilai
+        Route::resource('nilai', NilaiController::class);
+    });
+
+    // === RUTE RATING & REVIEW (Akses Gabungan) ===
     Route::middleware(['role:mahasiswa,dosen_pembimbing,admin,koordinator'])->group(function () {
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 
-        Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])
-            ->name('lihatratingdanreview')
-            ->whereNumber('id_perusahaan');
+        // PERBAIKAN: Mendefinisikan rute 'tambahratingdanreview' secara manual
+        // Mengarah ke method create (halaman form)
+        Route::get('/ratingdanreview/tambah', [RatingDanReviewController::class, 'create'])->name('tambahratingdanreview');
 
-        // manual create per perusahaan (harus disediakan id_perusahaan)
-        Route::get('/ratingdanreview/tambah/{id_perusahaan}', [RatingDanReviewController::class, 'create'])
-            ->name('tambahratingdanreview')
-            ->whereNumber('id_perusahaan');
+        // Rute Resource standar (store, update, destroy, dll)
+        Route::resource('ratingdanreview', RatingDanReviewController::class)->except(['show', 'index']);
 
-        // fallback jika akses tanpa id
-        Route::get('/ratingdanreview/tambah', function () {
-            return redirect()->route('ratingperusahaan')
-                ->with('error', 'Silakan pilih perusahaan terlebih dahulu untuk menambahkan review.');
-        })->name('tambahratingdanreview.fallback');
-
-        // resource except create & index & show (agar tidak bentrok)
-        Route::resource('ratingdanreview', RatingDanReviewController::class)
-            ->except(['show', 'index', 'create']);
+        // Halaman detail per perusahaan
+        Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])->name('lihatratingdanreview');
     });
 
-    /*
-    |----------------------------------------------------------------------
-    | AJAX endpoints (otentikasi diperlukan)
-    |----------------------------------------------------------------------
-    */
-    // Mahasiswa
-    Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM'])->name('ajax.mahasiswa.suggest');
-    Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM'])->name('ajax.mahasiswa.byNim');
-
-    // Dosen (autocomplete / lookup)
-    Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
-    Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
+    // AJAX Cek NIM
+    Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM']);
 });
-
-/*
-|--------------------------------------------------------------------------
-| Admin & Koordinator: Data master
-|--------------------------------------------------------------------------
-| Pastikan user yang menguji memiliki role admin/koordinator untuk mengakses.
-| Hanya satu deklarasi resource datadosenpembimbing ada di sini.
-*/
-Route::middleware(['auth','role:admin,koordinator'])->group(function () {
-    Route::resource('perusahaan', PerusahaanController::class);
-    Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
-    Route::resource('mahasiswa', MahasiswaController::class);
-
-    Route::resource('dosen_penguji', DosenPengujiController::class);
-    Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
-
-    Route::resource('nilai', NilaiController::class);
-    Route::resource('dosen', DosenController::class);
-});
-
-/*
-|--------------------------------------------------------------------------
-| (Optional) Debug or helper routes
-|--------------------------------------------------------------------------
-| Jangan biarkan route debug ini production — hapus jika sudah tidak diperlukan.
-*/
-// Route::get('/debug-clear-all', function () {
-//     \Artisan::call('route:clear');
-//     \Artisan::call('view:clear');
-//     \Artisan::call('cache:clear');
-//     return 'cleared';
-// });

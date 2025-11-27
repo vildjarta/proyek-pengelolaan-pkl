@@ -1,12 +1,12 @@
 <!-- Sidebar Layout -->
 <div class="sidebar">
     <div class="menu-list">
-        
+
         {{-- Hanya tampilkan menu jika pengguna sudah login --}}
         @auth
             @php
                 // Ambil role pengguna yang sedang login
-                $userRole = auth()->user()->role; 
+                $userRole = auth()->user()->role;
                 // Ambil rute saat ini
                 $currentRoute = request()->path();
             @endphp
@@ -103,7 +103,7 @@
                         </a>
                     </li>
                 </ul>
-            
+
             {{-- Menu Mahasiswa --}}
             @elseif($userRole == 'mahasiswa')
                 <h4>Data Akademik</h4>
