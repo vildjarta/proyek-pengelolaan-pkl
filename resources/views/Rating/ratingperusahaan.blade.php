@@ -48,44 +48,48 @@
                         </tr>
                     </thead>
                     <tbody>
-    @forelse($perusahaans as $index => $p)
-        @php
-            $companyName = $p->nama_perusahaan ?? '-';
-            $avg = floatval($p->avg_rating ?? 0);
-            $count = intval($p->total_reviews ?? 0);
-            $avgStars = (int) round($avg);
-        @endphp
-        <tr>
-            <td>{{ $index + 1 }}</td>
-            <td>{{ $companyName }}</td>
-            <td>
-    <div class="rating-wrapper">
-        <div class="stars">
-            @for ($i = 1; $i <= 5; $i++)
-                <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
-            @endfor
-        </div>
-        <div class="rating-label">
-            Rata-rata rating {{ number_format($avg, 1) }}
-        </div>
-    </div>
-</td>
-
-            <td>
-                <span class="badge-rating-count">{{ $count }}</span> orang
-            </td>
-            <td>
-                <div class="action-buttons">
-                    <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $p->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                    <a href="{{ url('/ratingdanreview/tambah/'.$p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
-    <i class="fa fa-plus"></i>
-</a>
+   @forelse($perusahaans as $index => $p)
+    @php
+        $companyName = $p->nama_perusahaan ?? '-';
+        $avg = floatval($p->avg_rating ?? 0);
+        $count = intval($p->total_reviews ?? 0);
+        $avgStars = (int) round($avg);
+        $canAdd = $canAddMap[$p->id_perusahaan] ?? false;
+    @endphp
+    <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ $companyName }}</td>
+        <td>
+            <div class="rating-wrapper">
+                <div class="stars">
+                    @for ($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
+                    @endfor
                 </div>
-            </td>
-        </tr>
-    @empty
+                <div class="rating-label">
+                    Rata-rata rating {{ number_format($avg, 1) }}
+                </div>
+            </div>
+        </td>
+        <td>
+            <span class="badge-rating-count">{{ $count }}</span> orang
+        </td>
+        <td>
+            <div class="action-buttons">
+                <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $p->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
+                    <i class="fa fa-eye"></i>
+                </a>
+
+                {{-- Hanya tampilkan tombol tambah jika mahasiswa login, ditempatkan di perusahaan ini, dan belum review --}}
+                @if($canAdd)
+                    <a href="{{ url('/ratingdanreview/tambah/'.$p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                @endif
+            </div>
+        </td>
+    </tr>
+@empty
         <tr>
             <td colspan="5" class="text-center text-muted py-4">
                 @if(request('search'))

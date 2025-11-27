@@ -41,18 +41,24 @@
 
         {{-- Baris NIM & Perusahaan --}}
         <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="nim" class="form-label required">NIM Mahasiswa</label>
-            <input type="text" id="nim" name="nim" class="form-control"
-                   value="{{ old('nim') }}" maxlength="10" minlength="10" required>
-          </div>
+  <div class="col-md-6 mb-3">
+    <label for="nim" class="form-label required">NIM Mahasiswa</label>
+    @if(isset($mahasiswa))
+      <input type="text" id="nim" name="nim" class="form-control" value="{{ old('nim', $mahasiswa->nim) }}" maxlength="10" minlength="10" readonly>
+    @else
+      {{-- fallback jika admin/pengisian manual --}}
+      <input type="text" id="nim" name="nim" class="form-control"
+             value="{{ old('nim') }}" maxlength="10" minlength="10" required>
+    @endif
+  </div>
 
-          <div class="col-md-6 mb-3">
-            <label class="form-label required">Perusahaan</label>
-            <input type="text" class="form-control" value="{{ $perusahaan->nama }}" readonly>
-            <input type="hidden" name="id_perusahaan" value="{{ $perusahaan->id_perusahaan }}">
-          </div>
-        </div>
+  <div class="col-md-6 mb-3">
+    <label class="form-label required">Perusahaan</label>
+    <input type="text" class="form-control" value="{{ $perusahaan->nama }}" readonly>
+    <input type="hidden" name="id_perusahaan" value="{{ $perusahaan->id_perusahaan }}">
+  </div>
+</div>
+
 
         {{-- Rating Bintang --}}
         <div class="mb-4 text-center">

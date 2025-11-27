@@ -20,7 +20,7 @@
 
     <div class="main-content-wrapper">
         <div class="content container-fluid">
-            
+
             <!-- Tombol Kembali -->
             <a href="{{ route('ratingperusahaan') }}" class="btn-back" title="Kembali">
                 <i class="fas fa-arrow-left"></i>
@@ -45,6 +45,34 @@
                 </div>
             @endif
 
+            @php
+                use Illuminate\Support\Facades\Auth;
+                use App\Models\Mahasiswa;
+
+                // Ambil data mahasiswa yang terhubung dengan akun login (sekali saja)
+                $authMahasiswa = null;
+                $isAdmin = false;
+
+                if (Auth::check()) {
+                    $user = Auth::user();
+
+                    // Jika tabel mahasiswa menyimpan email yang sama dengan auth user
+                    try {
+                        $authMahasiswa = Mahasiswa::where('email', $user->email)->first();
+                    } catch (\Throwable $e) {
+                        // jika tidak ada kolom email atau error, biarkan null
+                        $authMahasiswa = null;
+                    }
+
+                    // Cek bila sistem role tersedia (opsional). Jika Anda tidak menggunakan role, ini akan false.
+                    if (method_exists($user, 'hasRole')) {
+                        $isAdmin = $user->hasRole('admin') || $user->hasRole('koordinator');
+                    } else {
+                        $isAdmin = false;
+                    }
+                }
+            @endphp
+
             {{-- LIST REVIEW --}}
             <div class="review-list">
                 @forelse ($reviews as $review)
@@ -52,11 +80,23 @@
                         $nama = $review->nama_mahasiswa ?? 'Mahasiswa';
                         $inisial = strtoupper(substr($nama, 0, 1));
                         $namaTersembunyi = substr($nama, 0, 2) . str_repeat('*', max(3, strlen($nama) - 2));
+
+                        // Pastikan kita punya id_mahasiswa pada $review (rating_dan_reviews.* seharusnya menyertakan id_mahasiswa)
+                        $reviewMahasiswaId = $review->id_mahasiswa ?? null;
+
+                        // Pemilik review?
+                        $isOwner = false;
+                        if ($authMahasiswa && $reviewMahasiswaId) {
+                            $isOwner = ((int)$authMahasiswa->id_mahasiswa === (int)$reviewMahasiswaId);
+                        }
+
+                        // Jika admin, boleh edit/hapus juga (opsional)
+                        $canModify = $isOwner || $isAdmin;
                     @endphp
 
                     <div class="review-card">
-                        <div class="review-header">
-                            <div class="avatar">{{ $inisial }}</div>
+                        <div class="review-header d-flex align-items-center">
+                            <div class="avatar me-3">{{ $inisial }}</div>
                             <div class="reviewer-info">
                                 <span class="reviewer-name">{{ $namaTersembunyi }}</span>
                                 <div class="review-rating">
@@ -67,27 +107,32 @@
                             </div>
                         </div>
 
-                        <div class="review-text">
+                        <div class="review-text mt-3">
                             {{ $review->review }}
                         </div>
 
-                        <div class="review-footer">
+                        <div class="review-footer d-flex justify-content-between align-items-center mt-3">
                             <span class="review-date">
                                 <i class="fa-regular fa-calendar"></i>
                                 {{ \Carbon\Carbon::parse($review->tanggal_review)->translatedFormat('d F Y') }}
                             </span>
 
                             <div class="action-buttons">
-                                <a href="{{ route('ratingdanreview.edit', $review->id_review) }}" class="btn-edit" title="Edit Review">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-                                <form action="{{ route('ratingdanreview.destroy', $review->id_review) }}" method="POST" onsubmit="return confirm('Hapus review ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-delete" title="Hapus Review">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                {{-- Tautan Lihat tidak perlu, karena kita sudah di halaman lihat --}}
+                                {{-- Tampilkan edit/hapus hanya jika pemilik atau admin --}}
+                                @if($canModify)
+                                    <a href="{{ route('ratingdanreview.edit', $review->id_review) }}" class="btn-edit btn btn-sm btn-outline-primary me-2" title="Edit Review">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+
+                                    <form action="{{ route('ratingdanreview.destroy', $review->id_review) }}" method="POST" onsubmit="return confirm('Hapus review ini?')" style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-delete btn btn-sm btn-outline-danger" title="Hapus Review">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>
