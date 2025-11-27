@@ -94,25 +94,29 @@
     <div class="container d-flex align-items-center justify-content-center" style="min-height:100vh;">
         <div class="col-md-5">
             <div class="card login-card">
-                <!-- Logo -->
                 <div class="logo-pkl mb-3">
                     <img src="{{ asset('assets/images/logo-baru.png') }}" alt="Logo PKL">
                 </div>
 
                 <h3 class="text-center mb-4" style="color:#769FCD;">Sistem Pengelolaan PKL</h3>
 
-                <!-- Form Login -->
-                <form method="POST" action="#">
+                <form method="POST" action="{{ route('login.submit') }}">
                     @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Pengguna</label>
                         <input type="email" class="form-control" id="email" name="email" required autofocus
-                            placeholder="nama@email.com">
+                            placeholder="nama@email.com" value="{{ old('email') }}">
+
+                        @error('email')
+                            <div class="text-danger mt-1" style="font-size: 0.9rem;">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Kata Sandi</label>
                         <input type="password" class="form-control" id="password" name="password" required
-                            placeholder="********">
+                            placeholder="">
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="remember" name="remember">
@@ -121,12 +125,10 @@
                     <button type="submit" class="btn btn-login w-100">Masuk</button>
                 </form>
 
-                <!-- Divider -->
                 <div class="text-center my-3">
                     <span style="color: #999;">atau</span>
                 </div>
 
-                <!-- Login dengan Google -->
                 <a href="{{ route('auth.google') }}" class="btn btn-google w-100 d-flex align-items-center justify-content-center">
                     <svg width="20" height="20" viewBox="0 0 24 24" class="me-2">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -137,12 +139,8 @@
                     Masuk dengan Google
                 </a>
 
-                <!-- Link Daftar dan Home -->
-                <div class="mt-3 text-center text-link">
-                    <small>Belum punya akun? <a href="/registrasi">Buat akun</a></small>
-                </div>
                 <div class="mt-2 text-center text-link">
-                    <small>Sudah punya akun? <a href="/home">home</a></small>
+                    <small>Kembali ke <a href="/home">home</a></small>
                 </div>
             </div>
         </div>

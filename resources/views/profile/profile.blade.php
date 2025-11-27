@@ -16,36 +16,30 @@
         width: calc(100% - 60px); /* Lebar konten saat sidebar tertutup */
     }
 
-    /* * 2. MEMPERBAIKI MASALAH FULL-SCREEN (WIDTH & HEIGHT)
-     */
-    
-    /* (Ini dari jawaban saya sebelumnya, memastikan width 100%) */
     .profile-page-container {
          width: 100%;
-         /* Pastikan display: flex (dari profile.css) tetap ada */
          display: flex;
     }
 
-    /* JADIKAN .profile-content SEBAGAI FLEX CONTAINER VERTIKAL */
     .profile-content {
-        width: 100%; /* (dari jawaban saya sebelumnya) */
-        
-        /* -- KODE TAMBAHAN UNTUK FIX TINGGI -- */
-        display: flex;          /* <-- KUNCI 1: Jadikan flex container */
-        flex-direction: column; /* <-- KUNCI 2: Arah vertikal */
-        /* flex: 1; sudah ada di profile.css, jadi ini akan stretch */
+        width: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
-    /* BUAT .profile-card (area putih) MENGISI .profile-content */
     .profile-card {
         width: 100%;
         box-sizing: border-box; 
-        
-        /* -- KODE TAMBAHAN UNTUK FIX TINGGI -- */
-        flex: 1; /* <-- KUNCI 3: Buat card memanjang ke bawah */
-        
-        /* Override max-width dari profile.css */
+        flex: 1;
         max-width: none !important; 
+    }
+    
+    /* Styling khusus untuk input Read-Only agar terlihat "mati" */
+    input[readonly] {
+        background-color: #e9ecef !important; /* Abu-abu muda */
+        cursor: not-allowed;
+        color: #6c757d;
+        border-color: #ced4da;
     }
 </style>
 
@@ -58,7 +52,6 @@
             
             <div class="profile-content">
                 <div class="profile-card">
-                    {{-- Judul "Pengaturan Data Diri" di dalam card tetap ada --}}
                     <h3>Pengaturan Data Diri</h3>
         
                     @if (session('success'))
@@ -89,6 +82,7 @@
                                 @error('avatar') <span class="error-text">{{ $message }}</span> @enderror
                             </div>
                         </div>
+                    
         
                         <div class="form-group">
                             <label for="name">Nama Lengkap</label>
@@ -96,10 +90,12 @@
                             @error('name') <span class="error-text">{{ $message }}</span> @enderror
                         </div>
         
+                        {{-- BAGIAN EMAIL (READ ONLY) --}}
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="@error('email') is-invalid @enderror">
-                            @error('email') <span class="error-text">{{ $message }}</span> @enderror
+                            <label for="email">Email <small class="text-muted">(Terkunci karena menggunakan Login Google)</small></label>
+                            {{-- Tambahkan atribut 'readonly' --}}
+                            <input type="email" id="email" name="email" value="{{ $user->email }}" class="form-control" readonly>
+                            {{-- Kita tidak perlu menampilkan error email karena user tidak bisa mengeditnya --}}
                         </div>
         
                         <div class="form-group">
@@ -127,15 +123,10 @@
                         </div>
                     </form>
                     @else
-                        <p>Data pengguna tidak ditemukan. Pastikan Anda sudah menjalankan migrasi dan memiliki setidaknya satu user di database.</p>
+                        <p>Data pengguna tidak ditemukan. Silakan login kembali.</p>
                     @endif
                 </div>
                 
-                {{-- 
-                  Script ini sebaiknya dipindah ke layout global (misal: app.blade.php) 
-                  agar tidak ter-load di setiap halaman. 
-                  Tapi tidak masalah tetap di sini, script toggle sudah benar.
-                --}}
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         const toggleButton = document.querySelector('.menu-toggle');

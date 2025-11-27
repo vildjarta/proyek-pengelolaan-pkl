@@ -1,3 +1,4 @@
+/* ratingperusahaan.css - versi final untuk center Nama Perusahaan */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f7f9;
@@ -66,30 +67,43 @@ body.sidebar-closed .main-content-wrapper {
     overflow: hidden;
 }
 
+/* Pastikan semua header default center (tetap aman) */
 .table thead tr {
     background-color: #5b8ad2;
     color: #fff;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 14px 18px;
     border-bottom: 1px solid #ddd;
     text-align: center;
     vertical-align: middle;
 }
 
+/* Baris dan hover */
 .table tbody tr:nth-child(even) {
     background-color: #f8f9fa;
 }
-
 .table tbody tr:hover {
     background-color: #e2e6ea;
 }
 
-/* Rating visual baru */
+/* ===== PENTING: pastikan header kolom ke-2 (Nama Perusahaan) CENTERED ===== */
+/* Gunakan selector untuk thead dan tbody, pakai !important agar tidak tertimpa */
+.table thead th:nth-child(2) {
+    text-align: center !important;
+    justify-content: center;
+}
+.table tbody td:nth-child(2) {
+    text-align: center !important;
+    justify-content: center;
+}
+
+/* Rating visual */
 .rating-wrapper {
     display: flex;
-    flex-direction: column; /* bintang di atas, teks di bawah */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -104,17 +118,9 @@ body.sidebar-closed .main-content-wrapper {
     font-size: 20px;
 }
 
-.stars .fa-star {
-    transition: color 0.3s ease;
-}
-
-.stars .fa-star.filled {
-    color: #ffc107; /* kuning */
-}
-
-.stars .fa-star:not(.filled) {
-    color: #e0e0e0; /* abu terang */
-}
+.stars .fa-star { transition: color 0.3s ease; }
+.stars .fa-star.filled { color: #ffc107; }
+.stars .fa-star:not(.filled) { color: #e0e0e0; }
 
 .rating-label {
     font-size: 13px;
@@ -123,11 +129,7 @@ body.sidebar-closed .main-content-wrapper {
     margin-top: 2px;
 }
 
-
-.rating-text {
-    font-weight: 500;
-    color: #555;
-}
+.rating-text { font-weight: 500; color: #555; }
 
 /* Badge jumlah rating */
 .badge-rating-count {
@@ -158,12 +160,8 @@ body.sidebar-closed .main-content-wrapper {
     color: #fff;
 }
 
-.btn-view {
-    background-color: #28a745;
-}
-.btn-view:hover {
-    background-color: #218838;
-}
+.btn-view { background-color: #28a745; }
+.btn-view:hover { background-color: #218838; }
 
 .btn-add {
     background-color: #ffc107;
@@ -174,15 +172,14 @@ body.sidebar-closed .main-content-wrapper {
     color: #000;
 }
 
-/* Responsif */
+/* =======================
+   RESPONSIVE MODE
+   ======================= */
 @media (max-width: 992px) {
-    .main-content-wrapper {
-        margin-left: 0;
-    }
 
-    .content {
-        padding: 15px;
-    }
+    .main-content-wrapper { margin-left: 0; }
+
+    .content { padding: 15px; }
 
     .table-header {
         flex-direction: column;
@@ -190,9 +187,7 @@ body.sidebar-closed .main-content-wrapper {
         gap: 10px;
     }
 
-    .table thead {
-        display: none;
-    }
+    .table thead { display: none; }
 
     .table tbody tr {
         display: block;
@@ -216,7 +211,11 @@ body.sidebar-closed .main-content-wrapper {
         color: #5b8ad2;
     }
 
-    .action-buttons {
-        justify-content: flex-start;
+    /* Center nama perusahaan di mobile juga */
+    .table tbody td:nth-child(2) {
+        justify-content: center;
+        text-align: center !important;
     }
+
+    .action-buttons { justify-content: flex-start; }
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class RatingDanReviewController extends Controller
 {
     /**
-     * 📊 Menampilkan Ranking Perusahaan berdasarkan rata-rata rating
+     * Menampilkan Ranking Perusahaan berdasarkan rata-rata rating
      */
     public function showRanking(Request $request)
     {
@@ -36,7 +36,7 @@ class RatingDanReviewController extends Controller
     }
 
     /**
-     * 📋 Menampilkan daftar rating dan review per perusahaan
+     * Menampilkan daftar rating dan review per perusahaan
      */
     public function index(Request $request, $id_perusahaan)
     {
@@ -50,7 +50,7 @@ class RatingDanReviewController extends Controller
             )
             ->where('rating_dan_reviews.id_perusahaan', $id_perusahaan);
 
-        // 🔍 Pencarian
+        // Pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $reviews->where(function ($q) use ($search) {
@@ -60,7 +60,7 @@ class RatingDanReviewController extends Controller
             });
         }
 
-        // ⏳ Filter urutan
+        // Filter urutan
         switch ($request->filter) {
             case 'highest':
                 $reviews->orderByDesc('rating');
@@ -79,20 +79,25 @@ class RatingDanReviewController extends Controller
     }
 
     /**
-     * 📝 Form tambah review baru
+     * Form tambah review baru
      */
     public function create($id_perusahaan)
     {
+        // pastikan numeric dan exist
+        if (!is_numeric($id_perusahaan)) {
+            return redirect()->route('ratingperusahaan')->with('error', 'ID perusahaan tidak valid.');
+        }
+
         $perusahaan = Perusahaan::findOrFail($id_perusahaan);
         return view('rating.ratingdanreview', compact('perusahaan'));
     }
 
     /**
-     * 💾 Simpan data review baru
+     * Simpan data review baru
      */
     public function store(Request $request)
     {
-        // ✅ Validasi manual agar pesan error bisa dikustom
+        // Validasi
         $validated = $request->validate([
             'nim'            => 'required|digits:10',
             'id_perusahaan'  => 'required|exists:perusahaan,id_perusahaan',
@@ -106,26 +111,31 @@ class RatingDanReviewController extends Controller
             'review.required' => 'Review wajib diisi.',
         ]);
 
-        // 🔎 Cari mahasiswa berdasarkan NIM
+        // Cari mahasiswa berdasarkan NIM
         $mahasiswa = Mahasiswa::where('nim', $validated['nim'])->first();
 
         if (!$mahasiswa) {
             return back()->withErrors(['nim' => 'NIM tidak ditemukan.'])->withInput();
         }
 
-        // Simpan data review
-        $validated['id_mahasiswa'] = $mahasiswa->id_mahasiswa;
-        $validated['tanggal_review'] = $validated['tanggal_review'] ?? now();
+        // Siapkan data untuk simpan
+        $data = [
+            'id_mahasiswa' => $mahasiswa->id_mahasiswa,
+            'id_perusahaan' => $validated['id_perusahaan'],
+            'rating' => $validated['rating'],
+            'review' => $validated['review'],
+            'tanggal_review' => $validated['tanggal_review'] ?? now(),
+        ];
 
-        RatingDanReview::create($validated);
+        RatingDanReview::create($data);
 
         return redirect()
-            ->route('lihatratingdanreview', ['id_perusahaan' => $validated['id_perusahaan']])
+            ->route('lihatratingdanreview', ['id_perusahaan' => $data['id_perusahaan']])
             ->with('success', 'Review berhasil ditambahkan!');
     }
 
     /**
-     * ✏️ Form edit review
+     * Form edit review
      */
     public function edit($id_review)
     {
@@ -136,7 +146,7 @@ class RatingDanReviewController extends Controller
     }
 
     /**
-     * 🔄 Update review
+     * Update review
      */
     public function update(Request $request, $id_review)
     {
@@ -155,14 +165,13 @@ class RatingDanReviewController extends Controller
             'review.required' => 'Review wajib diisi.',
         ]);
 
-        // 🔎 Cek NIM Mahasiswa
+        // Cek mahasiswa
         $mahasiswa = Mahasiswa::where('nim', $validated['nim'])->first();
 
         if (!$mahasiswa) {
             return back()->withErrors(['nim' => 'NIM tidak ditemukan.'])->withInput();
         }
 
-        // Update data review
         $validated['id_mahasiswa'] = $mahasiswa->id_mahasiswa;
         $validated['tanggal_review'] = $validated['tanggal_review'] ?? now();
 
@@ -174,7 +183,7 @@ class RatingDanReviewController extends Controller
     }
 
     /**
-     * ❌ Hapus review
+     * Hapus review
      */
     public function destroy($id_review)
     {
