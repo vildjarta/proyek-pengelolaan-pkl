@@ -166,7 +166,7 @@ html {
     position: fixed;
     top: 60px;
     left: 0;
-    width: 260px;
+    width: 285px;
     background-color: var(--color-primary-blue);
     color: var(--color-white);
     height: calc(100vh - 60px);
@@ -226,7 +226,7 @@ body.sidebar-closed .sidebar ul li a i {
 }
 
 .sidebar ul.dropdown-menu {
-    background-color: rgb(65 127 255 / 66%);
+    background-color: rgba(117, 161, 227, 1);
     margin: 0 12px 14px;
     border-radius: 6px;
 }
