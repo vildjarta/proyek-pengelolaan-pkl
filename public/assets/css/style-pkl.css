@@ -166,7 +166,7 @@ html {
     position: fixed;
     top: 60px;
     left: 0;
-    width: 285px;
+    width: 295px;
     background-color: var(--color-primary-blue);
     color: var(--color-white);
     height: calc(100vh - 60px);
