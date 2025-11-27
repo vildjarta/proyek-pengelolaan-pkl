@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
     // Transkrip (role: mahasiswa, admin, koordinator)
     Route::middleware(['role:mahasiswa,admin,koordinator'])->group(function () {
         Route::resource('transkrip', TranscriptController::class);
-
+        
         // Transkrip Analyze
         Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
         Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
@@ -83,11 +83,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
         Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
         Route::resource('mahasiswa', MahasiswaController::class);
-
+        
         // Dosen Penguji & Search
         Route::resource('dosen_penguji', DosenPengujiController::class);
         Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
-
+        
         // Nilai
         Route::resource('nilai', NilaiController::class);
     });
@@ -95,14 +95,14 @@ Route::middleware(['auth'])->group(function () {
     // === RUTE RATING & REVIEW (Akses Gabungan) ===
     Route::middleware(['role:mahasiswa,dosen_pembimbing,admin,koordinator'])->group(function () {
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
-
+        
         // PERBAIKAN: Mendefinisikan rute 'tambahratingdanreview' secara manual
         // Mengarah ke method create (halaman form)
         Route::get('/ratingdanreview/tambah', [RatingDanReviewController::class, 'create'])->name('tambahratingdanreview');
-
+        
         // Rute Resource standar (store, update, destroy, dll)
         Route::resource('ratingdanreview', RatingDanReviewController::class)->except(['show', 'index']);
-
+        
         // Halaman detail per perusahaan
         Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])->name('lihatratingdanreview');
     });
@@ -110,3 +110,4 @@ Route::middleware(['auth'])->group(function () {
     // AJAX Cek NIM
     Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM']);
 });
+
