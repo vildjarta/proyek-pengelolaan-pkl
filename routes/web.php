@@ -156,4 +156,3 @@ Route::middleware(['auth'])->group(function () {
 //     \Artisan::call('cache:clear');
 //     return 'cleared';
 // });
-
