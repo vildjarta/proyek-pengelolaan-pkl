@@ -150,37 +150,44 @@ class MahasiswaController extends Controller
 
     /**
      * 🔍 AJAX: Cek NIM mahasiswa dan kirimkan nama ke form dosen pembimbing
+     * Route: GET /cek-nim/{nim}
      */
     public function cekNIM($nim)
     {
-        $mahasiswa = \App\Models\Mahasiswa::where('NIM', $nim)->first();
+        // pastikan query pakai nama kolom yang benar (nim)
+        $mahasiswa = Mahasiswa::where('nim', $nim)->first();
 
-    if ($mahasiswa) {
-        return response()->json([
-            'exists' => true,
-            'nama_mahasiswa' => $mahasiswa->nama,
-        ]);
-    } else {
+        if ($mahasiswa) {
+            return response()->json([
+                'exists' => true,
+                'nama_mahasiswa' => $mahasiswa->nama,
+                'nim' => $mahasiswa->nim,
+                'id_mahasiswa' => $mahasiswa->id_mahasiswa ?? null,
+            ]);
+        }
+
         return response()->json(['exists' => false]);
     }
-}
 
+    /**
+     * 🔎 AJAX: Suggest/Autocomplete NIM
+     * Route: GET /cek-nim-suggest?q=...
+     */
+    public function suggestNIM(Request $request)
+    {
+        $q = (string) $request->query('q', '');
+        $q = trim($q);
+        if ($q === '') {
+            return response()->json([]);
+        }
 
-public function suggestNIM(Request $request)
-{
-    $q = $request->query('q', '');
-    if (trim($q) === '') {
-        return response()->json([]);
+        $results = Mahasiswa::select('nim','nama')
+            ->where('nim', 'LIKE', $q . '%')
+            ->orWhere('nama', 'LIKE', '%' . $q . '%')
+            ->orderBy('nim')
+            ->limit(10)
+            ->get();
+
+        return response()->json($results);
     }
-
-    $results = \App\Models\Mahasiswa::select('nim','nama')
-        ->where('nim', 'LIKE', $q . '%')
-        ->orWhere('nama', 'LIKE', '%' . $q . '%')
-        ->orderBy('nim')
-        ->limit(10)
-        ->get();
-
-    return response()->json($results);
-}
-
 }

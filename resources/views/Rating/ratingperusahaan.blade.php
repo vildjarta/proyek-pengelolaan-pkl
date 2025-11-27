@@ -79,9 +79,9 @@
                     <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $p->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
                         <i class="fa fa-eye"></i>
                     </a>
-                    <a href="{{ route('tambahratingdanreview', $p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
-                        <i class="fa fa-plus"></i>
-                    </a>
+                    <a href="{{ url('/ratingdanreview/tambah/'.$p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
+    <i class="fa fa-plus"></i>
+</a>
                 </div>
             </td>
         </tr>
