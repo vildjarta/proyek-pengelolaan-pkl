@@ -294,13 +294,35 @@
                     </div>
                 </div>
 
-                <!-- BARIS KEDUA: Email dan No HP -->
+                <!-- BARIS KEDUA: Pilih Email dari Users atau Input Manual -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user_id">Pilih Email dari User (Opsional)</label>
+                        <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                            <option value="">-- Pilih User atau Isi Manual --</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" data-email="{{ $user->email }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }} ({{ $user->email }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        <small style="color: #6c757d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Pilih dari user yang ada atau isi email manual di bawah
+                        </small>
+                    </div>
+                </div>
+
+                <!-- BARIS KETIGA: Email Manual dan No HP -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="email">Email <span class="required">*</span></label>
                         <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
-                            required placeholder="Masukkan Email" value="{{ old('email') }}">
+                            required placeholder="Masukkan Email atau pilih dari user di atas" value="{{ old('email') }}">
                         @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        <small style="color: #6c757d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Email akan otomatis terisi jika memilih user di atas
+                        </small>
                     </div>
 
                     <div class="form-group">
@@ -427,6 +449,24 @@ document.addEventListener('DOMContentLoaded', function() {
         angkatanInput.addEventListener('input', function() {
             if (this.value.length > 4) {
                 this.value = this.value.slice(0, 4);
+            }
+        });
+    }
+
+    // Auto-fill email ketika memilih user dari dropdown
+    const userSelect = document.getElementById('user_id');
+    const emailInput = document.getElementById('email');
+    
+    if (userSelect && emailInput) {
+        userSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const email = selectedOption.getAttribute('data-email');
+            
+            if (email) {
+                emailInput.value = email;
+            } else if (this.value === '') {
+                // Jika "Pilih User atau Isi Manual" dipilih, kosongkan email
+                emailInput.value = '';
             }
         });
     }
