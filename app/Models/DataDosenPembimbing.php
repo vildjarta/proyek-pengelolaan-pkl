@@ -23,19 +23,16 @@ class DataDosenPembimbing extends Model
         'id_user',
     ];
 
-    // relasi ke mahasiswa (asumsikan Mahasiswa model punya id_pembimbing column)
     public function mahasiswa()
     {
         return $this->hasMany(Mahasiswa::class, 'id_pembimbing', 'id_pembimbing');
     }
 
-    // optional relation ke Dosen master
     public function dosen()
     {
         return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
 
-    // alias id to keep views using ->id
     public function getIdAttribute()
     {
         return $this->attributes[$this->getKeyName()] ?? $this->getKey();

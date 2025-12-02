@@ -22,7 +22,8 @@ class MahasiswaController extends Controller
     public function create()
     {
         $perusahaan = \App\Models\Perusahaan::orderBy('nama')->get();
-        return view('mahasiswa.tambah-mahasiswa', compact('perusahaan'));
+        $users = \App\Models\User::orderBy('email')->get();
+        return view('mahasiswa.tambah-mahasiswa', compact('perusahaan', 'users'));
     }
 
     /**
@@ -34,6 +35,7 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim'        => 'required|regex:/^\d{10,12}$/|unique:mahasiswa,nim',
             'nama'       => 'required|string|max:100|regex:/^[A-Za-z\s]+$/',
+            'user_id'    => 'nullable|exists:users,id',
             'email'      => 'required|email|unique:mahasiswa,email',
             'no_hp'      => 'nullable|regex:/^\d{10,15}$/',
             'prodi'      => 'required|string|max:50|regex:/^[A-Za-z\s]+$/',
@@ -46,6 +48,7 @@ class MahasiswaController extends Controller
             'nim.unique'   => 'NIM ini sudah terdaftar.',
             'nama.required'=> 'Nama wajib diisi.',
             'nama.regex'   => 'Nama hanya boleh berisi huruf dan spasi.',
+            'user_id.exists' => 'User yang dipilih tidak valid.',
             'email.required'=> 'Email wajib diisi.',
             'email.email'  => 'Format email tidak valid. Pastikan ada tanda @.',
             'email.unique' => 'Email ini sudah terdaftar.',
@@ -61,10 +64,20 @@ class MahasiswaController extends Controller
             'perusahaan.max'   => 'Nama perusahaan maksimal 100 karakter.',
         ]);
 
+        // Jika user_id dipilih, ambil email dari user tersebut
+        $data = $request->only([
+            'nim','nama','email','no_hp','prodi','angkatan','ipk','perusahaan','user_id'
+        ]);
+        
+        if ($request->user_id) {
+            $user = \App\Models\User::find($request->user_id);
+            if ($user) {
+                $data['email'] = $user->email;
+            }
+        }
+
         // Simpan data
-        Mahasiswa::create($request->only([
-            'nim','nama','email','no_hp','prodi','angkatan','ipk','perusahaan'
-        ]));
+        Mahasiswa::create($data);
 
         return redirect()->route('mahasiswa.index')
                          ->with('success', 'Data mahasiswa berhasil ditambahkan');
@@ -86,7 +99,8 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
         $perusahaan = \App\Models\Perusahaan::orderBy('nama')->get();
-        return view('mahasiswa.edit-mahasiswa', compact('mahasiswa', 'perusahaan'));
+        $users = \App\Models\User::orderBy('email')->get();
+        return view('mahasiswa.edit-mahasiswa', compact('mahasiswa', 'perusahaan', 'users'));
     }
 
     /**
@@ -100,6 +114,7 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim'        => 'required|regex:/^\d{10,12}$/|unique:mahasiswa,nim,' . $mahasiswa->id_mahasiswa . ',id_mahasiswa',
             'nama'       => 'required|string|max:100|regex:/^[A-Za-z\s]+$/',
+            'user_id'    => 'nullable|exists:users,id',
             'email'      => 'required|email|unique:mahasiswa,email,' . $mahasiswa->id_mahasiswa . ',id_mahasiswa',
             'no_hp'      => 'nullable|regex:/^\d{10,15}$/',
             'prodi'      => 'required|string|max:50|regex:/^[A-Za-z\s]+$/',
@@ -112,6 +127,7 @@ class MahasiswaController extends Controller
             'nim.unique'   => 'NIM ini sudah terdaftar.',
             'nama.required'=> 'Nama wajib diisi.',
             'nama.regex'   => 'Nama hanya boleh berisi huruf dan spasi.',
+            'user_id.exists' => 'User yang dipilih tidak valid.',
             'email.required'=> 'Email wajib diisi.',
             'email.email'  => 'Format email tidak valid. Pastikan ada tanda @.',
             'email.unique' => 'Email ini sudah terdaftar.',
@@ -127,10 +143,20 @@ class MahasiswaController extends Controller
             'perusahaan.max'   => 'Nama perusahaan maksimal 100 karakter.',
         ]);
 
+        // Jika user_id dipilih, ambil email dari user tersebut
+        $data = $request->only([
+            'nim','nama','email','no_hp','prodi','angkatan','ipk','perusahaan','user_id'
+        ]);
+        
+        if ($request->user_id) {
+            $user = \App\Models\User::find($request->user_id);
+            if ($user) {
+                $data['email'] = $user->email;
+            }
+        }
+
         // Update data
-        $mahasiswa->update($request->only([
-            'nim','nama','email','no_hp','prodi','angkatan','ipk','perusahaan'
-        ]));
+        $mahasiswa->update($data);
 
         return redirect()->route('mahasiswa.index')
                          ->with('success', 'Data mahasiswa berhasil diupdate');
@@ -150,37 +176,44 @@ class MahasiswaController extends Controller
 
     /**
      * 🔍 AJAX: Cek NIM mahasiswa dan kirimkan nama ke form dosen pembimbing
+     * Route: GET /cek-nim/{nim}
      */
     public function cekNIM($nim)
     {
-        $mahasiswa = \App\Models\Mahasiswa::where('NIM', $nim)->first();
+        // pastikan query pakai nama kolom yang benar (nim)
+        $mahasiswa = Mahasiswa::where('nim', $nim)->first();
 
-    if ($mahasiswa) {
-        return response()->json([
-            'exists' => true,
-            'nama_mahasiswa' => $mahasiswa->nama,
-        ]);
-    } else {
+        if ($mahasiswa) {
+            return response()->json([
+                'exists' => true,
+                'nama_mahasiswa' => $mahasiswa->nama,
+                'nim' => $mahasiswa->nim,
+                'id_mahasiswa' => $mahasiswa->id_mahasiswa ?? null,
+            ]);
+        }
+
         return response()->json(['exists' => false]);
     }
-}
 
+    /**
+     * 🔎 AJAX: Suggest/Autocomplete NIM
+     * Route: GET /cek-nim-suggest?q=...
+     */
+    public function suggestNIM(Request $request)
+    {
+        $q = (string) $request->query('q', '');
+        $q = trim($q);
+        if ($q === '') {
+            return response()->json([]);
+        }
 
-public function suggestNIM(Request $request)
-{
-    $q = $request->query('q', '');
-    if (trim($q) === '') {
-        return response()->json([]);
+        $results = Mahasiswa::select('nim','nama')
+            ->where('nim', 'LIKE', $q . '%')
+            ->orWhere('nama', 'LIKE', '%' . $q . '%')
+            ->orderBy('nim')
+            ->limit(10)
+            ->get();
+
+        return response()->json($results);
     }
-
-    $results = \App\Models\Mahasiswa::select('nim','nama')
-        ->where('nim', 'LIKE', $q . '%')
-        ->orWhere('nama', 'LIKE', '%' . $q . '%')
-        ->orderBy('nim')
-        ->limit(10)
-        ->get();
-
-    return response()->json($results);
-}
-
 }

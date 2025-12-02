@@ -14,9 +14,10 @@
     <style>
         /* ===== ROOT VARIABLES ===== */
         :root {
-            --primary-color: #1976d2;
-            --primary-dark: #1565c0;
-            --primary-light: #42a5f5;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
             --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
@@ -31,7 +32,7 @@
             padding: 30px;
             margin-left: 250px;
             transition: margin-left 0.3s ease;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
 
@@ -57,9 +58,22 @@
         }
 
         .card-header {
-            background: #1976d2 !important;
+            background: var(--primary-gradient) !important;
             border: none !important;
             padding: 25px 30px !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .card-header h4 {
@@ -77,9 +91,8 @@
         /* ===== TABLE CONTAINER ===== */
         .table-container {
             width: 100%;
-            overflow-x: auto;
+            overflow: visible;
             border-radius: var(--radius-md);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .compact-table {
@@ -90,18 +103,17 @@
             border-spacing: 0;
             border-radius: var(--radius-md);
             overflow: hidden;
-            min-width: 1400px;
         }
 
         /* ===== KOLOM WIDTH ===== */
         .compact-table th,
         .compact-table td {
-            padding: 14px 10px;
+            padding: 12px 8px;
             vertical-align: middle;
             text-align: center;
             word-wrap: break-word;
-            border-bottom: 1px solid #e0e0e0;
-            border-right: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e8edf2;
+            border-right: 1px solid #e8edf2;
             transition: var(--transition-smooth);
         }
 
@@ -110,141 +122,98 @@
             border-right: none;
         }
 
-        .col-nip { width: 120px; }
-        .col-dosen { width: 150px; text-align: left !important; }
-        .col-mahasiswa { width: 150px; text-align: left !important; }
-        .col-presentasi { width: 90px; }
-        .col-materi { width: 100px; }
-        .col-hasil { width: 80px; }
-        .col-objektif { width: 100px; }
-        .col-laporan { width: 90px; }
-        .col-total { width: 100px; }
-        .col-nilai-akhir { width: 120px; }
-        .col-tanggal { width: 120px; }
+        .col-nip { width: 110px; }
+        .col-dosen { width: 130px; text-align: left !important; }
+        .col-mahasiswa { width: 130px; text-align: left !important; }
+        .col-presentasi { width: 85px; }
+        .col-materi { width: 95px; }
+        .col-hasil { width: 75px; }
+        .col-objektif { width: 95px; }
+        .col-laporan { width: 85px; }
+        .col-total { width: 95px; }
+        .col-nilai-akhir { width: 110px; }
+        .col-tanggal { width: 110px; }
         .col-aksi { width: 100px; }
 
         /* ===== TABLE HEADER STYLING ===== */
         .table-header-main {
-            background: #1976d2;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            font-size: 13px;
-        }
-
-        .table-header-main th {
-            padding: 16px 12px !important;
-            border-bottom: 2px solid rgba(255,255,255,0.2) !important;
-            border-right: 1px solid rgba(255,255,255,0.1) !important;
-        }
-
-        .table-header-main th:last-child {
-            border-right: none !important;
+            letter-spacing: 0.5px;
+            font-size: 12px;
         }
 
         .table-header-sub {
-            background: #42a5f5;
+            background: linear-gradient(135deg, #2a5298 0%, #3a6ab8 100%);
             color: white;
             font-weight: 600;
         }
 
-        .table-header-sub th {
-            padding: 14px 8px !important;
-            border-top: 1px solid rgba(255,255,255,0.15) !important;
-            border-right: 1px solid rgba(255,255,255,0.1) !important;
-        }
-
-        .table-header-sub th:last-child {
-            border-right: none !important;
-        }
-
         .compact-header {
-            line-height: 1.5;
+            font-size: 11px;
+            line-height: 1.4;
+            padding: 10px 6px;
         }
 
         .compact-header .main-title {
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             display: block;
-            font-size: 13px;
-            letter-spacing: 0.3px;
+            font-size: 12px;
         }
 
         .compact-header .sub-title {
-            font-size: 11px;
+            font-size: 10px;
             opacity: 0.95;
             display: block;
-            font-weight: 500;
-            margin-top: 2px;
-        }
-
-        .header-rowspan {
-            vertical-align: middle !important;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            line-height: 1.4;
-        }
-
-        .header-komponen {
-            background: #1976d2 !important;
-            color: white !important;
-            font-weight: 700 !important;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            font-size: 13px;
-            padding: 16px 12px !important;
-            text-align: center !important;
-        }
-
-        /* ===== NILAI TABLE BODY ===== */
-        .compact-table tbody td {
-            font-size: 13px;
-            color: #424242;
+            font-style: italic;
         }
 
         /* ===== BUTTON STYLING ===== */
         .btn-light {
-            background: #1976d2;
-            border: none;
-            color: white;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #667eea;
             font-weight: 700;
             padding: 8px 20px;
             border-radius: 25px;
             transition: var(--transition-smooth);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
 
         .btn-light:hover {
-            background: #1565c0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
-            color: white;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            color: #764ba2;
         }
 
         .btn-warning {
-            background: #ff9800;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
             border: none;
             color: white;
             transition: var(--transition-smooth);
         }
 
         .btn-warning:hover {
-            background: #f57c00;
+            background: linear-gradient(135deg, #fda085 0%, #f6d365 100%);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(253, 160, 133, 0.4);
         }
 
         .btn-danger {
-            background: #f44336;
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
             border: none;
             color: white;
             transition: var(--transition-smooth);
         }
 
         .btn-danger:hover {
-            background: #d32f2f;
+            background: linear-gradient(135deg, #f45c43 0%, #eb3349 100%);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+            box-shadow: 0 4px 12px rgba(235, 51, 73, 0.4);
         }
 
         .btn-sm {
@@ -277,7 +246,7 @@
         }
 
         .alert-success {
-            background: #4caf50;
+            background: var(--success-gradient);
             color: white;
             font-weight: 600;
         }
@@ -301,32 +270,38 @@
         /* ===== TABLE ROW HOVER ===== */
         .table-hover tbody tr {
             transition: var(--transition-smooth);
-            background-color: white;
+            cursor: pointer;
         }
 
         .table-hover tbody tr:hover {
-            background: rgba(25, 118, 210, 0.05) !important;
-            transform: translateX(2px);
-            box-shadow: -3px 0 0 0 #1976d2, 0 2px 8px rgba(0,0,0,0.1);
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         /* ===== NILAI CELL STYLING ===== */
         .nilai-cell {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
             color: #2d3748;
         }
 
         .total-nilai {
-            font-weight: 700;
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%) !important;
+            font-weight: 800;
             font-size: 15px;
-            color: #2d3748;
+            color: #22543d;
+            border-radius: 8px;
+            padding: 8px !important;
         }
 
         .nilai-akhir {
-            font-weight: 700;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+            font-weight: 800;
             font-size: 15px;
-            color: #2d3748;
+            color: #2c5282;
+            border-radius: 8px;
+            padding: 8px !important;
         }
 
         /* ===== RESPONSIVE UNTUK SIDEBAR ===== */
@@ -345,38 +320,21 @@
             
             .compact-table th,
             .compact-table td {
-                padding: 12px 8px;
-            }
-
-            .table-header-main th {
-                padding: 14px 10px !important;
-                font-size: 12px;
-            }
-
-            .table-header-sub th {
-                padding: 12px 6px !important;
-            }
-
-            .compact-header .main-title {
-                font-size: 12px;
-            }
-
-            .compact-header .sub-title {
-                font-size: 10px;
+                padding: 10px 6px;
             }
             
             .col-nip { width: 100px; }
-            .col-dosen { width: 130px; }
-            .col-mahasiswa { width: 130px; }
-            .col-presentasi { width: 85px; }
-            .col-materi { width: 95px; }
-            .col-hasil { width: 75px; }
-            .col-objektif { width: 95px; }
-            .col-laporan { width: 85px; }
-            .col-total { width: 95px; }
-            .col-nilai-akhir { width: 110px; }
-            .col-tanggal { width: 110px; }
-            .col-aksi { width: 95px; }
+            .col-dosen { width: 120px; }
+            .col-mahasiswa { width: 120px; }
+            .col-presentasi { width: 80px; }
+            .col-materi { width: 90px; }
+            .col-hasil { width: 70px; }
+            .col-objektif { width: 90px; }
+            .col-laporan { width: 80px; }
+            .col-total { width: 90px; }
+            .col-nilai-akhir { width: 100px; }
+            .col-tanggal { width: 100px; }
+            .col-aksi { width: 90px; }
         }
 
         /* ===== MOBILE CARD VIEW ===== */
@@ -399,7 +357,8 @@
                 padding: 20px;
                 margin-bottom: 15px;
                 box-shadow: var(--shadow-md);
-                border-left: 5px solid #1976d2;
+                border-left: 5px solid;
+                border-image: var(--primary-gradient) 1;
                 animation: fadeInUp 0.5s ease;
                 transition: var(--transition-smooth);
             }
@@ -452,23 +411,21 @@
             
             .nilai-item.total {
                 grid-column: 1 / -1;
-                background: #f5f5f5;
+                background: var(--success-gradient);
                 padding: 12px;
                 border-radius: var(--radius-sm);
                 font-weight: 700;
                 margin-top: 8px;
-                color: #2d3748;
-                border: 1px solid #e0e0e0;
+                color: white;
             }
             
             .nilai-item.akhir {
                 grid-column: 1 / -1;
-                background: #f5f5f5;
+                background: var(--info-gradient);
                 padding: 12px;
                 border-radius: var(--radius-sm);
                 font-weight: 700;
-                color: #2d3748;
-                border: 1px solid #e0e0e0;
+                color: white;
             }
         }
 
@@ -498,11 +455,7 @@
 
         /* ===== BORDER TABLE ===== */
         .compact-table {
-            border: 1px solid #e0e0e0;
-        }
-
-        .compact-table thead th {
-            border-color: rgba(255,255,255,0.1) !important;
+            border: 1px solid #e8edf2;
         }
 
         /* ===== CUSTOM SCROLLBAR ===== */
@@ -516,12 +469,12 @@
         }
 
         .table-container::-webkit-scrollbar-thumb {
-            background: #1976d2;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
         }
 
         .table-container::-webkit-scrollbar-thumb:hover {
-            background: #1565c0;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
     </style>
 </head>
@@ -535,12 +488,12 @@
 <div class="main-content-wrapper">
     <div class="content">
         <div class="card shadow border-0 rounded-3">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">
-                    <i class="fas fa-clipboard-check me-2"></i> Daftar Penilaian Dosen Penguji
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold">
+                    <i class="fa fa-clipboard me-2"></i> Daftar Penilaian Dosen Penguji
                 </h4>
-                <a href="{{ route('penilaian-penguji.create') }}" class="btn btn-light btn-sm">
-                    <i class="fas fa-plus-circle me-1"></i> Tambah Penilaian
+                <a href="{{ route('penilaian-penguji.create') }}" class="btn btn-light btn-sm text-primary fw-bold">
+                    <i class="fa fa-plus me-1"></i> Tambah Penilaian
                 </a>
             </div>
 
@@ -561,32 +514,32 @@
                                     <th class="col-nip header-rowspan" rowspan="2">NIP</th>
                                     <th class="col-dosen header-rowspan" rowspan="2">Nama Dosen</th>
                                     <th class="col-mahasiswa header-rowspan" rowspan="2">Nama Mahasiswa</th>
-                                    <th class="header-komponen" colspan="5">Komponen Penilaian</th>
+                                    <th colspan="5" style="background-color: #2c3e50; color: white;">Komponen Penilaian</th>
                                     <th class="col-total header-rowspan" rowspan="2">Total Nilai</th>
-                                    <th class="col-nilai-akhir header-rowspan" rowspan="2">Nilai Akhir<br>(20%)</th>
-                                    <th class="col-tanggal header-rowspan" rowspan="2">Tanggal Ujian</th>
+                                    <th class="col-nilai-akhir header-rowspan" rowspan="2">Nilai Akhir (20%)</th>
+                                    <th class="col-tanggal header-rowspan" rowspan="2">Tanggal</th>
                                     <th class="col-aksi header-rowspan" rowspan="2">Aksi</th>
                                 </tr>
                                 <tr class="table-header-sub">
                                     <th class="col-presentasi compact-header">
-                                        <div class="main-title">Presentasi</div>
-                                        <div class="sub-title">(10%)</div>
+                                        <span class="main-title">Presentasi</span>
+                                        <span class="sub-title">(10%)</span>
                                     </th>
                                     <th class="col-materi compact-header">
-                                        <div class="main-title">Pemahaman</div>
-                                        <div class="sub-title">(15%)</div>
+                                        <span class="main-title">Pemahaman</span>
+                                        <span class="sub-title">(15%)</span>
                                     </th>
                                     <th class="col-hasil compact-header">
-                                        <div class="main-title">Hasil</div>
-                                        <div class="sub-title">(40%)</div>
+                                        <span class="main-title">Hasil</span>
+                                        <span class="sub-title">(40%)</span>
                                     </th>
                                     <th class="col-objektif compact-header">
-                                        <div class="main-title">Objektivitas</div>
-                                        <div class="sub-title">(20%)</div>
+                                        <span class="main-title">Objektivitas</span>
+                                        <span class="sub-title">(20%)</span>
                                     </th>
                                     <th class="col-laporan compact-header">
-                                        <div class="main-title">Laporan</div>
-                                        <div class="sub-title">(15%)</div>
+                                        <span class="main-title">Laporan</span>
+                                        <span class="sub-title">(15%)</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -594,7 +547,7 @@
                                 @forelse ($penilaian as $p)
                                 <tr>
                                     <td class="col-nip">{{ $p->dosen->nip ?? '-' }}</td>
-                                    <td class="col-dosen">{{ $p->dosen->nama ?? '-' }}</td>
+                                    <td class="col-dosen">{{ $p->dosen->nama_dosen ?? '-' }}</td>
                                     <td class="col-mahasiswa">{{ $p->nama_mahasiswa }}</td>
                                     <td class="col-presentasi nilai-cell">{{ $p->presentasi }}</td>
                                     <td class="col-materi nilai-cell">{{ $p->materi }}</td>
@@ -640,18 +593,18 @@
                         <div class="nilai-card-header">
                             <div>
                                 <strong>{{ $p->nama_mahasiswa }}</strong>
-                                <div class="text-muted small">{{ $p->dosen->nama ?? '-' }}</div>
+                                <div class="text-muted small">{{ $p->dosen->nama_dosen ?? '-' }}</div>
                             </div>
                             <div class="action-buttons">
-                                <a href="{{ route('penilaian-penguji.edit', $p->id) }}" class="btn btn-warning btn-sm" title="Edit Penilaian">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{ route('penilaian-penguji.edit', $p->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i>
                                 </a>
                                 <form action="{{ route('penilaian-penguji.destroy', $p->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus Penilaian"
-                                            onclick="return confirm('⚠️ Yakin ingin menghapus data penilaian ini?\n\nData yang dihapus tidak dapat dikembalikan!')">
-                                        <i class="fas fa-trash-alt"></i>
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Yakin hapus data ini?')">
+                                        <i class="fa fa-trash"></i>
                                     </button>
                                 </form>
                             </div>

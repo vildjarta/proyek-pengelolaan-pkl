@@ -30,6 +30,7 @@ class Mahasiswa extends Model
         'perusahaan',    
         'id_pembimbing',
         'judul_pkl',
+        'user_id',
     ];
 
     /**
@@ -39,5 +40,14 @@ class Mahasiswa extends Model
     public function dosen()
     {
         return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
+    }
+
+    /**
+     * 🔗 Relasi ke tabel users
+     * Setiap mahasiswa dapat terhubung dengan satu user.
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 }
