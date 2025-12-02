@@ -49,26 +49,17 @@
                 use Illuminate\Support\Facades\Auth;
                 use App\Models\Mahasiswa;
 
-                // Ambil data mahasiswa yang terhubung dengan akun login (sekali saja)
+                // Mahasiswa yang sedang login (kalau ada)
                 $authMahasiswa = null;
-                $isAdmin = false;
 
                 if (Auth::check()) {
                     $user = Auth::user();
 
-                    // Jika tabel mahasiswa menyimpan email yang sama dengan auth user
+                    // tabel mahasiswa menyimpan email yang sama dengan auth user
                     try {
                         $authMahasiswa = Mahasiswa::where('email', $user->email)->first();
                     } catch (\Throwable $e) {
-                        // jika tidak ada kolom email atau error, biarkan null
                         $authMahasiswa = null;
-                    }
-
-                    // Cek bila sistem role tersedia (opsional). Jika Anda tidak menggunakan role, ini akan false.
-                    if (method_exists($user, 'hasRole')) {
-                        $isAdmin = $user->hasRole('admin') || $user->hasRole('koordinator');
-                    } else {
-                        $isAdmin = false;
                     }
                 }
             @endphp
@@ -81,17 +72,14 @@
                         $inisial = strtoupper(substr($nama, 0, 1));
                         $namaTersembunyi = substr($nama, 0, 2) . str_repeat('*', max(3, strlen($nama) - 2));
 
-                        // Pastikan kita punya id_mahasiswa pada $review (rating_dan_reviews.* seharusnya menyertakan id_mahasiswa)
+                        // id_mahasiswa pemilik review
                         $reviewMahasiswaId = $review->id_mahasiswa ?? null;
 
-                        // Pemilik review?
+                        // Apakah review ini milik user yang sedang login?
                         $isOwner = false;
                         if ($authMahasiswa && $reviewMahasiswaId) {
-                            $isOwner = ((int)$authMahasiswa->id_mahasiswa === (int)$reviewMahasiswaId);
+                            $isOwner = ((int) $authMahasiswa->id_mahasiswa === (int) $reviewMahasiswaId);
                         }
-
-                        // Jika admin, boleh edit/hapus juga (opsional)
-                        $canModify = $isOwner || $isAdmin;
                     @endphp
 
                     <div class="review-card">
@@ -118,17 +106,23 @@
                             </span>
 
                             <div class="action-buttons">
-                                {{-- Tautan Lihat tidak perlu, karena kita sudah di halaman lihat --}}
-                                {{-- Tampilkan edit/hapus hanya jika pemilik atau admin --}}
-                                @if($canModify)
-                                    <a href="{{ route('ratingdanreview.edit', $review->id_review) }}" class="btn-edit btn btn-sm btn-outline-primary me-2" title="Edit Review">
+                                {{-- Hanya pemilik review yang boleh melihat tombol edit & delete --}}
+                                @if($isOwner)
+                                    <a href="{{ route('ratingdanreview.edit', $review->id_review) }}"
+                                       class="btn-edit btn btn-sm btn-outline-primary me-2"
+                                       title="Edit Review">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
-                                    <form action="{{ route('ratingdanreview.destroy', $review->id_review) }}" method="POST" onsubmit="return confirm('Hapus review ini?')" style="display:inline-block;">
+                                    <form action="{{ route('ratingdanreview.destroy', $review->id_review) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Hapus review ini?')"
+                                          style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn-delete btn btn-sm btn-outline-danger" title="Hapus Review">
+                                        <button type="submit"
+                                                class="btn-delete btn btn-sm btn-outline-danger"
+                                                title="Hapus Review">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

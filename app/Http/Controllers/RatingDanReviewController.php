@@ -12,7 +12,30 @@ use Illuminate\Support\Facades\Auth;
 class RatingDanReviewController extends Controller
 {
     /**
-     * Menampilkan Ranking Perusahaan berdasarkan rata-rata rating
+     * Helper: cari id_perusahaan tempat mahasiswa tersebut PKL.
+     * - Kalau suatu saat kamu menambah kolom id_perusahaan di tabel mahasiswa,
+     *   fungsi ini tetap bisa dipakai (cek dulu id_perusahaan, kalau tidak ada baru pakai nama).
+     */
+    protected function resolveMahasiswaCompanyId(Mahasiswa $mahasiswa): ?int
+    {
+        // 1) Kalau tabel mahasiswa nanti punya kolom id_perusahaan
+        if (isset($mahasiswa->id_perusahaan) && !empty($mahasiswa->id_perusahaan)) {
+            return (int) $mahasiswa->id_perusahaan;
+        }
+
+        // 2) Sekarang yang dipakai adalah kolom "perusahaan" (nama perusahaan, string)
+        if (!empty($mahasiswa->perusahaan)) {
+            $perusahaan = Perusahaan::where('nama', $mahasiswa->perusahaan)->first();
+            if ($perusahaan) {
+                return (int) $perusahaan->id_perusahaan;
+            }
+        }
+
+        return null; // tidak terhubung ke perusahaan manapun
+    }
+
+    /**
+     * Halaman Ranking Perusahaan
      */
     public function showRanking(Request $request)
     {
@@ -33,24 +56,37 @@ class RatingDanReviewController extends Controller
             ->orderByDesc('avg_rating')
             ->get();
 
-        // Tentukan mahasiswa yang login (jika ada)
+        // Mahasiswa yang sedang login (jika ada)
         $currentMahasiswa = null;
+        $mahasiswaCompanyId = null;
+
         if (Auth::check()) {
             $currentMahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+
+            if ($currentMahasiswa) {
+                $mahasiswaCompanyId = $this->resolveMahasiswaCompanyId($currentMahasiswa);
+            }
         }
 
-        // Map company id => apakah user dapat menambah review (hanya jika mahasiswa dan perusahaan sesuai & belum ada review)
+        /**
+         * Map: id_perusahaan => boleh tambah review atau tidak
+         * Syarat:
+         *  - user login sebagai mahasiswa
+         *  - mahasiswa punya perusahaan (mahasiswaCompanyId tidak null)
+         *  - perusahaan di baris ini sama dengan perusahaan mahasiswa
+         *  - mahasiswa belum pernah review perusahaan ini
+         */
         $canAddMap = [];
         foreach ($perusahaans as $p) {
             $canAddMap[$p->id_perusahaan] = false;
-            if ($currentMahasiswa) {
-                $belongs = ($currentMahasiswa->id_perusahaan == $p->id_perusahaan);
-                if ($belongs) {
-                    $already = RatingDanReview::where('id_mahasiswa', $currentMahasiswa->id_mahasiswa)
-                        ->where('id_perusahaan', $p->id_perusahaan)
-                        ->exists();
-                    $canAddMap[$p->id_perusahaan] = !$already;
-                }
+
+            if ($currentMahasiswa && $mahasiswaCompanyId && $mahasiswaCompanyId == $p->id_perusahaan) {
+                $already = RatingDanReview::where('id_mahasiswa', $currentMahasiswa->id_mahasiswa)
+                    ->where('id_perusahaan', $p->id_perusahaan)
+                    ->exists();
+
+                // 1 akun 1 review per perusahaan
+                $canAddMap[$p->id_perusahaan] = !$already;
             }
         }
 
@@ -58,7 +94,7 @@ class RatingDanReviewController extends Controller
     }
 
     /**
-     * Menampilkan daftar rating dan review per perusahaan
+     * Daftar rating & review per perusahaan
      */
     public function index(Request $request, $id_perusahaan)
     {
@@ -101,20 +137,18 @@ class RatingDanReviewController extends Controller
     }
 
     /**
-     * Form tambah review baru
+     * Form tambah review baru (untuk perusahaan tertentu)
      */
     public function create($id_perusahaan)
     {
-        // pastikan numeric dan exist
         if (!is_numeric($id_perusahaan)) {
             return redirect()->route('ratingperusahaan')->with('error', 'ID perusahaan tidak valid.');
         }
 
         $perusahaan = Perusahaan::findOrFail($id_perusahaan);
 
-        // Pastikan user login dan merupakan mahasiswa yang ditempatkan di perusahaan ini
         if (!Auth::check()) {
-            return redirect()->route('ratingperusahaan')->with('error', 'Silakan login sebagai mahasiswa yang bekerja di perusahaan ini untuk menambahkan review.');
+            return redirect()->route('ratingperusahaan')->with('error', 'Silakan login terlebih dahulu.');
         }
 
         $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
@@ -122,36 +156,46 @@ class RatingDanReviewController extends Controller
             return redirect()->route('ratingperusahaan')->with('error', 'Akun Anda belum terhubung dengan data mahasiswa.');
         }
 
-        if ($mahasiswa->id_perusahaan != $perusahaan->id_perusahaan) {
-            return redirect()->route('ratingperusahaan')->with('error', 'Anda hanya dapat memberi review pada perusahaan tempat Anda melakukan PKL/kerja.');
+        // Tentukan perusahaan tempat mahasiswa PKL (dari kolom "perusahaan" di tabel mahasiswa)
+        $mahasiswaCompanyId = $this->resolveMahasiswaCompanyId($mahasiswa);
+
+        if (!$mahasiswaCompanyId || $mahasiswaCompanyId != $perusahaan->id_perusahaan) {
+            return redirect()->route('ratingperusahaan')->with(
+                'error',
+                'Anda hanya dapat memberi rating pada perusahaan tempat Anda PKL.'
+            );
         }
 
-        // Cek apakah sudah memberi review sebelumnya
+        // Cek apakah sudah pernah review perusahaan ini
         $already = RatingDanReview::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->where('id_perusahaan', $perusahaan->id_perusahaan)
             ->exists();
 
         if ($already) {
             return redirect()->route('lihatratingdanreview', ['id_perusahaan' => $perusahaan->id_perusahaan])
-                ->with('error', 'Anda sudah memberikan review untuk perusahaan ini. Anda dapat mengeditnya jika perlu.');
+                ->with('error', 'Anda sudah memberikan review untuk perusahaan ini. Silakan edit jika ingin mengubah.');
         }
 
-        // Berikan mahasiswa ke view agar form menampilkan NIM (readonly)
+        // Kirim data mahasiswa agar NIM otomatis & readonly
         return view('rating.ratingdanreview', compact('perusahaan', 'mahasiswa'));
     }
 
     /**
-     * Simpan data review baru
+     * Simpan review baru
      */
     public function store(Request $request)
     {
-        // Jika user mahasiswa, ambil data mahasiswa dari email login
         $mahasiswa = null;
+        $mahasiswaCompanyId = null;
+
         if (Auth::check()) {
             $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+            if ($mahasiswa) {
+                $mahasiswaCompanyId = $this->resolveMahasiswaCompanyId($mahasiswa);
+            }
         }
 
-        // Validation: jika mahasiswa ditemukan -> tidak perlu validasi nim, gunakan data mahasiswa terhubung.
+        // Jika mahasiswa login ➜ gunakan data dari akun, nim diabaikan
         if ($mahasiswa) {
             $validated = $request->validate([
                 'id_perusahaan'  => 'required|exists:perusahaan,id_perusahaan',
@@ -159,28 +203,34 @@ class RatingDanReviewController extends Controller
                 'review'         => 'required|string|max:500',
                 'tanggal_review' => 'nullable|date',
             ]);
-            // double check perusahaan sesuai
-            if ($mahasiswa->id_perusahaan != $validated['id_perusahaan']) {
-                return back()->withErrors(['id_perusahaan' => 'Anda hanya dapat memberi review untuk perusahaan tempat Anda bekerja.'])->withInput();
+
+            // Pastikan hanya bisa rating perusahaan tempat dia PKL
+            if (!$mahasiswaCompanyId || $mahasiswaCompanyId != $validated['id_perusahaan']) {
+                return back()
+                    ->withErrors(['id_perusahaan' => 'Anda hanya dapat memberi review pada perusahaan tempat Anda PKL.'])
+                    ->withInput();
             }
 
-            // cek duplicate
+            // Cek duplikasi review (1 akun 1 review untuk perusahaan ini)
             $exists = RatingDanReview::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
                 ->where('id_perusahaan', $validated['id_perusahaan'])
                 ->exists();
+
             if ($exists) {
-                return back()->withErrors(['review' => 'Anda sudah memberikan review untuk perusahaan ini.'])->withInput();
+                return back()
+                    ->withErrors(['review' => 'Anda sudah memberikan review untuk perusahaan ini.'])
+                    ->withInput();
             }
 
             $data = [
-                'id_mahasiswa' => $mahasiswa->id_mahasiswa,
-                'id_perusahaan' => $validated['id_perusahaan'],
-                'rating' => $validated['rating'],
-                'review' => $validated['review'],
+                'id_mahasiswa'   => $mahasiswa->id_mahasiswa,
+                'id_perusahaan'  => $validated['id_perusahaan'],
+                'rating'         => $validated['rating'],
+                'review'         => $validated['review'],
                 'tanggal_review' => $validated['tanggal_review'] ?? now(),
             ];
         } else {
-            // Jika bukan mahasiswa (mis. admin memasukkan manual), izinkan pengisian nim
+            // Bukan mahasiswa (misal admin input manual)
             $validated = $request->validate([
                 'nim'            => 'required|digits:10',
                 'id_perusahaan'  => 'required|exists:perusahaan,id_perusahaan',
@@ -188,24 +238,29 @@ class RatingDanReviewController extends Controller
                 'review'         => 'required|string|max:500',
                 'tanggal_review' => 'nullable|date',
             ]);
+
             $mahasiswa = Mahasiswa::where('nim', $validated['nim'])->first();
             if (!$mahasiswa) {
-                return back()->withErrors(['nim' => 'NIM tidak ditemukan.'])->withInput();
+                return back()
+                    ->withErrors(['nim' => 'NIM tidak ditemukan.'])
+                    ->withInput();
             }
 
-            // cek duplicate
             $exists = RatingDanReview::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
                 ->where('id_perusahaan', $validated['id_perusahaan'])
                 ->exists();
+
             if ($exists) {
-                return back()->withErrors(['review' => 'Mahasiswa ini sudah memberikan review untuk perusahaan ini.'])->withInput();
+                return back()
+                    ->withErrors(['review' => 'Mahasiswa ini sudah memberikan review untuk perusahaan ini.'])
+                    ->withInput();
             }
 
             $data = [
-                'id_mahasiswa' => $mahasiswa->id_mahasiswa,
-                'id_perusahaan' => $validated['id_perusahaan'],
-                'rating' => $validated['rating'],
-                'review' => $validated['review'],
+                'id_mahasiswa'   => $mahasiswa->id_mahasiswa,
+                'id_perusahaan'  => $validated['id_perusahaan'],
+                'rating'         => $validated['rating'],
+                'review'         => $validated['review'],
                 'tanggal_review' => $validated['tanggal_review'] ?? now(),
             ];
         }
@@ -225,15 +280,15 @@ class RatingDanReviewController extends Controller
         $ratingdanreview = RatingDanReview::findOrFail($id_review);
         $perusahaan = Perusahaan::findOrFail($ratingdanreview->id_perusahaan);
 
-        // Cek kepemilikan: hanya mahasiswa pemilik review (atau admin) yang boleh edit
-        if (Auth::check()) {
-            $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
-            if ($mahasiswa && $mahasiswa->id_mahasiswa != $ratingdanreview->id_mahasiswa) {
-                return redirect()->route('lihatratingdanreview', ['id_perusahaan' => $perusahaan->id_perusahaan])
-                    ->with('error', 'Anda tidak berwenang mengedit review ini.');
-            }
-        } else {
+        if (!Auth::check()) {
             return redirect()->route('ratingperusahaan')->with('error', 'Silakan login untuk mengedit review.');
+        }
+
+        $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+        if ($mahasiswa && $mahasiswa->id_mahasiswa != $ratingdanreview->id_mahasiswa) {
+            return redirect()
+                ->route('lihatratingdanreview', ['id_perusahaan' => $perusahaan->id_perusahaan])
+                ->with('error', 'Anda tidak berwenang mengedit review ini.');
         }
 
         return view('rating.editratingdanreview', compact('ratingdanreview', 'perusahaan'));
@@ -246,13 +301,14 @@ class RatingDanReviewController extends Controller
     {
         $ratingdanreview = RatingDanReview::findOrFail($id_review);
 
-        // Pastikan pemilik
         if (!Auth::check()) {
             return redirect()->route('ratingperusahaan')->with('error', 'Silakan login untuk melakukan perubahan.');
         }
+
         $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
         if (!$mahasiswa || $mahasiswa->id_mahasiswa != $ratingdanreview->id_mahasiswa) {
-            return redirect()->route('lihatratingdanreview', ['id_perusahaan' => $ratingdanreview->id_perusahaan])
+            return redirect()
+                ->route('lihatratingdanreview', ['id_perusahaan' => $ratingdanreview->id_perusahaan])
                 ->with('error', 'Anda tidak berwenang mengubah review ini.');
         }
 
@@ -281,13 +337,14 @@ class RatingDanReviewController extends Controller
     {
         $ratingdanreview = RatingDanReview::findOrFail($id_review);
 
-        // Hanya pemilik (mahasiswa yang membuat review) yang dapat menghapus, atau admin (opsional)
         if (!Auth::check()) {
             return redirect()->route('ratingperusahaan')->with('error', 'Silakan login untuk melakukan aksi ini.');
         }
+
         $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
         if (!$mahasiswa || $mahasiswa->id_mahasiswa != $ratingdanreview->id_mahasiswa) {
-            return redirect()->route('lihatratingdanreview', ['id_perusahaan' => $ratingdanreview->id_perusahaan])
+            return redirect()
+                ->route('lihatratingdanreview', ['id_perusahaan' => $ratingdanreview->id_perusahaan])
                 ->with('error', 'Anda tidak berwenang menghapus review ini.');
         }
 
