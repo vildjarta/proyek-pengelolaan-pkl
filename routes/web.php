@@ -16,16 +16,23 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\ManageUserController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes (bersih & terstruktur)
+| Web Routes
 |--------------------------------------------------------------------------
-|
-| File ini berisi rute web aplikasi. Pastikan hanya ada SATU deklarasi
-| Route::resource('datadosenpembimbing', ...) seperti di bawah.
-|
 */
+
+/*
+|--------------------------------------------------------------------------
+| Super Admin (KHUSUS KOORDINATOR)
+|--------------------------------------------------------------------------
+| Hanya Koordinator yang boleh mengelola User (Tambah/Edit/Hapus Akun).
+*/
+Route::middleware(['auth', 'role:koordinator'])->group(function () {
+    Route::resource('manage-users', ManageUserController::class);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -65,13 +72,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Jadwal (role: mahasiswa, dosen_pembimbing, admin, koordinator)
-    Route::middleware(['role:mahasiswa,dosen_pembimbing,admin,koordinator'])->group(function () {
+    /* * PERUBAHAN:
+     * - 'admin' dihapus (digantikan koordinator).
+     * - 'staff' ditambahkan ke rute manajemen (Jadwal, Transkrip, Data Master).
+     */
+
+    // Jadwal (role: mahasiswa, dosen_pembimbing, koordinator, staff)
+    Route::middleware(['role:mahasiswa,dosen_pembimbing,koordinator,staff'])->group(function () {
         Route::resource('jadwal', JadwalBimbinganController::class);
     });
 
-    // Transkrip (role: mahasiswa, admin, koordinator)
-    Route::middleware(['role:mahasiswa,admin,koordinator'])->group(function () {
+    // Transkrip (role: mahasiswa, koordinator, staff)
+    // Staff perlu akses untuk mengelola nilai/kelayakan
+    Route::middleware(['role:mahasiswa,koordinator,staff'])->group(function () {
         Route::resource('transkrip', TranscriptController::class);
 
         // Transkrip Analyze
@@ -80,18 +93,20 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
     });
 
-    // Penilaian pembimbing (role: dosen_pembimbing, admin, koordinator)
-    Route::middleware(['role:dosen_pembimbing,admin,koordinator'])->group(function () {
+    // Penilaian pembimbing (role: dosen_pembimbing, koordinator, staff)
+    // Staff ditambahkan untuk rekapitulasi nilai jika perlu
+    Route::middleware(['role:dosen_pembimbing,koordinator,staff'])->group(function () {
         Route::resource('penilaian', PenilaianDospemController::class);
     });
 
-    // Penilaian penguji (role: dosen_penguji, admin, koordinator)
-    Route::middleware(['role:dosen_penguji,admin,koordinator'])->group(function () {
+    // Penilaian penguji (role: dosen_penguji, koordinator, staff)
+    Route::middleware(['role:dosen_penguji,koordinator,staff'])->group(function () {
         Route::resource('penilaian-penguji', PenilaianPengujiController::class);
     });
 
-    // Admin & Koordinator: Data master
-    Route::middleware(['role:admin,koordinator'])->group(function () {
+    // Data Master (Dikelola oleh Koordinator & Staff)
+    // Menggantikan 'role:admin,koordinator' menjadi 'role:koordinator,staff'
+    Route::middleware(['role:koordinator,staff'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
         Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
         Route::resource('mahasiswa', MahasiswaController::class);
@@ -100,12 +115,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
 
         Route::resource('nilai', NilaiController::class);
-        // Optional: resource for general dosen management if needed
         Route::resource('dosen', DosenController::class);
     });
 
     // Rating & review (gabungan roles)
-    Route::middleware(['role:mahasiswa,dosen_pembimbing,admin,koordinator'])->group(function () {
+    // 'admin' dihapus, 'staff' ditambahkan
+    Route::middleware(['role:mahasiswa,dosen_pembimbing,koordinator,staff'])->group(function () {
         // Halaman ranking utama
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 
@@ -125,21 +140,14 @@ Route::middleware(['auth'])->group(function () {
                 ->with('error', 'Silakan pilih perusahaan terlebih dahulu untuk menambahkan review.');
         })->name('tambahratingdanreview.fallback');
 
-        // resource routes (hindari bentrok dengan create/index/show yang kita handle di atas)
+        // resource routes
         Route::resource('ratingdanreview', RatingDanReviewController::class)
             ->except(['show', 'index', 'create']);
     });
 
-    /*
-    |--------------------------------------------------------------------
-    | AJAX endpoints (otentikasi diperlukan)
-    |--------------------------------------------------------------------
-    */
-    // Mahasiswa
+    // AJAX endpoints
     Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM'])->name('ajax.mahasiswa.suggest');
     Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM'])->name('ajax.mahasiswa.byNim');
-
-    // Dosen (autocomplete / lookup)
     Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
     Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
 });

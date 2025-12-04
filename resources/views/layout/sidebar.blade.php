@@ -145,8 +145,20 @@
                        onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
                         <span class="label-text">Logout</span>
                     </a>
-
-                    <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" style="display:none;">
+                            {{-- KHUSUS KOORDINATOR (SUPER ADMIN) --}}
+                    @if($userRole == 'koordinator')
+                        <h4>Super Admin</h4>
+                        <ul>
+                            <li class="{{ (request()->is('manage-users') || request()->is('manage-users/*')) ? 'active' : '' }}">
+                                <a href="{{ url('/manage-users') }}">
+                                    <i class="fa fa-users-cog"></i> {{-- Pastikan icon fa-users-cog tersedia, atau pakai fa-cogs --}}
+                                    <span>Manajemen Users</span>
+                                </a>
+                            </li>
+                        </ul>
+                    @endif
+                    {{-- Form ini diperlukan karena logout adalah rute POST --}}
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </li>
