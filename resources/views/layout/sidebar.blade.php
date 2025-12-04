@@ -29,7 +29,7 @@
             </ul>
 
             {{-- Menu Admin/Koordinator (Melihat Semua Fitur) --}}
-            @if(in_array($userRole == 'koordinator'))
+            @if($userRole == 'koordinator')
                 <h4 class="menu-dropdown-toggle">
                     <span>
                         <i class="fa fa-graduation-cap"></i>
