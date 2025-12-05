@@ -89,8 +89,7 @@ body.sidebar-closed .main-content-wrapper {
     background-color: #e2e6ea;
 }
 
-/* ===== PENTING: pastikan header kolom ke-2 (Nama Perusahaan) CENTERED ===== */
-/* Gunakan selector untuk thead dan tbody, pakai !important agar tidak tertimpa */
+/* Nama Perusahaan di tengah */
 .table thead th:nth-child(2) {
     text-align: center !important;
     justify-content: center;
@@ -218,4 +217,31 @@ body.sidebar-closed .main-content-wrapper {
     }
 
     .action-buttons { justify-content: flex-start; }
+}
+
+/* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+
+/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+
+    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
+    display: block !important;
+    list-style: none;
+
+    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
+.sidebar .dropdown-menu.collapsed {
+    display: none !important;
 }

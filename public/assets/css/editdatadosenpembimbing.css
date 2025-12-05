@@ -62,3 +62,31 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
     }
     .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
     .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
+
+    /* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+
+/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+
+    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
+    display: block !important;
+    list-style: none;
+
+    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
+.sidebar .dropdown-menu.collapsed {
+    display: none !important;
+}
+

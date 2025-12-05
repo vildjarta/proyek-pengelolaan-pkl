@@ -110,6 +110,32 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         row.style.display = namaDosen.includes(filter) ? '' : 'none';
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.querySelector('.menu-toggle');
+        const body = document.body;
+        const profileWrapper = document.querySelector('.user-profile-wrapper');
+        const userinfo = document.querySelector('.user-info');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                body.classList.toggle('sidebar-closed');
+            });
+        }
+
+        if (userinfo) {
+            userinfo.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileWrapper.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                    profileWrapper.classList.remove('active');
+                }
+            });
+        }
+    });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
