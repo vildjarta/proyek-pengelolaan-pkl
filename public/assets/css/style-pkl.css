@@ -729,3 +729,32 @@ body.sidebar-closed .main-content-wrapper {
         padding: 20px !important;
     }
 }
+
+/* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+
+/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+
+    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
+    display: block !important;
+    list-style: none;
+
+    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
+.sidebar .dropdown-menu.collapsed {
+    display: none !important;
+}
+
+

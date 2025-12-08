@@ -49,13 +49,16 @@
                 use Illuminate\Support\Facades\Auth;
                 use App\Models\Mahasiswa;
 
-                // Mahasiswa yang sedang login (kalau ada)
                 $authMahasiswa = null;
+                $isKoordinator = false;
 
                 if (Auth::check()) {
                     $user = Auth::user();
 
-                    // tabel mahasiswa menyimpan email yang sama dengan auth user
+                    // Jika project-mu menyimpan role di kolom 'role' pada users table
+                    $isKoordinator = isset($user->role) && $user->role === 'koordinator';
+
+                    // ambil data mahasiswa yang terhubung lewat email (jika ada)
                     try {
                         $authMahasiswa = Mahasiswa::where('email', $user->email)->first();
                     } catch (\Throwable $e) {
@@ -72,22 +75,23 @@
                         $inisial = strtoupper(substr($nama, 0, 1));
                         $namaTersembunyi = substr($nama, 0, 2) . str_repeat('*', max(3, strlen($nama) - 2));
 
-                        // id_mahasiswa pemilik review
                         $reviewMahasiswaId = $review->id_mahasiswa ?? null;
 
-                        // Apakah review ini milik user yang sedang login?
+                        // apakah user ini pemilik review?
                         $isOwner = false;
                         if ($authMahasiswa && $reviewMahasiswaId) {
-                            $isOwner = ((int) $authMahasiswa->id_mahasiswa === (int) $reviewMahasiswaId);
+                            $isOwner = ((int)$authMahasiswa->id_mahasiswa === (int)$reviewMahasiswaId);
                         }
                     @endphp
 
-                    <div class="review-card">
+                    <div class="review-card card mb-3 p-3" style="max-width:700px;">
                         <div class="review-header d-flex align-items-center">
-                            <div class="avatar me-3">{{ $inisial }}</div>
+                            <div class="avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width:48px;height:48px;">
+                                <strong>{{ $inisial }}</strong>
+                            </div>
                             <div class="reviewer-info">
-                                <span class="reviewer-name">{{ $namaTersembunyi }}</span>
-                                <div class="review-rating">
+                                <span class="reviewer-name fw-semibold">{{ $namaTersembunyi }}</span>
+                                <div class="review-rating mt-1">
                                     @for ($i = 1; $i <= 5; $i++)
                                         <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
                                     @endfor
@@ -100,23 +104,26 @@
                         </div>
 
                         <div class="review-footer d-flex justify-content-between align-items-center mt-3">
-                            <span class="review-date">
+                            <span class="review-date text-muted">
                                 <i class="fa-regular fa-calendar"></i>
                                 {{ \Carbon\Carbon::parse($review->tanggal_review)->translatedFormat('d F Y') }}
                             </span>
 
                             <div class="action-buttons">
-                                {{-- Hanya pemilik review yang boleh melihat tombol edit & delete --}}
+                                {{-- EDIT hanya untuk pemilik review --}}
                                 @if($isOwner)
                                     <a href="{{ route('ratingdanreview.edit', $review->id_review) }}"
                                        class="btn-edit btn btn-sm btn-outline-primary me-2"
                                        title="Edit Review">
                                         <i class="fas fa-pen"></i>
                                     </a>
+                                @endif
 
+                                {{-- HAPUS untuk pemilik ATAU koordinator --}}
+                                @if($isOwner || $isKoordinator)
                                     <form action="{{ route('ratingdanreview.destroy', $review->id_review) }}"
                                           method="POST"
-                                          onsubmit="return confirm('Hapus review ini?')"
+                                          onsubmit="return confirm('Yakin menghapus review ini?')"
                                           style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
