@@ -179,3 +179,57 @@ html, body {
 .main-content-wrapper:focus {
   outline: none;
 }
+
+/* Submenu container: beri sedikit bg dan rounded corner */
+.sidebar ul.dropdown-menu {
+  margin: 0 12px 14px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04); /* lembut */
+  list-style: none;
+  padding: 6px 6px;
+  transition: all .15s ease;
+}
+
+/* setiap menu item jadi block (mudah dipisah) */
+.sidebar ul.dropdown-menu li {
+  margin: 0;
+  padding: 0;
+}
+
+/* link jadi full-width block, tanpa rounded pada tiap item
+   supaya border-top divider terlihat rapi */
+.sidebar ul.dropdown-menu li a {
+  display: block;
+  align-items: center;
+  padding: 12px 14px;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 0; /* jangan rounded tiap item (agar divider lurus) */
+  background: transparent;
+  font-weight: 500;
+}
+
+/* divider / garis antar item: gunakan border-top pada item setelah item pertama */
+.sidebar ul.dropdown-menu li + li {
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* hover / focus pada item: beri latar lembut (tetap respect text color) */
+.sidebar ul.dropdown-menu li a:hover,
+.sidebar ul.dropdown-menu li a:focus {
+  background: rgba(0,0,0,0.09);
+  color: #fff;
+  outline: none;
+}
+
+/* active item: tunjukkan lebih tegas (buat rounded di sekitar active agar terlihat) */
+.sidebar ul li.active a{
+  background: rgba(0,0,0,0.14);
+  border-radius: 6px;
+}
+
+/* jika Anda sebelumnya menyembunyikan ikon intern, biarkan tetap */
+.sidebar ul.dropdown-menu li a i { display: none; }
+
+/* jika butuh spasi tambahan antara grup, jaga margin-bottom */
+.sidebar .menu-list > h4 + .dropdown-menu { margin-top: 8px; }

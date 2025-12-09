@@ -5,13 +5,21 @@
             @php
                 $userRole = auth()->user()->role ?? '';
                 $currentRoute = request()->path();
+
+                // helper kecil untuk membuka grup jika salah satu route anak cocok
+                $isDataAkademikOpen = request()->is('mahasiswa*') || request()->is('transkrip*');
+                $isBimbinganOpen = request()->is('datadosenpembimbing*') || request()->is('dosen_penguji*');
+                $isPerusahaanOpen = request()->is('perusahaan*');
+                $isJadwalOpen = request()->is('jadwal*');
+                $isPenilaianOpen = request()->is('penilaian*') || request()->is('penilaian-penguji*') || request()->is('nilai*') || request()->is('ratingperusahaan*');
+                $isAkunOpen = request()->is('profile*') || request()->is('manage-users*') || $currentRoute == 'home';
             @endphp
 
             <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-halaman-utama">
                 <span><i class="fa fa-home"></i> <span class="label-text">Halaman Utama</span></span>
                 <i class="fa fa-chevron-down dropdown-caret"></i>
             </h4>
-            <ul class="dropdown-menu collapsed" aria-hidden="true">
+            <ul class="dropdown-menu {{ $currentRoute == 'home' ? '' : 'collapsed' }}" aria-hidden="{{ $currentRoute == 'home' ? 'false' : 'true' }}">
                 <li class="{{ $currentRoute == 'home' ? 'active' : '' }}">
                     <a href="{{ url('/home') }}">
                         <span class="label-text">Beranda</span>
@@ -24,7 +32,7 @@
                     <span><i class="fa fa-graduation-cap"></i> <span class="label-text">Data Akademik</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed" aria-hidden="true">
+                <ul class="dropdown-menu {{ $isDataAkademikOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isDataAkademikOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('mahasiswa') || request()->is('mahasiswa/*')) ? 'active' : '' }}">
                         <a href="{{ url('/mahasiswa') }}">
                             <span class="label-text">Data Mahasiswa</span>
@@ -41,7 +49,7 @@
                     <span><i class="fa fa-users"></i> <span class="label-text">Bimbingan & Penguji</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed" aria-hidden="true">
+                <ul class="dropdown-menu {{ $isBimbinganOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isBimbinganOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('datadosenpembimbing') || request()->is('datadosenpembimbing/*')) ? 'active' : '' }}">
                         <a href="{{ url('/datadosenpembimbing') }}">
                             <span class="label-text">Dosen Pembimbing</span>
@@ -58,7 +66,7 @@
                     <span><i class="fa fa-building"></i> <span class="label-text">Perusahaan PKL</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed" aria-hidden="true">
+                <ul class="dropdown-menu {{ $isPerusahaanOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isPerusahaanOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('perusahaan') || request()->is('perusahaan/*')) ? 'active' : '' }}">
                         <a href="{{ url('/perusahaan') }}">
                             <span class="label-text">Data Perusahaan</span>
@@ -70,7 +78,7 @@
                     <span><i class="fa fa-calendar-alt"></i> <span class="label-text">Jadwal & Kegiatan</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed" aria-hidden="true">
+                <ul class="dropdown-menu {{ $isJadwalOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isJadwalOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('jadwal') || request()->is('jadwal/*')) ? 'active' : '' }}">
                         <a href="{{ url('/jadwal') }}">
                             <span class="label-text">Jadwal Bimbingan</span>
@@ -82,7 +90,7 @@
                     <span><i class="fa fa-clipboard-check"></i> <span class="label-text">Penilaian & Hasil</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed" aria-hidden="true">
+                <ul class="dropdown-menu {{ $isPenilaianOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isPenilaianOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('penilaian') || request()->is('penilaian/*')) ? 'active' : '' }}">
                         <a href="{{ url('/penilaian') }}">
                             <span class="label-text">Nilai Pembimbing</span>
@@ -110,7 +118,7 @@
                 <span><i class="fa fa-user-circle"></i> <span class="label-text">Akun</span></span>
                 <i class="fa fa-chevron-down dropdown-caret"></i>
             </h4>
-            <ul class="dropdown-menu collapsed" aria-hidden="true">
+            <ul class="dropdown-menu {{ $isAkunOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isAkunOpen ? 'false' : 'true' }}">
                 <li>
                     <a href="#"
                        onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
