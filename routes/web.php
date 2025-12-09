@@ -143,16 +143,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
     Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
 });
-
-/*
-|--------------------------------------------------------------------------
-| (Optional) Debug or helper routes
-|--------------------------------------------------------------------------
-| Jangan biarkan route debug ini production — hapus jika sudah tidak diperlukan.
-*/
-// Route::get('/debug-clear-all', function () {
-//     \Artisan::call('route:clear');
-//     \Artisan::call('view:clear');
-//     \Artisan::call('cache:clear');
-//     return 'cleared';
-// });

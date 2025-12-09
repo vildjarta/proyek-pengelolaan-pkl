@@ -15,6 +15,12 @@
     {{-- CSS Halaman Ini --}}
     <link rel="stylesheet" href="{{ asset('assets/css/ratingperusahaan.css') }}">
 
+    {{-- Small safety override in case CSS elsewhere hides dropdown --}}
+    <style>
+        .user-profile-wrapper { position: relative !important; z-index: 20000 !important; }
+        .header { z-index: 21000 !important; }
+        .profile-dropdown-menu { z-index: 22000 !important; }
+    </style>
 </head>
 <body>
     {{-- HEADER --}}
@@ -81,7 +87,6 @@
                     <i class="fa fa-eye"></i>
                 </a>
 
-                {{-- Hanya tampilkan tombol tambah jika mahasiswa login, ditempatkan di perusahaan ini, dan belum review --}}
                 @if($canAdd)
                     <a href="{{ url('/ratingdanreview/tambah/'.$p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
                         <i class="fa fa-plus"></i>
@@ -114,45 +119,30 @@
             const searchInput = document.getElementById('searchInput');
             const table = document.getElementById('rankingTable');
 
-            searchInput.addEventListener('keyup', function() {
-                const filter = searchInput.value.toLowerCase();
-                const rows = table.querySelectorAll("tbody tr");
-                rows.forEach(row => {
-                    const namaCell = row.cells[1];
-                    if (!namaCell) return;
-                    const nama = (namaCell.textContent || namaCell.innerText).toLowerCase();
-                    row.style.display = nama.includes(filter) ? "" : "none";
+            if (searchInput && table) {
+                searchInput.addEventListener('keyup', function() {
+                    const filter = searchInput.value.toLowerCase();
+                    const rows = table.querySelectorAll("tbody tr");
+                    rows.forEach(row => {
+                        const namaCell = row.cells[1];
+                        if (!namaCell) return;
+                        const nama = (namaCell.textContent || namaCell.innerText).toLowerCase();
+                        row.style.display = nama.includes(filter) ? "" : "none";
+                    });
                 });
-            });
+            }
+
+            // sidebar toggle only — header handles profile dropdown
+            const toggleButton = document.querySelector('.menu-toggle');
+            const body = document.body;
+            if (toggleButton) {
+                toggleButton.addEventListener('click', function() {
+                    body.classList.toggle('sidebar-closed');
+                });
+            }
         });
-
-        document.addEventListener('DOMContentLoaded', function() {
-        const toggleButton = document.querySelector('.menu-toggle');
-        const body = document.body;
-        const profileWrapper = document.querySelector('.user-profile-wrapper');
-        const userinfo = document.querySelector('.user-info');
-
-        if (toggleButton) {
-            toggleButton.addEventListener('click', function() {
-                body.classList.toggle('sidebar-closed');
-            });
-        }
-
-        if (userinfo) {
-            userinfo.addEventListener('click', function(e) {
-                e.preventDefault();
-                profileWrapper.classList.toggle('active');
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
-                    profileWrapper.classList.remove('active');
-                }
-            });
-        }
-    });
-
-    
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

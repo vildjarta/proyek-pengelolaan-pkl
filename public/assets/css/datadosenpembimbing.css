@@ -228,3 +228,41 @@ body {
     display: none !important;
 }
 
+/* Force dropdown profile terlihat meskipun ada override lain */
+.user-profile-wrapper { position: relative !important; z-index: 20000 !important; }
+.header { z-index: 21000 !important; }
+
+/* Pastikan dropdown muncul saat wrapper punya class .active */
+.profile-dropdown-menu {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transform: translateY(10px) !important;
+    transition: opacity 0.18s ease, transform 0.18s ease !important;
+    z-index: 22000 !important;
+}
+
+/* Saat aktif: tunjukkan */
+.user-profile-wrapper.active .profile-dropdown-menu {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Pastikan header tidak memotong dropdown dengan overflow */
+.header, .user-profile-wrapper {
+    overflow: visible !important;
+}
+
+/* Pastikan tombol di dropdown dapat diklik */
+.profile-dropdown-menu .dropdown-item,
+.profile-dropdown-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: transparent;
+    border: 0;
+    width: 100%;
+    cursor: pointer;
+    color: inherit;
+}
