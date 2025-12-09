@@ -1,69 +1,48 @@
+{{-- header.blade.php --}}
 <head>
     <meta charset="UTF-8">
     <title>Sistem PKL JOZZ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {{-- CSS utama --}}
     <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
+
     <style>
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            padding: 0.6rem 1rem;
-            background: #fff;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
+        .menu-toggle { font-size: 14px; line-height:1; }
+        .header .logo span { font-size: 1rem; letter-spacing: .2px; }
+
+        /* Hilangkan outline/blue highlight pada avatar/tap */
+        .avatar img { outline: none; -webkit-tap-highlight-color: transparent; }
+        .avatar img:focus { outline: none; box-shadow: none; }
+
+        /* Normalisasi teks & fokus pada dropdown items */
+        .profile-dropdown-menu .dropdown-item,
+        .profile-dropdown-menu .dropdown-item:link,
+        .profile-dropdown-menu .dropdown-item:visited {
+            text-decoration: none;
+            color: var(--color-text-dark);
+            font-weight: 500;
         }
-        .header .logo { display:flex; align-items:center; gap:0.6rem; font-weight:700; color:#0f172a; }
-        .header .logo img{ height:34px; width:auto; display:block }
-        .header-left { display:flex; align-items:center; gap:0.75rem }
-        .menu-right { display:flex; align-items:center; gap:0.75rem }
-        .menu-right a.icon-link { color: #374151; padding:6px 8px; border-radius:6px; text-decoration:none }
-        .menu-right a.icon-link:hover { background: rgba(15,23,42,0.03) }
-        .user-profile-wrapper { position:relative }
-        .user-info {
-            display:flex;
-            align-items:center;
-            gap:0.6rem;
-            cursor:pointer;
-            user-select:none;
+
+        /* Hover sama untuk semua item */
+        .profile-dropdown-menu .dropdown-item:hover {
+            background: var(--color-light-blue-bg);
+            color: var(--color-primary-blue);
         }
-        .user-info .text-link { font-weight:600; color:#111827; }
-        .user-info .avatar img{ height:36px; width:36px; border-radius:50%; object-fit:cover; display:block }
-        .profile-dropdown-menu {
-            position:absolute;
-            right:0;
-            top:calc(100% + 8px);
-            min-width:200px;
-            background:#fff;
-            border:1px solid rgba(0,0,0,0.08);
-            box-shadow:0 6px 18px rgba(2,6,23,0.08);
-            display:none;
-            border-radius:8px;
-            overflow:hidden;
-            z-index:999;
+
+        /* Fokus keyboard: tunjukkan ring, tapi hindari auto-styling saat klik */
+        .profile-dropdown-menu .dropdown-item:focus-visible {
+            background: var(--color-light-blue-bg);
+            color: var(--color-primary-blue);
+            box-shadow: 0 0 0 3px rgba(91,138,210,0.08);
+            outline: none;
         }
-        .profile-dropdown-menu a, .profile-dropdown-menu button {
-            display:flex;
-            align-items:center;
-            gap:0.6rem;
-            padding:8px 14px;
-            color:#0f172a;
-            text-decoration:none;
-            background:transparent;
-            border:0;
-            width:100%;
-            text-align:left;
-            font-size:0.95rem;
-        }
-        .profile-dropdown-menu a:hover, .profile-dropdown-menu button:hover{ background:#f8fafc }
-        .user-profile-wrapper.open .profile-dropdown-menu{ display:block }
-        /* small visual polish */
-        .profile-dropdown-menu .icon { width:20px; display:inline-flex; justify-content:center }
-        @media (max-width:720px){
-            .header { padding:0.5rem }
-            .menu-right a.text-link{ display:none }
-        }
+
+        /* Pastikan tidak ada underline / warna visited default */
+        .profile-dropdown-menu .dropdown-item { text-decoration: none !important; -webkit-text-decoration-skip: none; }
     </style>
 </head>
 
@@ -74,28 +53,30 @@
     $version = ($authUser && $authUser->updated_at) ? $authUser->updated_at->timestamp : time();
 @endphp
 
-<div class="header">
+<div class="header" role="banner">
     <div class="header-left">
-        <div class="logo">
+        <div class="logo" aria-hidden="true">
             <img src="{{ asset('assets/images/logo-baru.png') }}" alt="Logo PKL JOZZ">
             <span>PKL JOZZ</span>
         </div>
-        <button class="fa fa-bars menu-toggle" aria-label="Toggle menu"></button>
+
+        <button class="menu-toggle" id="sidebarToggle" aria-label="Toggle sidebar" title="Toggle sidebar">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
     </div>
 
-    <div class="menu-right">
-        <a href="#" class="icon-link" title="Notifikasi"><i class="fa fa-bell"></i></a>
-        <a href="#" class="icon-link" title="Pesan"><i class="fa fa-envelope"></i></a>
+    <div class="menu-right" role="navigation" aria-label="Top navigation">
+        <a href="#" class="icon-link" title="Notifikasi" aria-label="Notifikasi"><i class="fa fa-bell"></i></a>
+        <a href="#" class="icon-link" title="Pesan" aria-label="Pesan"><i class="fa fa-envelope"></i></a>
 
         <div class="user-profile-wrapper" id="userProfileWrapper">
-            {{-- clickable area: nama + avatar --}}
             <div class="user-info" id="userInfo"
                  role="button"
                  tabindex="0"
                  aria-haspopup="true"
                  aria-expanded="false"
                  aria-controls="profileDropdown">
-                <span class="text-link">{{ $displayName }}</span>
+                <span class="text-link" id="userDisplayName">{{ $displayName }}</span>
 
                 <div class="avatar" aria-hidden="true">
                     <img
@@ -106,60 +87,56 @@
             </div>
 
             <div class="profile-dropdown-menu" id="profileDropdown" role="menu" aria-labelledby="userInfo">
-                <a href="{{ route('profile.edit') }}" role="menuitem">
+                <a href="{{ route('profile.edit') }}" role="menuitem" class="dropdown-item">
                     <span class="icon"><i class="fa fa-user-circle"></i></span>
                     Profil Saya
                 </a>
 
-                <a href="#" role="menuitem">
+                <a href="#" role="menuitem" class="dropdown-item">
                     <span class="icon"><i class="fa fa-cog"></i></span>
                     Pengaturan
                 </a>
 
-                {{-- logout form (ubah route jika bukan 'logout') --}}
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+                {{-- Logout: gunakan <a> supaya tampilannya sama persis --}}
+                <form id="logout-form-header" action="{{ route('logout') }}" method="POST" style="display:none;">
                     @csrf
                 </form>
-                <button type="button" id="logoutButton" role="menuitem" aria-label="Logout">
+                <a href="#" role="menuitem" id="logoutLinkHeader" class="dropdown-item" aria-label="Logout">
                     <span class="icon"><i class="fa fa-sign-out-alt"></i></span>
                     Logout
-                </button>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    (function(){
-        const wrapper = document.getElementById('userProfileWrapper');
-        const info = document.getElementById('userInfo');
-        const dropdown = document.getElementById('profileDropdown');
-        const logoutBtn = document.getElementById('logoutButton');
+(function(){
+    const wrapper = document.getElementById('userProfileWrapper');
+    const info = document.getElementById('userInfo');
+    const dropdown = document.getElementById('profileDropdown');
+    const logoutLink = document.getElementById('logoutLinkHeader');
+    const logoutForm = document.getElementById('logout-form-header');
+    const sidebarToggle = document.getElementById('sidebarToggle');
 
-        if (!info || !dropdown || !wrapper) return;
-
-        // Toggle function
+    if (info && dropdown && wrapper) {
         function toggleDropdown(open) {
             const willOpen = (typeof open === 'boolean') ? open : !wrapper.classList.contains('open');
             if (willOpen) {
                 wrapper.classList.add('open');
                 info.setAttribute('aria-expanded', 'true');
-                // focus first item for accessibility
-                const firstItem = dropdown.querySelector('[role="menuitem"]');
-                if (firstItem) firstItem.focus();
+                // TIDAK auto-focus item => mencegah auto-blue highlight
             } else {
                 wrapper.classList.remove('open');
                 info.setAttribute('aria-expanded', 'false');
             }
         }
 
-        // Click on user-info opens/closes dropdown. Stop propagation to avoid document click handler.
         info.addEventListener('click', function(e){
             e.stopPropagation();
             toggleDropdown();
         });
 
-        // Allow keyboard: Enter or Space toggles dropdown
         info.addEventListener('keydown', function(e){
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -170,32 +147,33 @@
             }
         });
 
-        // Clicking outside closes dropdown
         document.addEventListener('click', function(e){
-            if (!wrapper.contains(e.target)) {
-                toggleDropdown(false);
-            }
+            if (!wrapper.contains(e.target)) toggleDropdown(false);
         });
 
-        // Close on Escape globally
         document.addEventListener('keydown', function(e){
             if (e.key === 'Escape') toggleDropdown(false);
         });
 
-        // Prevent clicks inside dropdown from closing (stop propagation)
-        dropdown.addEventListener('click', function(e){
-            e.stopPropagation();
-        });
+        // biarkan klik di dalam dropdown tidak menutup otomatis
+        dropdown.addEventListener('click', function(e){ e.stopPropagation(); });
+    }
 
-        // Logout button submits hidden form (or change behavior if needed)
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(e){
-                e.preventDefault();
-                // submit logout form if route exists, otherwise fallback to alert
-                const form = document.getElementById('logout-form');
-                if (form) form.submit();
-                else alert('Logout route not configured.');
-            });
-        }
-    })();
+    // logout link submits form, lalu blur supaya tidak tinggalkan fokus biru
+    if (logoutLink && logoutForm) {
+        logoutLink.addEventListener('click', function(e){
+            e.preventDefault();
+            // submit form
+            logoutForm.submit();
+            // lepaskan fokus agar tidak tampil biru
+            try { logoutLink.blur(); } catch (err) {}
+        });
+    }
+
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function () {
+            document.body.classList.toggle('sidebar-closed');
+        });
+    }
+})();
 </script>

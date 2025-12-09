@@ -1,345 +1,139 @@
-<!-- Sidebar Layout -->
-<div class="sidebar">
+{{-- sidebar.blade.php --}}
+<div class="sidebar" role="navigation" aria-label="Sidebar menu">
     <div class="menu-list">
-
-        {{-- Hanya tampilkan menu jika pengguna sudah login --}}
         @auth
             @php
-                // Ambil role pengguna yang sedang login
-                $userRole = auth()->user()->role;
-                // Ambil rute saat ini
+                $userRole = auth()->user()->role ?? '';
                 $currentRoute = request()->path();
             @endphp
 
-            {{-- HALAMAN UTAMA - Semua Role --}}
-            <h4 class="menu-dropdown-toggle">
-                <span>
-                    <i class="fa fa-home"></i>
-                    Halaman Utama
-                </span>
+            <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-halaman-utama">
+                <span><i class="fa fa-home"></i> <span class="label-text">Halaman Utama</span></span>
                 <i class="fa fa-chevron-down dropdown-caret"></i>
             </h4>
-            <ul class="dropdown-menu collapsed">
+            <ul class="dropdown-menu collapsed" aria-hidden="true">
                 <li class="{{ $currentRoute == 'home' ? 'active' : '' }}">
                     <a href="{{ url('/home') }}">
-                        <i class="fa fa-home"></i>
-                        <span>Beranda</span>
+                        <span class="label-text">Beranda</span>
                     </a>
                 </li>
             </ul>
 
-            {{-- Menu Admin/Koordinator (Melihat Semua Fitur) --}}
             @if($userRole == 'koordinator')
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-graduation-cap"></i>
-                        Data Akademik
-                    </span>
+                <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-data-akademik">
+                    <span><i class="fa fa-graduation-cap"></i> <span class="label-text">Data Akademik</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed">
+                <ul class="dropdown-menu collapsed" aria-hidden="true">
                     <li class="{{ (request()->is('mahasiswa') || request()->is('mahasiswa/*')) ? 'active' : '' }}">
                         <a href="{{ url('/mahasiswa') }}">
-                            <i class="fa fa-user-graduate"></i>
-                            <span>Data Mahasiswa</span>
+                            <span class="label-text">Data Mahasiswa</span>
                         </a>
                     </li>
                     <li class="{{ (request()->is('transkrip') || request()->is('transkrip/*')) ? 'active' : '' }}">
                         <a href="{{ url('/transkrip') }}">
-                            <i class="fa fa-file-alt"></i>
-                            <span>Transkrip Kelayakan</span>
+                            <span class="label-text">Transkrip Kelayakan</span>
                         </a>
                     </li>
                 </ul>
 
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-users"></i>
-                        Bimbingan & Penguji
-                    </span>
+                <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-bimbingan-penguji">
+                    <span><i class="fa fa-users"></i> <span class="label-text">Bimbingan & Penguji</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed">
+                <ul class="dropdown-menu collapsed" aria-hidden="true">
                     <li class="{{ (request()->is('datadosenpembimbing') || request()->is('datadosenpembimbing/*')) ? 'active' : '' }}">
                         <a href="{{ url('/datadosenpembimbing') }}">
-                            <i class="fa fa-chalkboard-teacher"></i>
-                            <span>Dosen Pembimbing</span>
+                            <span class="label-text">Dosen Pembimbing</span>
                         </a>
                     </li>
                     <li class="{{ (request()->is('dosen_penguji') || request()->is('dosen_penguji/*')) ? 'active' : '' }}">
                         <a href="{{ url('/dosen_penguji') }}">
-                            <i class="fa fa-user-tie"></i>
-                            <span>Dosen Penguji</span>
+                            <span class="label-text">Dosen Penguji</span>
                         </a>
                     </li>
                 </ul>
 
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-building"></i>
-                        Perusahaan PKL
-                    </span>
+                <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-perusahaan">
+                    <span><i class="fa fa-building"></i> <span class="label-text">Perusahaan PKL</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed">
+                <ul class="dropdown-menu collapsed" aria-hidden="true">
                     <li class="{{ (request()->is('perusahaan') || request()->is('perusahaan/*')) ? 'active' : '' }}">
                         <a href="{{ url('/perusahaan') }}">
-                            <i class="fa fa-building"></i>
-                            <span>Data Perusahaan</span>
+                            <span class="label-text">Data Perusahaan</span>
                         </a>
                     </li>
                 </ul>
 
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-calendar-alt"></i>
-                        Jadwal & Kegiatan
-                    </span>
+                <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-jadwal">
+                    <span><i class="fa fa-calendar-alt"></i> <span class="label-text">Jadwal & Kegiatan</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed">
+                <ul class="dropdown-menu collapsed" aria-hidden="true">
                     <li class="{{ (request()->is('jadwal') || request()->is('jadwal/*')) ? 'active' : '' }}">
                         <a href="{{ url('/jadwal') }}">
-                            <i class="fa fa-calendar-alt"></i>
-                            <span>Jadwal Bimbingan</span>
+                            <span class="label-text">Jadwal Bimbingan</span>
                         </a>
                     </li>
                 </ul>
 
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-clipboard-check"></i>
-                        Penilaian & Hasil
-                    </span>
+                <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-penilaian">
+                    <span><i class="fa fa-clipboard-check"></i> <span class="label-text">Penilaian & Hasil</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
-                <ul class="dropdown-menu collapsed">
+                <ul class="dropdown-menu collapsed" aria-hidden="true">
                     <li class="{{ (request()->is('penilaian') || request()->is('penilaian/*')) ? 'active' : '' }}">
                         <a href="{{ url('/penilaian') }}">
-                            <i class="fa fa-clipboard-check"></i>
-                            <span>Nilai Pembimbing</span>
+                            <span class="label-text">Nilai Pembimbing</span>
                         </a>
                     </li>
                     <li class="{{ (request()->is('penilaian-penguji') || request()->is('penilaian-penguji/*')) ? 'active' : '' }}">
                         <a href="{{ url('/penilaian-penguji') }}">
-                            <i class="fa fa-clipboard-check"></i>
-                            <span>Nilai Penguji</span>
+                            <span class="label-text">Nilai Penguji</span>
                         </a>
                     </li>
                     <li class="{{ (request()->is('nilai') || request()->is('nilai/*')) ? 'active' : '' }}">
                         <a href="{{ url('/nilai') }}">
-                            <i class="fa fa-clipboard-check"></i>
-                            <span>Nilai Mahasiswa</span>
+                            <span class="label-text">Nilai Mahasiswa</span>
                         </a>
                     </li>
                     <li class="{{ (request()->is('ratingperusahaan') || request()->is('ratingperusahaan/*')) ? 'active' : '' }}">
                         <a href="{{ url('/ratingperusahaan') }}">
-                            <i class="fa fa-star"></i>
-                            <span>Rating Perusahaan</span>
-                        </a>
-                    </li>
-                </ul>
-
-            {{-- Menu Mahasiswa --}}
-            @elseif($userRole == 'mahasiswa')
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-graduation-cap"></i>
-                        Data Akademik
-                    </span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('transkrip') || request()->is('transkrip/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/transkrip') }}">
-                            <i class="fa fa-file-alt"></i>
-                            <span>Cek Kelayakan PKL</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <h4 class="menu-dropdown-toggle">
-                    <span>Jadwal & Kegiatan</span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('jadwal') || request()->is('jadwal/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/jadwal') }}">
-                            <i class="fa fa-calendar-alt"></i>
-                            <span>Jadwal Bimbingan</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-clipboard-check"></i>
-                        Penilaian & Hasil
-                    </span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('nilai') || request()->is('nilai/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/nilai') }}">
-                            <i class="fa fa-clipboard-check"></i>
-                            <span>Nilai PKL</span>
-                        </a>
-                    </li>
-                    <li class="{{ (request()->is('ratingperusahaan') || request()->is('ratingperusahaan/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/ratingperusahaan') }}">
-                            <i class="fa fa-star"></i>
-                            <span>Rating Perusahaan</span>
-                        </a>
-                    </li>
-                </ul>
-
-            {{-- Menu Dosen Pembimbing --}}
-            @elseif($userRole == 'dosen_pembimbing')
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-graduation-cap"></i>
-                        Data Akademik
-                    </span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('mahasiswa') || request()->is('mahasiswa/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/mahasiswa') }}">
-                            <i class="fa fa-user-graduate"></i>
-                            <span>Mahasiswa Bimbingan</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <h4>Jadwal & Kegiatan</h4>
-                <ul>
-                    <li class="{{ (request()->is('jadwal') || request()->is('jadwal/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/jadwal') }}">
-                            <i class="fa fa-calendar-alt"></i>
-                            <span>Jadwal Bimbingan</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-clipboard-check"></i>
-                        Penilaian & Hasil
-                    </span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('penilaian') || request()->is('penilaian/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/penilaian') }}">
-                            <i class="fa fa-clipboard-check"></i>
-                            <span>Input Nilai Bimbingan</span>
-                        </a>
-                    </li>
-                </ul>
-
-            {{-- Menu Dosen Penguji --}}
-            @elseif($userRole == 'dosen_penguji')
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-clipboard-check"></i>
-                        Penilaian & Hasil
-                    </span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('penilaian-penguji') || request()->is('penilaian-penguji/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/penilaian-penguji') }}">
-                            <i class="fa fa-clipboard-check"></i>
-                            <span>Input Nilai Ujian</span>
-                        </a>
-                    </li>
-                </ul>
-
-            {{-- Menu Perusahaan --}}
-            @elseif($userRole == 'perusahaan')
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-graduation-cap"></i>
-                        Data Akademik
-                    </span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('mahasiswa') || request()->is('mahasiswa/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/mahasiswa') }}">
-                            <i class="fa fa-user-graduate"></i>
-                            <span>Mahasiswa PKL</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <h4 class="menu-dropdown-toggle">
-                    <span>Perusahaan PKL</span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('perusahaan') || request()->is('perusahaan/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/perusahaan') }}">
-                            <i class="fa fa-building"></i>
-                            <span>Profil Perusahaan</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <h4 class="menu-dropdown-toggle">
-                    <span>
-                        <i class="fa fa-clipboard-check"></i>
-                        Penilaian & Hasil
-                    </span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
-                </h4>
-                <ul class="dropdown-menu collapsed">
-                    <li class="{{ (request()->is('penilaian') || request()->is('penilaian/*')) ? 'active' : '' }}">
-                        <a href="{{ url('/penilaian') }}">
-                            <i class="fa fa-clipboard-check"></i>
-                            <span>Penilaian Mahasiswa</span>
+                            <span class="label-text">Rating Perusahaan</span>
                         </a>
                     </li>
                 </ul>
             @endif
 
-            {{-- AKUN - Semua Role --}}
-            <h4 class="menu-dropdown-toggle">
-                <span>
-                    <i class="fa fa-user-circle"></i>
-                    Akun
-                </span>
+            <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-akun">
+                <span><i class="fa fa-user-circle"></i> <span class="label-text">Akun</span></span>
                 <i class="fa fa-chevron-down dropdown-caret"></i>
             </h4>
-            <ul class="dropdown-menu collapsed">
+            <ul class="dropdown-menu collapsed" aria-hidden="true">
                 <li>
-                    {{-- Ini adalah tombol logout yang BENAR --}}
-                    <a href="{{ route('logout') }}"
-                       onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
-                        <i class="fa fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                    <a href="#"
+                       onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
+                        <span class="label-text">Logout</span>
                     </a>
-                            {{-- KHUSUS KOORDINATOR (SUPER ADMIN) --}}
+
                     @if($userRole == 'koordinator')
-                        <h4>Super Admin</h4>
-                        <ul>
+                        <h4 class="menu-dropdown-toggle" data-persist-id="menu-superadmin"><span><i class="fa fa-users-cog"></i> <span class="label-text">Super Admin</span></span></h4>
+                        <ul class="dropdown-menu collapsed" aria-hidden="true">
                             <li class="{{ (request()->is('manage-users') || request()->is('manage-users/*')) ? 'active' : '' }}">
                                 <a href="{{ url('/manage-users') }}">
-                                    <i class="fa fa-users-cog"></i> {{-- Pastikan icon fa-users-cog tersedia, atau pakai fa-cogs --}}
-                                    <span>Manajemen Users</span>
+                                    <span class="label-text">Manajemen Users</span>
                                 </a>
                             </li>
                         </ul>
                     @endif
-                    {{-- Form ini diperlukan karena logout adalah rute POST --}}
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+
+                    <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" style="display:none;">
                         @csrf
                     </form>
                 </li>
             </ul>
-
-        @endauth {{-- Akhir dari cek @auth --}}
+        @endauth
     </div>
 </div>
 
@@ -347,15 +141,54 @@
     document.addEventListener('DOMContentLoaded', function () {
         const dropdownHeaders = document.querySelectorAll('.sidebar h4.menu-dropdown-toggle');
 
-        dropdownHeaders.forEach(function (header) {
-            header.addEventListener('click', function () {
+        try {
+            const stored = JSON.parse(localStorage.getItem('sidebar-open-menus') || '{}');
+            dropdownHeaders.forEach(function (header) {
                 const menu = header.nextElementSibling;
+                const id = header.getAttribute('data-persist-id') || header.textContent.trim();
+                if (menu && stored[id]) {
+                    menu.classList.remove('collapsed');
+                    header.classList.remove('collapsed');
+                    menu.setAttribute('aria-hidden', 'false');
+                }
+            });
+        } catch (err) { console.warn('sidebar restore error', err); }
 
+        dropdownHeaders.forEach(function (header, idx) {
+            const toggle = function () {
+                const menu = header.nextElementSibling;
                 if (menu && menu.classList.contains('dropdown-menu')) {
                     menu.classList.toggle('collapsed');
                     header.classList.toggle('collapsed');
+                    const isCollapsed = menu.classList.contains('collapsed');
+                    menu.setAttribute('aria-hidden', isCollapsed ? 'true' : 'false');
+                    persistSidebarState();
+                }
+            };
+
+            if (!header.hasAttribute('data-persist-id')) {
+                header.setAttribute('data-persist-id', 'menu-' + idx);
+            }
+
+            header.addEventListener('click', toggle);
+            header.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggle();
                 }
             });
         });
+
+        function persistSidebarState() {
+            const state = {};
+            document.querySelectorAll('.sidebar h4.menu-dropdown-toggle').forEach(function (header) {
+                const id = header.getAttribute('data-persist-id');
+                const menu = header.nextElementSibling;
+                if (!id || !menu) return;
+                state[id] = !menu.classList.contains('collapsed');
+            });
+            try { localStorage.setItem('sidebar-open-menus', JSON.stringify(state)); }
+            catch (e) { console.warn('could not persist sidebar state', e); }
+        }
     });
 </script>

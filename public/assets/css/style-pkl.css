@@ -1,6 +1,4 @@
-/* public/assets/css/style-pkl.css
-   Cleaned + fixes to avoid header/sidebar blocking inputs
-*/
+/* public/assets/css/style-pkl.css (updated) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root{
@@ -16,57 +14,24 @@
   --sidebar-collapsed: 70px;
 }
 
-/* --- Base --- */
+/* Base */
 * { box-sizing: border-box; }
-html, body {
-  height:100%;
-  margin:0;
-  padding:0;
-  font-family: 'Poppins', sans-serif;
-  background-color:#f4f7f9;
-  overflow-x: hidden;        /* no horizontal scroll */
-  overflow-y: auto;          /* allow vertical scroll */
-}
-
-/* ensure content below header */
+html, body { height:100%; margin:0; padding:0; font-family: 'Poppins', sans-serif; background-color:#f4f7f9; overflow-x: hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 body { padding-top: var(--header-height); }
 
-/* --- Header --- */
-.header{
-  position: fixed;
-  top:0; left:0; right:0;
-  height: var(--header-height);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 18px;
-  background:var(--color-white);
-  border-bottom:1px solid rgba(0,0,0,0.06);
-  z-index:12000; /* high but not excessive */
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-
+/* Header */
+.header{ position: fixed; top:0; left:0; right:0; height: var(--header-height); display:flex; align-items:center; justify-content:space-between; padding:0 18px; background:var(--color-white); border-bottom:1px solid rgba(0,0,0,0.06); z-index:12000; }
 .header-left{ display:flex; align-items:center; gap:12px; }
 .logo img{ height:32px; width:auto; vertical-align:middle; }
 .logo span{ font-weight:600; margin-left:6px; color:#1f2937; }
-
-.menu-toggle{
-  background:transparent;
-  border:2px solid rgba(0,0,0,0.08);
-  border-radius:6px;
-  padding:6px 8px;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-}
+.menu-toggle{ background:transparent; border:2px solid rgba(0,0,0,0.08); border-radius:6px; padding:6px 8px; cursor:pointer; display:inline-flex; align-items:center; }
 
 /* header right */
 .menu-right{ display:flex; align-items:center; gap:12px; }
-.icon-link{ padding:8px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.icon-link{ padding:8px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; color:#374151; }
 
 /* profile */
-.user-profile-wrapper{ position:relative; }
+.user-profile-wrapper{ position:relative; z-index:12100; }
 .user-info{ display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
 .user-info .text-link{ padding:6px 8px; border-radius:8px; font-weight:500; background:transparent; }
 .avatar img{ width:36px; height:36px; border-radius:999px; object-fit:cover; display:block; }
@@ -75,7 +40,7 @@ body { padding-top: var(--header-height); }
 .profile-dropdown-menu{
   position:absolute;
   right:12px;
-  top: calc(var(--header-height) + 8px);
+  top: calc(100% + 8px);
   min-width:210px;
   background:#fff;
   border:1px solid rgba(0,0,0,0.08);
@@ -83,9 +48,10 @@ body { padding-top: var(--header-height); }
   box-shadow:0 6px 18px rgba(2,6,23,0.08);
   display:none;
   padding:8px 6px;
-  z-index:12100;
+  z-index:12150;
   pointer-events:auto;
 }
+.user-profile-wrapper.open .profile-dropdown-menu,
 .user-profile-wrapper.active .profile-dropdown-menu{ display:block; }
 
 .profile-dropdown-menu .dropdown-item,
@@ -97,42 +63,30 @@ body { padding-top: var(--header-height); }
 .profile-dropdown-menu .dropdown-item:hover,
 .profile-dropdown-menu button:hover { background:var(--color-light-blue-bg); color:var(--color-primary-blue); }
 
-/* --- Sidebar --- */
-.sidebar{
-  position: fixed;
-  top: var(--header-height);
-  left: 0;
-  width: var(--sidebar-width);
-  height: calc(100vh - var(--header-height));
-  background: var(--color-primary-blue);
-  color: #fff;
-  overflow-y:auto;
-  z-index:900;
-  transition: width .22s ease;
-}
-body.sidebar-closed .sidebar{ width: var(--sidebar-collapsed); }
-body.sidebar-closed .sidebar h4,
-body.sidebar-closed .sidebar span{ display:none; }
+/* Sidebar */
+.sidebar{ position: fixed; top: var(--header-height); left: 0; width: var(--sidebar-width); height: calc(100vh - var(--header-height)); background: var(--color-primary-blue); color: #fff; overflow-y:auto; z-index:900; transition: width .22s ease, transform .22s ease; }
+body.sidebar-closed .sidebar{ width: var(--sidebar-collapsed); transform: none; }
+body.sidebar-closed .sidebar .label-text { display:none; }
 
-/* menu items */
 .sidebar .menu-list{ padding:10px 0; }
-.sidebar h4{ margin:20px 20px 12px; font-size:1.05rem; font-weight:500; text-transform:uppercase; }
-.sidebar ul.dropdown-menu{ margin:0 12px 14px; border-radius:6px; background: rgba(117,161,227,1); list-style:none; padding:0; }
+.sidebar h4{ margin:20px 16px 12px; font-size:0.95rem; font-weight:600; text-transform:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+.sidebar h4 .fa { margin-right:10px; }
+.sidebar ul.dropdown-menu{ margin:0 12px 14px; border-radius:6px; background: rgba(0,0,0,0.06); list-style:none; padding:6px 0; }
 .sidebar ul.dropdown-menu.collapsed{ display:none; }
 
 /* links */
-.sidebar ul li a{ display:flex; align-items:center; padding:12px 20px; color:#fff; text-decoration:none; }
-.sidebar ul li a i{ width:20px; margin-right:12px; text-align:center; }
+.sidebar ul li a{ display:flex; align-items:center; padding:10px 14px; color:#fff; text-decoration:none; border-radius:8px; }
+.sidebar ul li a i{ width:22px; margin-right:10px; text-align:center; }
 
-/* --- Main Content --- */
-.main-content-wrapper{
-  margin-top:0; /* body padding already */
-  margin-left: var(--sidebar-width);
-  min-height: calc(100vh - var(--header-height));
-  padding:28px;
-  transition: margin-left .22s ease, max-width .22s ease;
-  max-width: calc(100vw - var(--sidebar-width));
-}
+/* HIDE icons inside submenu items (keinginan Anda) */
+.sidebar ul.dropdown-menu li a i { display: none; } /* ikon header tetap tampil karena ada di <h4> */
+.sidebar ul.dropdown-menu li a .label-text { display:block; margin-left:0; }
+
+/* active item */
+.sidebar ul li.active a{ background: rgba(0,0,0,0.12); }
+
+/* Main content */
+.main-content-wrapper{ margin-top:0; margin-left: var(--sidebar-width); min-height: calc(100vh - var(--header-height)); padding:28px; transition: margin-left .22s ease, max-width .22s ease; max-width: calc(100vw - var(--sidebar-width)); }
 body.sidebar-closed .main-content-wrapper{ margin-left: var(--sidebar-collapsed); max-width: calc(100vw - var(--sidebar-collapsed)); }
 
 /* small screens */
@@ -143,21 +97,85 @@ body.sidebar-closed .main-content-wrapper{ margin-left: var(--sidebar-collapsed)
   .header-left .user-profile-wrapper{ display:none; }
 }
 
-/* --- Forms, buttons, tables --- */
+/* Forms, buttons */
 .form-group{ margin-bottom:15px; }
 .form-group label{ display:block; margin-bottom:6px; font-weight:500; color:var(--color-text-dark); }
-.form-control{
-  width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:.95rem;
-}
+.form-control{ width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:.95rem; }
 .form-control:focus{ outline:none; border-color:var(--color-primary-blue); box-shadow:0 0 0 3px rgba(91,138,210,0.08); }
 
 /* make inputs clickable even if overlays exist accidentally */
 input, textarea, select { position: relative; z-index: 5; }
 
-/* tables and common utilities (kept minimal) */
+/* tables */
 .table{ width:100%; border-collapse:collapse; background:var(--color-white); border-radius:8px; overflow:hidden; box-shadow:0 2px 8px var(--color-shadow); }
 .result-card{ background:var(--color-white); border-radius:12px; padding:25px; box-shadow:0 2px 8px var(--color-shadow); margin-bottom:20px; }
 
 /* accessibility focus */
 .menu-toggle:focus, .user-info:focus, .profile-dropdown-menu .dropdown-item:focus,
 input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px rgba(91,138,210,0.08); outline: none; }
+
+/* small helpers */
+.hidden { display:none !important; }
+
+/* ensure dropdown profile focus doesn't auto-style except for keyboard users */
+.profile-dropdown-menu .dropdown-item,
+.profile-dropdown-menu button {
+  text-decoration: none;
+}
+.profile-dropdown-menu .dropdown-item:focus-visible,
+.profile-dropdown-menu button:focus-visible {
+  background: var(--color-light-blue-bg);
+  color: var(--color-primary-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(91,138,210,0.08);
+}
+
+/* force no underline from UA */
+.profile-dropdown-menu .dropdown-item { text-decoration: none !important; -webkit-text-decoration-skip: none; }
+
+/* --- FIX: make scrollbars belong to sidebar & main-content, not to page --- */
+
+/* 1) Prevent body/page showing vertical scrollbar */
+html, body {
+  height: 100%;
+  overflow-x: hidden; /* tetap seperti semula */
+  overflow-y: hidden; /* important: jangan gunakan page scrollbar */
+}
+
+/* 2) Ensure header tetap fixed and above content */
+.header {
+  z-index: 12000; /* sudah ada, pastikan lebih tinggi dari content */
+}
+
+/* 3) Make sidebar its own scroll container (visible under header area) */
+.sidebar {
+  top: var(--header-height); /* mulai di bawah header */
+  height: calc(100vh - var(--header-height)); /* tinggi pas */
+  overflow-y: auto; /* scroll internal */
+  -webkit-overflow-scrolling: touch; /* smoother on mobile */
+  z-index: 11000; /* tetap di bawah header, header tetap di atas konten */
+}
+
+/* 4) Make main content area scrollable inside viewport */
+.main-content-wrapper {
+  position: relative;
+  overflow-y: auto; /* internal scroll */
+  height: calc(100vh - var(--header-height)); /* agar area scroll sesuai */
+  box-sizing: border-box;
+}
+
+/* 5) If you want the rightmost page scrollbar to appear for main-content only,
+   keep scrollbar styling default. If you have custom scrollbars, ensure they
+   apply to .sidebar and .main-content-wrapper instead of body. */
+
+/* 6) Optional: keep footer or bottom sticky areas visible by adding bottom padding if needed */
+.main-content-wrapper,
+.sidebar {
+  padding-bottom: 24px; /* beri sedikit ruang di bawah agar handle scrollbar tidak terlalu ke tepi */
+}
+
+/* 7) Accessibility: allow keyboard users to see focus when scrolling inside containers */
+.sidebar:focus,
+.main-content-wrapper:focus {
+  outline: none;
+}
