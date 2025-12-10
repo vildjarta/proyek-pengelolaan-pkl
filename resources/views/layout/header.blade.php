@@ -4,7 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
-    <!-- Small header-specific styles to improve spacing and responsiveness without touching global CSS -->
+    
+    {{-- Style Anda --}}
     <style>
         .header {
             display: flex;
@@ -52,22 +53,27 @@
     </div>
 
     <div class="menu-right">
-        <!-- Removed 'Ajukan Proposal' and 'Akademik' per request. Added compact icons for notifications/settings -->
         <a href="#" class="icon-link" title="Notifikasi"><i class="fa fa-bell"></i></a>
         <a href="#" class="icon-link" title="Pesan"><i class="fa fa-envelope"></i></a>
 
         <div class="user-profile-wrapper">
             <div class="user-info">
-                <span class="text-link">Nama User</span>
+                
+                <span class="text-link">Ahmad Khairi</span>
+                
                 <div class="avatar">
-                    <img src="https://i.ibb.co/L8f3XnS/user-avatar.png" alt="User Avatar">
+                    <img src="{{ asset('storage/avatars/default.png') }}" alt="User Avatar">
                 </div>
             </div>
             <div class="profile-dropdown-menu">
                 <a href="/profile"><i class="fa fa-user-circle"></i> Profil Saya</a>
                 <a href="#"><i class="fa fa-cog"></i> Pengaturan</a>
-                <a href="#"><i class="fa fa-sign-out-alt"></i> Logout</a>
+                
+                <a href="#" onclick="event.preventDefault(); alert('Fungsi logout akan diimplementasikan nanti');">
+                    <i class="fa fa-sign-out-alt"></i> Logout
+                </a>
             </div>
         </div>
+        
     </div>
 </div>

@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'google_id',    // <-- DITAMBAHKAN (Penting untuk Google SSO)
+        'phone_number', // <-- DITAMBAHKAN (Untuk simpan profil)
+        'gender',       // <-- DITAMBAHKAN (Untuk simpan profil)
     ];
 
     /**

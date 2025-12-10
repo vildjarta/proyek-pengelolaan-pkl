@@ -18,7 +18,7 @@
     @endif
 
 {{-- ... (kode header dan lainnya tetap sama) ... --}}
-    <form action="{{ route('penilaian.update', $penilaian->id) }}" method="POST">
+    <form action="{{ route('penilaian.update', $penilaian->id) }}" method="POST" onsubmit="return confirmSubmit()">
         @csrf
         @method('PUT')
         

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Tambah Dosen Pembimbing | Sistem PKL JOZZ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -11,11 +12,6 @@
 
   <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/tambahdatadosenpembimbing.css') }}">
-  <style>
-    /* optional quick styles for valid/invalid visuals */
-    .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
-    .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
-  </style>
 </head>
 <body>
 
@@ -41,6 +37,7 @@
             </div>
           @endif
 
+          <!-- NIP & Dosen -->
           <div class="mb-3 position-relative" style="min-height:70px;">
             <label class="form-label required">NIP</label>
             <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18"
@@ -64,6 +61,7 @@
             <input type="text" name="no_hp" id="no_hp" class="form-control" maxlength="13" placeholder="No. HP Terisi Otomatis" required value="{{ old('no_hp') }}" inputmode="numeric" readonly>
           </div>
 
+          <!-- Daftar Mahasiswa -->
           <div class="mb-3">
             <h5 class="fw-bold text-primary mb-3">Daftar Mahasiswa Bimbingan</h5>
             <div id="mahasiswa-list">
@@ -114,7 +112,21 @@
 /* helper debounce */
 function debounce(fn, wait=220){ let t; return function(...a){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), wait); }; }
 
-/* elements */
+/* base URLs (jalankan dari blade agar base path benar) */
+const urlCekDosenSuggest = "{{ url('cek-dosen-suggest') }}";
+const urlCekDosenByNip = "{{ url('cek-dosen') }}"; // will append /{nip}
+const urlCekNimSuggest = "{{ url('cek-nim-suggest') }}";
+const urlCekNim = "{{ url('cek-nim') }}"; // will append /{nim}
+
+/* small helper headers */
+function baseFetchHeaders() {
+  return {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept': 'application/json'
+  };
+}
+
+/* NIP elements */
 const nipInput = document.getElementById('NIP');
 const suggestNip = document.getElementById('suggest-nip');
 const nipError = document.getElementById('nipError');
@@ -122,9 +134,9 @@ const namaField = document.getElementById('nama');
 const emailField = document.getElementById('email');
 const noHpField = document.getElementById('no_hp');
 
-/* helper to update nip error + classes */
 function updateNipState(value) {
   const len = (value||'').length;
+  if (!nipInput) return;
   if (len === 0) {
     nipError.style.display = 'none';
     nipInput.classList.remove('is-invalid','is-valid');
@@ -132,65 +144,38 @@ function updateNipState(value) {
     nipError.style.display = 'block';
     nipInput.classList.add('is-invalid');
     nipInput.classList.remove('is-valid');
-  } else if (len === 18) {
-    nipError.style.display = 'none';
-    nipInput.classList.remove('is-invalid');
-    nipInput.classList.add('is-valid');
   } else {
-    // shouldn't happen due maxlength, but fallback:
     nipError.style.display = 'none';
     nipInput.classList.remove('is-invalid');
     nipInput.classList.add('is-valid');
   }
 }
 
-/* sanitize NIP input: digits only */
-if (nipInput) {
-  nipInput.addEventListener('input', function(){
-    this.value = this.value.replace(/\D/g,'').slice(0,18);
-    updateNipState(this.value);
-  });
-}
-
-/* no_hp: numeric only; maxlength enforced by attribute; readonly */
-if (noHpField) {
-  noHpField.addEventListener('input', function(){
-    this.value = this.value.replace(/\D/g,'').slice(0,13);
-  });
-}
-
-/* fill helper for dosen fields */
-function fillDosen(obj){
-  if (namaField) namaField.value = obj.nama ?? '';
-  if (emailField) emailField.value = obj.email ?? '';
-  if (noHpField) noHpField.value = obj.no_hp ?? obj.nomor_hp ?? '';
-  // when filled from lookup, consider NIP valid
-  updateNipState(nipInput.value);
-}
-
-/* NIP suggest + lookup */
+/* NIP suggest */
 if (nipInput && suggestNip) {
-  const doSuggest = debounce(async function(){
+  nipInput.addEventListener('input', debounce(async function(){
     const q = this.value.trim();
     if (!q) { suggestNip.style.display='none'; updateNipState(q); return; }
     try {
-      const res = await fetch(`/cek-dosen-suggest?q=${encodeURIComponent(q)}`);
-      if (!res.ok) throw 0;
+      const res = await fetch(`${urlCekDosenSuggest}?q=${encodeURIComponent(q)}`, { headers: baseFetchHeaders(), credentials:'same-origin' });
+      if (!res.ok) { suggestNip.style.display='none'; return; }
       const list = await res.json();
       suggestNip.innerHTML = '';
       if (Array.isArray(list) && list.length) {
         list.forEach(r=>{
           const el = document.createElement('div');
           el.className = 'item';
-          el.dataset.nip = r.nip ?? '';
+          el.dataset.nip = r.nip ?? r.NIP ?? '';
           el.dataset.nama = r.nama ?? '';
           el.dataset.email = r.email ?? '';
-          el.dataset.no_hp = r.no_hp ?? r.nomor_hp ?? '';
+          el.dataset.no_hp = r.no_hp ?? '';
           el.innerHTML = `<strong>${el.dataset.nip}</strong> — <small>${el.dataset.nama}</small>`;
           el.addEventListener('mousedown', function(e){
             e.preventDefault();
             nipInput.value = this.dataset.nip;
-            fillDosen({ nama: this.dataset.nama, email: this.dataset.email, no_hp: this.dataset.no_hp });
+            namaField.value = this.dataset.nama;
+            emailField.value = this.dataset.email;
+            noHpField.value = this.dataset.no_hp;
             suggestNip.style.display = 'none';
             updateNipState(nipInput.value);
           });
@@ -200,35 +185,31 @@ if (nipInput && suggestNip) {
       } else {
         suggestNip.style.display = 'none';
       }
-    } catch(e){ suggestNip.style.display = 'none'; }
-  }, 160);
-
-  nipInput.addEventListener('input', doSuggest);
-
+    } catch(e){ console.error(e); suggestNip.style.display = 'none'; }
+  }, 160));
+  // blur lookup
   nipInput.addEventListener('blur', function(){
     setTimeout(async ()=> {
       const v = this.value.trim();
       updateNipState(v);
       if (!v) { suggestNip.style.display='none'; return; }
-      // if full length, attempt exact lookup to fill other fields
       try {
-        const res = await fetch(`/cek-dosen/${encodeURIComponent(v)}`);
-        const data = await res.json();
-        if (data && data.exists) {
-          fillDosen({ nama: data.nama, email: data.email, no_hp: data.no_hp });
+        const res = await fetch(`${urlCekDosenByNip}/${encodeURIComponent(v)}`, { headers: baseFetchHeaders(), credentials:'same-origin' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.exists) {
+            namaField.value = data.nama ?? '';
+            emailField.value = data.email ?? '';
+            noHpField.value = data.no_hp ?? '';
+          }
         }
       } catch(e){}
       suggestNip.style.display='none';
     }, 150);
   });
-
-  document.addEventListener('click', function(e){
-    if (!suggestNip.contains(e.target) && e.target !== nipInput) suggestNip.style.display='none';
-  });
 }
 
-/* ========== Mahasiswa item behavior (unchanged) ========== */
-
+/* Mahasiswa autocomplete setup */
 function allowDigitsOnly(el) {
   el.addEventListener('keypress', function(e){
     const char = String.fromCharCode(e.which || e.keyCode);
@@ -248,7 +229,7 @@ function setupMahasiswaItem(item, isClone=false) {
   const namaInput = item.querySelector('.namaInput');
   const btnRemove = item.querySelector('.remove-mahasiswa');
 
-  if (!suggestWrap || !nimInput) return;
+  if (!nimInput || !suggestWrap) return;
   if (isClone && btnRemove) btnRemove.style.display = 'block';
 
   allowDigitsOnly(nimInput);
@@ -257,17 +238,17 @@ function setupMahasiswaItem(item, isClone=false) {
     const q = this.value.trim();
     if (!q) { suggestWrap.style.display='none'; return; }
     try {
-      const res = await fetch(`/cek-nim-suggest?q=${encodeURIComponent(q)}`);
-      if (!res.ok) throw 0;
+      const res = await fetch(`${urlCekNimSuggest}?q=${encodeURIComponent(q)}`, { headers: baseFetchHeaders(), credentials:'same-origin' });
+      if (!res.ok) { suggestWrap.style.display='none'; return; }
       const list = await res.json();
       suggestWrap.innerHTML = '';
       if (Array.isArray(list) && list.length) {
         list.forEach(r=>{
           const el = document.createElement('div');
           el.className = 'item';
-          el.dataset.nim = r.nim;
-          el.dataset.nama = r.nama;
-          el.innerHTML = `<strong>${r.nim}</strong> — <small>${r.nama}</small>`;
+          el.dataset.nim = r.nim ?? r.NIM ?? '';
+          el.dataset.nama = r.nama ?? r.nama_mahasiswa ?? '';
+          el.innerHTML = `<strong>${el.dataset.nim}</strong> — <small>${el.dataset.nama}</small>`;
           el.addEventListener('mousedown', function(e){
             e.preventDefault();
             nimInput.value = this.dataset.nim;
@@ -279,28 +260,31 @@ function setupMahasiswaItem(item, isClone=false) {
           });
           suggestWrap.appendChild(el);
         });
+        // ensure position inside wrapper
         suggestWrap.style.display = 'block';
+        suggestWrap.style.zIndex = 99999;
       } else {
         suggestWrap.style.display = 'none';
       }
-    } catch(e){ suggestWrap.style.display='none'; }
+    } catch(err){ console.error(err); suggestWrap.style.display='none'; }
   }, 200);
 
   nimInput.addEventListener('input', doSuggest);
 
   nimInput.addEventListener('blur', function(){
-    setTimeout(async ()=>{
+    setTimeout(async ()=> {
       const v = this.value.trim();
       if (!v) {
-        nimError.style.display='none';
-        nimSuccess.style.display='none';
         if (namaTampil) namaTampil.textContent='';
         if (namaInput) namaInput.value='';
+        nimError.style.display='none';
+        nimSuccess.style.display='none';
         suggestWrap.style.display='none';
         return;
       }
       try {
-        const res = await fetch(`/cek-nim/${encodeURIComponent(v)}`);
+        const res = await fetch(`${urlCekNim}/${encodeURIComponent(v)}`, { headers: baseFetchHeaders(), credentials:'same-origin' });
+        if (!res.ok) throw 0;
         const data = await res.json();
         if (data && data.exists) {
           nimError.style.display='none';
@@ -313,21 +297,29 @@ function setupMahasiswaItem(item, isClone=false) {
           if (namaTampil) namaTampil.textContent = '';
           if (namaInput) namaInput.value = '';
         }
-      } catch(e){ nimError.style.display='block'; nimSuccess.style.display='none'; }
+      } catch(e){
+        nimError.style.display='block';
+        nimSuccess.style.display='none';
+      }
       suggestWrap.style.display='none';
     },150);
   });
 
   if (btnRemove) btnRemove.addEventListener('click', ()=> item.remove());
-  document.addEventListener('click', function(e){ if (!item.contains(e.target)) suggestWrap.style.display='none'; });
 }
 
+/* init existing items */
 document.querySelectorAll('.mahasiswa-item').forEach(it=> setupMahasiswaItem(it, false));
+
+/* add new */
 document.getElementById('add-mahasiswa').addEventListener('click', function(){
   const list = document.getElementById('mahasiswa-list');
   const first = list.firstElementChild;
   const clone = first.cloneNode(true);
-  clone.querySelectorAll('input').forEach(inp=> inp.value = '');
+  clone.querySelectorAll('input').forEach(inp=>{
+    inp.value = '';
+    inp.classList.remove('is-valid','is-invalid');
+  });
   const err = clone.querySelector('.nimError'); if (err) err.style.display='none';
   const ok = clone.querySelector('.nimSuccess'); if (ok) ok.style.display='none';
   const suggest = clone.querySelector('.nim-suggest'); if (suggest) suggest.style.display='none';

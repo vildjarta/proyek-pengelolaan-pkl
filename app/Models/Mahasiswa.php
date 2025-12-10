@@ -18,7 +18,7 @@ class Mahasiswa extends Model
     // Aktifkan created_at & updated_at
     public $timestamps = true;
 
-    // Kolom yang bisa diisi
+    // Kolom yang bisa diisi (mass assignment)
     protected $fillable = [
         'nim',
         'nama',
@@ -27,10 +27,20 @@ class Mahasiswa extends Model
         'prodi',
         'angkatan',
         'ipk',
+        'perusahaan',
         'id_pembimbing',
         'judul_pkl',
+        'user_id',
     ];
 
+    /**
+     * 🔗 Relasi ke tabel dosen_pembimbing
+     * Setiap mahasiswa memiliki satu dosen pembimbing.
+     */
+    public function dosen()
+    {
+        return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
+    }
 
     public function dosen_penguji()
     {
@@ -38,10 +48,11 @@ class Mahasiswa extends Model
     }
 
     /**
-     * 🔗 Relasi ke tabel dosen_pembimbing (setiap mahasiswa punya satu dosen)
+     * 🔗 Relasi ke tabel users
+     * Setiap mahasiswa dapat terhubung dengan satu user.
      */
-    public function dosen()
+    public function user()
     {
-        return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 }

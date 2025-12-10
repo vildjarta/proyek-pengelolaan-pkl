@@ -60,3 +60,5 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
     @media (max-width: 992px) {
       .content-container { padding: 20px; }
     }
+    .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
+    .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
