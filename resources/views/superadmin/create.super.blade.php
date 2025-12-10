@@ -35,7 +35,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-bold">Email</label>
                     <input type="email" name="email" class="form-control" required>
-                    <small class="text-muted">* Email @mhs.politala.ac.id otomatis menjadi Role Mahasiswa.</small>
+                    <small class="text-muted"></small>
                 </div>
 
                 <div class="mb-3">
