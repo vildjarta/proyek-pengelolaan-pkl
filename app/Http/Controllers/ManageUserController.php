@@ -68,7 +68,7 @@ class ManageUserController extends Controller
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
-            'role'     => $role, 
+            'role'     => $role,
         ]);
 
         return redirect()->route('manage-users.index')
@@ -81,7 +81,7 @@ class ManageUserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        
+
         // Menggunakan path file langsung
         return view()->file(resource_path('views/superadmin/edit.super.blade.php'), ['user' => $user]);
     }
