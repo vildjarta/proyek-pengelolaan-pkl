@@ -1,6 +1,13 @@
-/* public/assets/css/style-pkl.css (updated) */
+/* public/assets/css/style-pkl-combined.css
+   Combined stylesheet: merged from "program awal" + "program terbaru"
+   - Preferensi nilai modern (variabel & layout) dipertahankan dari program terbaru
+   - Menyertakan semua komponen dari file lama (tables, modals, alerts, responsive table behavior, print, dll.)
+*/
+
+/* --- Font --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+/* --- Root variables (utama: gunakan versi terbaru + mempertahankan warna lama) --- */
 :root{
   --color-primary-blue: #5b8ad2;
   --color-light-blue-bg: #eaf1f8;
@@ -9,34 +16,74 @@
   --color-white: #ffffff;
   --color-shadow: rgba(0,0,0,0.08);
 
-  --header-height: 64px;
+  /* layout */
+  --header-height: 64px;        /* updated */
   --sidebar-width: 285px;
   --sidebar-collapsed: 70px;
+
+  /* spacing / sizing helpers */
+  --base-radius: 8px;
+  --transition-fast: .22s;
+  --transition-medium: .3s;
 }
 
-/* Base */
+/* --- Base / Reset --- */
 * { box-sizing: border-box; }
 html, body { height:100%; margin:0; padding:0; font-family: 'Poppins', sans-serif; background-color:#f4f7f9; overflow-x: hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-body { padding-top: var(--header-height); }
+body { padding-top: var(--header-height); transition: all var(--transition-medium) ease; }
 
-/* Header */
-.header{ position: fixed; top:0; left:0; right:0; height: var(--header-height); display:flex; align-items:center; justify-content:space-between; padding:0 18px; background:var(--color-white); border-bottom:1px solid rgba(0,0,0,0.06); z-index:12000; }
+/* Ensure inputs clickable if overlays exist */
+input, textarea, select { position: relative; z-index: 5; }
+
+/* Small helper */
+.hidden { display:none !important; }
+
+/* --- Header (menggabungkan keduanya, memakai style terbaru, jaga kompat) --- */
+.header{
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  height: var(--header-height);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  background:var(--color-white);
+  border-bottom:1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 4px var(--color-shadow);
+  z-index:12000;
+}
+
+/* header left */
 .header-left{ display:flex; align-items:center; gap:12px; }
 .logo img{ height:32px; width:auto; vertical-align:middle; }
-.logo span{ font-weight:600; margin-left:6px; color:#1f2937; }
-.menu-toggle{ background:transparent; border:2px solid rgba(0,0,0,0.08); border-radius:6px; padding:6px 8px; cursor:pointer; display:inline-flex; align-items:center; }
+.logo span{ font-weight:600; margin-left:6px; color:#1f2937; font-size:1.05rem; }
 
-/* header right */
+/* menu toggle (hamburger) */
+.menu-toggle{
+  background:transparent;
+  border:2px solid rgba(0,0,0,0.08);
+  border-radius:6px;
+  padding:6px 8px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  font-size:1.1rem;
+  color: var(--color-primary-blue);
+}
+
+/* header right (menu, links) */
 .menu-right{ display:flex; align-items:center; gap:12px; }
 .icon-link{ padding:8px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; color:#374151; }
 
-/* profile */
-.user-profile-wrapper{ position:relative; z-index:12100; }
-.user-info{ display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
-.user-info .text-link{ padding:6px 8px; border-radius:8px; font-weight:500; background:transparent; }
+/* --- User profile and dropdown --- */
+.user-profile-wrapper{ position:relative; z-index:12100; cursor:pointer; user-select:none; }
+.user-info{ display:flex; align-items:center; gap:8px; }
+.user-info .text-link{ padding:6px 8px; border-radius:8px; font-weight:500; background:transparent; color:var(--color-text-dark); }
 .avatar img{ width:36px; height:36px; border-radius:999px; object-fit:cover; display:block; }
 
-/* dropdown */
+/* dropdown menu (use display:block by toggling .open or .active on wrapper) */
 .profile-dropdown-menu{
   position:absolute;
   right:12px;
@@ -63,65 +110,7 @@ body { padding-top: var(--header-height); }
 .profile-dropdown-menu .dropdown-item:hover,
 .profile-dropdown-menu button:hover { background:var(--color-light-blue-bg); color:var(--color-primary-blue); }
 
-/* Sidebar */
-.sidebar{ position: fixed; top: var(--header-height); left: 0; width: var(--sidebar-width); height: calc(100vh - var(--header-height)); background: var(--color-primary-blue); color: #fff; overflow-y:auto; z-index:900; transition: width .22s ease, transform .22s ease; }
-body.sidebar-closed .sidebar{ width: var(--sidebar-collapsed); transform: none; }
-body.sidebar-closed .sidebar .label-text { display:none; }
-
-.sidebar .menu-list{ padding:10px 0; }
-.sidebar h4{ margin:20px 16px 12px; font-size:0.95rem; font-weight:600; text-transform:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
-.sidebar h4 .fa { margin-right:10px; }
-.sidebar ul.dropdown-menu{ margin:0 12px 14px; border-radius:6px; background: rgba(0,0,0,0.06); list-style:none; padding:6px 0; }
-.sidebar ul.dropdown-menu.collapsed{ display:none; }
-
-/* links */
-.sidebar ul li a{ display:flex; align-items:center; padding:10px 14px; color:#fff; text-decoration:none; border-radius:8px; }
-.sidebar ul li a i{ width:22px; margin-right:10px; text-align:center; }
-
-/* HIDE icons inside submenu items (keinginan Anda) */
-.sidebar ul.dropdown-menu li a i { display: none; } /* ikon header tetap tampil karena ada di <h4> */
-.sidebar ul.dropdown-menu li a .label-text { display:block; margin-left:0; }
-
-/* active item */
-.sidebar ul li.active a{ background: rgba(0,0,0,0.12); }
-
-/* Main content */
-.main-content-wrapper{ margin-top:0; margin-left: var(--sidebar-width); min-height: calc(100vh - var(--header-height)); padding:28px; transition: margin-left .22s ease, max-width .22s ease; max-width: calc(100vw - var(--sidebar-width)); }
-body.sidebar-closed .main-content-wrapper{ margin-left: var(--sidebar-collapsed); max-width: calc(100vw - var(--sidebar-collapsed)); }
-
-/* small screens */
-@media (max-width:768px){
-  .sidebar{ transform: translateX(-100%); position: absolute; width: var(--sidebar-width); }
-  body.sidebar-closed .sidebar{ transform: translateX(0); }
-  .main-content-wrapper{ margin-left:0; max-width:100vw; padding:16px; }
-  .header-left .user-profile-wrapper{ display:none; }
-}
-
-/* Forms, buttons */
-.form-group{ margin-bottom:15px; }
-.form-group label{ display:block; margin-bottom:6px; font-weight:500; color:var(--color-text-dark); }
-.form-control{ width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:.95rem; }
-.form-control:focus{ outline:none; border-color:var(--color-primary-blue); box-shadow:0 0 0 3px rgba(91,138,210,0.08); }
-
-/* make inputs clickable even if overlays exist accidentally */
-input, textarea, select { position: relative; z-index: 5; }
-
-/* tables */
-.table{ width:100%; border-collapse:collapse; background:var(--color-white); border-radius:8px; overflow:hidden; box-shadow:0 2px 8px var(--color-shadow); }
-.result-card{ background:var(--color-white); border-radius:12px; padding:25px; box-shadow:0 2px 8px var(--color-shadow); margin-bottom:20px; }
-
-/* accessibility focus */
-.menu-toggle:focus, .user-info:focus, .profile-dropdown-menu .dropdown-item:focus,
-input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px rgba(91,138,210,0.08); outline: none; }
-
-/* small helpers */
-.hidden { display:none !important; }
-
-/* ensure dropdown profile focus doesn't auto-style except for keyboard users */
-.profile-dropdown-menu .dropdown-item,
-.profile-dropdown-menu button {
-  text-decoration: none;
-}
+/* keyboard focus accessibility for dropdown items */
 .profile-dropdown-menu .dropdown-item:focus-visible,
 .profile-dropdown-menu button:focus-visible {
   background: var(--color-light-blue-bg);
@@ -130,106 +119,275 @@ input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px rgba(91,138,21
   box-shadow: 0 0 0 3px rgba(91,138,210,0.08);
 }
 
-/* force no underline from UA */
+/* prevent ua underline */
 .profile-dropdown-menu .dropdown-item { text-decoration: none !important; -webkit-text-decoration-skip: none; }
 
-/* --- FIX: make scrollbars belong to sidebar & main-content, not to page --- */
-
-/* 1) Prevent body/page showing vertical scrollbar */
-html, body {
-  height: 100%;
-  overflow-x: hidden; /* tetap seperti semula */
-  overflow-y: hidden; /* important: jangan gunakan page scrollbar */
+/* --- Sidebar (gunakan versi terbaru & penyesuaian) --- */
+.sidebar{
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  background: var(--color-primary-blue);
+  color: #fff;
+  overflow-y:auto;
+  -webkit-overflow-scrolling: touch;
+  z-index:11000;
+  transition: width var(--transition-fast) ease, transform var(--transition-fast) ease;
+  padding-bottom: 24px;
 }
 
-/* 2) Ensure header tetap fixed and above content */
-.header {
-  z-index: 12000; /* sudah ada, pastikan lebih tinggi dari content */
+/* collapsed state controlled by body.sidebar-closed */
+body.sidebar-closed .sidebar{ width: var(--sidebar-collapsed); transform: none; }
+body.sidebar-closed .sidebar .label-text { display:none; }
+
+/* menu list */
+.sidebar .menu-list{ padding:10px 0; }
+.sidebar h4{
+  margin:20px 16px 12px; font-size:0.95rem; font-weight:600; text-transform:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:space-between;
 }
+.sidebar h4 .fa { margin-right:10px; }
 
-/* 3) Make sidebar its own scroll container (visible under header area) */
-.sidebar {
-  top: var(--header-height); /* mulai di bawah header */
-  height: calc(100vh - var(--header-height)); /* tinggi pas */
-  overflow-y: auto; /* scroll internal */
-  -webkit-overflow-scrolling: touch; /* smoother on mobile */
-  z-index: 11000; /* tetap di bawah header, header tetap di atas konten */
-}
-
-/* 4) Make main content area scrollable inside viewport */
-.main-content-wrapper {
-  position: relative;
-  overflow-y: auto; /* internal scroll */
-  height: calc(100vh - var(--header-height)); /* agar area scroll sesuai */
-  box-sizing: border-box;
-}
-
-/* 5) If you want the rightmost page scrollbar to appear for main-content only,
-   keep scrollbar styling default. If you have custom scrollbars, ensure they
-   apply to .sidebar and .main-content-wrapper instead of body. */
-
-/* 6) Optional: keep footer or bottom sticky areas visible by adding bottom padding if needed */
-.main-content-wrapper,
-.sidebar {
-  padding-bottom: 24px; /* beri sedikit ruang di bawah agar handle scrollbar tidak terlalu ke tepi */
-}
-
-/* 7) Accessibility: allow keyboard users to see focus when scrolling inside containers */
-.sidebar:focus,
-.main-content-wrapper:focus {
-  outline: none;
-}
-
-/* Submenu container: beri sedikit bg dan rounded corner */
-.sidebar ul.dropdown-menu {
-  margin: 0 12px 14px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.04); /* lembut */
-  list-style: none;
-  padding: 6px 6px;
+/* dropdown submenu container */
+.sidebar ul.dropdown-menu{
+  margin:0 12px 14px;
+  border-radius:8px;
+  background: rgba(255,255,255,0.04);
+  list-style:none;
+  padding:6px 6px;
   transition: all .15s ease;
 }
+.sidebar ul.dropdown-menu.collapsed{ display:none; }
 
-/* setiap menu item jadi block (mudah dipisah) */
-.sidebar ul.dropdown-menu li {
-  margin: 0;
-  padding: 0;
+/* each submenu item block */
+.sidebar ul.dropdown-menu li{ margin:0; padding:0; }
+.sidebar ul.dropdown-menu li a{
+  display:block; align-items:center; padding:12px 14px; color:#fff; text-decoration:none; border-radius:0; background:transparent; font-weight:500;
 }
 
-/* link jadi full-width block, tanpa rounded pada tiap item
-   supaya border-top divider terlihat rapi */
-.sidebar ul.dropdown-menu li a {
-  display: block;
-  align-items: center;
-  padding: 12px 14px;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 0; /* jangan rounded tiap item (agar divider lurus) */
-  background: transparent;
-  font-weight: 500;
-}
+/* divider between items */
+.sidebar ul.dropdown-menu li + li { border-top: 1px solid rgba(255,255,255,0.06); }
 
-/* divider / garis antar item: gunakan border-top pada item setelah item pertama */
-.sidebar ul.dropdown-menu li + li {
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
+/* hide icons inside submenu items (requested) */
+.sidebar ul.dropdown-menu li a i { display: none; } /* icon header tetap di <h4> */
 
-/* hover / focus pada item: beri latar lembut (tetap respect text color) */
-.sidebar ul.dropdown-menu li a:hover,
-.sidebar ul.dropdown-menu li a:focus {
-  background: rgba(0,0,0,0.09);
-  color: #fff;
-  outline: none;
-}
+/* top-level links */
+.sidebar ul li a{ display:flex; align-items:center; padding:10px 14px; color:#fff; text-decoration:none; border-radius:8px; }
+.sidebar ul li a i{ width:22px; margin-right:10px; text-align:center; }
 
-/* active item: tunjukkan lebih tegas (buat rounded di sekitar active agar terlihat) */
+/* active item visual */
 .sidebar ul li.active a{
   background: rgba(0,0,0,0.14);
   border-radius: 6px;
 }
 
-/* jika Anda sebelumnya menyembunyikan ikon intern, biarkan tetap */
-.sidebar ul.dropdown-menu li a i { display: none; }
+/* hover on items */
+.sidebar ul li a:hover { background: rgba(255, 255, 255, 0.08); }
 
-/* jika butuh spasi tambahan antara grup, jaga margin-bottom */
-.sidebar .menu-list > h4 + .dropdown-menu { margin-top: 8px; }
+/* --- Main content wrapper (make internally scrollable) --- */
+.main-content-wrapper{
+  margin-top:0;
+  margin-left: var(--sidebar-width);
+  min-height: calc(100vh - var(--header-height));
+  padding:28px;
+  transition: margin-left var(--transition-fast) ease, max-width var(--transition-fast) ease;
+  max-width: calc(100vw - var(--sidebar-width));
+  position: relative;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-bottom: 24px;
+}
+body.sidebar-closed .main-content-wrapper{ margin-left: var(--sidebar-collapsed); max-width: calc(100vw - var(--sidebar-collapsed)); }
+
+/* --- Content --- */
+.content{ padding:30px; flex-grow:1; }
+.content h2{ color:var(--color-text-dark); margin-top:0; font-weight:600; font-size:1.8rem; }
+.content p{ color:var(--color-text-gray); }
+
+/* --- Table styling (merge lama & baru) --- */
+.table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--color-white);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 8px var(--color-shadow);
+  margin-top:20px;
+}
+.table thead{ background-color:var(--color-primary-blue); color:var(--color-white); }
+.table thead th{ padding:15px; text-align:left; font-weight:600; font-size:0.95rem; border:none; }
+.table tbody tr{ border-bottom:1px solid #e0e0e0; transition:background-color .2s ease; }
+.table tbody tr:hover{ background-color:var(--color-light-blue-bg); }
+.table tbody tr:last-child{ border-bottom:none; }
+.table tbody td{ padding:15px; color:var(--color-text-dark); font-size:0.9rem; border:none; }
+
+.table-bordered{ border:1px solid #e0e0e0; }
+.table-bordered th, .table-bordered td{ border:1px solid #e0e0e0; }
+
+/* responsive table (mobile) - from original */
+@media (max-width: 768px){
+  .table thead { display: none; }
+  .table tbody tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .table tbody td {
+    display: block;
+    text-align: right;
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .table tbody td:last-child { border-bottom: none; }
+  .table tbody td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: 600;
+    color: var(--color-primary-blue);
+  }
+}
+
+/* --- Result card --- */
+.result-card{ background:var(--color-white); border-radius:12px; padding:25px; box-shadow:0 2px 8px var(--color-shadow); margin-bottom:20px; }
+
+/* --- Status badges (from original) --- */
+.status-badge{ display:inline-block; padding:5px 12px; border-radius:20px; font-weight:500; font-size:0.85rem; }
+.status-layak{ background-color:#d4edda; color:#155724; }
+.status-tidak-layak{ background-color:#f8d7da; color:#721c24; }
+
+/* --- Forms, inputs, buttons --- */
+.form-group{ margin-bottom:15px; }
+.form-group label{ display:block; margin-bottom:6px; font-weight:500; color:var(--color-text-dark); }
+.form-control, .form-group .form-control{ width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:.95rem; }
+.form-control:focus, .form-group .form-control:focus{ outline:none; border-color:var(--color-primary-blue); box-shadow:0 0 0 3px rgba(91,138,210,0.08); }
+
+/* Buttons (merged styles) */
+.btn{
+  padding:10px 20px; font-size:0.95em; border-radius:6px; border:none; cursor:pointer;
+  transition: all var(--transition-medium) ease; display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-weight:500;
+}
+.btn:hover{ transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.btn-primary{ background-color: var(--color-primary-blue); color: white; border-radius:6px; }
+.btn-primary:hover{ background-color:#4a7bc4; }
+.btn-info{ background-color:#17a2b8; color:white; }
+.btn-info:hover{ background-color:#138496; }
+.btn-success{ background-color:#28a745; color:white; }
+.btn-success:hover{ background-color:#218838; }
+.btn-danger{ background-color:#dc3545; color:white; }
+.btn-danger:hover{ background-color:#c82333; }
+
+.btn-sm{ padding:6px 12px; font-size:0.875em; border-radius:6px; display:inline-flex; gap:5px; }
+
+/* --- Empty state (merged) --- */
+.empty-state{
+  text-align:center; padding:60px 20px; color:var(--color-text-gray);
+}
+.empty-state i{ font-size:4em; margin-bottom:20px; opacity:0.5; color:var(--color-primary-blue); display:block; }
+.empty-state p{ font-size:1.2em; margin-bottom:20px; }
+
+/* --- Modal styling (preserve animation & structure) --- */
+.modal{
+  display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color: rgba(0,0,0,0.5); animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.modal-content{
+  background-color:#fefefe; margin:5% auto; padding:0; border:1px solid #888; border-radius:10px; width:90%; max-width:600px; box-shadow:0 4px 20px rgba(0,0,0,0.2); animation: slideDown 0.3s ease;
+}
+@keyframes slideDown { from { transform: translateY(-50px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+.modal-header{ padding:20px; background-color:var(--color-primary-blue); color:white; border-radius:10px 10px 0 0; display:flex; justify-content:space-between; align-items:center; }
+.modal-header h3{ margin:0; font-size:1.3em; }
+.modal-body{ padding:20px; }
+.modal-footer{ padding:15px 20px; background-color:#f5f5f5; border-radius:0 0 10px 10px; display:flex; justify-content:flex-end; gap:10px; }
+
+.close{ color:white; font-size:28px; font-weight:bold; cursor:pointer; transition: color .3s ease; }
+.close:hover, .close:focus{ color:#ddd; }
+
+/* --- Alerts (from original) --- */
+.alert{ padding:15px 20px; margin-bottom:20px; border-radius:8px; display:flex; align-items:center; gap:10px; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { transform: translateX(-20px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+.alert-success{ background-color:#d4edda; border:1px solid #c3e6cb; color:#155724; }
+.alert-danger{ background-color:#f8d7da; border:1px solid #f5c6cb; color:#721c24; }
+.alert i{ font-size:1.2em; }
+
+/* --- Accessibility focus helpers (merged) --- */
+.menu-toggle:focus, .user-info:focus, .profile-dropdown-menu .dropdown-item:focus,
+input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px rgba(91,138,210,0.08); outline: none; }
+
+/* --- Scrollbar & container behavior notes --- */
+/* Prevent page showing vertical scrollbar: keep scrolling inside sidebar & main content */
+html, body { overflow-x: hidden; overflow-y: hidden; } /* page-level scrollbar hidden on purpose */
+.sidebar { overflow-y: auto; }
+.main-content-wrapper { overflow-y: auto; height: calc(100vh - var(--header-height)); }
+
+/* Provide slight padding bottom for comfortable scroll handle */
+.main-content-wrapper, .sidebar { padding-bottom: 24px; }
+
+/* keyboard focus for scroll containers */
+.sidebar:focus, .main-content-wrapper:focus { outline: none; }
+
+/* --- Submenu visuals (dividers between submenu items) --- */
+.sidebar ul.dropdown-menu li + li { border-top:1px solid rgba(255,255,255,0.06); }
+
+/* --- Misc helpers from original --- */
+.info-text { color: var(--color-text-gray); margin-bottom:15px; font-size:0.95rem; }
+.table-wrapper { overflow-x:auto; margin-top:20px; }
+
+/* --- Print styling (preserve) --- */
+@media print {
+  .header, .sidebar, .form-actions, .btn { display: none !important; }
+  .main-content-wrapper { margin:0 !important; padding:20px !important; }
+}
+
+/* --- Responsiveness (merge and keep behavior) --- */
+@media (max-width:768px){
+  .sidebar{ transform: translateX(-100%); position:absolute; width:var(--sidebar-width); }
+  body.sidebar-closed .sidebar{ transform: translateX(0); }
+  .main-content-wrapper{ margin-left:0; max-width:100vw; padding:16px; }
+  .header-left .user-profile-wrapper{ display:none; }
+
+  /* small-screen adjustments for header logo & paddings */
+  .logo span{ display:none; } /* hide text label to save space - optional */
+}
+
+/* --- Additional small helpers & focus states preserved --- */
+/* Ensure dropdown items don't inherit unwanted UA styling */
+.profile-dropdown-menu .dropdown-item, .profile-dropdown-menu button { text-decoration: none; }
+
+/* End of combined stylesheet */
+
+/* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+
+/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+
+    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
+    display: block !important;
+    list-style: none;
+
+    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
+.sidebar .dropdown-menu.collapsed {
+    display: none !important;
+}
+
+
+
+
