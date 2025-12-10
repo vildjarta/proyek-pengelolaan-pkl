@@ -8,7 +8,10 @@
 
                 // helper kecil untuk membuka grup jika salah satu route anak cocok
                 $isDataAkademikOpen = request()->is('mahasiswa*') || request()->is('transkrip*');
-                $isBimbinganOpen = request()->is('datadosenpembimbing*') || request()->is('dosen_penguji*');
+
+                // PERBAIKAN: tambahkan 'dosen*' agar grup Bimbingan terbuka juga saat /dosen
+                $isBimbinganOpen = request()->is('datadosenpembimbing*') || request()->is('dosen_penguji*') || request()->is('dosen*');
+
                 $isPerusahaanOpen = request()->is('perusahaan*');
                 $isJadwalOpen = request()->is('jadwal*');
                 $isPenilaianOpen = request()->is('penilaian*') || request()->is('penilaian-penguji*') || request()->is('nilai*') || request()->is('ratingperusahaan*');
@@ -17,7 +20,7 @@
 
             <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-halaman-utama">
                 <span><i class="fa fa-home"></i> <span class="label-text">Halaman Utama</span></span>
-                <i class="fa fa-chevron-down dropdown-caret"></i>
+                <i class="fa dropdown-caret fa-chevron-right" aria-hidden="true"></i>
             </h4>
             <ul class="dropdown-menu {{ $currentRoute == 'home' ? '' : 'collapsed' }}" aria-hidden="{{ $currentRoute == 'home' ? 'false' : 'true' }}">
                 <li class="{{ $currentRoute == 'home' ? 'active' : '' }}">
@@ -30,7 +33,7 @@
             @if($userRole == 'koordinator')
                 <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-data-akademik">
                     <span><i class="fa fa-graduation-cap"></i> <span class="label-text">Data Akademik</span></span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
+                    <i class="fa dropdown-caret fa-chevron-right" aria-hidden="true"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isDataAkademikOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isDataAkademikOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('mahasiswa') || request()->is('mahasiswa/*')) ? 'active' : '' }}">
@@ -47,7 +50,7 @@
 
                 <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-bimbingan-penguji">
                     <span><i class="fa fa-users"></i> <span class="label-text">Bimbingan & Penguji</span></span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
+                    <i class="fa dropdown-caret fa-chevron-right" aria-hidden="true"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isBimbinganOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isBimbinganOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('datadosenpembimbing') || request()->is('datadosenpembimbing/*')) ? 'active' : '' }}">
@@ -55,16 +58,24 @@
                             <span class="label-text">Dosen Pembimbing</span>
                         </a>
                     </li>
+
                     <li class="{{ (request()->is('dosen_penguji') || request()->is('dosen_penguji/*')) ? 'active' : '' }}">
                         <a href="{{ url('/dosen_penguji') }}">
                             <span class="label-text">Dosen Penguji</span>
+                        </a>
+                    </li>
+
+                    {{-- ITEM BARU: Dosen (menu umum masuk ke halaman /dosen) --}}
+                    <li class="{{ (request()->is('dosen') || request()->is('dosen/*')) ? 'active' : '' }}">
+                        <a href="{{ url('/dosen') }}">
+                            <span class="label-text">Dosen</span>
                         </a>
                     </li>
                 </ul>
 
                 <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-perusahaan">
                     <span><i class="fa fa-building"></i> <span class="label-text">Perusahaan PKL</span></span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
+                    <i class="fa dropdown-caret fa-chevron-right" aria-hidden="true"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isPerusahaanOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isPerusahaanOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('perusahaan') || request()->is('perusahaan/*')) ? 'active' : '' }}">
@@ -76,7 +87,7 @@
 
                 <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-jadwal">
                     <span><i class="fa fa-calendar-alt"></i> <span class="label-text">Jadwal & Kegiatan</span></span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
+                    <i class="fa dropdown-caret fa-chevron-right" aria-hidden="true"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isJadwalOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isJadwalOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('jadwal') || request()->is('jadwal/*')) ? 'active' : '' }}">
@@ -88,7 +99,7 @@
 
                 <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-penilaian">
                     <span><i class="fa fa-clipboard-check"></i> <span class="label-text">Penilaian & Hasil</span></span>
-                    <i class="fa fa-chevron-down dropdown-caret"></i>
+                    <i class="fa dropdown-caret fa-chevron-right" aria-hidden="true"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isPenilaianOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isPenilaianOpen ? 'false' : 'true' }}">
                     <li class="{{ (request()->is('penilaian') || request()->is('penilaian/*')) ? 'active' : '' }}">
@@ -114,27 +125,26 @@
                 </ul>
             @endif
 
+            {{-- AKUN --}}
             <h4 class="menu-dropdown-toggle" tabindex="0" data-persist-id="menu-akun">
                 <span><i class="fa fa-user-circle"></i> <span class="label-text">Akun</span></span>
-                <i class="fa fa-chevron-down dropdown-caret"></i>
+                <i class="fa dropdown-caret fa-chevron-right" aria-hidden="true"></i>
             </h4>
+
             <ul class="dropdown-menu {{ $isAkunOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isAkunOpen ? 'false' : 'true' }}">
+                @if($userRole == 'koordinator')
+                    <li class="{{ (request()->is('manage-users') || request()->is('manage-users/*')) ? 'active' : '' }}">
+                        <a href="{{ url('/manage-users') }}">
+                            <span class="label-text">Manajemen Users</span>
+                        </a>
+                    </li>
+                @endif
+
                 <li>
                     <a href="#"
                        onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
                         <span class="label-text">Logout</span>
                     </a>
-
-                    @if($userRole == 'koordinator')
-                        <h4 class="menu-dropdown-toggle" data-persist-id="menu-superadmin"><span><i class="fa fa-users-cog"></i> <span class="label-text">Super Admin</span></span></h4>
-                        <ul class="dropdown-menu collapsed" aria-hidden="true">
-                            <li class="{{ (request()->is('manage-users') || request()->is('manage-users/*')) ? 'active' : '' }}">
-                                <a href="{{ url('/manage-users') }}">
-                                    <span class="label-text">Manajemen Users</span>
-                                </a>
-                            </li>
-                        </ul>
-                    @endif
 
                     <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" style="display:none;">
                         @csrf
@@ -149,15 +159,20 @@
     document.addEventListener('DOMContentLoaded', function () {
         const dropdownHeaders = document.querySelectorAll('.sidebar h4.menu-dropdown-toggle');
 
+        // Restore persisted open menus (if any)
         try {
             const stored = JSON.parse(localStorage.getItem('sidebar-open-menus') || '{}');
             dropdownHeaders.forEach(function (header) {
                 const menu = header.nextElementSibling;
+                const caret = header.querySelector('.dropdown-caret');
                 const id = header.getAttribute('data-persist-id') || header.textContent.trim();
                 if (menu && stored[id]) {
                     menu.classList.remove('collapsed');
                     header.classList.remove('collapsed');
                     menu.setAttribute('aria-hidden', 'false');
+                    if (caret) { caret.classList.remove('fa-chevron-right'); caret.classList.add('fa-chevron-down'); }
+                } else {
+                    if (caret) { caret.classList.remove('fa-chevron-down'); caret.classList.add('fa-chevron-right'); }
                 }
             });
         } catch (err) { console.warn('sidebar restore error', err); }
@@ -165,11 +180,22 @@
         dropdownHeaders.forEach(function (header, idx) {
             const toggle = function () {
                 const menu = header.nextElementSibling;
+                const caret = header.querySelector('.dropdown-caret');
                 if (menu && menu.classList.contains('dropdown-menu')) {
                     menu.classList.toggle('collapsed');
                     header.classList.toggle('collapsed');
                     const isCollapsed = menu.classList.contains('collapsed');
                     menu.setAttribute('aria-hidden', isCollapsed ? 'true' : 'false');
+
+                    if (caret) {
+                        if (isCollapsed) {
+                            caret.classList.remove('fa-chevron-down');
+                            caret.classList.add('fa-chevron-right');
+                        } else {
+                            caret.classList.remove('fa-chevron-right');
+                            caret.classList.add('fa-chevron-down');
+                        }
+                    }
                     persistSidebarState();
                 }
             };

@@ -224,6 +224,51 @@ body.sidebar-closed .main-content-wrapper {
   }
 }
 
+    /* Lokal: batasi lebar card agar selalu center, beri padding vertikal */
+    .page-card {
+      max-width: 980px;
+      margin: 0 auto;
+      padding-top: 8px;
+      padding-bottom: 24px;
+    }
+
+    .content-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+    }
+
+    /* Suggest box z-index agar muncul di atas sidebar */
+    .suggest-wrap,
+    .nim-suggest {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+      z-index: 12050;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .suggest-wrap .item,
+    .nim-suggest .item {
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+    .suggest-wrap .item:hover,
+    .nim-suggest .item:hover {
+      background: #f1f5f9;
+    }
+
+    /* Pastikan main-content-wrapper mengatur scroll internal (seharusnya ada di style-pkl.css) */
+    .main-content-wrapper {
+      /* fallback jika style-pkl belum mengaturnya */
+      position: relative;
+    }
+
 /* ======================================================
    FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
    ====================================================== */

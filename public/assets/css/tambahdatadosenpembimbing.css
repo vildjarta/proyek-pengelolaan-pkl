@@ -66,3 +66,43 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
     display: none !important;
 }
 
+/* ===== Quick fix: make .main-wrapper scrollable and fill viewport ===== */
+:root {
+  --sidebar-width: 285px; /* samakan dengan style global Anda */
+  --sidebar-collapsed-width: 70px;
+  --header-height: 64px; /* akan disesuaikan oleh JS jika header beda */
+}
+
+/* Pastikan body tidak memblokir scroll di seluruh halaman (jika global men-set hidden) */
+/* Kita tidak mengubah body overflow di sini — hanya membuat main-wrapper scrollable */
+
+#main-wrapper,
+.main-wrapper {
+  position: absolute;
+  top: var(--header-height);
+  left: var(--sidebar-width);
+  right: 0;
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px; /* sama seperti halaman lain */
+  box-sizing: border-box;
+  z-index: 11000;
+}
+
+/* jika body.sidebar-closed diterapkan saat collapsed, jaga konsistensi */
+body.sidebar-closed #main-wrapper,
+body.sidebar-closed .main-wrapper {
+  left: var(--sidebar-collapsed-width);
+}
+
+/* jika ada .content-container digunakan untuk padding internal */
+.content-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.content-card {
+  max-width: 900px;
+  margin: 0 auto; /* center card seperti halaman lain */
+}

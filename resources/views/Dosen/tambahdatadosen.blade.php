@@ -24,7 +24,7 @@
     <div class="content-container container-fluid px-4">
       <div class="content-card shadow-sm w-100">
 
-        <h2 class="text-center mb-4 page-header">Tambah Dosen</h2>
+        <h2 class="text-center mb-4 page-header">Tambah Data Dosen</h2>
         <hr>
 
         <form action="{{ route('dosen.store') }}" method="POST" id="formTambahDosen" class="needs-validation" novalidate>

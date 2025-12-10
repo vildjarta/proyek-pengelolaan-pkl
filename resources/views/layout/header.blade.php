@@ -33,7 +33,7 @@
             color: var(--color-primary-blue);
         }
 
-        /* Fokus keyboard: tunjukkan ring, tapi hindari auto-styling saat klik */
+        /* Fokus keyboard: tunjukkan ring */
         .profile-dropdown-menu .dropdown-item:focus-visible {
             background: var(--color-light-blue-bg);
             color: var(--color-primary-blue);
@@ -43,6 +43,12 @@
 
         /* Pastikan tidak ada underline / warna visited default */
         .profile-dropdown-menu .dropdown-item { text-decoration: none !important; -webkit-text-decoration-skip: none; }
+
+        /* Slight spacing for icon inside dropdown */
+        .profile-dropdown-menu .icon { width: 28px; display:inline-flex; align-items:center; justify-content:center; margin-right:8px; color:inherit; }
+
+        /* Ensure dropdown menu aligns under the user-info nicely */
+        .profile-dropdown-menu { min-width: 190px; }
     </style>
 </head>
 
@@ -66,8 +72,7 @@
     </div>
 
     <div class="menu-right" role="navigation" aria-label="Top navigation">
-        <a href="#" class="icon-link" title="Notifikasi" aria-label="Notifikasi"><i class="fa fa-bell"></i></a>
-        <a href="#" class="icon-link" title="Pesan" aria-label="Pesan"><i class="fa fa-envelope"></i></a>
+        {{-- NOTE: removed notification & message icons as requested --}}
 
         <div class="user-profile-wrapper" id="userProfileWrapper">
             <div class="user-info" id="userInfo"
@@ -75,7 +80,8 @@
                  tabindex="0"
                  aria-haspopup="true"
                  aria-expanded="false"
-                 aria-controls="profileDropdown">
+                 aria-controls="profileDropdown"
+                 aria-label="Menu pengguna">
                 <span class="text-link" id="userDisplayName">{{ $displayName }}</span>
 
                 <div class="avatar" aria-hidden="true">
@@ -86,23 +92,19 @@
                 </div>
             </div>
 
-            <div class="profile-dropdown-menu" id="profileDropdown" role="menu" aria-labelledby="userInfo">
-                <a href="{{ route('profile.edit') }}" role="menuitem" class="dropdown-item">
-                    <span class="icon"><i class="fa fa-user-circle"></i></span>
+            <div class="profile-dropdown-menu" id="profileDropdown" role="menu" aria-labelledby="userInfo" tabindex="-1">
+                {{-- Profil Saya --}}
+                <a href="{{ route('profile.edit') }}" role="menuitem" class="dropdown-item" tabindex="0">
+                    <span class="icon" aria-hidden="true"><i class="fa fa-user-circle"></i></span>
                     Profil Saya
-                </a>
-
-                <a href="#" role="menuitem" class="dropdown-item">
-                    <span class="icon"><i class="fa fa-cog"></i></span>
-                    Pengaturan
                 </a>
 
                 {{-- Logout: gunakan <a> supaya tampilannya sama persis --}}
                 <form id="logout-form-header" action="{{ route('logout') }}" method="POST" style="display:none;">
                     @csrf
                 </form>
-                <a href="#" role="menuitem" id="logoutLinkHeader" class="dropdown-item" aria-label="Logout">
-                    <span class="icon"><i class="fa fa-sign-out-alt"></i></span>
+                <a href="#" role="menuitem" id="logoutLinkHeader" class="dropdown-item" aria-label="Logout" tabindex="0">
+                    <span class="icon" aria-hidden="true"><i class="fa fa-sign-out-alt"></i></span>
                     Logout
                 </a>
             </div>
@@ -120,56 +122,72 @@
     const sidebarToggle = document.getElementById('sidebarToggle');
 
     if (info && dropdown && wrapper) {
-        function toggleDropdown(open) {
-            const willOpen = (typeof open === 'boolean') ? open : !wrapper.classList.contains('open');
-            if (willOpen) {
-                wrapper.classList.add('open');
-                info.setAttribute('aria-expanded', 'true');
-                // TIDAK auto-focus item => mencegah auto-blue highlight
-            } else {
-                wrapper.classList.remove('open');
-                info.setAttribute('aria-expanded', 'false');
-            }
+        function openDropdown() {
+            wrapper.classList.add('open');
+            info.setAttribute('aria-expanded', 'true');
+            // show dropdown (css controls display via .open)
+        }
+        function closeDropdown() {
+            wrapper.classList.remove('open');
+            info.setAttribute('aria-expanded', 'false');
+        }
+        function toggleDropdown() {
+            if (wrapper.classList.contains('open')) closeDropdown();
+            else openDropdown();
         }
 
+        // click to toggle
         info.addEventListener('click', function(e){
             e.stopPropagation();
             toggleDropdown();
         });
 
+        // keyboard support for Enter, Space, ArrowDown to open then focus first item
         info.addEventListener('keydown', function(e){
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 e.stopPropagation();
                 toggleDropdown();
+                // focus first item if opened
+                if (wrapper.classList.contains('open')) {
+                    const first = dropdown.querySelector('.dropdown-item');
+                    if (first) first.focus();
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                openDropdown();
+                const first = dropdown.querySelector('.dropdown-item');
+                if (first) first.focus();
             } else if (e.key === 'Escape') {
-                toggleDropdown(false);
+                closeDropdown();
+                info.focus();
             }
         });
 
+        // close when clicking outside
         document.addEventListener('click', function(e){
-            if (!wrapper.contains(e.target)) toggleDropdown(false);
+            if (!wrapper.contains(e.target)) closeDropdown();
         });
 
+        // close on ESC globally
         document.addEventListener('keydown', function(e){
-            if (e.key === 'Escape') toggleDropdown(false);
+            if (e.key === 'Escape') closeDropdown();
         });
 
-        // biarkan klik di dalam dropdown tidak menutup otomatis
+        // prevent clicks inside dropdown from closing it (so user can click items)
         dropdown.addEventListener('click', function(e){ e.stopPropagation(); });
     }
 
-    // logout link submits form, lalu blur supaya tidak tinggalkan fokus biru
+    // logout link submits form, then blur to avoid focus outline
     if (logoutLink && logoutForm) {
         logoutLink.addEventListener('click', function(e){
             e.preventDefault();
-            // submit form
             logoutForm.submit();
-            // lepaskan fokus agar tidak tampil biru
-            try { logoutLink.blur(); } catch (err) {}
+            try { logoutLink.blur(); } catch (_) {}
         });
     }
 
+    // sidebar toggle: toggle collapsed class on body
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function () {
             document.body.classList.toggle('sidebar-closed');

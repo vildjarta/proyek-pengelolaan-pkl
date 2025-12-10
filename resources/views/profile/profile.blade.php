@@ -1,249 +1,169 @@
 {{-- resources/views/profile/profile.blade.php --}}
 @include('layout.header')
 
+<!-- Stylesheet yang diperlukan (jika punya global, biarkan) -->
 <link rel="stylesheet" href="{{ asset('assets/css/profile.css') }}">
 
 <!-- Cropper.js CSS (CDN) -->
 <link href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet"/>
 
+<!-- Perbaikan CSS inline khusus halaman (override jika perlu) -->
 <style>
+    /* ===============================
+       Layout variables (ubah sesuai theme)
+       =============================== */
     :root {
-        --sidebar-width: 250px;
-        --sidebar-collapsed-width: 60px;
-        --header-safe-height: 72px;
+        --sidebar-width: 285px;
+        --sidebar-collapsed-width: 70px;
+        --header-height: 64px; /* default, akan diperbarui oleh JS bila header beda */
         --content-vertical-padding: 24px;
         --content-horizontal-padding: 24px;
+        --color-primary-blue: #5b8ad2;
     }
 
-    .content-wrapper {
-        margin-left: var(--sidebar-width);
-        transition: margin-left 0.3s ease-in-out;
-        padding: var(--content-vertical-padding) var(--content-horizontal-padding);
-        padding-top: calc(var(--header-safe-height) + var(--content-vertical-padding));
-        width: calc(100% - var(--sidebar-width));
-        box-sizing: border-box;
-        min-height: calc(100vh - var(--header-safe-height));
-    }
-
-    body.sidebar-closed .content-wrapper {
-        margin-left: var(--sidebar-collapsed-width);
-        width: calc(100% - var(--sidebar-collapsed-width));
-    }
-
-    .profile-page-container { width: 100%; display: block; }
-    .profile-content { width: 100%; display: block; }
-
-    .profile-card {
-        width: calc(100% - 48px);
-        max-width: none;
+    /* --- Base (jaga tidak ada overflow-y:hidden di sini) --- */
+    html, body {
+        height: 100%;
         margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        font-family: 'Poppins', sans-serif;
+        background: #f4f7f9;
+    }
+
+    /* Header tetap fixed (layout.header di-include) */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--header-height);
+        z-index: 13000;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    /* Sidebar: mulai dibawah header, scrollable internal */
+    .sidebar {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        width: var(--sidebar-width);
+        height: calc(100vh - var(--header-height));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background: var(--color-primary-blue);
+        color: #fff;
+        z-index: 12000;
+        padding-bottom: 24px;
+        box-sizing: border-box;
+    }
+
+    /* Jika sidebar collapsed (body.sidebar-closed) */
+    body.sidebar-closed .sidebar {
+        width: var(--sidebar-collapsed-width);
+    }
+
+    /* Content wrapper: terletak setelah sidebar, juga scrollable internal */
+    .content-wrapper {
+        position: absolute;
+        top: var(--header-height);
+        left: var(--sidebar-width);
+        right: 0;
+        height: calc(100vh - var(--header-height));
+        padding: var(--content-vertical-padding) var(--content-horizontal-padding);
+        overflow-y: auto;
+        box-sizing: border-box;
+        transition: left .22s ease, width .22s ease;
+        z-index: 11000;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Jika sidebar collapsed, geser content */
+    body.sidebar-closed .content-wrapper {
+        left: var(--sidebar-collapsed-width);
+    }
+
+    /* Profile card styles (dipertahankan) */
+    .profile-page-container { width:100%; }
+    .profile-content { width:100%; }
+    .profile-card {
         background: #fff;
         border-radius: 8px;
         padding: 1.25rem;
         box-shadow: 0 6px 18px rgba(2,6,23,0.03);
+        max-width: 100%;
+        margin-bottom: 16px;
     }
 
     .profile-card .form-group { margin-bottom: 1.25rem; display:block; }
     .profile-card label { display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a; }
-    .profile-card .form-control {
-        display:block;
-        width:100%;
-        padding:10px 12px;
-        border-radius:8px;
-        border:1px solid #e6e9ef;
-        background:#fff;
-        box-sizing:border-box;
-    }
+    .profile-card .form-control { display:block; width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e9ef; background:#fff; box-sizing:border-box; }
 
-    input[readonly] {
-        background-color: #e9ecef !important;
-        cursor: not-allowed;
-        color: #6c757d;
-        border-color: #ced4da;
-    }
+    input[readonly] { background-color: #e9ecef !important; cursor: not-allowed; color:#6c757d; border-color:#ced4da; }
 
-    /* Profile picture section */
-    .profile-picture-section {
-        display:flex;
-        gap:20px;
-        align-items:flex-start;
-    }
-    .profile-picture-section .left-col {
-        min-width: 110px;
-        display:flex;
-        align-items:flex-start;
-        padding-top:6px;
-    }
-
+    /* Profile picture */
+    .profile-picture-section { display:flex; gap:20px; align-items:flex-start; }
+    .profile-picture-section .left-col { min-width:110px; padding-top:6px; }
     .profile-pic-wrapper { display:flex; align-items:center; gap:12px; }
     .profile-pic-wrapper img#profilePicPreview {
-        width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
-        margin-right: 12px; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(2,6,23,0.06);
+        width:96px; height:96px; border-radius:50%; object-fit:cover; margin-right:12px; border:4px solid #fff;
+        box-shadow: 0 4px 12px rgba(2,6,23,0.06); cursor:pointer; transition: transform .12s ease;
         flex: 0 0 96px;
-        cursor: pointer;
-        transition: transform .12s ease;
     }
     .profile-pic-wrapper img#profilePicPreview:hover { transform: scale(1.03); }
-
-    .upload-button {
-        padding: 8px 12px; background: #eef2ff; color:#334155; border-radius:8px; cursor:pointer; margin-left:6px;
-    }
+    .upload-button { padding:8px 12px; background:#eef2ff; color:#334155; border-radius:8px; cursor:pointer; margin-left:6px; }
 
     .form-actions { display:flex; justify-content:flex-end; gap:12px; margin-top:12px; }
 
-    @media (min-width: 1300px) { .profile-card { width: calc(100% - 80px); } }
-    @media (max-width: 900px) {
-        :root { --sidebar-width: 60px; --content-horizontal-padding: 12px; }
-        .content-wrapper { padding-left: var(--content-horizontal-padding); padding-right: var(--content-horizontal-padding); }
-        .profile-card { width: calc(100% - 24px); padding:1rem; border-radius:6px; }
-        .profile-pic-wrapper img#profilePicPreview { width:72px; height:72px; flex:0 0 72px; }
-        .profile-picture-section { flex-direction:column; align-items:flex-start; }
-        .profile-picture-section .left-col { min-width:auto; padding-top:0; margin-bottom:6px; }
-    }
-
-    /* gaya tombol back */
-    .back-button { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; background:#f1f5f9; border-radius:6px; cursor:pointer; color:#334155; margin-bottom:12px; transition:0.15s; }
+    /* Back button */
+    .back-button { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; background:#f1f5f9; border-radius:6px; cursor:pointer; color:#334155; margin-bottom:12px; transition:.15s; }
     .back-button:hover { background:#e2e8f0; }
 
-    /* Preview modal */
-    .photo-modal {
-        position: fixed;
-        inset: 0;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0,0,0,0.6);
-        z-index: 99999;
-        padding: 20px;
-    }
-    .photo-modal.active { display: flex; }
-    .photo-modal .modal-content {
-        max-width: 95%;
-        max-height: 95%;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 18px 60px rgba(2,6,23,0.6);
-        background: #fff !important;
-        position: relative;
-        opacity: 1 !important;
-        filter: none !important;
-        mix-blend-mode: normal !important;
-        -webkit-backdrop-filter: none !important;
-        backdrop-filter: none !important;
-    }
-    .photo-modal .modal-content img {
-        display:block;
-        max-width: 100%;
-        max-height: 80vh;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        background: #111;
-        opacity: 1 !important;
-        filter: none !important;
-        mix-blend-mode: normal !important;
-    }
-    .photo-modal .modal-close-x {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: rgba(255,255,255,0.95);
-        border-radius: 6px;
-        padding: 6px 8px;
-        cursor: pointer;
-        font-weight: 600;
-        border: 1px solid rgba(0,0,0,0.06);
-    }
+    /* Modal and cropper styles (dipertahankan) */
+    .photo-modal, .cropper-modal { position: fixed; inset: 0; display: none; align-items:center; justify-content:center; z-index: 20000; padding: 20px; }
+    .photo-modal.active, .cropper-modal.active { display:flex; }
+    .photo-modal { background: rgba(0,0,0,0.6); }
+    .photo-modal .modal-content { max-width:95%; max-height:95%; border-radius:10px; overflow:hidden; box-shadow:0 18px 60px rgba(2,6,23,0.6); background:#fff; position:relative; }
+    .photo-modal .modal-content img { display:block; max-width:100%; max-height:80vh; object-fit:contain; background:#111; }
 
-    /* Cropper modal */
-    .cropper-modal {
-        position: fixed;
-        inset: 0;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0,0,0,0.7) !important;
-        z-index: 100000 !important;
-        padding: 20px;
-    }
-    .cropper-modal.active { display: flex; }
-    .cropper-modal .cropper-content {
-        width: min(920px, 96%);
-        max-height: 90vh;
-        background: #ffffff !important;
-        padding: 12px;
-        border-radius: 8px;
-        box-shadow: 0 18px 60px rgba(2,6,23,0.5) !important;
-        opacity: 1 !important;
-        position: relative;
-        filter: none !important;
-        mix-blend-mode: normal !important;
-        -webkit-backdrop-filter: none !important;
-        backdrop-filter: none !important;
-    }
-    .cropper-content img {
-        display:block;
-        max-width:100%;
-        height: auto;
-        opacity: 1 !important;
-        -webkit-user-drag: none;
-        user-select: none;
-        filter: none !important;
-        mix-blend-mode: normal !important;
-        background: transparent !important;
-    }
+    .modal-close-x { position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.95); border-radius:6px; padding:6px 8px; cursor:pointer; font-weight:600; border:1px solid rgba(0,0,0,0.06); }
 
-    /* toolbar / actions */
-    .cropper-toolbar { display:flex; gap:8px; margin-top:8px; justify-content:flex-end; flex-wrap:wrap; }
-    .cropper-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+    .cropper-modal { background: rgba(0,0,0,0.7); z-index: 21000; }
+    .cropper-modal .cropper-content { width: min(920px, 96%); max-height:90vh; background:#fff; padding:12px; border-radius:8px; box-shadow:0 18px 60px rgba(2,6,23,0.5); overflow:auto; }
 
-    /* STRONG OVERRIDES to dim background but not modal */
-    body.modal-open .content-wrapper,
-    body.modal-open .header,
-    body.modal-open .sidebar,
-    body.modal-open #appContent,
-    body.modal-open .profile-card {
-        transition: none !important;
-        opacity: 0.18 !important;
-        filter: none !important;
-        pointer-events: none !important;
-        user-select: none !important;
+    /* Dim background when modal open: controlled with class modal-open */
+    body.modal-open {
+        overflow: hidden; /* block page scroll while modal open */
     }
-
-    body.modal-open .cropper-modal,
-    body.modal-open .cropper-modal *,
+    /* But make the modals themselves interactable */
     body.modal-open .photo-modal,
-    body.modal-open .photo-modal * {
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        user-select: auto !important;
-        filter: none !important;
+    body.modal-open .cropper-modal { pointer-events: auto; }
+
+    /* Accessibility: ensure sidebar/content focusable */
+    .sidebar:focus, .content-wrapper:focus { outline: none; }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+        :root { --content-horizontal-padding: 12px; --content-vertical-padding: 16px; }
+        .sidebar { transform: translateX(-100%); position: fixed; left:0; }
+        body.sidebar-closed .sidebar { transform: translateX(0); }
+        .content-wrapper { left: 0; padding: 16px; top: var(--header-height); }
+        .profile-pic-wrapper img#profilePicPreview { width:72px; height:72px; flex:0 0 72px; }
+        .profile-picture-section { flex-direction: column; align-items:flex-start; }
     }
 
-    /* MAKE CROP BOX TRANSPARENT (override Cropper.js defaults) */
-    .cropper-modal .cropper-container .cropper-view-box {
-        box-shadow: 0 0 0 2px rgba(59,130,246,0.95) !important; /* blue frame */
-        background: transparent !important;
-    }
-    .cropper-modal .cropper-container .cropper-face {
-        background: transparent !important;
-        opacity: 1 !important;
-    }
-    /* ensure overlay outside crop box not visible */
-    .cropper-modal .cropper-container .cropper-modal-overlay,
-    .cropper-modal .cropper-container .cropper-modal-overlay * { display: none !important; }
+    /* Minor scrollbar styling */
+    .sidebar::-webkit-scrollbar, .content-wrapper::-webkit-scrollbar { width:10px; }
+    .sidebar::-webkit-scrollbar-thumb, .content-wrapper::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius:8px; }
 
-    /* hide any pseudo overlays */
-    .cropper-modal::before,
-    .photo-modal::before { display: none !important; }
-
-    /* focus ring */
-    .cropper-modal .btn:focus, .photo-modal .modal-close-x:focus { outline: 3px solid rgba(59,130,246,0.35); outline-offset: 2px; }
 </style>
 
 @include('layout.sidebar')
 
-<main class="content-wrapper" id="appContent">
+<main class="content-wrapper" id="appContent" tabindex="-1" role="main" aria-label="Konten utama">
     <div class="profile-page-container">
         <div class="profile-content">
             <div class="profile-card">
@@ -395,6 +315,7 @@
 <!-- Cropper.js -->
 <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
 
+<!-- Perbaikan JS: handle header/sidebar/content sizes & modal lock -->
 <script>
     function goBack() {
         try {
@@ -432,28 +353,65 @@
     }
 
     document.addEventListener('DOMContentLoaded', function(){
-        function adjustContentTopSpacing() {
+        // ====================
+        // layout sizing helpers
+        // ====================
+        function updateLayoutSizes() {
             const header = document.querySelector('.header');
+            const sidebar = document.querySelector('.sidebar');
             const content = document.querySelector('.content-wrapper');
-            if (!content) return;
-            let headerHeight = 72;
-            if (header) headerHeight = header.offsetHeight;
-            const extra = 16;
-            content.style.paddingTop = (headerHeight + extra) + 'px';
-            document.documentElement.style.setProperty('--header-safe-height', headerHeight + 'px');
+
+            const headerHeight = header ? header.offsetHeight : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 64;
+            // set CSS var so CSS uses accurate value
+            document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+
+            if (sidebar) {
+                sidebar.style.top = headerHeight + 'px';
+                sidebar.style.height = 'calc(100vh - ' + headerHeight + 'px)';
+            }
+            if (content) {
+                content.style.top = headerHeight + 'px';
+                content.style.height = 'calc(100vh - ' + headerHeight + 'px)';
+                // adjust left based on sidebar state
+                const sidebarClosed = document.body.classList.contains('sidebar-closed');
+                const leftWidth = sidebarClosed ? getComputedStyle(document.documentElement).getPropertyValue('--sidebar-collapsed-width') : getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                if (leftWidth) content.style.left = leftWidth.trim();
+            }
         }
 
-        adjustContentTopSpacing();
-        window.addEventListener('resize', adjustContentTopSpacing);
+        // initial layout set & on resize
+        updateLayoutSizes();
+        window.addEventListener('resize', updateLayoutSizes);
 
+        // observe header resize (if header content change) and body class change
         const headerEl = document.querySelector('.header');
         if (window.ResizeObserver && headerEl) {
             try {
-                const ro = new ResizeObserver(adjustContentTopSpacing);
+                const ro = new ResizeObserver(updateLayoutSizes);
                 ro.observe(headerEl);
-            } catch(e){}
+            } catch (e) { /* ignore */ }
         }
+        const bodyObserver = new MutationObserver(updateLayoutSizes);
+        bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
+        // ================
+        // modal lock/unlock
+        // ================
+        window.lockBodyForModal = function() {
+            document.body.classList.add('modal-open');
+            // mark non-modal areas inert for a11y if supported
+            const parts = [document.querySelector('.sidebar'), document.querySelector('.header'), document.querySelector('#appContent')];
+            parts.forEach(el => { if (el) { try { el.setAttribute('aria-hidden','true'); el.inert = true; } catch(e) { try { el.setAttribute('aria-hidden','true'); } catch(_){} } }});
+        };
+        window.unlockBodyForModal = function() {
+            document.body.classList.remove('modal-open');
+            const parts = [document.querySelector('.sidebar'), document.querySelector('.header'), document.querySelector('#appContent')];
+            parts.forEach(el => { if (el) { try { el.removeAttribute('aria-hidden'); el.inert = false; } catch(e) { try { el.removeAttribute('aria-hidden'); } catch(_){} } }});
+        };
+
+        // =========================
+        // Avatar preview & cropper
+        // =========================
         const labelAvatar = document.querySelector('label[for="avatarInput"]');
         const fileInput = document.getElementById('avatarInput');
         if (labelAvatar && fileInput) {
@@ -463,7 +421,6 @@
             });
         }
 
-        // modal elements
         const previewImg = document.getElementById('profilePicPreview');
         const photoModal = document.getElementById('photoModal');
         const modalImage = document.getElementById('modalImage');
@@ -479,37 +436,6 @@
         let cropperInstance = null;
         const aspectToggle = document.getElementById('aspectToggle');
 
-        // Lock/unlock body + set aria-hidden/inert on background content
-        function lockBodyForModal() {
-            document.body.classList.add('modal-open');
-            document.body.style.overflow = 'hidden';
-
-            const appContent = document.getElementById('appContent');
-            const sidebar = document.querySelector('.sidebar');
-            const header = document.querySelector('.header');
-
-            [appContent, sidebar, header].forEach(el => {
-                if (!el) return;
-                try { el.setAttribute('aria-hidden', 'true'); } catch(e){}
-                try { el.inert = true; } catch(e){}
-            });
-        }
-        function unlockBodyForModal() {
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-
-            const appContent = document.getElementById('appContent');
-            const sidebar = document.querySelector('.sidebar');
-            const header = document.querySelector('.header');
-
-            [appContent, sidebar, header].forEach(el => {
-                if (!el) return;
-                try { el.removeAttribute('aria-hidden'); } catch(e){}
-                try { el.inert = false; } catch(e){}
-            });
-        }
-
-        /* ---------------- Preview modal (X only) ---------------- */
         if (previewImg) {
             previewImg.addEventListener('click', function(){
                 if (modalImage) {
@@ -517,11 +443,10 @@
                     modalImage.alt = previewImg.alt || 'Foto Profil';
                 }
                 photoModal.classList.add('active');
-                photoModal.setAttribute('aria-hidden', 'false');
+                photoModal.setAttribute('aria-hidden','false');
                 lockBodyForModal();
                 if (photoModalClose) photoModalClose.focus();
             });
-
             previewImg.addEventListener('keydown', function(e){
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -530,7 +455,7 @@
                         modalImage.alt = previewImg.alt || 'Foto Profil';
                     }
                     photoModal.classList.add('active');
-                    photoModal.setAttribute('aria-hidden', 'false');
+                    photoModal.setAttribute('aria-hidden','false');
                     lockBodyForModal();
                     if (photoModalClose) photoModalClose.focus();
                 }
@@ -540,33 +465,29 @@
         if (photoModalClose) {
             photoModalClose.addEventListener('click', function(){
                 photoModal.classList.remove('active');
-                photoModal.setAttribute('aria-hidden', 'true');
+                photoModal.setAttribute('aria-hidden','true');
                 unlockBodyForModal();
                 if (previewImg) previewImg.focus();
             });
         }
 
-        // Intentionally DO NOT close preview modal on backdrop click or ESC
-
-        /* ---------------- CROPPER ---------------- */
+        // Cropper open
         function openCropperWithFile(file) {
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 cropperImage.src = e.target.result;
 
-                // show modal after src set
                 cropperModal.classList.add('active');
-                cropperModal.setAttribute('aria-hidden', 'false');
+                cropperModal.setAttribute('aria-hidden','false');
                 lockBodyForModal();
 
-                // destroy prior instance
                 if (cropperInstance) {
-                    try { cropperInstance.destroy(); } catch(e){ }
+                    try { cropperInstance.destroy(); } catch(e) {}
                     cropperInstance = null;
                 }
 
-                // create cropper
+                // create cropper instance
                 cropperInstance = new Cropper(cropperImage, {
                     viewMode: 1,
                     aspectRatio: aspectToggle && aspectToggle.checked ? 1 : NaN,
@@ -581,7 +502,6 @@
                     center: true,
                 });
 
-                // focus the close X so user can cancel quickly
                 if (cropperCloseX) cropperCloseX.focus();
             };
             reader.readAsDataURL(file);
@@ -589,11 +509,11 @@
 
         function closeCropperAndCleanup() {
             if (cropperInstance) {
-                try { cropperInstance.destroy(); } catch(e){}
+                try { cropperInstance.destroy(); } catch(e) {}
                 cropperInstance = null;
             }
             cropperModal.classList.remove('active');
-            cropperModal.setAttribute('aria-hidden', 'true');
+            cropperModal.setAttribute('aria-hidden','true');
             unlockBodyForModal();
         }
 
@@ -611,7 +531,7 @@
             });
         }
 
-        // cropper controls
+        // cropper controls mapping
         const byId = id => document.getElementById(id);
         byId('rotateLeft')?.addEventListener('click', function(){ if (cropperInstance) cropperInstance.rotate(-90); });
         byId('rotateRight')?.addEventListener('click', function(){ if (cropperInstance) cropperInstance.rotate(90); });
@@ -625,46 +545,38 @@
             else cropperInstance.setAspectRatio(NaN);
         });
 
-        // Apply crop
         if (applyCropBtn) {
             applyCropBtn.addEventListener('click', function(){
                 if (!cropperInstance) return;
                 const canvas = cropperInstance.getCroppedCanvas({
-                    width: 600,
-                    height: 600,
-                    imageSmoothingQuality: 'high'
+                    width: 600, height: 600, imageSmoothingQuality: 'high'
                 });
-
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
                 avatarCroppedInput.value = dataUrl;
                 previewImageFromDataUrl(dataUrl);
 
-                // close and cleanup
                 closeCropperAndCleanup();
                 fileInput.value = '';
             });
         }
 
-        // Cancel crop (button Batal and X)
         if (cancelCropBtn) cancelCropBtn.addEventListener('click', function(){ closeCropperAndCleanup(); fileInput.value = ''; });
         if (cropperCloseX) cropperCloseX.addEventListener('click', function(){ closeCropperAndCleanup(); fileInput.value = ''; });
 
-        // Do NOT close cropper on backdrop click: remove/ignore any backdrop click handlers
-        // (If there exist previous global handlers, they will be overridden by not adding any here)
-
-        // Do not close on Escape — disable Escape behavior for modal/ cropper
+        // Disable ESC close to enforce X/Batal/Gunakan Foto only (per spec)
         document.addEventListener('keydown', function(e){
-            // intentionally ignore Escape to enforce X/Batal/Gunakan Foto only
             if (e.key === 'Escape') {
                 e.preventDefault();
                 e.stopPropagation();
             }
         });
 
-        // keep original form submission behavior (server handles avatar_cropped or file)
+        // keep form submit as-is (server handles avatar_cropped)
         const profileForm = document.getElementById('profileForm');
-        profileForm?.addEventListener('submit', function(e){
-            // allow submit as normal
-        });
+        if (profileForm) {
+            profileForm.addEventListener('submit', function(e){
+                /* submit normally - server handles */
+            });
+        }
     });
 </script>

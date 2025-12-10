@@ -10,7 +10,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
+  <!-- Global layout CSS (header/sidebar/main-content behaviors) -->
   <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
+  <!-- Page specific CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/tambahdatadosenpembimbing.css') }}">
 </head>
 <body>
@@ -18,93 +20,97 @@
   @include('layout.header')
   @include('layout.sidebar')
 
-  <div class="main-wrapper" id="main-wrapper">
-    <div class="content-container container-fluid px-4">
-      <div class="content-card shadow-sm w-100 p-4">
-        <h3 class="text-center mb-4 page-header">Tambah Dosen Pembimbing</h3>
-        <hr>
+  {{-- Gunakan kelas global yang konsisten dengan style utama supaya header/sidebar tetap fixed dan konten scrollable --}}
+  <main class="main-content-wrapper" id="appContent" role="main" tabindex="-1" aria-label="Konten utama">
+    <div class="container-fluid px-4">
+      <div class="page-card">
+        <div class="content-card w-100 p-4">
 
-        <form action="{{ route('datadosenpembimbing.store') }}" method="POST" id="formDosenPembimbing">
-          @csrf
+          <h3 class="text-center mb-4 page-header">Tambah Data Dosen Pembimbing</h3>
+          <hr>
 
-          @if($errors->any())
-            <div class="alert alert-danger">
-              <ul class="mb-0">
-                @foreach($errors->all() as $err)
-                  <li>{{ $err }}</li>
-                @endforeach
-              </ul>
+          <form action="{{ route('datadosenpembimbing.store') }}" method="POST" id="formDosenPembimbing" novalidate>
+            @csrf
+
+            @if($errors->any())
+              <div class="alert alert-danger">
+                <ul class="mb-0">
+                  @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                  @endforeach
+                </ul>
+              </div>
+            @endif
+
+            <!-- NIP & Dosen -->
+            <div class="mb-3 position-relative" style="min-height:70px;">
+              <label class="form-label required">NIP</label>
+              <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18"
+                     placeholder="Masukkan 18 digit NIP" required value="{{ old('NIP') }}" autocomplete="off" inputmode="numeric">
+              <div class="suggest-wrap" id="suggest-nip" style="display:none"></div>
+              <div id="nipError" class="text-danger mt-1" style="display:none;">NIP harus 18 angka.</div>
             </div>
-          @endif
 
-          <!-- NIP & Dosen -->
-          <div class="mb-3 position-relative" style="min-height:70px;">
-            <label class="form-label required">NIP</label>
-            <input type="text" name="NIP" id="NIP" class="form-control" maxlength="18"
-                   placeholder="Masukkan 18 digit NIP" required value="{{ old('NIP') }}" autocomplete="off" inputmode="numeric">
-            <div class="suggest-wrap" id="suggest-nip" style="display:none"></div>
-            <div id="nipError" class="text-danger mt-1" style="display:none;">NIP harus 18 angka.</div>
-          </div>
+            <div class="mb-3">
+              <label class="form-label required">Nama Dosen</label>
+              <input type="text" name="nama" id="nama" class="form-control" placeholder="Nama Terisi Otomatis" readonly value="{{ old('nama') }}">
+            </div>
 
-          <div class="mb-3">
-            <label class="form-label required">Nama Dosen</label>
-            <input type="text" name="nama" id="nama" class="form-control" placeholder="Nama Terisi Otomatis" readonly value="{{ old('nama') }}">
-          </div>
+            <div class="mb-3">
+              <label class="form-label required">Email</label>
+              <input type="email" name="email" id="email" class="form-control" placeholder="Email Terisi Otomatis" readonly value="{{ old('email') }}">
+            </div>
 
-          <div class="mb-3">
-            <label class="form-label required">Email</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="Email Terisi Otomatis" readonly value="{{ old('email') }}">
-          </div>
+            <div class="mb-3">
+              <label class="form-label required">No. HP</label>
+              <input type="text" name="no_hp" id="no_hp" class="form-control" maxlength="13" placeholder="No. HP Terisi Otomatis" required value="{{ old('no_hp') }}" inputmode="numeric" readonly>
+            </div>
 
-          <div class="mb-3">
-            <label class="form-label required">No. HP</label>
-            <input type="text" name="no_hp" id="no_hp" class="form-control" maxlength="13" placeholder="No. HP Terisi Otomatis" required value="{{ old('no_hp') }}" inputmode="numeric" readonly>
-          </div>
+            <!-- Daftar Mahasiswa -->
+            <div class="mb-3">
+              <h5 class="fw-bold text-primary mb-3">Daftar Mahasiswa Bimbingan</h5>
+              <div id="mahasiswa-list">
+                <div class="mahasiswa-item mb-3 p-3 border rounded position-relative" style="min-height:120px;">
+                  <button type="button" class="btn btn-danger btn-sm remove-mahasiswa position-absolute top-0 end-0 mt-2 me-2" style="display:none;">
+                    <i class="bi bi-trash"></i> Hapus
+                  </button>
 
-          <!-- Daftar Mahasiswa -->
-          <div class="mb-3">
-            <h5 class="fw-bold text-primary mb-3">Daftar Mahasiswa Bimbingan</h5>
-            <div id="mahasiswa-list">
-              <div class="mahasiswa-item mb-3 p-3 border rounded position-relative" style="min-height:120px;">
-                <button type="button" class="btn btn-danger btn-sm remove-mahasiswa position-absolute top-0 end-0 mt-2 me-2" style="display:none;">
-                  <i class="bi bi-trash"></i> Hapus
-                </button>
+                  <div class="mb-3 mt-3 position-relative">
+                    <label class="form-label required">NIM Mahasiswa</label>
+                    <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa" autocomplete="off" required maxlength="12" inputmode="numeric">
+                    <div class="suggest-wrap nim-suggest" style="display:none"></div>
+                    <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">NIM tidak ditemukan.</div>
+                    <div class="nimSuccess alert alert-success py-1 px-2 mt-2 mb-0" style="display:none;">
+                      NIM valid. Nama mahasiswa: <span class="namaTampil fw-bold"></span>
+                    </div>
+                  </div>
 
-                <div class="mb-3 mt-3 position-relative">
-                  <label class="form-label required">NIM Mahasiswa</label>
-                  <input type="text" name="nim[]" class="form-control nimInput" placeholder="Masukkan NIM Mahasiswa" autocomplete="off" required maxlength="12" inputmode="numeric">
-                  <div class="suggest-wrap nim-suggest" style="display:none"></div>
-                  <div class="nimError alert alert-danger py-1 px-2 mt-2 mb-0" style="display:none;">NIM tidak ditemukan.</div>
-                  <div class="nimSuccess alert alert-success py-1 px-2 mt-2 mb-0" style="display:none;">
-                    NIM valid. Nama mahasiswa: <span class="namaTampil fw-bold"></span>
+                  <div class="mb-3">
+                    <label class="form-label required">Nama Mahasiswa</label>
+                    <input type="text" name="nama_mahasiswa[]" class="form-control namaInput" placeholder="Nama Mahasiswa Terisi Otomatis" readonly required>
                   </div>
                 </div>
-
-                <div class="mb-3">
-                  <label class="form-label required">Nama Mahasiswa</label>
-                  <input type="text" name="nama_mahasiswa[]" class="form-control namaInput" placeholder="Nama Mahasiswa Terisi Otomatis" readonly required>
-                </div>
               </div>
+
+              <button type="button" id="add-mahasiswa" class="btn btn-primary btn-sm mt-2">
+                <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
+              </button>
             </div>
 
-            <button type="button" id="add-mahasiswa" class="btn btn-primary btn-sm mt-2">
-              <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
-            </button>
-          </div>
+            <div class="text-center mt-4">
+              <button type="submit" id="btnSubmit" class="btn btn-success px-4 me-2">
+                <i class="bi bi-check-circle"></i> Simpan
+              </button>
+              <a href="{{ route('datadosenpembimbing.index') }}" class="btn btn-secondary px-4">
+                <i class="bi bi-x-circle"></i> Batal
+              </a>
+            </div>
+          </form>
 
-          <div class="text-center mt-4">
-            <button type="submit" id="btnSubmit" class="btn btn-success px-4 me-2">
-              <i class="bi bi-check-circle"></i> Simpan
-            </button>
-            <a href="{{ route('datadosenpembimbing.index') }}" class="btn btn-secondary px-4">
-              <i class="bi bi-x-circle"></i> Batal
-            </a>
-          </div>
-        </form>
-
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -260,9 +266,8 @@ function setupMahasiswaItem(item, isClone=false) {
           });
           suggestWrap.appendChild(el);
         });
-        // ensure position inside wrapper
         suggestWrap.style.display = 'block';
-        suggestWrap.style.zIndex = 99999;
+        suggestWrap.style.zIndex = 12050;
       } else {
         suggestWrap.style.display = 'none';
       }

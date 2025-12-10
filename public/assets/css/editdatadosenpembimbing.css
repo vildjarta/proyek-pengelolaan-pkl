@@ -63,6 +63,46 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
     .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
     .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
 
+     /* Local layout helpers to ensure card centered and suggestion boxes above sidebar */
+    .page-card {
+      max-width: 980px;
+      margin: 0 auto;
+      padding-top: 8px;
+      padding-bottom: 24px;
+    }
+
+    .content-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+    }
+
+    .suggest-wrap,
+    .nim-suggest {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+      z-index: 12050;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .suggest-wrap .item,
+    .nim-suggest .item {
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+    .suggest-wrap .item:hover,
+    .nim-suggest .item:hover {
+      background: #f1f5f9;
+    }
+
+    /* fallback if global doesn't set; main-content-wrapper should be defined in style-pkl.css */
+    .main-content-wrapper { position: relative; }
     /* ======================================================
    FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
    ====================================================== */
