@@ -145,8 +145,8 @@
                        onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
                         <span class="label-text">Logout</span>
                     </a>
-
-                    <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" style="display:none;">
+                    {{-- Form ini diperlukan karena logout adalah rute POST --}}
+                    <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </li>

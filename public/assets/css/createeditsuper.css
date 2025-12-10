@@ -1,0 +1,189 @@
+/* =========================================
+   Super Admin Ultra Full Styles
+   File: public/assets/css/superadmin.css
+   ========================================= */
+
+/* --- 1. Layout Utama (Full Width) --- */
+.main-content-wrapper {
+    background-color: #f4f7fc; /* Warna background modern */
+    padding: 30px;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sa-wrapper {
+    /* MENGISI LAYAR: Gunakan 95% atau 100% lebar layar */
+    width: 98%; 
+    margin: 0 auto;
+}
+
+/* --- 2. Header --- */
+.sa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eef2f7;
+}
+
+.sa-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #2c3e50;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.sa-header a {
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid #dfe6e9;
+    color: #636e72;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.sa-header a:hover {
+    background: #eef2f7;
+    color: #2d3436;
+    border-color: #b2bec3;
+}
+
+/* --- 3. Card Container (Full & Clean) --- */
+.sa-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03); /* Shadow sangat halus */
+    border: 1px solid #edf2f7;
+    border-top: 4px solid #3498db; /* Aksen Biru di atas */
+}
+
+/* --- 4. FORM GRID SYSTEM (RAHASIA DESAIN BAGUS) --- */
+/* Mengubah form menjadi layout 2 kolom agar layar penuh terisi rapi */
+.sa-card form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Membagi menjadi 2 kolom sama besar */
+    column-gap: 40px; /* Jarak antar kolom kiri dan kanan */
+    row-gap: 10px;    /* Jarak antar baris */
+}
+
+/* Elemen Input Wrapper (.mb-3) */
+.sa-card .mb-3 {
+    margin-bottom: 15px !important;
+    width: 100%;
+}
+
+/* Label Styling */
+.sa-card .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #636e72;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Input Styling */
+.sa-card .form-control,
+.sa-card select.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 15px;
+    border: 2px solid #f1f2f6; /* Border tebal tapi warnanya pudar */
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    transition: all 0.3s;
+    color: #2d3436;
+}
+
+.sa-card .form-control:focus,
+.sa-card select.form-control:focus {
+    border-color: #3498db; /* Biru saat aktif */
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+    outline: none;
+}
+
+/* Select Arrow Customization */
+.sa-card select.form-control {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px;
+    appearance: none;
+}
+
+/* Helper Text */
+.sa-card small.text-muted {
+    font-size: 12px;
+    color: #b2bec3 !important;
+    margin-top: 5px;
+}
+
+/* --- 5. Tombol & Footer --- */
+/* Wrapper tombol agar bisa dimanipulasi posisinya di Grid */
+.sa-card .mt-4 {
+    grid-column: 1 / -1; /* Membuat tombol membentang penuh dari kiri ke kanan */
+    margin-top: 20px !important;
+    border-top: 1px solid #f1f2f6;
+    padding-top: 25px;
+    text-align: right; /* Tombol di kanan agar ergonomis */
+}
+
+.sa-card button[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 40px; /* Tombol lebar */
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+}
+
+.sa-card button[type="submit"]:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* --- 6. Alerts --- */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ff7675;
+    color: white;
+    margin-bottom: 20px;
+    border: none;
+}
+
+/* --- 7. Responsive (HP) --- */
+@media (max-width: 992px) {
+    /* Pada layar tablet/HP, kembali ke 1 kolom agar tidak sempit */
+    .sa-card form {
+        grid-template-columns: 1fr; 
+        gap: 0;
+    }
+    
+    .sa-wrapper {
+        width: 100%;
+        padding: 0 10px;
+    }
+    
+    .sa-card .mt-4 {
+        text-align: center; /* Tombol tengah di HP */
+    }
+    
+    .sa-card button[type="submit"] {
+        width: 100%;
+    }
+}
