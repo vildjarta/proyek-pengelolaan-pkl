@@ -41,32 +41,62 @@
             @method('PUT')
 
             {{-- NIP --}}
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="nip" class="form-label">NIP</label>
                 <input type="text" name="nip" id="nip" class="form-control"
                     value="{{ old('nip', $dosenPenguji->nip) }}" required>
-            </div>
+            </div> --}}
 
             {{-- Nama Dosen --}}
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="nama_dosen" class="form-label">Nama Dosen</label>
                 <input type="text" name="nama_dosen" id="nama_dosen" class="form-control"
                     value="{{ old('nama_dosen', $dosenPenguji->nama_dosen) }}" required>
+            </div> --}}
+            <div class="mb-3">
+                <label for="id_dosen" class="form-label fw-bold">Pilih Dosen</label>
+                <select name="id_dosen" id="id_dosen" class="form-select" required>
+                    <option value="">-- Pilih Dosen --</option>
+                    @foreach ($dosen as $dsn)
+                        <option value="{{ $dsn->id_dosen }}"
+                            {{ $dosenPenguji['id_dosen'] == $dsn->id_dosen ? 'selected' : '' }}>
+                            {{ $dsn->nama }} - {{ $dsn->nip ?? 'NIP' }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('id_dosen')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="id_mahasiswa" class="form-label fw-bold">Pilih Mahasiswa</label>
+                <select name="id_mahasiswa" id="id_mahasiswa" class="form-select" required>
+                    <option value="">-- Pilih Mahasiswa --</option>
+                    @foreach ($Mahasiswa as $mhs)
+                        <option value="{{ $mhs->id_mahasiswa }}"
+                            {{ $dosenPenguji['id_mahasiswa'] == $mhs->id_mahasiswa ? 'selected' : '' }}>
+                            {{ $mhs->nama }} - {{ $mhs->nim ?? 'NIM' }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('id_mahasiswa')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             {{-- Email --}}
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" name="email" id="email" class="form-control"
                     value="{{ old('email', $dosenPenguji->email) }}" required>
-            </div>
+            </div> --}}
 
             {{-- Nomor HP --}}
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="no_hp" class="form-label">Nomor HP</label>
                 <input type="text" name="no_hp" id="no_hp" class="form-control"
                     value="{{ old('no_hp', $dosenPenguji->no_hp) }}">
-            </div>
+            </div> --}}
 
             <div class="text-end">
                 <button type="submit" class="btn btn-primary">Update</button>

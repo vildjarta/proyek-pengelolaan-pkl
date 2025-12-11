@@ -1,6 +1,12 @@
 {{-- sidebar.blade.php --}}
 <div class="sidebar" role="navigation" aria-label="Sidebar menu">
     <div class="menu-list">
+        @php
+            // Dummy role untuk sementara (nanti akan diganti dengan auth()->user()->role)
+            $userRole = 'admin'; // Options: admin, mahasiswa, dosen, perusahaan, koordinator
+            $currentRoute = request()->path();
+        @endphp
+        {{-- Hanya tampilkan menu jika pengguna sudah login --}}
         @auth
             @php
                 $userRole = auth()->user()->role ?? '';
@@ -226,3 +232,4 @@
         }
     });
 </script>
+

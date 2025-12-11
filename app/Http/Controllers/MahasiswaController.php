@@ -68,7 +68,7 @@ class MahasiswaController extends Controller
         $data = $request->only([
             'nim','nama','email','no_hp','prodi','angkatan','ipk','perusahaan','user_id'
         ]);
-        
+
         if ($request->user_id) {
             $user = \App\Models\User::find($request->user_id);
             if ($user) {
@@ -147,7 +147,7 @@ class MahasiswaController extends Controller
         $data = $request->only([
             'nim','nama','email','no_hp','prodi','angkatan','ipk','perusahaan','user_id'
         ]);
-        
+
         if ($request->user_id) {
             $user = \App\Models\User::find($request->user_id);
             if ($user) {

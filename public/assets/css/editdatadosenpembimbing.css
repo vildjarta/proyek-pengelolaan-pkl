@@ -126,7 +126,6 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
 }
 
 /* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
-.sidebar .dropdown-menu.collapsed {
-    display: none !important;
+  .sidebar .dropdown-menu.collapsed {
+  display: none !important;
 }
-

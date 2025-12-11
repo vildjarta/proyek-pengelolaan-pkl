@@ -6,6 +6,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PerusahaanController;
+use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\PenilaianPerusahaanController;
 use App\Http\Controllers\JadwalBimbinganController;
 use App\Http\Controllers\PenilaianDospemController;
 use App\Http\Controllers\PenilaianPengujiController;
@@ -39,6 +41,7 @@ Route::middleware(['auth', 'role:koordinator'])->group(function () {
 | Guest routes (unauthenticated)
 |--------------------------------------------------------------------------
 */
+
 Route::middleware('guest')->group(function () {
     Route::view('/', 'login')->name('login');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login.submit');
@@ -49,7 +52,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Logout (authenticated)
-Route::post('logout', function(){
+Route::post('logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
@@ -107,6 +110,8 @@ Route::middleware(['auth'])->group(function () {
     // Menggantikan 'role:admin,koordinator' menjadi 'role:koordinator,staff'
     Route::middleware(['role:koordinator,staff'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
+        Route::resource('/kriteria', KriteriaController::class);
+        Route::resource('/penilaian_perusahaan', PenilaianPerusahaanController::class);
         Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
         Route::resource('mahasiswa', MahasiswaController::class);
 
@@ -150,3 +155,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
     Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
 });
+
+/*
+|--------------------------------------------------------------------------
+| (Optional) Debug or helper routes
+|--------------------------------------------------------------------------
+| Jangan biarkan route debug ini production — hapus jika sudah tidak diperlukan.
+|*/
+// Route::get('/debug-clear-all', function () {
+//     \Artisan::call('route:clear');
+//     \Artisan::call('view:clear');
+//     \Artisan::call('cache:clear');
+//     return 'cleared';
+// });
+

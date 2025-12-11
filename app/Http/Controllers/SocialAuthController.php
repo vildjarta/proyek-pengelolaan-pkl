@@ -26,30 +26,30 @@ class SocialAuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            
+
             // Cek apakah user sudah ada berdasarkan google_id
             $user = User::where('google_id', $googleUser->id)->first();
-            
+
             if ($user) {
                 // User sudah ada, langsung login
                 Auth::login($user);
                 return redirect()->intended('/home')->with('success', 'Berhasil login dengan Google!');
             }
-            
+
             // Cek apakah email sudah terdaftar
             $existingUser = User::where('email', $googleUser->email)->first();
-            
+
             if ($existingUser) {
                 // Update existing user dengan Google ID
                 $existingUser->update([
                     'google_id' => $googleUser->id,
                     'avatar' => $googleUser->avatar,
                 ]);
-                
+
                 Auth::login($existingUser);
                 return redirect()->intended('/home')->with('success', 'Akun berhasil dihubungkan dengan Google!');
             }
-            
+
             // Buat user baru
             $newUser = User::create([
                 'name' => $googleUser->name,
@@ -58,10 +58,9 @@ class SocialAuthController extends Controller
                 'avatar' => $googleUser->avatar,
                 'password' => Hash::make(Str::random(16)), // Password random untuk keamanan
             ]);
-            
+
             Auth::login($newUser);
             return redirect()->intended('/home')->with('success', 'Akun berhasil dibuat dengan Google!');
-            
         } catch (\Exception $e) {
             return redirect('/')->with('error', 'Terjadi kesalahan saat login dengan Google: ' . $e->getMessage());
         }

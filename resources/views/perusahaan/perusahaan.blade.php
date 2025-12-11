@@ -183,20 +183,8 @@
                                                     <p class="mb-0 mt-1">{{ $prs->hari_operasi }}</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div><!--style="background-color: #0d6efd; color: white;"-->
 
-                                        <div class="mt-4">
-                                            <h6 class="mb-3"><i class="fas fa-map me-2"></i>Lokasi</h6>
-                                            <div class="row">
-                                                <div class="col-md-6 mb-2">
-                                                    <strong>Latitude:</strong> {{ $prs->lat }}
-                                                </div>
-                                                <div class="col-md-6 mb-2">
-                                                    <strong>Longitude:</strong> {{ $prs->lng }}
-                                                </div>
-                                            </div>
-                                            <div id="map{{ $prs->id_perusahaan }}" class="map-container mt-2"></div>
-                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -222,44 +210,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM6yhmdJP1BPXmzo852fIlEc4GlZtXtXU"></script>
-    <script>
-        @foreach ($perusahaans as $prs)
-            var modal{{ $prs->id_perusahaan }} = document.getElementById('detailModal{{ $prs->id_perusahaan }}');
-            modal{{ $prs->id_perusahaan }}.addEventListener('shown.bs.modal', function() {
-                var lokasi = {
-                    lat: parseFloat('{{ $prs->lat }}'),
-                    lng: parseFloat('{{ $prs->lng }}')
-                };
-                var map = new google.maps.Map(document.getElementById('map{{ $prs->id_perusahaan }}'), {
-                    center: lokasi,
-                    zoom: 15,
-                    styles: [{
-                            "featureType": "all",
-                            "elementType": "geometry.fill",
-                            "stylers": [{
-                                "weight": "2.00"
-                            }]
-                        },
-                        {
-                            "featureType": "all",
-                            "elementType": "geometry.stroke",
-                            "stylers": [{
-                                "color": "#9c9c9c"
-                            }]
-                        }
-                    ]
-                });
-                new google.maps.Marker({
-                    position: lokasi,
-                    map: map,
-                    title: '{{ $prs->nama }}'
-                });
-            });
-        @endforeach
-    </script>
 
     <script src="{{ asset('assets/js/hhd.js') }}"></script>
 </body>

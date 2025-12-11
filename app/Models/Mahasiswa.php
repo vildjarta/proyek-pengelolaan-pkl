@@ -27,7 +27,7 @@ class Mahasiswa extends Model
         'prodi',
         'angkatan',
         'ipk',
-        'perusahaan',    
+        'perusahaan',
         'id_pembimbing',
         'judul_pkl',
         'user_id',
@@ -40,6 +40,11 @@ class Mahasiswa extends Model
     public function dosen()
     {
         return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
+    }
+
+    public function dosen_penguji()
+    {
+        return $this->hasOne(dosen_penguji::class, 'id_mahasiswa', 'id_mahasiswa');
     }
 
     /**
