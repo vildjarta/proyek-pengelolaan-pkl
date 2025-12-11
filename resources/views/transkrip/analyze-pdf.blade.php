@@ -53,7 +53,7 @@
                     <label for="nim" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
                         <i class="fas fa-id-card"></i> NIM Mahasiswa <span style="color: red;">*</span>
                     </label>
-                    <input type="text" name="nim" id="nim" required placeholder="Contoh: 2021-08-001"
+                    <input type="text" name="nim" id="nim" required placeholder="Contoh: 24013010xx"
                         style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1em;"
                         onchange="this.style.borderColor = this.value ? '#28a745' : '#ddd';">
                     <small style="color: #666; display: block; margin-top: 5px;">Masukkan NIM tanpa spasi</small>
