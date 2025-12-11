@@ -88,11 +88,11 @@ Route::middleware(['auth'])->group(function () {
     // Transkrip (role: mahasiswa, koordinator, staff, superadmin)
     // Staff perlu akses untuk mengelola nilai/kelayakan
     Route::middleware(['role:mahasiswa,koordinator,staff,superadmin'])->group(function () {
-        Route::resource('transkrip', TranscriptController::class);
-
-        // Transkrip Analyze PDF
+        // Transkrip Analyze PDF - must be defined BEFORE resource route
         Route::get('/transkrip/analyze-pdf', [TranscriptController::class, 'analyzePdfView'])->name('transkrip.analyzePdfView');
         Route::post('/transkrip/upload-pdf', [TranscriptController::class, 'uploadPdf'])->name('transkrip.uploadPdf');
+
+        Route::resource('transkrip', TranscriptController::class);
     });
 
     // Penilaian pembimbing (role: dosen_pembimbing, koordinator, staff)
