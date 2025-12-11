@@ -31,18 +31,20 @@ body.sidebar-closed .main-content-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #5b8ad2;
+    border-bottom: 2px solid #261FB3;
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
 
 .table-header .title {
-    color: #5b8ad2;
+    color: #261FB3;
     font-weight: 700;
     font-size: 22px;
 }
 
-/* Pencarian */
+/* ==============================
+   Pencarian (MODIFIKASI BUTTON)
+   ============================== */
 .search-container {
     width: 250px;
 }
@@ -55,9 +57,28 @@ body.sidebar-closed .main-content-wrapper {
 }
 
 .search-input:focus {
-    border-color: #5b8ad2;
+    border-color: #261FB3;
     outline: none;
 }
+
+/* 🔥 PERBAIKAN UTAMA — BUTTON PENCARIAN JADI 261FB3 */
+.search-container .btn.btn-primary,
+.table-header .btn.btn-primary,
+.btn.btn-primary {
+    background-color: #261FB3 !important;
+    border-color: #261FB3 !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.search-container .btn.btn-primary:hover,
+.table-header .btn.btn-primary:hover,
+.btn.btn-primary:hover {
+    background-color: #1e1797 !important;
+    border-color: #1e1797 !important;
+}
+
+/* ========================== */
 
 /* Tabel utama */
 .table {
@@ -67,9 +88,8 @@ body.sidebar-closed .main-content-wrapper {
     overflow: hidden;
 }
 
-/* Pastikan semua header default center (tetap aman) */
 .table thead tr {
-    background-color: #5b8ad2;
+    background-color: #261FB3;
     color: #fff;
 }
 
@@ -90,10 +110,7 @@ body.sidebar-closed .main-content-wrapper {
 }
 
 /* Nama Perusahaan di tengah */
-.table thead th:nth-child(2) {
-    text-align: center !important;
-    justify-content: center;
-}
+.table thead th:nth-child(2),
 .table tbody td:nth-child(2) {
     text-align: center !important;
     justify-content: center;
@@ -132,7 +149,7 @@ body.sidebar-closed .main-content-wrapper {
 
 /* Badge jumlah rating */
 .badge-rating-count {
-    background-color: #5b8ad2;
+    background-color: #261FB3;
     color: #fff;
     padding: 5px 10px;
     border-radius: 20px;
@@ -171,9 +188,7 @@ body.sidebar-closed .main-content-wrapper {
     color: #000;
 }
 
-/* =======================
-   RESPONSIVE MODE
-   ======================= */
+/* Responsive */
 @media (max-width: 992px) {
 
     .main-content-wrapper { margin-left: 0; }
@@ -207,10 +222,9 @@ body.sidebar-closed .main-content-wrapper {
     .table tbody td::before {
         content: attr(data-label);
         font-weight: bold;
-        color: #5b8ad2;
+        color: #261FB3;
     }
 
-    /* Center nama perusahaan di mobile juga */
     .table tbody td:nth-child(2) {
         justify-content: center;
         text-align: center !important;
@@ -223,25 +237,19 @@ body.sidebar-closed .main-content-wrapper {
    FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
    ====================================================== */
 
-/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
 .sidebar .dropdown-menu {
     position: static !important;
     float: none !important;
     inset: auto !important;
     transform: none !important;
     min-width: 0 !important;
-
-    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
     display: block !important;
     list-style: none;
-
-    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
     border: none !important;
     box-shadow: none !important;
     outline: none !important;
 }
 
-/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
 .sidebar .dropdown-menu.collapsed {
     display: none !important;
 }

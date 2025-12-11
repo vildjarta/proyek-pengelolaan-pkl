@@ -3,7 +3,7 @@ body{font-family:'Poppins',sans-serif;background:#fff;margin:0;padding:0;overflo
 .main-wrapper{margin-left:260px;padding-top:90px;min-height:100vh}
 .content-container{padding:20px 30px}
 .content-card{background:#fff;border-radius:16px;padding:30px 40px;max-width:1000px;margin:0 auto;box-shadow:0 3px 10px rgba(0,0,0,.05)}
-.page-header{font-weight:700;color:#113d92}
+.page-header{font-weight:700;color:#261FB3}
 
 .form-label{font-weight:600;color:#222;position:relative}
 .form-label.required::after{content:" *";color:red;font-weight:700;margin-left:2px}
@@ -17,8 +17,8 @@ body{font-family:'Poppins',sans-serif;background:#fff;margin:0;padding:0;overflo
 
 /* buttons */
 .btn{font-weight:600;border-radius:8px;display:inline-flex;align-items:center;gap:.5rem}
-.action-accept{background:#2fbd56;color:#fff;border:none;padding:9px 18px}
-.action-accept:hover{background:#29a646}
+.action-accept{background:#261FB3;color:#fff;border:none;padding:9px 18px}
+.action-accept:hover{background:#261FB3}
 .action-cancel{background:#6f757b;color:#fff;border:none;padding:9px 18px}
 .action-cancel:hover{background:#5f6569}
 

@@ -77,36 +77,38 @@ class RatingDanReviewController extends Controller
     {
         $perusahaan = Perusahaan::findOrFail($id_perusahaan);
 
-        $reviews = RatingDanReview::leftJoin('mahasiswa', 'rating_dan_reviews.id_mahasiswa', '=', 'mahasiswa.id_mahasiswa')
-            ->select(
-                'rating_dan_reviews.*',
-                'mahasiswa.nama as nama_mahasiswa',
-                'mahasiswa.nim'
-            )
-            ->where('rating_dan_reviews.id_perusahaan', $id_perusahaan);
+        $reviewsQuery = RatingDanReview::with(['mahasiswa' => function($q) {
+                $q->with('user');
+            }])
+            ->where('id_perusahaan', $id_perusahaan);
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $reviews->where(function ($q) use ($search) {
-                $q->where('mahasiswa.nama', 'like', "%$search%")
-                    ->orWhere('mahasiswa.nim', 'like', "%$search%")
-                    ->orWhere('rating_dan_reviews.review', 'like', "%$search%");
-            });
+            $reviewsQuery->whereHas('mahasiswa', function($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")
+                    ->orWhere('nim', 'like', "%$search%");
+            })->orWhere('review', 'like', "%$search%");
         }
 
         switch ($request->filter) {
             case 'highest':
-                $reviews->orderByDesc('rating');
+                $reviewsQuery->orderByDesc('rating');
                 break;
             case 'lowest':
-                $reviews->orderBy('rating', 'asc');
+                $reviewsQuery->orderBy('rating', 'asc');
                 break;
             default:
-                $reviews->orderByDesc('tanggal_review');
+                $reviewsQuery->orderByDesc('tanggal_review');
                 break;
         }
 
-        $reviews = $reviews->paginate(10)->withQueryString();
+        $reviews = $reviewsQuery->paginate(10)->withQueryString();
+
+        foreach($reviews as $review) {
+            if($review->mahasiswa && !isset($review->nama_mahasiswa)) {
+                $review->nama_mahasiswa = $review->mahasiswa->nama;
+            }
+        }
 
         return view('rating.lihatratingdanreview', compact('reviews', 'perusahaan'));
     }

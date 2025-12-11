@@ -26,13 +26,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #5b8ad2;
+    border-bottom: 2px solid #261FB3;
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
 
 .table-header .title {
-    color: #5b8ad2;
+    color: #261FB3;
     font-weight: 700;
     font-size: 22px;
 }
@@ -51,8 +51,9 @@ body {
 }
 
 .search-input:focus {
-    border-color: #5b8ad2;
-    box-shadow: 0 0 4px rgba(91, 138, 210, 0.4);
+    border-color: #261FB3;
+    /* gunakan warna terkait #261FB3 untuk shadow */
+    box-shadow: 0 0 6px rgba(38,31,179,0.14);
 }
 
 /* ====== Tabel ====== */
@@ -65,7 +66,7 @@ body {
 }
 
 .table thead tr {
-    background-color: #5b8ad2;
+    background-color: #261FB3;
     color: #fff;
 }
 
@@ -148,15 +149,25 @@ body {
     transition: all 0.2s ease;
 }
 
+/* Ubah .btn-primary jadi warna 261FB3 (untuk tombol pencarian & Tambah) */
 .btn-primary {
-    background-color: #5b8ad2;
-    color: #fff;
+    background-color: #261FB3 !important;
+    color: #fff !important;
+    border: 1px solid #261FB3 !important;
 }
 
 .btn-primary:hover {
-    background-color: #4a75b3;
+    /* sedikit gelapkan saat hover */
+    background-color: #1f1799 !important;
+    border-color: #1f1799 !important;
 }
 
+.btn-primary:focus, .btn-primary:active {
+    box-shadow: 0 0 10px rgba(38,31,179,0.18);
+    outline: none;
+}
+
+/* Tombol edit/custom dan danger tetap sama (tidak diubah) */
 .btn-edit-custom {
     background-color: #00A19D;
     color: #fff;
@@ -168,6 +179,7 @@ body {
 
 .btn-danger {
     background-color: #dc3545;
+    color: #fff;
 }
 
 .btn-danger:hover {
