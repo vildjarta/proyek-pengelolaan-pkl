@@ -14,7 +14,7 @@
     <style>
         /* ===== ROOT VARIABLES ===== */
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-gradient: linear-gradient(135deg, #4a6baf 0%, #3a5a9f 100%);
             --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -112,14 +112,8 @@
             vertical-align: middle;
             text-align: center;
             word-wrap: break-word;
-            border-bottom: 1px solid #e8edf2;
-            border-right: 1px solid #e8edf2;
+            border: 1px solid #d1dce6;
             transition: var(--transition-smooth);
-        }
-
-        .compact-table th:last-child,
-        .compact-table td:last-child {
-            border-right: none;
         }
 
         .col-nip { width: 110px; }
@@ -175,19 +169,19 @@
         .btn-light {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             border: 2px solid rgba(255,255,255,0.3);
-            color: #667eea;
+            color: #4a6baf;
             font-weight: 700;
             padding: 8px 20px;
             border-radius: 25px;
             transition: var(--transition-smooth);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 4px 12px rgba(74, 107, 175, 0.2);
         }
 
         .btn-light:hover {
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
-            color: #764ba2;
+            box-shadow: 0 6px 20px rgba(74, 107, 175, 0.35);
+            color: #3a5a9f;
         }
 
         .btn-warning {
@@ -274,7 +268,7 @@
         }
 
         .table-hover tbody tr:hover {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            background: linear-gradient(90deg, rgba(74, 107, 175, 0.05) 0%, rgba(58, 90, 159, 0.05) 100%);
             transform: scale(1.01);
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
@@ -287,20 +281,18 @@
         }
 
         .total-nilai {
-            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%) !important;
+            background: #d4fc79 !important;
             font-weight: 800;
             font-size: 15px;
             color: #22543d;
-            border-radius: 8px;
             padding: 8px !important;
         }
 
         .nilai-akhir {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+            background: #a8edea !important;
             font-weight: 800;
             font-size: 15px;
             color: #2c5282;
-            border-radius: 8px;
             padding: 8px !important;
         }
 
@@ -469,12 +461,12 @@
         }
 
         .table-container::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a6baf 0%, #3a5a9f 100%);
             border-radius: 10px;
         }
 
         .table-container::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            background: linear-gradient(135deg, #3a5a9f 0%, #4a6baf 100%);
         }
     </style>
 </head>
@@ -547,7 +539,7 @@
                                 @forelse ($penilaian as $p)
                                 <tr>
                                     <td class="col-nip">{{ $p->dosen->nip ?? '-' }}</td>
-                                    <td class="col-dosen">{{ $p->dosen->nama_dosen ?? '-' }}</td>
+                                    <td class="col-dosen">{{ $p->dosen->nama ?? '-' }}</td>
                                     <td class="col-mahasiswa">{{ $p->nama_mahasiswa }}</td>
                                     <td class="col-presentasi nilai-cell">{{ $p->presentasi }}</td>
                                     <td class="col-materi nilai-cell">{{ $p->materi }}</td>
@@ -593,7 +585,7 @@
                         <div class="nilai-card-header">
                             <div>
                                 <strong>{{ $p->nama_mahasiswa }}</strong>
-                                <div class="text-muted small">{{ $p->dosen->nama_dosen ?? '-' }}</div>
+                                <div class="text-muted small">{{ $p->dosen->nama ?? '-' }}</div>
                             </div>
                             <div class="action-buttons">
                                 <a href="{{ route('penilaian-penguji.edit', $p->id) }}" class="btn btn-warning btn-sm">

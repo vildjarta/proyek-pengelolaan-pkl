@@ -57,6 +57,26 @@
         background: white;
     }
 
+    .form-section {
+        background: #fafbfc;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 25px;
+        border-left: 4px solid #1976d2;
+    }
+
+    .form-section-title {
+        color: #1976d2;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
     .form-label {
         font-weight: 600;
         color: #424242;
@@ -70,11 +90,13 @@
         padding: 12px 16px;
         font-size: 14px;
         transition: all 0.3s ease;
+        background: white;
     }
 
     .form-control:focus, .form-select:focus {
         border-color: #1976d2;
         box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        background: white;
     }
 
     .section-divider {
@@ -195,69 +217,77 @@
             </div>
 
             <div class="card-body">
-               <form action="{{ route('penilaian-penguji.store') }}" method="POST">
-    @csrf
+                <form action="{{ route('penilaian-penguji.store') }}" method="POST">
+                    @csrf
 
-                    {{-- PILIH DOSEN DAN DATA MAHASISWA --}}
-                    <div class="mb-4">
-                        <label class="form-label">Pilih Dosen Penguji</label>
-                        <select name="id_dosen" class="form-select mb-3" required>
-                            <option value="">-- Pilih Dosen --</option>
-                            @foreach($dosen as $d)
-                                <option value="{{ $d->id_dosen }}">{{ $d->nip }} - {{ $d->nama }}</option>
-                            @endforeach
-                        </select>
+                    {{-- INFORMASI PENGUJI & MAHASISWA --}}
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-user-tie"></i> Informasi Penguji & Mahasiswa
+                        </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Tanggal Ujian</label>
-                                <input type="date" name="tanggal_ujian" class="form-control" required>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dosen Penguji <span style="color: red;">*</span></label>
+                            <select name="id_dosen" class="form-select" required>
+                                <option value="">-- Pilih Dosen --</option>
+                                @foreach($dosen as $d)
+                                    <option value="{{ $d->id_dosen }}">{{ $d->nip }} - {{ $d->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">Nama Mahasiswa</label>
-                                <input type="text" name="nama_mahasiswa" class="form-control" placeholder="Masukkan nama mahasiswa" required>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nama Mahasiswa <span style="color: red;">*</span></label>
+                            <select name="nama_mahasiswa" class="form-select" required>
+                                <option value="">-- Pilih Mahasiswa --</option>
+                                @foreach($mahasiswa as $mhs)
+                                    <option value="{{ $mhs->nama }}">{{ $mhs->nim }} - {{ $mhs->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="form-label">Tanggal Ujian <span style="color: red;">*</span></label>
+                            <input type="date" name="tanggal_ujian" class="form-control" required>
                         </div>
                     </div>
-
-                    <hr class="section-divider">
 
                     {{-- KOMPONEN PENILAIAN --}}
-                    <div class="section-title">
-                        <h5>Komponen Penilaian Dosen Penguji</h5>
-                        <div class="underline"></div>
-                    </div>
-
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <label class="form-label">Penyajian Presentasi (10%)</label>
-                            <input type="number" class="form-control nilai-input nilai-inp" name="presentasi" 
-                                   min="0" max="100" placeholder="0 - 100" required>
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-clipboard-check"></i> Komponen Penilaian
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Pemahaman Materi (15%)</label>
-                            <input type="number" class="form-control nilai-input nilai-inp" name="materi" 
-                                   min="0" max="100" placeholder="0 - 100" required>
-                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-4 col-md-6">
+                                <label class="form-label">Penyajian Presentasi (10%) <span style="color: red;">*</span></label>
+                                <input type="number" class="form-control nilai-input nilai-inp" name="presentasi" 
+                                       min="0" max="100" placeholder="0 - 100" required>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Hasil yang Dicapai (40%)</label>
-                            <input type="number" class="form-control nilai-input nilai-inp" name="hasil" 
-                                   min="0" max="100" placeholder="0 - 100" required>
-                        </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="form-label">Pemahaman Materi (15%) <span style="color: red;">*</span></label>
+                                <input type="number" class="form-control nilai-input nilai-inp" name="materi" 
+                                       min="0" max="100" placeholder="0 - 100" required>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Objektivitas Menanggapi Pertanyaan (20%)</label>
-                            <input type="number" class="form-control nilai-input nilai-inp" name="objektif" 
-                                   min="0" max="100" placeholder="0 - 100" required>
-                        </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="form-label">Hasil yang Dicapai (40%) <span style="color: red;">*</span></label>
+                                <input type="number" class="form-control nilai-input nilai-inp" name="hasil" 
+                                       min="0" max="100" placeholder="0 - 100" required>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Penulisan Laporan (15%)</label>
-                            <input type="number" class="form-control nilai-input nilai-inp" name="laporan" 
-                                   min="0" max="100" placeholder="0 - 100" required>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="form-label">Objektivitas Pertanyaan (20%) <span style="color: red;">*</span></label>
+                                <input type="number" class="form-control nilai-input nilai-inp" name="objektif" 
+                                       min="0" max="100" placeholder="0 - 100" required>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6">
+                                <label class="form-label">Penulisan Laporan (15%) <span style="color: red;">*</span></label>
+                                <input type="number" class="form-control nilai-input nilai-inp" name="laporan" 
+                                       min="0" max="100" placeholder="0 - 100" required>
+                            </div>
                         </div>
                     </div>
 

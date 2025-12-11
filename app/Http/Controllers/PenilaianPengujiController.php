@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PenilaianPenguji;
 use App\Models\Dosen;
+use App\Models\Mahasiswa;
 
 class PenilaianPengujiController extends Controller
 {
@@ -17,7 +18,8 @@ class PenilaianPengujiController extends Controller
     public function create()
     {
         $dosen = Dosen::all();
-        return view('penilaianpenguji.tambah_penilaian_dospeng', compact('dosen'));
+        $mahasiswa = Mahasiswa::orderBy('nama', 'asc')->get();
+        return view('penilaianpenguji.tambah_penilaian_dospeng', compact('dosen', 'mahasiswa'));
     }
 
     public function store(Request $request)
@@ -55,7 +57,8 @@ class PenilaianPengujiController extends Controller
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
         $dosen = Dosen::all();
-        return view('penilaianpenguji.edit_penilaian_dospeng', compact('penilaian', 'dosen'));
+        $mahasiswa = Mahasiswa::orderBy('nama', 'asc')->get();
+        return view('penilaianpenguji.edit_penilaian_dospeng', compact('penilaian', 'dosen', 'mahasiswa'));
     }
 
     public function update(Request $request, $id)
