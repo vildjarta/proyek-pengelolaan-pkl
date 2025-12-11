@@ -12,154 +12,154 @@
     /* ===============================
        Layout variables (ubah sesuai theme)
        =============================== */
-    :root {
-        --sidebar-width: 285px;
-        --sidebar-collapsed-width: 70px;
-        --header-height: 64px; /* default, akan diperbarui oleh JS bila header beda */
-        --content-vertical-padding: 24px;
-        --content-horizontal-padding: 24px;
-        --color-primary-blue: #5b8ad2;
-    }
+        :root {
+            --sidebar-width: 285px;
+            --sidebar-collapsed-width: 70px;
+            --header-height: 64px; /* default, akan diperbarui oleh JS bila header beda */
+            --content-vertical-padding: 24px;
+            --content-horizontal-padding: 24px;
+            --color-primary-blue: #5b8ad2;
+        }
 
-    /* --- Base (jaga tidak ada overflow-y:hidden di sini) --- */
-    html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        font-family: 'Poppins', sans-serif;
-        background: #f4f7f9;
-    }
+        /* --- Base (jaga tidak ada overflow-y:hidden di sini) --- */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: #f4f7f9;
+        }
 
-    /* Header tetap fixed (layout.header di-include) */
-    .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: var(--header-height);
-        z-index: 13000;
-        background: #fff;
-        display: flex;
-        align-items: center;
-        box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-    }
+        /* Header tetap fixed (layout.header di-include) */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            z-index: 13000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        }
 
-    /* Sidebar: mulai dibawah header, scrollable internal */
-    .sidebar {
-        position: fixed;
-        top: var(--header-height);
-        left: 0;
-        width: var(--sidebar-width);
-        height: calc(100vh - var(--header-height));
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        background: var(--color-primary-blue);
-        color: #fff;
-        z-index: 12000;
-        padding-bottom: 24px;
-        box-sizing: border-box;
-    }
+        /* Sidebar: mulai dibawah header, scrollable internal */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: var(--color-primary-blue);
+            color: #fff;
+            z-index: 12000;
+            padding-bottom: 24px;
+            box-sizing: border-box;
+        }
 
-    /* Jika sidebar collapsed (body.sidebar-closed) */
-    body.sidebar-closed .sidebar {
-        width: var(--sidebar-collapsed-width);
-    }
+        /* Jika sidebar collapsed (body.sidebar-closed) */
+        body.sidebar-closed .sidebar {
+            width: var(--sidebar-collapsed-width);
+        }
 
-    /* Content wrapper: terletak setelah sidebar, juga scrollable internal */
-    .content-wrapper {
-        position: absolute;
-        top: var(--header-height);
-        left: var(--sidebar-width);
-        right: 0;
-        height: calc(100vh - var(--header-height));
-        padding: var(--content-vertical-padding) var(--content-horizontal-padding);
-        overflow-y: auto;
-        box-sizing: border-box;
-        transition: left .22s ease, width .22s ease;
-        z-index: 11000;
-        -webkit-overflow-scrolling: touch;
-    }
+        /* Content wrapper: terletak setelah sidebar, juga scrollable internal */
+        .content-wrapper {
+            position: absolute;
+            top: var(--header-height);
+            left: var(--sidebar-width);
+            right: 0;
+            height: calc(100vh - var(--header-height));
+            padding: var(--content-vertical-padding) var(--content-horizontal-padding);
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: left .22s ease, width .22s ease;
+            z-index: 11000;
+            -webkit-overflow-scrolling: touch;
+        }
 
-    /* Jika sidebar collapsed, geser content */
-    body.sidebar-closed .content-wrapper {
-        left: var(--sidebar-collapsed-width);
-    }
+        /* Jika sidebar collapsed, geser content */
+        body.sidebar-closed .content-wrapper {
+            left: var(--sidebar-collapsed-width);
+        }
 
-    /* Profile card styles (dipertahankan) */
-    .profile-page-container { width:100%; }
-    .profile-content { width:100%; }
-    .profile-card {
-        background: #fff;
-        border-radius: 8px;
-        padding: 1.25rem;
-        box-shadow: 0 6px 18px rgba(2,6,23,0.03);
-        max-width: 100%;
-        margin-bottom: 16px;
-    }
+        /* Profile card styles (dipertahankan) */
+        .profile-page-container { width:100%; }
+        .profile-content { width:100%; }
+        .profile-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.25rem;
+            box-shadow: 0 6px 18px rgba(2,6,23,0.03);
+            max-width: 100%;
+            margin-bottom: 16px;
+        }
 
-    .profile-card .form-group { margin-bottom: 1.25rem; display:block; }
-    .profile-card label { display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a; }
-    .profile-card .form-control { display:block; width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e9ef; background:#fff; box-sizing:border-box; }
+        .profile-card .form-group { margin-bottom: 1.25rem; display:block; }
+        .profile-card label { display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a; }
+        .profile-card .form-control { display:block; width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e9ef; background:#fff; box-sizing:border-box; }
 
-    input[readonly] { background-color: #e9ecef !important; cursor: not-allowed; color:#6c757d; border-color:#ced4da; }
+        input[readonly] { background-color: #e9ecef !important; cursor: not-allowed; color:#6c757d; border-color:#ced4da; }
 
-    /* Profile picture */
-    .profile-picture-section { display:flex; gap:20px; align-items:flex-start; }
-    .profile-picture-section .left-col { min-width:110px; padding-top:6px; }
-    .profile-pic-wrapper { display:flex; align-items:center; gap:12px; }
-    .profile-pic-wrapper img#profilePicPreview {
-        width:96px; height:96px; border-radius:50%; object-fit:cover; margin-right:12px; border:4px solid #fff;
-        box-shadow: 0 4px 12px rgba(2,6,23,0.06); cursor:pointer; transition: transform .12s ease;
-        flex: 0 0 96px;
-    }
-    .profile-pic-wrapper img#profilePicPreview:hover { transform: scale(1.03); }
-    .upload-button { padding:8px 12px; background:#eef2ff; color:#334155; border-radius:8px; cursor:pointer; margin-left:6px; }
+        /* Profile picture */
+        .profile-picture-section { display:flex; gap:20px; align-items:flex-start; }
+        .profile-picture-section .left-col { min-width:110px; padding-top:6px; }
+        .profile-pic-wrapper { display:flex; align-items:center; gap:12px; }
+        .profile-pic-wrapper img#profilePicPreview {
+            width:96px; height:96px; border-radius:50%; object-fit:cover; margin-right:12px; border:4px solid #fff;
+            box-shadow: 0 4px 12px rgba(2,6,23,0.06); cursor:pointer; transition: transform .12s ease;
+            flex: 0 0 96px;
+        }
+        .profile-pic-wrapper img#profilePicPreview:hover { transform: scale(1.03); }
+        .upload-button { padding:8px 12px; background:#eef2ff; color:#334155; border-radius:8px; cursor:pointer; margin-left:6px; }
 
-    .form-actions { display:flex; justify-content:flex-end; gap:12px; margin-top:12px; }
+        .form-actions { display:flex; justify-content:flex-end; gap:12px; margin-top:12px; }
 
-    /* Back button */
-    .back-button { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; background:#f1f5f9; border-radius:6px; cursor:pointer; color:#334155; margin-bottom:12px; transition:.15s; }
-    .back-button:hover { background:#e2e8f0; }
+        /* Back button */
+        .back-button { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; background:#f1f5f9; border-radius:6px; cursor:pointer; color:#334155; margin-bottom:12px; transition:.15s; }
+        .back-button:hover { background:#e2e8f0; }
 
-    /* Modal and cropper styles (dipertahankan) */
-    .photo-modal, .cropper-modal { position: fixed; inset: 0; display: none; align-items:center; justify-content:center; z-index: 20000; padding: 20px; }
-    .photo-modal.active, .cropper-modal.active { display:flex; }
-    .photo-modal { background: rgba(0,0,0,0.6); }
-    .photo-modal .modal-content { max-width:95%; max-height:95%; border-radius:10px; overflow:hidden; box-shadow:0 18px 60px rgba(2,6,23,0.6); background:#fff; position:relative; }
-    .photo-modal .modal-content img { display:block; max-width:100%; max-height:80vh; object-fit:contain; background:#111; }
+        /* Modal and cropper styles (dipertahankan) */
+        .photo-modal, .cropper-modal { position: fixed; inset: 0; display: none; align-items:center; justify-content:center; z-index: 20000; padding: 20px; }
+        .photo-modal.active, .cropper-modal.active { display:flex; }
+        .photo-modal { background: rgba(0,0,0,0.6); }
+        .photo-modal .modal-content { max-width:95%; max-height:95%; border-radius:10px; overflow:hidden; box-shadow:0 18px 60px rgba(2,6,23,0.6); background:#fff; position:relative; }
+        .photo-modal .modal-content img { display:block; max-width:100%; max-height:80vh; object-fit:contain; background:#111; }
 
-    .modal-close-x { position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.95); border-radius:6px; padding:6px 8px; cursor:pointer; font-weight:600; border:1px solid rgba(0,0,0,0.06); }
+        .modal-close-x { position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.95); border-radius:6px; padding:6px 8px; cursor:pointer; font-weight:600; border:1px solid rgba(0,0,0,0.06); }
 
-    .cropper-modal { background: rgba(0,0,0,0.7); z-index: 21000; }
-    .cropper-modal .cropper-content { width: min(920px, 96%); max-height:90vh; background:#fff; padding:12px; border-radius:8px; box-shadow:0 18px 60px rgba(2,6,23,0.5); overflow:auto; }
+        .cropper-modal { background: rgba(0,0,0,0.7); z-index: 21000; }
+        .cropper-modal .cropper-content { width: min(920px, 96%); max-height:90vh; background:#fff; padding:12px; border-radius:8px; box-shadow:0 18px 60px rgba(2,6,23,0.5); overflow:auto; }
 
-    /* Dim background when modal open: controlled with class modal-open */
-    body.modal-open {
-        overflow: hidden; /* block page scroll while modal open */
-    }
-    /* But make the modals themselves interactable */
-    body.modal-open .photo-modal,
-    body.modal-open .cropper-modal { pointer-events: auto; }
+        /* Dim background when modal open: controlled with class modal-open */
+        body.modal-open {
+            overflow: hidden; /* block page scroll while modal open */
+        }
+        /* But make the modals themselves interactable */
+        body.modal-open .photo-modal,
+        body.modal-open .cropper-modal { pointer-events: auto; }
 
-    /* Accessibility: ensure sidebar/content focusable */
-    .sidebar:focus, .content-wrapper:focus { outline: none; }
+        /* Accessibility: ensure sidebar/content focusable */
+        .sidebar:focus, .content-wrapper:focus { outline: none; }
 
-    /* Responsive adjustments */
-    @media (max-width: 900px) {
-        :root { --content-horizontal-padding: 12px; --content-vertical-padding: 16px; }
-        .sidebar { transform: translateX(-100%); position: fixed; left:0; }
-        body.sidebar-closed .sidebar { transform: translateX(0); }
-        .content-wrapper { left: 0; padding: 16px; top: var(--header-height); }
-        .profile-pic-wrapper img#profilePicPreview { width:72px; height:72px; flex:0 0 72px; }
-        .profile-picture-section { flex-direction: column; align-items:flex-start; }
-    }
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            :root { --content-horizontal-padding: 12px; --content-vertical-padding: 16px; }
+            .sidebar { transform: translateX(-100%); position: fixed; left:0; }
+            body.sidebar-closed .sidebar { transform: translateX(0); }
+            .content-wrapper { left: 0; padding: 16px; top: var(--header-height); }
+            .profile-pic-wrapper img#profilePicPreview { width:72px; height:72px; flex:0 0 72px; }
+            .profile-picture-section { flex-direction: column; align-items:flex-start; }
+        }
 
-    /* Minor scrollbar styling */
-    .sidebar::-webkit-scrollbar, .content-wrapper::-webkit-scrollbar { width:10px; }
-    .sidebar::-webkit-scrollbar-thumb, .content-wrapper::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius:8px; }
+        /* Minor scrollbar styling */
+        .sidebar::-webkit-scrollbar, .content-wrapper::-webkit-scrollbar { width:10px; }
+        .sidebar::-webkit-scrollbar-thumb, .content-wrapper::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius:8px; }
 
-</style>
+    </style>
 
 @include('layout.sidebar')
 
@@ -267,6 +267,22 @@
                         <button type="button" class="btn btn-secondary" onclick="goBack()" style="padding:8px 14px; border-radius:8px;">Batal</button>
                         <button type="submit" class="btn btn-primary" style="padding:8px 14px; border-radius:8px;">Simpan</button>
                     </div>
+                    <h4 style="margin-bottom: 16px;">Keamanan Akun</h4>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <label>Kata Sandi Baru</label>
+            <input type="password" name="new_password" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label>Konfirmasi Kata Sandi Baru</label>
+            <input type="password" name="new_password_confirmation" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Simpan</button>
+    </div>
                 </form>
                 @else
                     <p>Data pengguna tidak ditemukan. Silakan login kembali.</p>

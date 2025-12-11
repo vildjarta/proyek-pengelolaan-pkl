@@ -61,7 +61,7 @@
     padding: 40px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.03); /* Shadow sangat halus */
     border: 1px solid #edf2f7;
-    border-top: 4px solid #3498db; /* Aksen Biru di atas */
+    border-top: 4px solid #261FB3; /* Aksen Biru di atas */
 }
 
 /* --- 4. FORM GRID SYSTEM (RAHASIA DESAIN BAGUS) --- */
@@ -105,7 +105,7 @@
 
 .sa-card .form-control:focus,
 .sa-card select.form-control:focus {
-    border-color: #3498db; /* Biru saat aktif */
+    border-color: #261FB3; /* Biru saat aktif */
     background-color: #fff;
     box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
     outline: none;
@@ -138,7 +138,7 @@
 }
 
 .sa-card button[type="submit"] {
-    background-color: #3498db;
+    background-color: #261FB3;
     color: white;
     border: none;
     padding: 12px 40px; /* Tombol lebar */
