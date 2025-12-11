@@ -128,63 +128,188 @@ class TranscriptController extends Controller
      */
     public function uploadPdf(Request $req)
     {
-        $req->validate([
-            'nim' => 'required|exists:mahasiswa,nim',
-            'pdf' => 'required|mimes:pdf|max:2048',
-        ]);
+        try {
+            $req->validate([
+                'nim' => 'required|exists:mahasiswa,nim',
+                'pdf' => 'required|mimes:pdf|max:2048',
+            ]);
 
-        $nim = $req->nim;
-        $mahasiswa = Mahasiswa::where('nim', $nim)->first();
-        if (!$mahasiswa) {
-            return response()->json(['error' => 'Mahasiswa dengan NIM tersebut tidak ditemukan.']);
-        }
+            $nim = $req->nim;
+            $mahasiswa = Mahasiswa::where('nim', $nim)->first();
+            if (!$mahasiswa) {
+                return response()->json(['error' => 'Mahasiswa dengan NIM tersebut tidak ditemukan.'], 400);
+            }
 
-        $file = $req->file('pdf');
-        $parser = new Parser();
-        $pdf = $parser->parseFile($file->getRealPath());
-        $text = $pdf->getText();
+            $file = $req->file('pdf');
 
-        // --- Ambil nilai dari teks PDF ---
-        preg_match('/Jumlah SKS Yang Lulus\s*[:=]?\s*([\d.,]+)/i', $text, $sksMatch);
-        preg_match('/Jumlah Mutu\s*[:=]?\s*([\d.,]+)/i', $text, $mutuMatch);
-        preg_match('/Index Prestasi Kumulatif.*?([\d.,]+)/i', $text, $ipkMatch);
+            try {
+                $parser = new Parser();
+                $pdf = $parser->parseFile($file->getRealPath());
+                $text = $pdf->getText();
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Gagal membaca file PDF. Pastikan file PDF valid dan tidak terenkripsi.'], 400);
+            }
 
-        $totalSks = isset($sksMatch[1]) ? floatval(str_replace(',', '.', $sksMatch[1])) : null;
-        $totalMutu = isset($mutuMatch[1]) ? floatval(str_replace(',', '.', $mutuMatch[1])) : null;
-        $ipk = isset($ipkMatch[1]) ? floatval(str_replace(',', '.', $ipkMatch[1])) : null;
+            if (empty($text)) {
+                return response()->json(['error' => 'PDF tidak mengandung teks yang dapat dibaca. Gunakan transkrip PDF format teks, bukan scan/image.'], 400);
+            }
 
-        // Hitung IPK dari mutu / sks jika tidak tertulis di file
-        if (!$ipk && $totalSks && $totalMutu) {
-            $ipk = round($totalMutu / $totalSks, 2);
-        }
+            // --- Ekstrak IPK dari PDF (multiple patterns) ---
+            $ipk = $this->extractIPK($text);
 
-        // --- Deteksi nilai D dan E ---
-        preg_match_all('/\bD\b\s*\d+/i', $text, $dMatches);
-        $totalSksD = count($dMatches[0]);
+            // --- Ekstrak Total SKS (multiple patterns) ---
+            $totalSks = $this->extractTotalSKS($text);
+            $totalMutu = $this->extractTotalMutu($text);
 
-        $hasE = preg_match('/\bE\b/i', $text) > 0;
+            // Hitung IPK dari mutu / sks jika tidak tertulis di file
+            if (!$ipk && $totalSks && $totalMutu) {
+                $ipk = round($totalMutu / $totalSks, 2);
+            }
 
-        // --- Tentukan kelayakan PKL ---
-        $eligible = ($ipk >= 2.5 && $totalSksD <= 6 && !$hasE);
+            // --- Deteksi nilai D dan E ---
+            $totalSksD = $this->countGradeD($text);
+            $hasE = $this->hasGradeE($text);
 
-        // --- Simpan otomatis ke database ---
-        Transcript::updateOrCreate(
-            ['nim' => $nim],
-            [
-                'nama_mahasiswa' => $mahasiswa->nama,
-                'ipk' => $ipk ?? 0,
-                'total_sks_d' => $totalSksD ?? 0,
+            // --- Validasi data yang sudah diekstrak ---
+            if ($ipk === null || $ipk < 0) {
+                $ipk = 0;
+            }
+            if ($totalSksD === null || $totalSksD < 0) {
+                $totalSksD = 0;
+            }
+
+            // --- Tentukan kelayakan PKL ---
+            // Kriteria: IPK >= 2.5, Total SKS D <= 6, dan tidak ada nilai E
+            $eligible = ($ipk >= 2.5 && $totalSksD <= 6 && !$hasE);
+
+            // --- Simpan otomatis ke database ---
+            Transcript::updateOrCreate(
+                ['nim' => $nim],
+                [
+                    'nama_mahasiswa' => $mahasiswa->nama,
+                    'ipk' => $ipk ?? 0,
+                    'total_sks_d' => $totalSksD ?? 0,
+                    'has_e' => $hasE,
+                    'eligible' => $eligible,
+                ]
+            );
+
+            return response()->json([
+                'ipk' => $ipk,
+                'total_sks_d' => $totalSksD,
                 'has_e' => $hasE,
                 'eligible' => $eligible,
-            ]
-        );
+                'message' => 'Data berhasil dianalisis dan disimpan',
+            ], 200);
 
-        return response()->json([
-            'ipk' => $ipk,
-            'total_sks_d' => $totalSksD,
-            'has_e' => $hasE,
-            'eligible' => $eligible,
-        ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['error' => 'Validasi gagal: ' . implode(', ', $e->errors()['pdf'] ?? [])], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Extract IPK from PDF text with multiple patterns
+     */
+    private function extractIPK($text)
+    {
+        // Pattern 1: "Index Prestasi Kumulatif : X.XX"
+        if (preg_match('/Index\s+Prestasi\s+Kumulatif\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        // Pattern 2: "IPK : X.XX"
+        if (preg_match('/\bIPK\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        // Pattern 3: "Indeks Prestasi : X.XX"
+        if (preg_match('/Indeks\s+Prestasi\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        // Pattern 4: "A.A : X.XX" (format tertentu)
+        if (preg_match('/\bA\.A\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract Total SKS from PDF text
+     */
+    private function extractTotalSKS($text)
+    {
+        // Pattern 1: "Jumlah SKS Yang Lulus : XXX"
+        if (preg_match('/Jumlah\s+SKS\s+(?:Yang\s+)?Lulus\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        // Pattern 2: "Total SKS : XXX"
+        if (preg_match('/Total\s+SKS\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        // Pattern 3: "SKS Total : XXX"
+        if (preg_match('/SKS\s+Total\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract Total Mutu (nilai) from PDF text
+     */
+    private function extractTotalMutu($text)
+    {
+        // Pattern 1: "Jumlah Mutu : XXXX.X"
+        if (preg_match('/Jumlah\s+Mutu\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        // Pattern 2: "Total Nilai : XXXX.X"
+        if (preg_match('/Total\s+Nilai\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        // Pattern 3: "Jumlah Bobot : XXXX.X"
+        if (preg_match('/Jumlah\s+Bobot\s*[:=]?\s*([\d.,]+)/i', $text, $matches)) {
+            return floatval(str_replace(',', '.', $matches[1]));
+        }
+
+        return null;
+    }
+
+    /**
+     * Count grades with D (SKS D)
+     */
+    private function countGradeD($text)
+    {
+        // Look for "D" grades in transcript
+        // Count occurrences of " D " or "D " in grade columns
+        preg_match_all('/\s+D\s+[\d.]+\s+[\d.,]+/i', $text, $matches);
+
+        if (count($matches[0]) > 0) {
+            return count($matches[0]);
+        }
+
+        // Alternative: count line with D grade pattern
+        preg_match_all('/\bD\s+\d+/i', $text, $matches);
+        return count($matches[0]);
+    }
+
+    /**
+     * Check if there's any grade E
+     */
+    private function hasGradeE($text)
+    {
+        // Look for E grade in transcript
+        // Pattern: " E " or "E " followed by numbers (SKS and value)
+        return preg_match('/\s+E\s+[\d.]+\s+[\d.,]+/i', $text) > 0 ||
+               preg_match('/\bE\s+\d+/i', $text) > 0;
     }
 
 }
