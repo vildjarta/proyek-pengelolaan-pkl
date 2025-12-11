@@ -1,5 +1,6 @@
 /* =========================================
    STYLE: Lihat Rating & Review - PKL JOZZ
+   (Perbaikan: jangan ubah tampilan, hanya override warna/efek fokus)
    ========================================= */
 
 body {
@@ -34,7 +35,7 @@ body.sidebar-closed .main-content-wrapper {
   justify-content: center;
   width: 45px;
   height: 45px;
-  background-color: #5b8ad2;
+  background-color: #261FB3;
   color: #fff;
   border-radius: 50%;
   text-decoration: none;
@@ -44,18 +45,18 @@ body.sidebar-closed .main-content-wrapper {
   margin-bottom: 20px;
 }
 .btn-back:hover {
-  background-color: #4777c3;
+  background-color: #261FB3;
   transform: translateX(-3px);
 }
 
 /* ====== Header ====== */
 .table-header {
-  border-bottom: 2px solid #5b8ad2;
+  border-bottom: 2px solid #261FB3;
   margin-bottom: 25px;
   padding-bottom: 8px;
 }
 .table-header .title {
-  color: #5b8ad2;
+  color: #261FB3;
   font-weight: 700;
   font-size: 22px;
 }
@@ -107,10 +108,14 @@ body.sidebar-closed .main-content-wrapper {
   gap: 12px;
   margin-bottom: 10px;
 }
-.avatar {
+
+/* =====================================
+   AVATAR — untuk review list saja: gunakan .review-avatar
+   ===================================== */
+.review-avatar {
   width: 50px;
   height: 50px;
-  background-color: #5b8ad2;
+  background-color: #261FB3 !important; /* hanya untuk review-avatar */
   color: #fff;
   font-weight: 600;
   border-radius: 50%;
@@ -118,7 +123,40 @@ body.sidebar-closed .main-content-wrapper {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
+  overflow: hidden;
 }
+
+/* pastikan review-avatar tidak mendapat outline ketika keyboard focus */
+.review-avatar:focus,
+.review-avatar:active,
+.review-avatar:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #261FB3 !important;
+  transform: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* gambar di dalam review-avatar */
+.review-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  background: transparent;
+}
+
+/* inisial */
+.review-avatar .initial {
+  display: inline-block;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* reviewer info */
 .reviewer-info {
   display: flex;
   flex-direction: column;
@@ -169,6 +207,7 @@ body.sidebar-closed .main-content-wrapper {
 }
 
 /* ====== Tombol Aksi ====== */
+/* Default buttons */
 .action-buttons {
   display: flex;
   gap: 8px;
@@ -184,24 +223,60 @@ body.sidebar-closed .main-content-wrapper {
   transition: 0.3s;
   color: #fff;
 }
+
+/* Kuning (edit) dan merah (delete) states as original */
 .btn-edit {
   background-color: #ffc107;
   color: #000;
 }
+/* keep hover slightly darker (unchanged) */
 .btn-edit:hover {
   background-color: #e0a800;
+  color: #000;
 }
+
+/* ===== OVERRIDES untuk mencegah "klik jadi biru" =====
+   - Pastikan :focus, :active, :focus-visible tidak di-overwrite oleh bootstrap
+   - Tetap pertahankan tampilan visual (warna/ikon) saat diklik
+   - Hanya menghilangkan outline/box-shadow/overlay biru */
+.btn-edit:focus,
+.btn-edit:active,
+.btn-edit:focus-visible {
+  background-color: #ffc107 !important; /* tetap kuning */
+  color: #000 !important;               /* tetap teks/ikon hitam */
+  outline: none !important;             /* hilangkan outline biru */
+  box-shadow: none !important;          /* hilangkan box-shadow biru */
+  transform: none !important;           /* jangan ada translate/scale */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Jika ada pseudo-element overlay pada active, pastikan transparan */
+.btn-edit:active::after,
+.btn-edit:focus::after {
+  background: transparent !important;
+}
+
+/* Tombol delete (merah) dipertahankan, juga pastikan fokus tidak jadi biru */
 .btn-delete {
   background-color: #dc3545;
 }
-.btn-delete:hover {
-  background-color: #bb2d3b;
+.btn-delete:hover { background-color: #bb2d3b; color: #fff; }
+
+.btn-delete:focus,
+.btn-delete:active,
+.btn-delete:focus-visible {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ====== Alert Kosong ====== */
 .alert-info {
   background-color: #eaf3ff;
-  color: #5b8ad2;
+  color: #261FB3;
   border: none;
   font-weight: 500;
 }
@@ -224,75 +299,61 @@ body.sidebar-closed .main-content-wrapper {
   }
 }
 
-    /* Lokal: batasi lebar card agar selalu center, beri padding vertikal */
-    .page-card {
-      max-width: 980px;
-      margin: 0 auto;
-      padding-top: 8px;
-      padding-bottom: 24px;
-    }
+/* Lokal card layout */
+.page-card {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-top: 8px;
+  padding-bottom: 24px;
+}
 
-    .content-card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(2,6,23,0.04);
-    }
+.content-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+}
 
-    /* Suggest box z-index agar muncul di atas sidebar */
-    .suggest-wrap,
-    .nim-suggest {
-      position: absolute;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 6px;
-      box-shadow: 0 6px 18px rgba(2,6,23,0.06);
-      z-index: 12050;
-      max-height: 220px;
-      overflow-y: auto;
-    }
+/* Suggestion box */
+.suggest-wrap,
+.nim-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+  z-index: 12050;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.suggest-wrap .item,
+.nim-suggest .item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.suggest-wrap .item:hover,
+.nim-suggest .item:hover {
+  background: #f1f5f9;
+}
 
-    .suggest-wrap .item,
-    .nim-suggest .item {
-      padding: 8px 10px;
-      cursor: pointer;
-    }
-    .suggest-wrap .item:hover,
-    .nim-suggest .item:hover {
-      background: #f1f5f9;
-    }
+/* fallback */
+.main-content-wrapper {
+  position: relative;
+}
 
-    /* Pastikan main-content-wrapper mengatur scroll internal (seharusnya ada di style-pkl.css) */
-    .main-content-wrapper {
-      /* fallback jika style-pkl belum mengaturnya */
-      position: relative;
-    }
-
-/* ======================================================
-   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
-   ====================================================== */
-
-/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
+/* FIX dropdown bootstrap */
 .sidebar .dropdown-menu {
     position: static !important;
     float: none !important;
     inset: auto !important;
     transform: none !important;
     min-width: 0 !important;
-
-    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
     display: block !important;
     list-style: none;
-
-    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
     border: none !important;
     box-shadow: none !important;
-    outline: none !important;
 }
-
-/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
 .sidebar .dropdown-menu.collapsed {
     display: none !important;
 }
-

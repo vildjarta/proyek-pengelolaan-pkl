@@ -4,21 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Mahasiswa extends Model
 {
     use HasFactory;
 
-    // Nama tabel yang digunakan
     protected $table = 'mahasiswa';
-
-    // Primary key
     protected $primaryKey = 'id_mahasiswa';
-
-    // Aktifkan created_at & updated_at
     public $timestamps = true;
 
-    // Kolom yang bisa diisi (mass assignment)
     protected $fillable = [
         'nim',
         'nama',
@@ -31,15 +26,12 @@ class Mahasiswa extends Model
         'id_pembimbing',
         'judul_pkl',
         'user_id',
+        'avatar' // ← WAJIB ADA
     ];
 
-    /**
-     * 🔗 Relasi ke tabel dosen_pembimbing
-     * Setiap mahasiswa memiliki satu dosen pembimbing.
-     */
-    public function dosen()
+    public function user()
     {
-        return $this->belongsTo(DataDosenPembimbing::class, 'id_pembimbing', 'id_pembimbing');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function dosen_penguji()
@@ -48,11 +40,14 @@ class Mahasiswa extends Model
     }
 
     /**
-     * 🔗 Relasi ke tabel users
-     * Setiap mahasiswa dapat terhubung dengan satu user.
+     * ACCESSOR: URL avatar final
      */
-    public function user()
+    public function getAvatarUrlAttribute()
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+        if ($this->avatar && Storage::disk('public')->exists($this->avatar)) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        return asset('storage/avatars/default.png');
     }
 }

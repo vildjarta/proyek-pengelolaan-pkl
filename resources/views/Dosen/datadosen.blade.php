@@ -33,7 +33,7 @@
                         <!-- Form Pencarian -->
                         <div class="search-container d-flex align-items-center">
                             <input type="text" id="searchInput" class="search-input" placeholder="Cari Dosen...">
-                            <button class="btn btn-search ms-2" id="searchBtn"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-search ms-2" id="searchBtn" title="Cari"><i class="fa fa-search"></i></button>
                         </div>
 
                         <!-- Tombol Tambah -->
