@@ -22,7 +22,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Daftar Transkrip Kelayakan PKL</h2>
         <div>
-            <a href="{{ route('transkrip.analyze.page') }}" class="btn btn-info" style="margin-right: 10px;">
+            <a href="{{ route('transkrip.analyzePdfView') }}" class="btn btn-info" style="margin-right: 10px;">
                 <i class="fas fa-file-import"></i> Analisa Transkrip
             </a>
             <a href="{{ route('transkrip.create') }}" class="btn btn-primary">

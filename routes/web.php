@@ -82,15 +82,14 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('jadwal', JadwalBimbinganController::class);
     });
 
-    // Transkrip (role: mahasiswa, koordinator, staff)
+    // Transkrip (role: mahasiswa, koordinator, staff, superadmin)
     // Staff perlu akses untuk mengelola nilai/kelayakan
-    Route::middleware(['role:mahasiswa,koordinator,staff'])->group(function () {
+    Route::middleware(['role:mahasiswa,koordinator,staff,superadmin'])->group(function () {
         Route::resource('transkrip', TranscriptController::class);
 
-        // Transkrip Analyze
-        Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
-        Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
-        Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
+        // Transkrip Analyze PDF
+        Route::get('/transkrip/analyze-pdf', [TranscriptController::class, 'analyzePdfView'])->name('transkrip.analyzePdfView');
+        Route::post('/transkrip/upload-pdf', [TranscriptController::class, 'uploadPdf'])->name('transkrip.uploadPdf');
     });
 
     // Penilaian pembimbing (role: dosen_pembimbing, koordinator, staff)
