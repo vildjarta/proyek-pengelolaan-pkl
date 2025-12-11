@@ -9,7 +9,8 @@ body {
 .main-content-wrapper {
     margin-top: 60px;
     margin-left: 260px;
-    padding: 30px;
+    /* Tambahan padding bawah 80px agar scroll aman */
+    padding: 30px 30px 80px 30px; 
     flex-grow: 1;
     transition: margin-left 0.3s ease;
 }
@@ -32,12 +33,14 @@ body.sidebar-closed .main-content-wrapper {
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #5b8ad2;
+    /* UPDATE WARNA */
+    border-bottom: 2px solid #261FB3;
 }
 
 /* Judul (Heading) */
 h2.title {
-    color: #5b8ad2;
+    /* UPDATE WARNA */
+    color: #261FB3;
     margin: 0;
     font-size: 1.8rem;
 }
@@ -50,7 +53,8 @@ h2.title {
 }
 
 .table thead tr {
-    background-color: #5b8ad2;
+    /* UPDATE WARNA */
+    background-color: #261FB3;
     color: #fff;
 }
 
@@ -83,12 +87,15 @@ h2.title {
 }
 
 .btn-primary {
-    background-color: #5b8ad2;
-    color: #fff;
+    background-color: #261FB3 !important; 
+    border: 1px solid #261FB3 !important;
+    color: #fff !important;
 }
 
 .btn-primary:hover {
-    background-color: #4a75b3; /* Warna hover dibuat sedikit lebih gelap */
+    /* Tambahkan !important untuk hover juga */
+    background-color: #1B1680 !important; 
+    border-color: #1B1680 !important;
 }
 
 .action-buttons {
@@ -196,8 +203,7 @@ h2.title {
     font-size: 14px;
 }
 
-/* ===== Perbaikan Gaya Ikon Sorting (Hanya Blok Ini) ===== */
-/* Membuat link header menjadi area inline-flex yang nyaman */
+/* ===== Perbaikan Gaya Ikon Sorting ===== */
 .table thead th a {
     display: inline-flex;
     align-items: center;
@@ -208,12 +214,10 @@ h2.title {
     text-decoration: none;
 }
 
-/* Latar belakang hover yang halus untuk menandakan area yang bisa diklik */
 .table thead th a:hover {
     background: rgba(255,255,255,0.06);
 }
 
-/* Wadah untuk panah bertumpuk (markup: .sort-icon dengan .up/.down) */
 .table thead th a .sort-icon {
     display: inline-flex;
     flex-direction: column;
@@ -224,7 +228,6 @@ h2.title {
     line-height: 1;
 }
 
-/* Tampilan panah netral (berlaku untuk kelas .up/.down dan ikon fa-angle) */
 .table thead th a .up,
 .table thead th a .down,
 .table thead th a i.fa-angle-up,
@@ -235,7 +238,6 @@ h2.title {
     display: block;
 }
 
-/* Sorting 'asc' aktif -> sorot panah atas */
 .table thead th a.active.sort-asc .up,
 .table thead th a.active.sort-asc i.fa-angle-up {
     color: #ffffff;
@@ -247,7 +249,6 @@ h2.title {
     opacity: .9;
 }
 
-/* Sorting 'desc' aktif -> sorot panah bawah */
 .table thead th a.active.sort-desc .down,
 .table thead th a.active.sort-desc i.fa-angle-down {
     color: #ffffff;
@@ -259,7 +260,6 @@ h2.title {
     opacity: .9;
 }
 
-/* Layar kecil: perbesar area sentuh */
 @media (max-width:700px) {
     .table thead th a { padding: 8px 10px; gap: 6px; }
     .table thead th a .up, .table thead th a .down,
@@ -267,16 +267,3 @@ h2.title {
         font-size: 12px;
     }
 }
-
-/* Membuat link di header tabel terlihat seperti teks biasa (fallback) */
-.table thead th a {
-    color: inherit;
-    text-decoration: none;
-}
-
-/* Memberi sedikit jarak antara teks header dan ikon panah (fallback) */
-.table thead th a i {
-    margin-left: 8px;
-    font-size: 0.9em; /* Sedikit lebih kecil agar proporsional */
-}
-/* ===== Akhir Perbaikan Gaya Ikon Sorting ===== */
