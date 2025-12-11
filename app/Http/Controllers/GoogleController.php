@@ -58,7 +58,7 @@ class GoogleController extends Controller
                     // Kita set default 'dosen_pembimbing' (atau 'dosen')
                     // Anda bisa tambahkan logika lebih lanjut jika emailnya
                     // perlu dicek ke tabel dosen/admin untuk peran spesifik.
-                    $role = 'dosen_pembimbing'; 
+                    $role = 'dosen_pembimbing';
                 }
 
                 // 5. Tolak email publik (e.g., @gmail.com)
@@ -83,7 +83,6 @@ class GoogleController extends Controller
 
             // Redirect ke halaman home setelah berhasil login
             return redirect('/home');
-
         } catch (\Exception $e) {
             // dd($e); // Aktifkan ini hanya untuk debugging
             // Jika ada error, kembali ke halaman login
