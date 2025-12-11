@@ -124,7 +124,7 @@ class TranscriptController extends Controller
     }
 
     /**
-     * Proses analisa PDF
+     * Proses analisa PDF dengan deteksi E grade yang advanced
      */
     public function uploadPdf(Request $req)
     {
@@ -166,9 +166,9 @@ class TranscriptController extends Controller
                 $ipk = round($totalMutu / $totalSks, 2);
             }
 
-            // --- Deteksi nilai D dan E ---
+            // --- Deteksi nilai D dan E dengan Advanced Logic ---
             $totalSksD = $this->countGradeD($text);
-            $hasE = $this->hasGradeE($text);
+            $hasE = $this->detectGradeEAdvanced($text, $mahasiswa, $totalSks);
 
             // --- Validasi data yang sudah diekstrak ---
             if ($ipk === null || $ipk < 0) {
@@ -207,9 +207,7 @@ class TranscriptController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
-    }
-
-    /**
+    }    /**
      * Extract IPK from PDF text with multiple patterns
      */
     private function extractIPK($text)
@@ -302,14 +300,104 @@ class TranscriptController extends Controller
     }
 
     /**
-     * Check if there's any grade E
+     * Advanced E-grade detection using 3-layer system
+     * Layer 1: Direct detection - search for E pattern
+     * Layer 2: Count inference - if visible courses < expected (32), likely has E
+     * Layer 3: Pattern analysis - D grade presence suggests possible E grades
      */
-    private function hasGradeE($text)
+    private function detectGradeEAdvanced($text, $mahasiswa, $totalSks)
+    {
+        // LAYER 1: Direct E detection
+        if ($this->hasGradeEDirect($text)) {
+            return true;
+        }
+
+        // LAYER 2: Count inference - compare visible courses to expected
+        if ($this->hasGradeEByCountInference($text, $mahasiswa)) {
+            return true;
+        }
+
+        // LAYER 3: Pattern-based inference
+        if ($this->hasGradeEByPattern($text)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Layer 1: Direct E-grade detection
+     */
+    private function hasGradeEDirect($text)
     {
         // Look for E grade in transcript
-        // Pattern: " E " or "E " followed by numbers (SKS and value)
-        return preg_match('/\s+E\s+[\d.]+\s+[\d.,]+/i', $text) > 0 ||
-               preg_match('/\bE\s+\d+/i', $text) > 0;
+        // Pattern 1: " E " followed by decimal and numbers (e.g., "E 0.00")
+        if (preg_match('/\s+E\s+[\d.]+\s+[\d.,]+/i', $text)) {
+            return true;
+        }
+
+        // Pattern 2: "E" at start of grade column with numbers
+        if (preg_match('/\bE\s+\d+/i', $text)) {
+            return true;
+        }
+
+        // Pattern 3: "E" as standalone grade between SKS values
+        if (preg_match('/\d+\s+[A-Z]{2,4}\d{3,4}\s+[^\d\s]+\s+E\s+\d+/i', $text)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Layer 2: Count inference - detect missing courses (potential E grades)
+     * SIPADU standard: 32-33 courses expected
+     * If visible courses < 25, likely has E grades (student didn't take or failed courses)
+     */
+    private function hasGradeEByCountInference($text, $mahasiswa)
+    {
+        $visibleCourses = $this->countVisibleCourses($text);
+
+        // If course count is significantly below expected (32-33), likely has E
+        // Threshold: < 25 courses suggests student has E grades
+        return $visibleCourses > 0 && $visibleCourses < 25;
+    }
+
+    /**
+     * Layer 3: Pattern-based inference
+     * If D grades are present, it's more likely E grades exist too
+     */
+    private function hasGradeEByPattern($text)
+    {
+        // If we can find D grades, it suggests transcript shows failures
+        // This could correlate with E grades in other semesters
+        $dCount = $this->countGradeD($text);
+
+        // If multiple D grades (3+), higher likelihood of E grades
+        return $dCount >= 3;
+    }
+
+    /**
+     * Count visible courses in transcript
+     * Uses course code pattern: [A-Z]+[0-9]+
+     * Example: AII231203, AIK231307
+     */
+    private function countVisibleCourses($text)
+    {
+        // Remove newlines to make parsing consistent
+        $cleanText = preg_replace('/\s+/', ' ', $text);
+
+        // Pattern: Look for course codes like AII231203, AIK231307
+        preg_match_all('/[A-Z]+[0-9]+/', $cleanText, $matches);
+        if (count($matches[0]) > 0) {
+            // Filter to keep only course codes (7+ chars like AII2312 or longer)
+            $codes = array_filter($matches[0], function($code) {
+                return strlen($code) >= 7;
+            });
+            return count(array_unique($codes));
+        }
+
+        return 0;
     }
 
 }
