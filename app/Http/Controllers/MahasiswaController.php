@@ -39,7 +39,7 @@ class MahasiswaController extends Controller
             'email'      => 'required|email|unique:mahasiswa,email',
             'no_hp'      => 'nullable|regex:/^\d{10,15}$/',
             'prodi'      => 'required|string|max:50|regex:/^[A-Za-z\s]+$/',
-            'angkatan'   => 'required|integer|digits:4|min:1990|max:' . (date('Y') + 1),
+            'angkatan'   => 'required|integer|digits:4|min:2009|max:' . (date('Y') + 1),
             'ipk'        => 'nullable|numeric|between:0,4.00',
             'perusahaan' => 'nullable|string|max:100',
         ], [
@@ -58,6 +58,7 @@ class MahasiswaController extends Controller
             'angkatan.required'=> 'Angkatan wajib diisi.',
             'angkatan.integer' => 'Angkatan harus berupa angka tahun.',
             'angkatan.digits'  => 'Angkatan harus 4 digit angka.',
+            'angkatan.min'     => 'Tahun angkatan minimal 2009.',
             'ipk.numeric'      => 'IPK harus berupa angka.',
             'ipk.between'      => 'IPK harus antara 0.00 sampai 4.00.',
             'perusahaan.string'=> 'Nama perusahaan harus berupa teks.',
@@ -118,7 +119,7 @@ class MahasiswaController extends Controller
             'email'      => 'required|email|unique:mahasiswa,email,' . $mahasiswa->id_mahasiswa . ',id_mahasiswa',
             'no_hp'      => 'nullable|regex:/^\d{10,15}$/',
             'prodi'      => 'required|string|max:50|regex:/^[A-Za-z\s]+$/',
-            'angkatan'   => 'required|integer|digits:4|min:1990|max:' . (date('Y') + 1),
+            'angkatan'   => 'required|integer|digits:4|min:2009|max:' . (date('Y') + 1),
             'ipk'        => 'nullable|numeric|between:0,4.00',
             'perusahaan' => 'nullable|string|max:100',
         ], [
@@ -137,6 +138,7 @@ class MahasiswaController extends Controller
             'angkatan.required'=> 'Angkatan wajib diisi.',
             'angkatan.integer' => 'Angkatan harus berupa angka tahun.',
             'angkatan.digits'  => 'Angkatan harus 4 digit angka.',
+            'angkatan.min'     => 'Tahun angkatan minimal 2009.',
             'ipk.numeric'      => 'IPK harus berupa angka.',
             'ipk.between'      => 'IPK harus antara 0.00 sampai 4.00.',
             'perusahaan.string'=> 'Nama perusahaan harus berupa teks.',

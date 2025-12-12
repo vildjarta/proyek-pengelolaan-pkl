@@ -19,6 +19,7 @@ use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\PenilaianPerusahaanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,6 +121,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('nilai', NilaiController::class);
         Route::resource('dosen', DosenController::class);
+        Route::resource('penilaian-perusahaan', PenilaianPerusahaanController::class);
     });
 
     // Rating & review (gabungan roles)

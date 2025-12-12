@@ -294,35 +294,13 @@
                     </div>
                 </div>
 
-                <!-- BARIS KEDUA: Pilih Email dari Users atau Input Manual -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="user_id">Pilih Email dari User (Opsional)</label>
-                        <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror">
-                            <option value="">-- Pilih User atau Isi Manual --</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}" data-email="{{ $user->email }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }} ({{ $user->email }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        <small style="color: #6c757d; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Pilih dari user yang ada atau isi email manual di bawah
-                        </small>
-                    </div>
-                </div>
-
-                <!-- BARIS KETIGA: Email Manual dan No HP -->
+                <!-- BARIS KEDUA: Email dan No HP -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="email">Email <span class="required">*</span></label>
                         <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
-                            required placeholder="Masukkan Email atau pilih dari user di atas" value="{{ old('email') }}">
+                            required placeholder="Masukkan Email" value="{{ old('email') }}">
                         @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        <small style="color: #6c757d; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Email akan otomatis terisi jika memilih user di atas
-                        </small>
                     </div>
 
                     <div class="form-group">
@@ -359,7 +337,7 @@
                     <div class="form-group">
                         <label for="angkatan">Angkatan <span class="required">*</span></label>
                         <input type="number" name="angkatan" id="angkatan" class="form-control @error('angkatan') is-invalid @enderror"
-                            required placeholder="Masukkan Tahun Angkatan" value="{{ old('angkatan') }}">
+                            required placeholder="Masukkan Tahun Angkatan" value="{{ old('angkatan') }}" min="2009">
                         @error('angkatan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
@@ -519,23 +497,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.value.length > 4) {
                 this.value = this.value.slice(0, 4);
             }
-        });
-    }
-
-    // Auto-fill email ketika memilih user dari dropdown
-    const userSelect = document.getElementById('user_id');
-    const emailInput = document.getElementById('email');
-    
-    if (userSelect && emailInput) {
-        userSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const email = selectedOption.getAttribute('data-email');
-            
-            if (email) {
-                emailInput.value = email;
-            } else if (this.value === '') {
-                // Jika "Pilih User atau Isi Manual" dipilih, kosongkan email
-                emailInput.value = '';
+            // Validasi minimal 2009
+            if (this.value && parseInt(this.value) < 2009) {
+                this.setCustomValidity('Tahun angkatan minimal 2009');
+            } else {
+                this.setCustomValidity('');
             }
         });
     }
