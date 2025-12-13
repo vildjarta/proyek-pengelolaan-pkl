@@ -17,6 +17,21 @@
                 <a href="{{ route('manage-users.create') }}" class="btn-add-new text-decoration-none d-inline-flex align-items-center justify-content-center">
                     <i class="fa fa-plus-circle me-2"></i> Tambah Baru
                 </a>
+                {{-- FORM GABUNGAN (FILTER + SEARCH) --}}
+                <form action="{{ route('manage-users.index') }}" method="GET" class="d-flex" style="gap: 5px;">
+                    
+                    {{-- INPUT FILTER ROLE (BARU) --}}
+                    {{-- Otomatis submit saat dipilih --}}
+                    <select name="role" class="sa-select" onchange="this.form.submit()">
+                        <option value="">- Semua Role -</option>
+                        <option value="mahasiswa" {{ request('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                        <option value="dosen_pembimbing" {{ request('role') == 'dosen_pembimbing' ? 'selected' : '' }}>Dosen Pembimbing</option>
+                        <option value="dosen_penguji" {{ request('role') == 'dosen_penguji' ? 'selected' : '' }}>Dosen Penguji</option>
+                        <option value="koordinator" {{ request('role') == 'koordinator' ? 'selected' : '' }}>Koordinator</option>
+                        <option value="kaprodi" {{ request('role') == 'kaprodi' ? 'selected' : '' }}>Ketua Prodi</option>
+                        <option value="staff" {{ request('role') == 'staff' ? 'selected' : '' }}>Staff</option>
+                        <option value="perusahaan" {{ request('role') == 'perusahaan' ? 'selected' : '' }}>Perusahaan</option>
+                    </select>
 
                 <form action="{{ route('manage-users.index') }}" method="GET">
                     <div class="sa-search-box">
@@ -75,34 +90,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="p-3">{{ $users->links() }}</div>
+            
+            {{-- BAGIAN PAGINATION SUDAH DIHAPUS DISINI --}}
+
         </div>
     </div>
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleButton = document.querySelector('.menu-toggle');
-    const body = document.body;
-    const profileWrapper = document.querySelector('.user-profile-wrapper');
-    const userinfo = document.querySelector('.user-info');
-
-    if (toggleButton) {
-        toggleButton.addEventListener('click', function() {
-            body.classList.toggle('sidebar-closed');
-        });
-    }
-
-    if (userinfo && profileWrapper) {
-        userinfo.addEventListener('click', function(e) {
-            e.preventDefault();
-            profileWrapper.classList.toggle('active');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
-                profileWrapper.classList.remove('active');
-            }
-        });
-    }
-});
-</script>
 </div>

@@ -26,8 +26,11 @@ class ManageUserController extends Controller
             });
         }
 
-        // Tampilkan data terbaru dulu, 10 per halaman
-        $users = $query->orderBy('created_at', 'desc')->paginate(10);
+        if ($request->has('role') && $request->role != '') {
+            $query->where('role', $request->role);
+        }
+        // $users = $query->orderBy('created_at', 'desc')->paginate(10);
+        $users = $query->orderBy('created_at', 'desc')->get();
 
         return view('superadmin.index', compact('users'));
     }

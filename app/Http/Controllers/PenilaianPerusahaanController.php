@@ -19,10 +19,11 @@ class PenilaianPerusahaanController extends Controller
         //     ->select('penilaian_perusahaan.*', 'perusahaan.nama as nama_perusahaan', 'kriteria.kriteria as kriteria')
         //     // ->groupby('penilaian_perusahaan.id_perusahaan')
         //     ->get();
-        $penilaians = Perusahaan::get();
+        $penilaians = Penilaian_perusahaan::all();
         // dd($penilaians);
         // exit;
-        return view('penilaian_perusahaan.index', compact('penilaians'));
+// Ganti tanda strip (-) dengan titik (.) dan tambah .index
+        return view('penilaian-perusahaan.index', ['data' => $penilaians]);
 
         // 🔹 Kelompokkan nilai berdasarkan perusahaan & kriteria (disesuaikan dengan hasil left join)
         $nilaiGrouped = [];

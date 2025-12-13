@@ -12,14 +12,14 @@
     /* ===============================
        Layout variables (ubah sesuai theme)
        =============================== */
-        :root {
+        /* :root {
             --sidebar-width: 285px;
             --sidebar-collapsed-width: 70px;
-            --header-height: 64px; /* default, akan diperbarui oleh JS bila header beda */
+            --header-height: 64px; 
             --content-vertical-padding: 24px;
             --content-horizontal-padding: 24px;
             --color-primary-blue: #5b8ad2;
-        }
+        } */
 
         /* --- Base (jaga tidak ada overflow-y:hidden di sini) --- */
         html, body {
@@ -31,7 +31,7 @@
             background: #f4f7f9;
         }
 
-        /* Header tetap fixed (layout.header di-include) */
+        /* Header tetap fixed (layout.header di-include)
         .header {
             position: fixed;
             top: 0;
@@ -43,9 +43,9 @@
             display: flex;
             align-items: center;
             box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-        }
+        } */
 
-        /* Sidebar: mulai dibawah header, scrollable internal */
+        /* Sidebar: mulai dibawah header, scrollable internal
         .sidebar {
             position: fixed;
             top: var(--header-height);
@@ -59,7 +59,7 @@
             z-index: 12000;
             padding-bottom: 24px;
             box-sizing: border-box;
-        }
+        } */
 
         /* Jika sidebar collapsed (body.sidebar-closed) */
         body.sidebar-closed .sidebar {

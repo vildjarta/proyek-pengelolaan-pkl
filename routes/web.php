@@ -111,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:koordinator,staff'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
         Route::resource('/kriteria', KriteriaController::class);
-        Route::resource('/penilaian_perusahaan', PenilaianPerusahaanController::class);
+        Route::resource('/penilaian-perusahaan', PenilaianPerusahaanController::class);
         Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
         Route::resource('mahasiswa', MahasiswaController::class);
 
