@@ -123,24 +123,25 @@
         .back-button:hover { background:#e2e8f0; }
 
         /* Modal and cropper styles (dipertahankan) */
-        .photo-modal, .cropper-modal { position: fixed; inset: 0; display: none; align-items:center; justify-content:center; z-index: 20000; padding: 20px; }
-        .photo-modal.active, .cropper-modal.active { display:flex; }
-        .photo-modal { background: rgba(0,0,0,0.6); }
-        .photo-modal .modal-content { max-width:95%; max-height:95%; border-radius:10px; overflow:hidden; box-shadow:0 18px 60px rgba(2,6,23,0.6); background:#fff; position:relative; }
-        .photo-modal .modal-content img { display:block; max-width:100%; max-height:80vh; object-fit:contain; background:#111; }
+        /* Use ID selectors to avoid colliding with Cropper.js internal class names */
+        #photoModal, #cropperModal { position: fixed; inset: 0; display: none; align-items:center; justify-content:center; z-index: 20000; padding: 20px; }
+        #photoModal.active, #cropperModal.active { display:flex; }
+        #photoModal { background: rgba(0,0,0,0.6); }
+        #photoModal .modal-content { max-width:95%; max-height:95%; border-radius:10px; overflow:hidden; box-shadow:0 18px 60px rgba(2,6,23,0.6); background:#fff; position:relative; }
+        #photoModal .modal-content img { display:block; max-width:100%; max-height:80vh; object-fit:contain; background:#111; }
 
         .modal-close-x { position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.95); border-radius:6px; padding:6px 8px; cursor:pointer; font-weight:600; border:1px solid rgba(0,0,0,0.06); }
 
-        .cropper-modal { background: rgba(0,0,0,0.7); z-index: 21000; }
-        .cropper-modal .cropper-content { width: min(920px, 96%); max-height:90vh; background:#fff; padding:12px; border-radius:8px; box-shadow:0 18px 60px rgba(2,6,23,0.5); overflow:auto; }
+        #cropperModal { background: rgba(0,0,0,0.7); z-index: 21000; }
+        #cropperModal .cropper-content { width: min(920px, 96%); max-height:90vh; background:#fff; padding:12px; border-radius:8px; box-shadow:0 18px 60px rgba(2,6,23,0.5); overflow:auto; }
 
         /* Dim background when modal open: controlled with class modal-open */
         body.modal-open {
             overflow: hidden; /* block page scroll while modal open */
         }
         /* But make the modals themselves interactable */
-        body.modal-open .photo-modal,
-        body.modal-open .cropper-modal { pointer-events: auto; }
+        body.modal-open #photoModal,
+        body.modal-open #cropperModal { pointer-events: auto; }
 
         /* Accessibility: ensure sidebar/content focusable */
         .sidebar:focus, .content-wrapper:focus { outline: none; }
@@ -294,7 +295,7 @@
 </main>
 
 <!-- Preview modal (X to close only) -->
-<div id="photoModal" class="photo-modal" aria-hidden="true" role="dialog" aria-label="Pratinjau foto">
+<div id="photoModal" class="profile-photo-modal" aria-hidden="true" role="dialog" aria-label="Pratinjau foto">
     <div class="modal-content" role="document">
         <button class="modal-close-x" id="photoModalClose" aria-label="Tutup pratinjau">✕</button>
         <img id="modalImage" src="" alt="Preview Foto Profil">
@@ -302,7 +303,7 @@
 </div>
 
 <!-- Cropper modal (transparent crop box, X to cancel, Batal/Gunakan Foto) -->
-<div id="cropperModal" class="cropper-modal" aria-hidden="true" role="dialog" aria-label="Crop Foto Profil">
+<div id="cropperModal" class="profile-cropper-modal" aria-hidden="true" role="dialog" aria-label="Crop Foto Profil">
     <div class="cropper-content" role="document">
         <button class="modal-close-x" id="cropperCloseX" aria-label="Batal mengganti foto">✕</button>
 
