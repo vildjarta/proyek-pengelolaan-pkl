@@ -19,7 +19,6 @@ use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\ManageUserController;
-use App\Http\Controllers\PenilaianPerusahaanController;
 
 /*
 |--------------------------------------------------------------------------
