@@ -7,7 +7,9 @@
     <div class="main-content-wrapper">
         <div class="table-card">
             <div class="table-header">
-                <a href="{{ route('penilaian.create') }}" class="btn btn-primary">Tambah Penilaian</a>
+                @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                    <a href="{{ route('penilaian.create') }}" class="btn btn-primary">Tambah Penilaian</a>
+                @endif
                 <div class="search-container">
                     <form action="{{ route('penilaian.index') }}" method="GET">
                         <input type="text" name="search" class="form-control search-input" placeholder="Cari Mahasiswa/NIM..." value="{{ $search ?? '' }}">
@@ -44,16 +46,18 @@
                         <td>{{ $item->grade }}</td>
                         <td class="text-center">
                             <div class="action-buttons">
-                                <a href="{{ route('penilaian.edit', $item->id) }}" class="btn btn-edit-custom" title="Edit">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <form action="{{ route('penilaian.destroy', $item->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin hapus data?')" title="Hapus">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
+                                @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                                    <a href="{{ route('penilaian.edit', $item->id) }}" class="btn btn-edit-custom" title="Edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('penilaian.destroy', $item->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin hapus data?')" title="Hapus">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

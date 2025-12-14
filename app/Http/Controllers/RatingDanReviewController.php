@@ -125,6 +125,12 @@ class RatingDanReviewController extends Controller
             return redirect()->route('ratingperusahaan')->with('error', 'Silakan login terlebih dahulu.');
         }
 
+        // additional role guard: only mahasiswa and koordinator may access the create form
+        $user = Auth::user();
+        if (isset($user->role) && !in_array($user->role, ['mahasiswa', 'koordinator'])) {
+            return redirect()->route('ratingperusahaan')->with('error', 'Anda tidak berwenang menambahkan review.');
+        }
+
         $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
         if (!$mahasiswa) {
             return redirect()->route('ratingperusahaan')->with('error', 'Akun Anda belum terhubung dengan data mahasiswa.');
@@ -160,6 +166,14 @@ class RatingDanReviewController extends Controller
             $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
             if ($mahasiswa) {
                 $mahasiswaCompanyId = $this->resolveMahasiswaCompanyId($mahasiswa);
+            }
+        }
+
+        // role guard: if logged in and in one of the read-only roles, prevent adding
+        if (Auth::check()) {
+            $user = Auth::user();
+            if (isset($user->role) && in_array($user->role, ['ketua_prodi','perusahaan','dosen_pembimbing','dosen','dosen_penguji','staff'])) {
+                return redirect()->route('ratingperusahaan')->with('error', 'Anda tidak berwenang menambahkan review.');
             }
         }
 
@@ -323,5 +337,25 @@ class RatingDanReviewController extends Controller
         return redirect()
             ->route('lihatratingdanreview', ['id_perusahaan' => $idPerusahaan])
             ->with('success', 'Review berhasil dihapus!');
+    }
+
+    /**
+     * Destroy all reviews (only for koordinator)
+     */
+    public function destroyAll(Request $request)
+    {
+        if (!Auth::check() || !isset(Auth::user()->role) || Auth::user()->role !== 'koordinator') {
+            return redirect()->route('ratingperusahaan')->with('error', 'Anda tidak berwenang melakukan aksi ini.');
+        }
+
+        // delete all reviews
+        try {
+            RatingDanReview::query()->delete();
+        } catch (\Throwable $e) {
+            \Log::error('Failed to delete all reviews: ' . $e->getMessage());
+            return redirect()->route('ratingperusahaan')->with('error', 'Terjadi kesalahan saat menghapus data.');
+        }
+
+        return redirect()->route('ratingperusahaan')->with('success', 'Semua rating berhasil dihapus.');
     }
 }

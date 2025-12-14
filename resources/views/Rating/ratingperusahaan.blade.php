@@ -41,6 +41,14 @@
                             <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="search-input" placeholder="Cari perusahaan...">
                             <button type="submit" class="btn btn-primary ms-2"><i class="fa fa-search"></i></button>
                         </form>
+                        @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                            <form action="{{ route('ratingdanreview.destroyAll') }}" method="POST" style="margin-left:8px;">
+                                @csrf
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin menghapus semua rating? Tindakan ini tidak dapat dibatalkan.')">
+                                    <i class="fa fa-trash"></i> Hapus Semua Rating
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
 

@@ -21,11 +21,11 @@
 
                 // 4. Dosen Pembimbing
                 // Koordinator (All), Staff (View), Mahasiswa (View), DosPem (View/Edit)
-                $showDosenPembimbing = in_array($userRole, ['koordinator', 'staff', 'dosen_pembimbing']);
+                $showDosenPembimbing = in_array($userRole, ['koordinator', 'staff', 'dosen_pembimbing', 'mahasiswa']);
 
                 // 5. Dosen Penguji
                 // Koordinator (All), Staff (View), Mahasiswa (View), DosPeng (View/Edit)
-                $showDosenPenguji    = in_array($userRole, ['koordinator', 'staff', 'dosen_penguji']);
+                $showDosenPenguji    = in_array($userRole, ['koordinator', 'staff', 'dosen_penguji', 'mahasiswa']);
 
                 // 6. Data Perusahaan
                 // Koordinator (All), Staff(V), Mhs(V), Kaprodi(V), DosPeng(V), DosPem(V), Perusahaan(Edit Self)
