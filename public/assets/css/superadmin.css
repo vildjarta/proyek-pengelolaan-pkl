@@ -230,3 +230,25 @@
         display: none;
     }
 }
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto; /* Scroll samping jika tabel terlalu lebar */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+/* Style untuk Dropdown Filter */
+.sa-select {
+    height: 38px;
+    border: 1px solid #e3e6f0;
+    border-radius: 5px;
+    padding: 0 10px;
+    color: #6e707e;
+    background-color: white;
+    cursor: pointer;
+    outline: none;
+}
+
+.sa-select:focus {
+    border-color: #261FB3; /* Sesuai warna sidebar Anda */
+}

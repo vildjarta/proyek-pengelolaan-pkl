@@ -39,7 +39,9 @@
     @endif
 
     <div class="result-card">
-        @if(count($data) > 0)
+        <div class="result-card">
+        {{-- PERBAIKAN DI SINI: Tambahkan isset($data) --}}
+        @if(isset($data) && count($data) > 0)
             <div class="table-wrapper">
                 <table class="table table-bordered">
                     <thead>
@@ -87,6 +89,7 @@
                 </table>
             </div>
         @else
+            {{-- Bagian ini akan muncul jika $data null atau kosong --}}
             <div class="empty-state">
                 <i class="fas fa-inbox"></i>
                 <p>Belum ada data penilaian perusahaan.</p>
