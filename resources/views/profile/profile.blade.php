@@ -268,22 +268,49 @@
                         <button type="button" class="btn btn-secondary" onclick="goBack()" style="padding:8px 14px; border-radius:8px;">Batal</button>
                         <button type="submit" class="btn btn-primary" style="padding:8px 14px; border-radius:8px;">Simpan</button>
                     </div>
-                    <h4 style="margin-bottom: 16px;">Keamanan Akun</h4>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <label>Kata Sandi Baru</label>
-            <input type="password" name="new_password" class="form-control">
-        </div>
-        <div class="col-md-6">
-            <label>Konfirmasi Kata Sandi Baru</label>
-            <input type="password" name="new_password_confirmation" class="form-control">
-        </div>
-    </div>
+              <h4 style="margin-bottom: 16px; margin-top: 20px;">Keamanan Akun</h4>
 
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Simpan</button>
+<div class="row">
+    {{-- LOGIKA: Cek apakah user punya password di database --}}
+{{-- LOGIKA: Cek apakah user punya password di database --}}
+@if(!empty($user->password) && empty($user->google_id))
+        {{-- Skenario A: User Manual (Punya Password) -> Wajib isi password lama --}}
+        <div class="col-md-12 mb-3">
+            <label for="current_password">Kata Sandi Saat Ini</label>
+            <input type="password" id="current_password" name="current_password" class="form-control" placeholder="Masukkan kata sandi lama untuk konfirmasi">
+            @error('current_password') 
+                <div class="text-danger mt-1" style="font-size: 0.9rem;">{{ $message }}</div> 
+            @enderror
+        </div>
+    @else
+        {{-- Skenario B: User Google (Password Kosong) -> Beri info --}}
+        <div class="col-md-12 mb-3">
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+                <i class="fa fa-info-circle me-2"></i> {{-- Saya ganti icon svg dengan fa agar lebih aman jika tidak support svg --}}
+                <div>
+                    Anda login menggunakan Google. Silakan buat kata sandi baru agar bisa login secara manual (opsional).
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="col-md-6 mb-3">
+        <label for="new_password">Kata Sandi Baru</label>
+        <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Minimal 6 karakter">
+        @error('new_password') 
+            <div class="text-danger mt-1" style="font-size: 0.9rem;">{{ $message }}</div> 
+        @enderror
     </div>
+    
+    <div class="col-md-6 mb-3">
+        <label for="new_password_confirmation">Konfirmasi Kata Sandi Baru</label>
+        <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="form-control" placeholder="Ulangi kata sandi baru">
+    </div>
+</div>
+
+<div class="form-actions mt-3">
+    <button type="submit" class="btn btn-primary" style="padding:8px 14px; border-radius:8px;">Simpan Perubahan</button>
+</div>
                 </form>
                 @else
                     <p>Data pengguna tidak ditemukan. Silakan login kembali.</p>

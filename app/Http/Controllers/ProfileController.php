@@ -45,25 +45,25 @@ class ProfileController extends Controller
             'new_password' => ['nullable', 'min:6', 'confirmed'], 
         ]);
 
-        // 2. LOGIKA PASSWORD (PENGECEKAN MANUAL)
+        // 2. LOGIKA PASSWORD
         if ($request->filled('new_password')) {
             
-            // Cek: Apakah user ini punya password lama di database?
-            if (!empty($user->password)) {
-                // Jika PUNYA, kita wajib cek input current_password
+            // PERBAIKAN DISINI:
+            // Cek password lama HANYA JIKA user punya password DAN BUKAN user Google (google_id kosong)
+            // Pastikan nama kolom 'google_id' sesuai dengan database Anda (bisa google_id, social_id, dsb)
+            if (!empty($user->password) && empty($user->google_id)) {
+                
+                // Jika user biasa, wajib cek password lama
                 if (!$request->filled('current_password')) {
                     return back()->withErrors(['current_password' => 'Harap masukkan kata sandi saat ini untuk konfirmasi.']);
                 }
 
-                // Cek kesesuaian password lama
                 if (!Hash::check($request->current_password, $user->password)) {
                     return back()->withErrors(['current_password' => 'Kata sandi saat ini salah.']);
                 }
             }
-            // Jika user BELUM punya password (Login Google), dia lolos dari cek di atas 
-            // dan langsung lanjut ke pembuatan password baru.
 
-            // Enkripsi password baru
+            // User Google akan langsung loncat ke sini (bypass pengecekan sandi lama)
             $user->password = Hash::make($request->new_password);
         }
 
