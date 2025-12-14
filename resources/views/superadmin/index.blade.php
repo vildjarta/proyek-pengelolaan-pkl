@@ -28,7 +28,7 @@
                         <option value="dosen_pembimbing" {{ request('role') == 'dosen_pembimbing' ? 'selected' : '' }}>Dosen Pembimbing</option>
                         <option value="dosen_penguji" {{ request('role') == 'dosen_penguji' ? 'selected' : '' }}>Dosen Penguji</option>
                         <option value="koordinator" {{ request('role') == 'koordinator' ? 'selected' : '' }}>Koordinator</option>
-                        <option value="kaprodi" {{ request('role') == 'kaprodi' ? 'selected' : '' }}>Ketua Prodi</option>
+                        <option value="ketua_prodi" {{ request('role') == 'ketua_prodi' ? 'selected' : '' }}>Ketua Prodi</option>
                         <option value="staff" {{ request('role') == 'staff' ? 'selected' : '' }}>Staff</option>
                         <option value="perusahaan" {{ request('role') == 'perusahaan' ? 'selected' : '' }}>Perusahaan</option>
                     </select>
