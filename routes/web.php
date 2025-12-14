@@ -109,23 +109,26 @@ Route::middleware(['auth'])->group(function () {
     // Data Master (Dikelola oleh Koordinator & Staff)
     // Menggantikan 'role:admin,koordinator' menjadi 'role:koordinator,staff'
     Route::middleware(['role:koordinator,staff'])->group(function () {
-        Route::resource('perusahaan', PerusahaanController::class);
+        // Only koordinator may perform CRUD on perusahaan
+        Route::resource('perusahaan', PerusahaanController::class)->middleware('role:koordinator');
         Route::resource('/kriteria', KriteriaController::class);
         Route::resource('/penilaian-perusahaan', PenilaianPerusahaanController::class);
-        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+        // restrict datadosenpembimbing CRUD to koordinator only
+        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class)->middleware('role:koordinator');
         Route::resource('mahasiswa', MahasiswaController::class);
 
         Route::resource('dosen_penguji', DosenPengujiController::class);
         Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
 
         Route::resource('nilai', NilaiController::class);
-        Route::resource('dosen', DosenController::class);
+        // Ensure only koordinator may perform CRUD on dosen
+        Route::resource('dosen', DosenController::class)->middleware('role:koordinator');
         Route::resource('penilaian-perusahaan', PenilaianPerusahaanController::class);
     });
 
-    // Rating & review (gabungan roles)
-    // 'admin' dihapus, 'staff' ditambahkan
-    Route::middleware(['role:mahasiswa,dosen_pembimbing,koordinator,staff'])->group(function () {
+    // Rating & review routes
+    // Viewing (read-only) routes are available to a broader set of roles
+    Route::middleware(['role:mahasiswa,dosen_pembimbing,koordinator,staff,perusahaan,dosen,dosen_penguji,ketua_prodi'])->group(function () {
         // Halaman ranking utama
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 
@@ -133,8 +136,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])
             ->name('lihatratingdanreview')
             ->whereNumber('id_perusahaan');
+    });
 
-        // membuat review untuk perusahaan tertentu
+    // Actions that modify data (create/store/edit/update/destroy) are restricted
+    // to students (`mahasiswa`) and `koordinator` only.
+    Route::middleware(['role:mahasiswa,koordinator'])->group(function () {
+        // membuat review untuk perusahaan tertentu (form)
         Route::get('/ratingdanreview/tambah/{id_perusahaan}', [RatingDanReviewController::class, 'create'])
             ->name('tambahratingdanreview')
             ->whereNumber('id_perusahaan');
@@ -145,9 +152,13 @@ Route::middleware(['auth'])->group(function () {
                 ->with('error', 'Silakan pilih perusahaan terlebih dahulu untuk menambahkan review.');
         })->name('tambahratingdanreview.fallback');
 
-        // resource routes
+        // resource routes (store, edit, update, destroy)
         Route::resource('ratingdanreview', RatingDanReviewController::class)
             ->except(['show', 'index', 'create']);
+
+        // Koordinator-only action: delete all ratings
+        Route::post('/ratingdanreview/destroy-all', [RatingDanReviewController::class, 'destroyAll'])
+            ->name('ratingdanreview.destroyAll');
     });
 
     // AJAX endpoints

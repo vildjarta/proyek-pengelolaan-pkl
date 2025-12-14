@@ -27,9 +27,11 @@
                             <button class="btn btn-primary ms-2" type="submit"><i class="fa fa-search"></i></button>
                         </form>
 
-                        <a href="{{ route('datadosenpembimbing.create') }}" class="btn btn-primary">
-                            <i class="fa fa-plus"></i> Tambah
-                        </a>
+                        @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                            <a href="{{ route('datadosenpembimbing.create') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Tambah
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -74,16 +76,18 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="action-buttons">
-                                        <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
-                                            <i class="fa fa-pen"></i>
-                                        </a>
-                                        <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" title="Hapus">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                                            <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
+                                                <i class="fa fa-pen"></i>
+                                            </a>
+                                            <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" title="Hapus">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
