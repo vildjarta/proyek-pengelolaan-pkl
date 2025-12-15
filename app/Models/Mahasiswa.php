@@ -9,7 +9,12 @@ use Illuminate\Support\Facades\Storage;
 class Mahasiswa extends Model
 {
     use HasFactory;
-
+public function dosen()
+    {
+        // Asumsi: tabel mahasiswa punya kolom 'dosen_id'
+        // Sesuaikan 'dosen_id' dengan nama foreign key di database kamu
+        return $this->belongsTo(Dosen::class, 'dosen_id');
+    }
     protected $table = 'mahasiswa';
     protected $primaryKey = 'id_mahasiswa';
     public $timestamps = true;
