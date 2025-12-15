@@ -199,7 +199,7 @@
 
                     @if($showNilaiPerusahaan)
                     <li class="{{ (request()->is('penilaian_perusahaan') || request()->is('penilaian_perusahaan/*')) ? 'active' : '' }}">
-
+                        <a href="{{ route('penilaian-perusahaan.index') }}">
                             <span class="label-text">Nilai Perusahaan</span>
                         </a>
                     </li>
