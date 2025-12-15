@@ -120,7 +120,7 @@
                     @if($showMasterDosen)
                     <li class="{{ (request()->is('dosen') || request()->is('dosen/*') && !request()->is('dosen_penguji*')) ? 'active' : '' }}">
                         <a href="{{ route('dosen.index') }}">
-                            <span class="label-text">Master Data Dosen</span>
+                            <span class="label-text">Data Dosen</span>
                         </a>
                     </li>
                     @endif

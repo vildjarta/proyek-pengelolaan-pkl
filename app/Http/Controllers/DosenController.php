@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dosen;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class DosenController extends Controller
@@ -34,7 +37,27 @@ class DosenController extends Controller
             'nip.required' => 'NIP wajib diisi.',
         ]);
 
+        // create or find user account for this dosen
+        $user = null;
+        if (!empty($validated['email'])) {
+            $user = User::where('email', $validated['email'])->first();
+        }
+
+        if (!$user) {
+            $generatedEmail = $validated['email'] ?? ('dosen+' . $validated['nip'] . '@local');
+            $user = User::create([
+                'name' => $validated['nama'],
+                'email' => $generatedEmail,
+                'password' => Hash::make(Str::random(16)),
+                'role' => 'dosen',
+            ]);
+        } else {
+            // ensure role & name are in sync
+            $user->update(['name' => $validated['nama'], 'role' => 'dosen']);
+        }
+
         Dosen::create([
+            'id_user' => $user ? $user->id : null,
             'nip'   => $validated['nip'],
             'nama'  => $validated['nama'],
             'email' => $validated['email'] ?? null,
@@ -71,7 +94,25 @@ class DosenController extends Controller
             'nip.required' => 'NIP wajib diisi.',
         ]);
 
+        // keep or create linked user account when updating
+        $user = null;
+        if (!empty($validated['email'])) {
+            $user = User::where('email', $validated['email'])->first();
+        }
+
+        if (!$user && !empty($validated['email'])) {
+            $user = User::create([
+                'name' => $validated['nama'],
+                'email' => $validated['email'],
+                'password' => Hash::make(Str::random(16)),
+                'role' => 'dosen',
+            ]);
+        } elseif ($user) {
+            $user->update(['name' => $validated['nama'], 'role' => 'dosen']);
+        }
+
         $dosen->update([
+            'id_user' => $user ? $user->id : $dosen->id_user,
             'nip'   => $validated['nip'],
             'nama'  => $validated['nama'],
             'email' => $validated['email'] ?? null,

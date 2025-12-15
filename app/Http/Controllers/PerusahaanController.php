@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Perusahaan;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class PerusahaanController extends Controller
 {
@@ -25,6 +28,7 @@ class PerusahaanController extends Controller
     {
         $validated = $request->validate([
             'nama'          => 'required|string|max:255',
+            'email'         => 'nullable|email',
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
@@ -34,7 +38,27 @@ class PerusahaanController extends Controller
             'hari_operasi'   => 'required|string|max:100',
         ]);
 
-        Perusahaan::create($validated);
+        // create or find user for this perusahaan (optional email)
+        $user = null;
+        if (!empty($validated['email'])) {
+            $user = User::where('email', $validated['email'])->first();
+        }
+
+        if (!$user) {
+            $generatedEmail = $validated['email'] ?? ('perusahaan+' . Str::slug($validated['nama']) . '@local');
+            $user = User::create([
+                'name' => $validated['nama'],
+                'email' => $generatedEmail,
+                'password' => Hash::make(Str::random(16)),
+                'role' => 'perusahaan',
+            ]);
+        } else {
+            $user->update(['name' => $validated['nama'], 'role' => 'perusahaan']);
+        }
+
+        $perusahaanData = $validated;
+        $perusahaanData['id_user'] = $user ? $user->id : null;
+        Perusahaan::create($perusahaanData);
 
         return redirect()->route('perusahaan.index')
             ->with('success', 'Perusahaan berhasil ditambahkan!');
@@ -59,6 +83,7 @@ class PerusahaanController extends Controller
 
         $validated = $request->validate([
             'nama'          => 'required|string|max:255',
+            'email'         => 'nullable|email',
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
@@ -68,6 +93,24 @@ class PerusahaanController extends Controller
             'hari_operasi'   => 'required|string|max:100',
         ]);
 
+        // keep user in sync if email/name changed
+        $user = null;
+        if (!empty($validated['email'])) {
+            $user = User::where('email', $validated['email'])->first();
+        }
+
+        if (!$user && !empty($validated['email'])) {
+            $user = User::create([
+                'name' => $validated['nama'],
+                'email' => $validated['email'],
+                'password' => Hash::make(Str::random(16)),
+                'role' => 'perusahaan',
+            ]);
+        } elseif ($user) {
+            $user->update(['name' => $validated['nama'], 'role' => 'perusahaan']);
+        }
+
+        $validated['id_user'] = $user ? $user->id : $perusahaan->id_user;
         $perusahaan->update($validated);
 
         return redirect()->route('perusahaan.index')
