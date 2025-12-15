@@ -24,14 +24,23 @@
                     <div class="d-flex align-items-center gap-2">
 
                         {{-- LOGIKA 1: SEARCH --}}
-                        {{-- Koordinator, Staff, dan Dosen bisa mencari --}}
-                        {{-- Mahasiswa tidak melihat fitur pencarian --}}
-                        @if(in_array(Auth::user()->role, ['koordinator', 'staff', 'dosen_pembimbing']))
-                            <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="d-flex align-items-center">
-                                <input type="text" name="search" id="searchInput" class="search-input" placeholder="Cari dosen..." value="{{ request('search') }}">
-                                <button class="btn btn-primary ms-2" type="submit"><i class="fa fa-search"></i></button>
-                            </form>
-                        @endif
+{{-- SEMUA ROLE (koordinator, staff, dosen_pembimbing, mahasiswa) bisa mencari --}}
+@if(in_array(Auth::user()->role, ['koordinator', 'staff', 'dosen_pembimbing', 'mahasiswa']))
+    <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="d-flex align-items-center">
+        <input 
+            type="text" 
+            name="search" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Cari dosen..." 
+            value="{{ request('search') }}"
+        >
+        <button class="btn btn-primary ms-2" type="submit">
+            <i class="fa fa-search"></i>
+        </button>
+    </form>
+@endif
+
 
                         {{-- LOGIKA 2: TOMBOL TAMBAH --}}
                         {{-- Hanya Koordinator yang bisa menambah dosen --}}

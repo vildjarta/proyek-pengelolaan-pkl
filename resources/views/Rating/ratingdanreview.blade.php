@@ -46,9 +46,10 @@
     @if(isset($mahasiswa))
       <input type="text" id="nim" name="nim" class="form-control" value="{{ old('nim', $mahasiswa->nim) }}" maxlength="10" minlength="10" readonly>
     @else
-      {{-- fallback jika admin/pengisian manual --}}
+      {{-- fallback jika admin/pengisian manual atau role non-mahasiswa --}}
       <input type="text" id="nim" name="nim" class="form-control"
              value="{{ old('nim') }}" maxlength="10" minlength="10" required>
+
     @endif
   </div>
 

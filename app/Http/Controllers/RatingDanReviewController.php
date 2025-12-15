@@ -159,6 +159,12 @@ class RatingDanReviewController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+        // Ensure only mahasiswa or koordinator can attempt to store review
+        if (!in_array($user->role, ['mahasiswa', 'koordinator'])) {
+            return redirect()->route('ratingperusahaan')
+                ->with('error', 'Anda tidak berwenang.');
+        }
+
         $mahasiswa = Mahasiswa::where('email', $user->email)->first();
 
         if (!$mahasiswa) {
@@ -196,19 +202,37 @@ class RatingDanReviewController extends Controller
         $review = RatingDanReview::findOrFail($id_review);
         $perusahaan = Perusahaan::findOrFail($review->id_perusahaan);
 
-        $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
+        $mahasiswa = Mahasiswa::where('email', $user->email)->first();
 
-        if (!$mahasiswa || $mahasiswa->id_mahasiswa != $review->id_mahasiswa) {
+        $isOwner = $mahasiswa && $mahasiswa->id_mahasiswa == $review->id_mahasiswa;
+        $isKoordinator = $user->role === 'koordinator';
+
+        if (! $isOwner && ! $isKoordinator) {
             return redirect()->route('lihatratingdanreview', $perusahaan->id_perusahaan)
                 ->with('error', 'Tidak berwenang.');
         }
 
-        return view('rating.editratingdanreview', compact('review', 'perusahaan'));
+        // The edit view expects a variable named $ratingdanreview
+        $ratingdanreview = $review;
+
+        return view('rating.editratingdanreview', compact('ratingdanreview', 'perusahaan'));
     }
 
     public function update(Request $request, $id_review)
     {
         $review = RatingDanReview::findOrFail($id_review);
+
+        // authorization: only owner (mahasiswa) or koordinator may update
+        $user = Auth::user();
+        $mahasiswa = Mahasiswa::where('email', $user->email)->first();
+        $isOwner = $mahasiswa && $mahasiswa->id_mahasiswa == $review->id_mahasiswa;
+        $isKoordinator = $user->role === 'koordinator';
+
+        if (! $isOwner && ! $isKoordinator) {
+            return redirect()->route('lihatratingdanreview', $review->id_perusahaan)
+                ->with('error', 'Tidak berwenang.');
+        }
 
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
@@ -220,6 +244,21 @@ class RatingDanReviewController extends Controller
         return redirect()
             ->route('lihatratingdanreview', $review->id_perusahaan)
             ->with('success', 'Review diperbarui.');
+    }
+
+    /* ======================================================
+     | HAPUS SEMUA RATING (KOORDINATOR ONLY)
+     ====================================================== */
+    public function destroyAll(Request $request)
+    {
+        $user = Auth::user();
+        if (! $user || $user->role !== 'koordinator') {
+            return back()->with('error', 'Tidak berwenang.');
+        }
+
+        RatingDanReview::truncate();
+
+        return back()->with('success', 'Semua rating telah dihapus.');
     }
 
     /* ======================================================
