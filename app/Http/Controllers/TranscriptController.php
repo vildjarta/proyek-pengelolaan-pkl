@@ -10,11 +10,16 @@ use Smalot\PdfParser\Parser;
 
 class TranscriptController extends Controller
 {
-    public function __construct()
+    /**
+     * Helper: Cek apakah user adalah koordinator
+     */
+    private function requireCoordinator()
     {
-        // Batasi aksi yang mengubah data hanya untuk koordinator
-        $this->middleware('role:koordinator')->only(['create', 'store', 'edit', 'update', 'destroy']);
+        if (!Auth::check() || Auth::user()->role !== 'koordinator') {
+            abort(403, 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
+        }
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -41,6 +46,7 @@ class TranscriptController extends Controller
      */
     public function create()
     {
+        $this->requireCoordinator();
         return view('transkrip.create');
     }
 
@@ -49,6 +55,8 @@ class TranscriptController extends Controller
      */
     public function store(Request $request)
     {
+        $this->requireCoordinator();
+
         $request->validate([
             'nim' => 'required|unique:transcripts,nim',
             'nama_mahasiswa' => 'required',
@@ -86,6 +94,8 @@ class TranscriptController extends Controller
      */
     public function edit(string $id)
     {
+        $this->requireCoordinator();
+
         $transkrip = Transcript::findOrFail($id);
         return view('transkrip.edit', compact('transkrip'));
     }
@@ -95,6 +105,8 @@ class TranscriptController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->requireCoordinator();
+
         $transkrip = Transcript::findOrFail($id);
 
         $request->validate([
@@ -125,6 +137,8 @@ class TranscriptController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->requireCoordinator();
+
         $transkrip = Transcript::findOrFail($id);
         $transkrip->delete();
 
@@ -224,7 +238,7 @@ class TranscriptController extends Controller
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
-    
+
     /**
      * Extract IPK from PDF text with multiple patterns
      */
