@@ -1,4 +1,5 @@
 <?php
+<?php
 
 namespace App\Http\Controllers;
 
@@ -16,21 +17,13 @@ class DosenPengujiController extends Controller
             ->leftjoin('dosen', 'dosen.id_dosen', '=', 'dosen_penguji.id_dosen')
             ->select('dosen_penguji.*', 'mahasiswa.nama as nama_mahasiswa', 'dosen.nama as nama_dosen', 'dosen.nip', 'dosen.email', 'dosen.no_hp')
             ->get();
-        // dd($dosenPenguji);
         return view('dosen_penguji.dosen_penguji', compact('dosenPenguji'));
-
-        // Rename attributes untuk view
-        // $dosenPenguji->each(function ($dp) {
-        //     if ($dp->Mahasiswa) {
-        //         $dp->Mahasiswa->nama_mahasiswa = $dp->Mahasiswa->nama;
-        //     }
-        // });
     }
+
     public function search(Request $request)
     {
         $query = $request->input('q');
 
-        // Kalau kolom kamu nama_dosen, nip, dan email
         $dosenPenguji = dosen_penguji::where('nama_dosen', 'like', "%{$query}%")
             ->orWhere('nip', 'like', "%{$query}%")
             ->orWhere('email', 'like', "%{$query}%")
@@ -97,3 +90,4 @@ class DosenPengujiController extends Controller
             ->with('success', 'Data dosen penguji berhasil dihapus!');
     }
 }
+        $dosenPenguji = dosen_penguji::findOrFail($id);
