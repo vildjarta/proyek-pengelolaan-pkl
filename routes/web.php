@@ -113,8 +113,17 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class)->middleware('role:koordinator');
         Route::resource('/kriteria', KriteriaController::class);
         Route::resource('/penilaian-perusahaan', PenilaianPerusahaanController::class);
-        // restrict datadosenpembimbing CRUD to koordinator only
-        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class)->middleware('role:koordinator');
+        // datadosenpembimbing: allow viewing (index/show) to broader roles, CRUD only for koordinator
+        Route::middleware(['role:koordinator,staff,mahasiswa,dosen_pembimbing'])->group(function () {
+            Route::get('datadosenpembimbing', [DataDosenPembimbingController::class, 'index'])->name('datadosenpembimbing.index');
+            // Constrain {id} to numeric to avoid matching 'create' or other named routes
+            Route::get('datadosenpembimbing/{id}', [DataDosenPembimbingController::class, 'show'])->where('id', '[0-9]+')->name('datadosenpembimbing.show');
+        });
+
+        // CRUD routes restricted to koordinator
+        Route::middleware(['role:koordinator'])->group(function () {
+            Route::resource('datadosenpembimbing', DataDosenPembimbingController::class)->except(['index','show']);
+        });
         Route::resource('mahasiswa', MahasiswaController::class);
 
         Route::resource('dosen_penguji', DosenPengujiController::class);

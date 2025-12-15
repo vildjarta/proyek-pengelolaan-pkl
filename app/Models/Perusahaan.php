@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Perusahaan extends Model
 {
@@ -15,7 +16,9 @@ class Perusahaan extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
+        'id_user',
         'nama',
+        'email',
         'alamat',
         'bidang_usaha',
         'status',
@@ -26,6 +29,14 @@ class Perusahaan extends Model
         'created_at',
         'updated_at',
     ];
+
+    /**
+     * Optional relation to user account representing this company
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
 
     /**
      * 🔗 Relasi ke RatingDanReview

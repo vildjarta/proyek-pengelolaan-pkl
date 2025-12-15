@@ -49,10 +49,15 @@
                             <th class="text-center">Email</th>
                             <th class="text-center">No. HP</th>
                             <th class="text-start">Mahasiswa Bimbingan</th>
-                            <th class="text-center">Aksi</th>
+                            @if(!(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'staff'))
+                                <th class="text-center">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $hideActionsForStaff = auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'staff';
+                        @endphp
                         @forelse($data as $row)
                             <tr>
                                 <td class="text-center">{{ $row->NIP }}</td>
@@ -74,26 +79,29 @@
                                         <span class="text-muted">Belum memiliki mahasiswa</span>
                                     @endif
                                 </td>
-                                <td class="text-center">
-                                    <div class="action-buttons">
-                                        @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
-                                            <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
-                                                <i class="fa fa-pen"></i>
-                                            </a>
-                                            <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" title="Hapus">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </td>
+                                @if(!$hideActionsForStaff)
+                                    <td class="text-center">
+                                        <div class="action-buttons">
+                                            @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                                                <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
+                                                    <i class="fa fa-pen"></i>
+                                                </a>
+                                                <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger" title="Hapus">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">
+                                @php $colspan = $hideActionsForStaff ? 5 : 6; @endphp
+                                <td colspan="{{ $colspan }}" class="text-center text-muted py-4">
                                     Belum ada data dosen pembimbing.
                                 </td>
                             </tr>
