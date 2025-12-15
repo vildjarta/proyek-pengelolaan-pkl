@@ -20,24 +20,7 @@ use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\ManageUserController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
 
-/*
-|--------------------------------------------------------------------------
-| Super Admin (KHUSUS KOORDINATOR)
-|--------------------------------------------------------------------------
-| Hanya Koordinator yang boleh mengelola User (Tambah/Edit/Hapus Akun).
-*/
-
-/*
-|--------------------------------------------------------------------------
-| Guest routes (unauthenticated)
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware('guest')->group(function () {
     Route::view('/', 'login')->name('login');
@@ -103,9 +86,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('penilaian-penguji', PenilaianPengujiController::class);
     });
 
-        // Penilaian perusahaan (role: koordinator, perusahaan)
+                            // penilaian perusahaan (role: koordinator,perusahaan)
     Route::middleware(['role:koordinator,perusahaan'])->group(function () {
-        Route::resource('perusahaan', PerusahaanController::class);
+        Route::resource('penilaian-perusahaan', PenilaianPerusahaanController::class);
     });
 
         // data dosen pembimbing (role: koordinator , staff, mahasiswa,dosen pembimbing )
@@ -124,20 +107,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
     });
 
+            // Penilaian perusahaan (role: koordinator,perusahaan,staff,ketua_prodi,mahasiswa,dosen_penguji,dosen_pembimbing)
+    Route::middleware(['role:koordinator,perusahaan,staff,ketua_prodi,mahasiswa,dosen_penguji,dosen_pembimbing'])->group(function () {
+        Route::resource('perusahaan', PerusahaanController::class);
+    });
+
                     // nilai akhir (role: koordinator , staff, dosen penguji, mahasiswa )
     Route::middleware(['role:koordinator,dosen_pembimbing,dosen_penguji,mahasiswa'])->group(function () {
         Route::resource('nilai', NilaiController::class);
     });
 
-                        // nilai akhir dan manajemen user (role: koordinator)
+                        // data dosen dan manajemen user (role: koordinator)
     Route::middleware(['role:koordinator'])->group(function () {
         Route::resource('dosen', DosenController::class);
         Route::resource('manage-users', ManageUserController::class);
-    });
-
-                        // nilai akhir dan manajemen user (role: koordinator)
-    Route::middleware(['role:koordinator,perusahaan'])->group(function () {
-        Route::resource('penilaian-perusahaan', PenilaianPerusahaanController::class);
     });
 
     // Rating & review (gabungan roles)
