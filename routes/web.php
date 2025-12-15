@@ -20,27 +20,7 @@ use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\ManageUserController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
 
-/*
-|--------------------------------------------------------------------------
-| Super Admin (KHUSUS KOORDINATOR)
-|--------------------------------------------------------------------------
-| Hanya Koordinator yang boleh mengelola User (Tambah/Edit/Hapus Akun).
-*/
-Route::middleware(['auth', 'role:koordinator'])->group(function () {
-    Route::resource('manage-users', ManageUserController::class);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Guest routes (unauthenticated)
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware('guest')->group(function () {
     Route::view('/', 'login')->name('login');
@@ -87,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Transkrip (role: mahasiswa, koordinator, staff, superadmin)
     // Staff perlu akses untuk mengelola nilai/kelayakan
-    Route::middleware(['role:mahasiswa,koordinator,staff,superadmin'])->group(function () {
+    Route::middleware(['role:mahasiswa,koordinator,ketua_prodi'])->group(function () {
         // Transkrip Analyze PDF - must be defined BEFORE resource route
         Route::get('/transkrip/analyze-pdf', [TranscriptController::class, 'analyzePdfView'])->name('transkrip.analyzePdfView');
         Route::post('/transkrip/upload-pdf', [TranscriptController::class, 'uploadPdf'])->name('transkrip.uploadPdf');
@@ -106,38 +86,45 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('penilaian-penguji', PenilaianPengujiController::class);
     });
 
-    // Data Master (Dikelola oleh Koordinator & Staff)
-    // Menggantikan 'role:admin,koordinator' menjadi 'role:koordinator,staff'
-    Route::middleware(['role:koordinator,staff'])->group(function () {
-        // Only koordinator may perform CRUD on perusahaan
-        Route::resource('perusahaan', PerusahaanController::class)->middleware('role:koordinator');
-        Route::resource('/kriteria', KriteriaController::class);
-        Route::resource('/penilaian-perusahaan', PenilaianPerusahaanController::class);
-        // datadosenpembimbing: allow viewing (index/show) to broader roles, CRUD only for koordinator
-        Route::middleware(['role:koordinator,staff,mahasiswa,dosen_pembimbing'])->group(function () {
-            Route::get('datadosenpembimbing', [DataDosenPembimbingController::class, 'index'])->name('datadosenpembimbing.index');
-            // Constrain {id} to numeric to avoid matching 'create' or other named routes
-            Route::get('datadosenpembimbing/{id}', [DataDosenPembimbingController::class, 'show'])->where('id', '[0-9]+')->name('datadosenpembimbing.show');
-        });
-
-        // CRUD routes restricted to koordinator
-        Route::middleware(['role:koordinator'])->group(function () {
-            Route::resource('datadosenpembimbing', DataDosenPembimbingController::class)->except(['index','show']);
-        });
-        Route::resource('mahasiswa', MahasiswaController::class);
-
-        Route::resource('dosen_penguji', DosenPengujiController::class);
-        Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
-
-        Route::resource('nilai', NilaiController::class);
-        // Ensure only koordinator may perform CRUD on dosen
-        Route::resource('dosen', DosenController::class)->middleware('role:koordinator');
+                            // penilaian perusahaan (role: koordinator,perusahaan)
+    Route::middleware(['role:koordinator,perusahaan'])->group(function () {
         Route::resource('penilaian-perusahaan', PenilaianPerusahaanController::class);
     });
 
-    // Rating & review routes
-    // Viewing (read-only) routes are available to a broader set of roles
-    Route::middleware(['role:mahasiswa,dosen_pembimbing,koordinator,staff,perusahaan,dosen,dosen_penguji,ketua_prodi'])->group(function () {
+        // data dosen pembimbing (role: koordinator , staff, mahasiswa,dosen pembimbing )
+    Route::middleware(['role:dosen_pembimbing,koordinator,staff,mahasiswa'])->group(function () {
+        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+    });
+
+            // data mahasiswa (role: koordinator , staff, ketua prodi )
+    Route::middleware(['role:koordinator,staff,ketua_prodi'])->group(function () {
+        Route::resource('mahasiswa', MahasiswaController::class);
+    });
+
+                // data dosen penguji (role: koordinator , staff, dosen penguji, mahasiswa )
+    Route::middleware(['role:koordinator,staff,dosen_penguji,mahasiswa'])->group(function () {
+        Route::resource('dosen_penguji', DosenPengujiController::class);
+        Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+    });
+
+            // Penilaian perusahaan (role: koordinator,perusahaan,staff,ketua_prodi,mahasiswa,dosen_penguji,dosen_pembimbing)
+    Route::middleware(['role:koordinator,perusahaan,staff,ketua_prodi,mahasiswa,dosen_penguji,dosen_pembimbing'])->group(function () {
+        Route::resource('perusahaan', PerusahaanController::class);
+    });
+
+                    // nilai akhir (role: koordinator , staff, dosen penguji, mahasiswa )
+    Route::middleware(['role:koordinator,dosen_pembimbing,dosen_penguji,mahasiswa'])->group(function () {
+        Route::resource('nilai', NilaiController::class);
+    });
+
+                        // data dosen dan manajemen user (role: koordinator)
+    Route::middleware(['role:koordinator'])->group(function () {
+        Route::resource('dosen', DosenController::class);
+        Route::resource('manage-users', ManageUserController::class);
+    });
+
+    // Rating & review (gabungan roles)
+    Route::middleware(['role:mahasiswa,dosen_pembimbing,dosen_penguji,ketua_prodi,koordinator,staff'])->group(function () {
         // Halaman ranking utama
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 
