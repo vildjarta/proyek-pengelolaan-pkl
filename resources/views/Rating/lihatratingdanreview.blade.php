@@ -30,6 +30,7 @@
                 <h2 class="title">Rating & Review Perusahaan</h2>
             </div>
 
+
             {{-- Notifikasi Sukses --}}
             @if(session('success'))
                 <div class="alert alert-success alert-custom">
