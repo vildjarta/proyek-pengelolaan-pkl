@@ -1,14 +1,22 @@
-/* Tambah Dosen Pembimbing - styling */
+/* Tambah Dosen Pembimbing - styling (WARNA UTAMA: #261FB3) */
+/* Catatan: menambah spesifisitas & beberapa !important untuk override Bootstrap,
+   tetapi tetap mempertahankan bentuk/ukuran/spacing asli. */
+
+:root{
+  --warna-utama: #261FB3;
+  --warna-utama-darker: #1f1799;
+}
+
 body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0; overflow-x:hidden; }
 .main-wrapper{ padding-top:90px; margin-left:250px; transition:all .3s; }
 .content-container{ padding:30px 40px; max-width:1000px; margin:0 auto; }
 .content-card{ background:#fff; border-radius:16px; padding:30px; box-shadow:0 3px 10px rgba(0,0,0,0.05); }
-.page-header{ font-weight:700; color:#113d92; }
+.page-header{ font-weight:700; color:var(--warna-utama); } /* Judul halaman: Tambah Data Dosen Pembimbing */
 
 /* form */
 .form-label{ font-weight:600; color:#222; }
 .form-control{ border-radius:10px; padding:10px 12px; border:1px solid #ccc; transition:all .2s; }
-.form-control:focus{ border-color:#5b8ad2; box-shadow:0 0 0 .12rem rgba(91,138,210,0.12); }
+.form-control:focus{ border-color:var(--warna-utama) !important; box-shadow:0 0 0 .12rem rgba(38,31,179,0.12) !important; }
 
 /* mahasiswa item */
 .mahasiswa-item{ background:#f9fafc; border:1px solid #dee2e6; border-radius:12px; padding:18px; margin-bottom:15px; position:relative; }
@@ -16,52 +24,136 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
 .remove-mahasiswa i{ margin-right:6px; }
 
 /* suggestion dropdown */
-.nim-suggest{ position:absolute; z-index:2500; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-height:220px; overflow-y:auto; width:100%; padding:4px 0; margin-top:6px; }
-.nim-suggest .item{ padding:8px 12px; cursor:pointer; font-size:14px; }
-.nim-suggest .item:hover, .nim-suggest .item.active{ background:#f1f7ff; }
+.nim-suggest, .suggest-wrap{ position:absolute; left:0; right:0; z-index:2500; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-height:220px; overflow-y:auto; width:100%; padding:4px 0; margin-top:6px; display:none; }
+.nim-suggest .item, .suggest-wrap .item{ padding:8px 12px; cursor:pointer; font-size:14px; }
+.nim-suggest .item:hover, .nim-suggest .item.active, .suggest-wrap .item:hover, .suggest-wrap .item.active{ background:#f1f7ff; }
 
-/* buttons */
-.btn-primary{ background:#5b8ad2; border:none; font-weight:600; }
-.btn-primary:hover{ background:#4a75b3; }
-.btn-success{ background:#3bb273; border:none; }
-.btn-success:hover{ background:#319763; }
-.btn-secondary{ background:#adb5bd; border:none; }
-.btn-secondary:hover{ background:#9ca3af; }
+/* ===========================
+   TOMBOL: pastikan warna menggantikan Bootstrap
+   =========================== */
+
+/* 1) Tombol "Tambah Mahasiswa" -> .btn-primary
+   Gunakan selector lebih spesifik + !important untuk override */
+.content-card .btn.btn-primary,
+.main-wrapper .btn.btn-primary,
+.btn.btn-primary {
+  background-color: var(--warna-utama) !important;
+  border-color: var(--warna-utama) !important;
+  color: #fff !important;
+  font-weight: 600;
+  box-shadow: none !important;
+}
+
+/* Hover/focus/active states */
+.content-card .btn.btn-primary:hover,
+.main-wrapper .btn.btn-primary:hover,
+.btn.btn-primary:hover {
+  background-color: var(--warna-utama-darker) !important;
+  border-color: var(--warna-utama-darker) !important;
+  color: #fff !important;
+}
+
+.content-card .btn.btn-primary:focus,
+.btn.btn-primary:focus,
+.content-card .btn.btn-primary:active,
+.btn.btn-primary:active {
+  box-shadow: 0 0 8px rgba(38,31,179,0.18) !important;
+  outline: none !important;
+}
+
+/* 2) Tombol "Simpan" -> di markup Anda biasanya .btn-success
+   Kita override .btn-success untuk menggunakan warna utama (tetap visual tombol) */
+.content-card .btn.btn-success,
+.main-wrapper .btn.btn-success,
+.btn.btn-success {
+  background-color: var(--warna-utama) !important;
+  border-color: var(--warna-utama) !important;
+  color: #fff !important;
+  font-weight: 600;
+  box-shadow: none !important;
+}
+
+/* Hover/focus/active states for btn-success replaced */
+.content-card .btn.btn-success:hover,
+.main-wrapper .btn.btn-success:hover,
+.btn.btn-success:hover {
+  background-color: var(--warna-utama-darker) !important;
+  border-color: var(--warna-utama-darker) !important;
+  color: #fff !important;
+}
+
+.content-card .btn.btn-success:focus,
+.btn.btn-success:focus,
+.content-card .btn.btn-success:active,
+.btn.btn-success:active {
+  box-shadow: 0 0 8px rgba(38,31,179,0.18) !important;
+  outline: none !important;
+}
+
+/* Keep .btn-secondary (batal) unchanged visually */
+.btn-secondary{ background:#adb5bd !important; border:none !important; color:#fff !important; }
+.btn-secondary:hover{ background:#9ca3af !important; }
+
+/* If icons inside buttons have their own color, ensure they stay white */
+.content-card .btn i,
+.content-card .btn .bi,
+.content-card .btn .fa {
+  color: #fff !important;
+}
 
 /* required star */
 .form-label.required::after{ content: " *"; color:red; font-weight:700; margin-left:4px; }
 
+/* subjudul "Daftar Mahasiswa Bimbingan" di markup Anda sering pakai .fw-bold.text-primary
+   Pastikan teks tersebut juga menggunakan warna utama */
+.fw-bold.text-primary, h5.fw-bold.text-primary {
+  color: var(--warna-utama) !important;
+}
+
 /* responsive */
 @media (max-width:992px){ .main-wrapper{ margin-left:0; } .content-container{ padding:15px; } }
 
-/* keep layout stable: don't touch main wrapper margin (assume sidebar provided by layout) */
-    .content-container { padding: 30px 40px; max-width: 1000px; margin: 0 auto; box-sizing: border-box; }
+/* optional quick styles for valid/invalid visuals */
+.is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
+.is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
 
-    /* suggestion dropdowns confined to the input wrapper */
-    .suggest-wrap {
-      position: absolute;
-      left: 0;
-      right: 0;
-      z-index: 2500;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      max-height: 220px;
-      overflow-y: auto;
-      display: none;
-      margin-top: 6px;
-    }
-    .suggest-wrap .item { padding: 8px 12px; cursor: pointer; }
-    .suggest-wrap .item:hover, .suggest-wrap .item.active { background: #f1f7ff; }
+/* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+    display: block !important;
+    list-style: none;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.sidebar .dropdown-menu.collapsed { display: none !important; }
 
-    .form-label.required::after { content: " *"; color: red; margin-left: 4px; font-weight: 700; }
-
-    /* small responsiveness to avoid overflow from absolute elements */
-    @media (max-width: 992px) {
-      .content-container { padding: 20px; }
-    }
-
-    /* optional quick styles for valid/invalid visuals */
-    .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
-    .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
+/* Quick layout/main-wrapper scrollable fix (jaga konsistensi dengan style global) */
+:root {
+  --sidebar-width: 285px;
+  --sidebar-collapsed-width: 70px;
+  --header-height: 64px;
+}
+#main-wrapper, .main-wrapper {
+  position: absolute;
+  top: var(--header-height);
+  left: var(--sidebar-width);
+  right: 0;
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px;
+  box-sizing: border-box;
+  z-index: 11000;
+}
+body.sidebar-closed #main-wrapper, body.sidebar-closed .main-wrapper {
+  left: var(--sidebar-collapsed-width);
+}
+.content-container { padding-left: 0; padding-right: 0; }
+.content-card { max-width: 900px; margin: 0 auto; }

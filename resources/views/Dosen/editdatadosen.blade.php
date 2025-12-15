@@ -21,7 +21,7 @@
     <div class="content-container container-fluid px-4">
       <div class="content-card shadow-sm w-100">
 
-        <h2 class="text-center mb-4 page-header">Edit Dosen</h2>
+        <h2 class="text-center mb-4 page-header">Edit Data Dosen</h2>
         <hr>
 
         <form action="{{ route('dosen.update', $dosen->id) }}" method="POST" id="formEditDosen" class="needs-validation" novalidate>

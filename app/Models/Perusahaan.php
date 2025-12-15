@@ -23,8 +23,8 @@ class Perusahaan extends Model
         'level_legalitas',
         'jumlah_mahasiswa',
         'hari_operasi',
-        'lat',
-        'lng',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -33,5 +33,13 @@ class Perusahaan extends Model
     public function reviews()
     {
         return $this->hasMany(RatingDanReview::class, 'id_perusahaan', 'id_perusahaan');
+    }
+
+    /** 
+     * 🔗 relasi ke penilaian perusahaan
+     */
+    public function perusahaan()
+    {
+        return $this->hasOne(Penilaian_perusahaan::class, 'id_perusahaan', 'id_perusahaan');
     }
 }

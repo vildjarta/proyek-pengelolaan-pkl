@@ -36,10 +36,11 @@
         </div>
     @endif
 
+    @if(auth()->check() && auth()->user()->role == 'koordinator')
     <form action="{{ route('transkrip.update', $transkrip->id) }}" method="POST" id="transkripForm">
         @csrf
         @method('PUT')
-        
+
         <!-- Info Mahasiswa -->
         <div class="form-section">
             <h3><i class="fas fa-user"></i> Informasi Mahasiswa</h3>
@@ -98,6 +99,12 @@
             </a>
         </div>
     </form>
+    @else
+        <div class="alert alert-warning">
+            Anda tidak memiliki izin untuk mengubah data. Hanya koordinator yang dapat melakukan tindakan ini.
+        </div>
+        <a href="{{ route('transkrip.index') }}" class="btn btn-secondary">Kembali</a>
+    @endif
 </div>
 
 <script>
@@ -105,13 +112,13 @@
         const ipk = parseFloat(document.querySelector('[name="ipk"]').value) || 0;
         const sksD = parseInt(document.querySelector('[name="total_sks_d"]').value) || 0;
         const hasE = document.querySelector('[name="has_e"]').value === '1';
-        
+
         const statusElement = document.getElementById('status_kelayakan');
         const keteranganElement = document.getElementById('keterangan_kelayakan');
-        
+
         let keterangan = [];
         let layak = true;
-        
+
         // Cek IPK
         if (ipk < 2.5) {
             keterangan.push('❌ IPK kurang dari 2.5');
@@ -119,7 +126,7 @@
         } else {
             keterangan.push('✓ IPK memenuhi syarat (≥ 2.5)');
         }
-        
+
         // Cek SKS D
         if (sksD > 6) {
             keterangan.push('❌ Total SKS D lebih dari 6');
@@ -127,7 +134,7 @@
         } else {
             keterangan.push('✓ Total SKS D memenuhi syarat (≤ 6)');
         }
-        
+
         // Cek Nilai E
         if (hasE) {
             keterangan.push('❌ Terdapat nilai E');
@@ -135,7 +142,7 @@
         } else {
             keterangan.push('✓ Tidak ada nilai E');
         }
-        
+
         // Update tampilan
         if (layak) {
             statusElement.innerHTML = '<span style="color: green;"><i class="fas fa-check-circle"></i> LAYAK</span>';
@@ -144,14 +151,14 @@
             statusElement.innerHTML = '<span style="color: red;"><i class="fas fa-times-circle"></i> TIDAK LAYAK</span>';
             statusElement.style.color = 'red';
         }
-        
+
         keteranganElement.innerHTML = keterangan.join('<br>');
     }
 
     // Hitung saat halaman dimuat
     document.addEventListener('DOMContentLoaded', function() {
         hitungKelayakan();
-        
+
         const toggleButton = document.querySelector('.menu-toggle');
         const body = document.body;
         const profileWrapper = document.querySelector('.user-profile-wrapper');

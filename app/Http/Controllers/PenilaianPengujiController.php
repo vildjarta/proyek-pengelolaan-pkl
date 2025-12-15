@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PenilaianPenguji;
-use App\Models\dosen_penguji;
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
 
 class PenilaianPengujiController extends Controller
 {
@@ -16,14 +17,15 @@ class PenilaianPengujiController extends Controller
 
     public function create()
     {
-        $dosen = dosen_penguji::all();
-        return view('penilaianpenguji.tambah_penilaian_dospeng', compact('dosen'));
+        $dosen = Dosen::all();
+        $mahasiswa = Mahasiswa::orderBy('nama', 'asc')->get();
+        return view('penilaianpenguji.tambah_penilaian_dospeng', compact('dosen', 'mahasiswa'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_penguji' => 'required|exists:dosen_penguji,id_penguji',
+            'id_dosen' => 'required|exists:dosen,id_dosen',
             'nama_mahasiswa' => 'required|string|max:100',
             'presentasi' => 'required|numeric|min:0|max:100',
             'materi' => 'required|numeric|min:0|max:100', 
@@ -54,8 +56,9 @@ class PenilaianPengujiController extends Controller
     public function edit($id)
     {
         $penilaian = PenilaianPenguji::findOrFail($id);
-        $dosen = dosen_penguji::all();
-        return view('penilaianpenguji.edit_penilaian_dospeng', compact('penilaian', 'dosen'));
+        $dosen = Dosen::all();
+        $mahasiswa = Mahasiswa::orderBy('nama', 'asc')->get();
+        return view('penilaianpenguji.edit_penilaian_dospeng', compact('penilaian', 'dosen', 'mahasiswa'));
     }
 
     public function update(Request $request, $id)
@@ -63,7 +66,7 @@ class PenilaianPengujiController extends Controller
         $penilaian = PenilaianPenguji::findOrFail($id);
 
         $validated = $request->validate([
-            'id_penguji' => 'required|exists:dosen_penguji,id_penguji',
+            'id_dosen' => 'required|exists:dosen,id_dosen',
             'nama_mahasiswa' => 'required|string|max:100',
             'judul' => 'nullable|string|max:255',
             'presentasi' => 'required|numeric|min:0|max:100',

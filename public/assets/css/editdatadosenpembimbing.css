@@ -1,14 +1,21 @@
-/* Tambah Dosen Pembimbing - styling */
+/* Tambah Dosen Pembimbing - styling (WARNA UTAMA: #261FB3) */
+:root{
+  --warna-utama: #261FB3;
+  --warna-utama-darker: #1f1799;
+  --warna-utama-light: rgba(38,31,179,0.08);
+}
+
+/* layout */
 body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0; overflow-x:hidden; }
 .main-wrapper{ padding-top:90px; margin-left:250px; transition:all .3s; }
 .content-container{ padding:30px 40px; max-width:1000px; margin:0 auto; }
 .content-card{ background:#fff; border-radius:16px; padding:30px; box-shadow:0 3px 10px rgba(0,0,0,0.05); }
-.page-header{ font-weight:700; color:#113d92; }
+.page-header{ font-weight:700; color:var(--warna-utama); } /* Judul halaman warna utama */
 
 /* form */
 .form-label{ font-weight:600; color:#222; }
 .form-control{ border-radius:10px; padding:10px 12px; border:1px solid #ccc; transition:all .2s; }
-.form-control:focus{ border-color:#5b8ad2; box-shadow:0 0 0 .12rem rgba(91,138,210,0.12); }
+.form-control:focus{ border-color:var(--warna-utama) !important; box-shadow:0 0 0 .12rem var(--warna-utama-light) !important; }
 
 /* mahasiswa item */
 .mahasiswa-item{ background:#f9fafc; border:1px solid #dee2e6; border-radius:12px; padding:18px; margin-bottom:15px; position:relative; }
@@ -16,17 +23,61 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
 .remove-mahasiswa i{ margin-right:6px; }
 
 /* suggestion dropdown */
-.nim-suggest{ position:absolute; z-index:2500; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-height:220px; overflow-y:auto; width:100%; padding:4px 0; margin-top:6px; }
+.nim-suggest{ position:absolute; z-index:2500; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-height:220px; overflow-y:auto; width:100%; padding:4px 0; margin-top:6px; display:block; }
 .nim-suggest .item{ padding:8px 12px; cursor:pointer; font-size:14px; }
-.nim-suggest .item:hover, .nim-suggest .item.active{ background:#f1f7ff; }
+.nim-suggest .item:hover, .nim-suggest .item.active{ background: rgba(38,31,179,0.06); }
 
 /* buttons */
-.btn-primary{ background:#5b8ad2; border:none; font-weight:600; }
-.btn-primary:hover{ background:#4a75b3; }
-.btn-success{ background:#3bb273; border:none; }
-.btn-success:hover{ background:#319763; }
-.btn-secondary{ background:#adb5bd; border:none; }
-.btn-secondary:hover{ background:#9ca3af; }
+/* Tombol "Tambah Mahasiswa" biasanya .btn-primary -> override supaya jadi warna utama */
+.btn.btn-primary,
+.content-card .btn.btn-primary,
+.content-container .btn.btn-primary {
+  background-color: var(--warna-utama) !important;
+  border-color: var(--warna-utama) !important;
+  color: #fff !important;
+  font-weight:600;
+  box-shadow: none !important;
+}
+
+/* Hover/focus states untuk .btn-primary */
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.content-card .btn.btn-primary:hover,
+.content-card .btn.btn-primary:focus {
+  background-color: var(--warna-utama-darker) !important;
+  border-color: var(--warna-utama-darker) !important;
+  box-shadow: 0 0 8px rgba(38,31,179,0.18) !important;
+  color:#fff !important;
+}
+
+/* Tombol "Simpan" di markup Anda memakai .btn-success -> override jadi warna utama juga */
+.btn.btn-success,
+.content-card .btn.btn-success,
+.content-container .btn.btn-success {
+  background-color: var(--warna-utama) !important;
+  border-color: var(--warna-utama) !important;
+  color: #fff !important;
+  font-weight:600;
+  box-shadow: none !important;
+}
+
+/* Hover/focus states untuk .btn-success (diganti agar konsisten) */
+.btn.btn-success:hover,
+.btn.btn-success:focus,
+.content-card .btn.btn-success:hover,
+.content-card .btn.btn-success:focus {
+  background-color: var(--warna-utama-darker) !important;
+  border-color: var(--warna-utama-darker) !important;
+  box-shadow: 0 0 8px rgba(38,31,179,0.18) !important;
+  color:#fff !important;
+}
+
+/* Tombol sekunder (Batal) dipertahankan agar tidak berubah */
+.btn-secondary{ background:#adb5bd !important; border:none !important; color:#fff !important; }
+.btn-secondary:hover{ background:#9ca3af !important; }
+
+/* Pastikan ikon dalam tombol berwarna putih */
+.btn i, .btn .bi, .btn .fa { color: #fff !important; }
 
 /* required star */
 .form-label.required::after{ content: " *"; color:red; font-weight:700; margin-left:4px; }
@@ -35,30 +86,85 @@ body { font-family: 'Poppins', sans-serif; background:#fff; margin:0; padding:0;
 @media (max-width:992px){ .main-wrapper{ margin-left:0; } .content-container{ padding:15px; } }
 
 /* --- keep layout stable --- */
-    .content-container { padding: 30px 40px; max-width: 1000px; margin: 0 auto; box-sizing: border-box; }
-    .content-card { padding: 24px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.04); background:#fff; }
+.content-container { padding: 30px 40px; max-width: 1000px; margin: 0 auto; box-sizing: border-box; }
+.content-card { padding: 24px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.04); background:#fff; }
 
-    .suggest-wrap {
-      position: absolute;
-      left: 0;
-      right: 0;
-      z-index: 2500;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      max-height: 220px;
-      overflow-y: auto;
-      display: none;
-      margin-top: 6px;
-    }
-    .suggest-wrap .item { padding: 8px 12px; cursor: pointer; }
-    .suggest-wrap .item:hover, .suggest-wrap .item.active { background: #f1f7ff; }
+.suggest-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2500;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  max-height: 220px;
+  overflow-y: auto;
+  display: none;
+  margin-top: 6px;
+}
+.suggest-wrap .item { padding: 8px 12px; cursor: pointer; }
+.suggest-wrap .item:hover, .suggest-wrap .item.active { background: rgba(38,31,179,0.06); }
 
-    .form-label.required::after { content: " *"; color: red; margin-left: 4px; font-weight: 700; }
+.form-label.required::after { content: " *"; color: red; margin-left: 4px; font-weight: 700; }
 
-    @media (max-width: 992px) {
-      .content-container { padding: 20px; }
-    }
-    .is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
-    .is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
+@media (max-width: 992px) {
+  .content-container { padding: 20px; }
+}
+.is-valid { border-color: #198754 !important; box-shadow: 0 0 0 .12rem rgba(25,135,84,.12) !important; }
+.is-invalid { border-color: #dc3545 !important; box-shadow: none !important; }
+
+/* Local layout helpers */
+.page-card { max-width: 980px; margin: 0 auto; padding-top: 8px; padding-bottom: 24px; }
+.content-card { background: #fff; border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+
+/* suggestion box style with higher z-index */
+.suggest-wrap,
+.nim-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+  z-index: 12050;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.suggest-wrap .item,
+.nim-suggest .item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.suggest-wrap .item:hover,
+.nim-suggest .item:hover {
+  background: rgba(38,31,179,0.06);
+}
+
+/* fallback if global doesn't set; main-content-wrapper should be defined in style-pkl.css */
+.main-content-wrapper { position: relative; }
+
+/* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+    display: block !important;
+    list-style: none;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
+.sidebar .dropdown-menu.collapsed { display: none !important; }
+
+/* Ensure any element using .text-primary or .fw-bold.text-primary also uses main color */
+.text-primary, .fw-bold.text-primary, h5.fw-bold.text-primary {
+  color: var(--warna-utama) !important;
+}

@@ -1,5 +1,12 @@
 /* datadosen.css */
 
+/* primary color: warna malam yang diminta */
+:root {
+    --primary: #261FB3;
+    --primary-dark: #1f17a0; /* hover sedikit lebih gelap */
+    --primary-glow: rgba(38,31,179,0.15);
+}
+
 /* halaman umum */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,19 +34,19 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #5b8ad2;
+    border-bottom: 2px solid var(--primary); /* diganti ke warna malam */
     margin-bottom: 12px;
     padding-bottom: 8px;
 }
 
 .table-header .title {
-    color: #5b8ad2;
+    color: var(--primary); /* diganti ke warna malam */
     font-weight: 700;
     font-size: 22px;
 }
 
 /* search */
-.search-container { width: 280px; }
+.search-container { width: 280px; display:flex; align-items:center; }
 .search-input {
     width: 100%;
     padding: 8px 12px;
@@ -49,30 +56,61 @@ body {
     background: #fff;
 }
 .search-input:focus {
-    border-color: #5b8ad2;
-    box-shadow: 0 0 6px rgba(91, 138, 210, 0.15);
-}
-.btn-search {
-    background:#4b79c7;
-    color:#fff;
-    border:0;
-    padding:8px 10px;
-    border-radius:6px;
+    border-color: var(--primary); /* focus border matching warna malam */
+    box-shadow: 0 0 6px var(--primary-glow); /* glow from warna malam (#261FB3) */
 }
 
-/* tombol tambah */
-.btn-add {
-    background: #5b8ad2;
+/* tombol search kecil (kotak dengan icon) */
+.btn-search {
+    background: var(--primary); /* search button warna malam */
     color: #fff;
+    border: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    min-height: 36px;
+    box-shadow: none;
+    transition: background 0.15s ease, transform 0.08s ease;
+}
+.btn-search i { font-size: 16px; }
+.btn-search:hover,
+.btn-search:focus {
+    background: var(--primary-dark); /* sedikit lebih gelap untuk hover */
+    transform: translateY(-1px);
+}
+
+/* tombol tambah
+   NOTE: target selektor dengan spesifisitas yang lebih tinggi supaya menimpa .btn-primary bootstrap.
+   Juga set beberapa properti yang Bootstrap atur (border-color, box-shadow, background-image, color).
+*/
+.btn.btn-primary.btn-add {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    background-image: none !important;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     border-radius: 8px;
     padding: 8px 12px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    text-decoration:none;
-    font-weight:600;
+    font-weight: 600;
 }
-.btn-add:hover { background:#4a75b3; }
+
+/* hover/focus/active untuk tombol tambah */
+.btn.btn-primary.btn-add:hover,
+.btn.btn-primary.btn-add:focus,
+.btn.btn-primary.btn-add:active {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    transform: translateY(-1px);
+    color: #fff !important;
+    box-shadow: none !important;
+}
 
 /* container card untuk tabel */
 .table-card {
@@ -146,4 +184,32 @@ body {
     .search-container { width: 100%; }
     .nip-col { max-width: 120px; }
     .table-row td { padding: 10px 12px; }
+}
+
+
+/* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+
+/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+
+    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
+    display: block !important;
+    list-style: none;
+
+    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
+.sidebar .dropdown-menu.collapsed {
+    display: none !important;
 }

@@ -338,7 +338,7 @@
                     <div class="form-group">
                         <label for="angkatan">Angkatan <span class="required">*</span></label>
                         <input type="number" name="angkatan" id="angkatan" class="form-control @error('angkatan') is-invalid @enderror"
-                            required placeholder="Masukkan Tahun Angkatan" value="{{ old('angkatan', $mahasiswa->angkatan) }}">
+                            required placeholder="Masukkan Tahun Angkatan" value="{{ old('angkatan', $mahasiswa->angkatan) }}" min="2009">
                         @error('angkatan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
@@ -360,10 +360,25 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="perusahaan">Perusahaan (Tempat PKL)</label>
-                        <input type="text" name="perusahaan" id="perusahaan"
-                            class="form-control @error('perusahaan') is-invalid @enderror"
-                            placeholder="Masukkan Nama Perusahaan" value="{{ old('perusahaan', $mahasiswa->perusahaan) }}">
+                        <input type="text" 
+                               name="perusahaan" 
+                               id="perusahaan"
+                               class="form-control @error('perusahaan') is-invalid @enderror"
+                               placeholder="Ketik atau pilih nama perusahaan"
+                               value="{{ old('perusahaan', $mahasiswa->perusahaan) }}"
+                               list="perusahaan-list"
+                               autocomplete="off">
+                        
+                        <datalist id="perusahaan-list">
+                            @foreach($perusahaan as $p)
+                                <option value="{{ $p->nama }}">{{ $p->nama }}</option>
+                            @endforeach
+                        </datalist>
+                        
                         @error('perusahaan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        <small style="color: #6c757d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Ketik untuk mencari atau pilih dari dropdown
+                        </small>
                     </div>
                 </div>
             </div>
@@ -413,6 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
         angkatanInput.addEventListener('input', function() {
             if (this.value.length > 4) {
                 this.value = this.value.slice(0, 4);
+            }
+            // Validasi minimal 2009
+            if (this.value && parseInt(this.value) < 2009) {
+                this.setCustomValidity('Tahun angkatan minimal 2009');
+            } else {
+                this.setCustomValidity('');
             }
         });
     }

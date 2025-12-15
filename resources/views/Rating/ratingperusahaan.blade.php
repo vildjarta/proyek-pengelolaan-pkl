@@ -14,6 +14,13 @@
 
     {{-- CSS Halaman Ini --}}
     <link rel="stylesheet" href="{{ asset('assets/css/ratingperusahaan.css') }}">
+
+    {{-- Small safety override in case CSS elsewhere hides dropdown --}}
+    <style>
+        .user-profile-wrapper { position: relative !important; z-index: 20000 !important; }
+        .header { z-index: 21000 !important; }
+        .profile-dropdown-menu { z-index: 22000 !important; }
+    </style>
 </head>
 <body>
     {{-- HEADER --}}
@@ -34,6 +41,14 @@
                             <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="search-input" placeholder="Cari perusahaan...">
                             <button type="submit" class="btn btn-primary ms-2"><i class="fa fa-search"></i></button>
                         </form>
+                        @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                            <form action="{{ route('ratingdanreview.destroyAll') }}" method="POST" style="margin-left:8px;">
+                                @csrf
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin menghapus semua rating? Tindakan ini tidak dapat dibatalkan.')">
+                                    <i class="fa fa-trash"></i> Hapus Semua Rating
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
 
@@ -48,44 +63,47 @@
                         </tr>
                     </thead>
                     <tbody>
-    @forelse($perusahaans as $index => $p)
-        @php
-            $companyName = $p->nama_perusahaan ?? '-';
-            $avg = floatval($p->avg_rating ?? 0);
-            $count = intval($p->total_reviews ?? 0);
-            $avgStars = (int) round($avg);
-        @endphp
-        <tr>
-            <td>{{ $index + 1 }}</td>
-            <td>{{ $companyName }}</td>
-            <td>
-    <div class="rating-wrapper">
-        <div class="stars">
-            @for ($i = 1; $i <= 5; $i++)
-                <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
-            @endfor
-        </div>
-        <div class="rating-label">
-            Rata-rata rating {{ number_format($avg, 1) }}
-        </div>
-    </div>
-</td>
+   @forelse($perusahaans as $index => $p)
+    @php
+        $companyName = $p->nama_perusahaan ?? '-';
+        $avg = floatval($p->avg_rating ?? 0);
+        $count = intval($p->total_reviews ?? 0);
+        $avgStars = (int) round($avg);
+        $canAdd = $canAddMap[$p->id_perusahaan] ?? false;
+    @endphp
+    <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ $companyName }}</td>
+        <td>
+            <div class="rating-wrapper">
+                <div class="stars">
+                    @for ($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star {{ $i <= $avgStars ? 'filled' : '' }}"></i>
+                    @endfor
+                </div>
+                <div class="rating-label">
+                    Rata-rata rating {{ number_format($avg, 1) }}
+                </div>
+            </div>
+        </td>
+        <td>
+            <span class="badge-rating-count">{{ $count }}</span> orang
+        </td>
+        <td>
+            <div class="action-buttons">
+                <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $p->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
+                    <i class="fa fa-eye"></i>
+                </a>
 
-            <td>
-                <span class="badge-rating-count">{{ $count }}</span> orang
-            </td>
-            <td>
-                <div class="action-buttons">
-                    <a href="{{ route('lihatratingdanreview', ['id_perusahaan' => $p->id_perusahaan]) }}" class="btn btn-view" title="Lihat Review">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                    <a href="{{ route('tambahratingdanreview', $p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
+                @if($canAdd)
+                    <a href="{{ url('/ratingdanreview/tambah/'.$p->id_perusahaan) }}" class="btn btn-add" title="Tambah Review">
                         <i class="fa fa-plus"></i>
                     </a>
-                </div>
-            </td>
-        </tr>
-    @empty
+                @endif
+            </div>
+        </td>
+    </tr>
+@empty
         <tr>
             <td colspan="5" class="text-center text-muted py-4">
                 @if(request('search'))
@@ -109,17 +127,30 @@
             const searchInput = document.getElementById('searchInput');
             const table = document.getElementById('rankingTable');
 
-            searchInput.addEventListener('keyup', function() {
-                const filter = searchInput.value.toLowerCase();
-                const rows = table.querySelectorAll("tbody tr");
-                rows.forEach(row => {
-                    const namaCell = row.cells[1];
-                    if (!namaCell) return;
-                    const nama = (namaCell.textContent || namaCell.innerText).toLowerCase();
-                    row.style.display = nama.includes(filter) ? "" : "none";
+            if (searchInput && table) {
+                searchInput.addEventListener('keyup', function() {
+                    const filter = searchInput.value.toLowerCase();
+                    const rows = table.querySelectorAll("tbody tr");
+                    rows.forEach(row => {
+                        const namaCell = row.cells[1];
+                        if (!namaCell) return;
+                        const nama = (namaCell.textContent || namaCell.innerText).toLowerCase();
+                        row.style.display = nama.includes(filter) ? "" : "none";
+                    });
                 });
-            });
+            }
+
+            // sidebar toggle only — header handles profile dropdown
+            const toggleButton = document.querySelector('.menu-toggle');
+            const body = document.body;
+            if (toggleButton) {
+                toggleButton.addEventListener('click', function() {
+                    body.classList.toggle('sidebar-closed');
+                });
+            }
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

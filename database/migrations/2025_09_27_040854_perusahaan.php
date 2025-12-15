@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('level_legalitas', 100);
             $table->string('jumlah_mahasiswa', 100);
             $table->string('hari_operasi', 100);
-            $table->string('lat', 50);
-            $table->string('lng', 50);
             $table->timestamps();
         });
     }

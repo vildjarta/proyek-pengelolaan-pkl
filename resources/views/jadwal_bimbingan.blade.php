@@ -6,7 +6,13 @@
 <div class="main-content-wrapper">
     <div class="table-card">
         <div class="table-header">
-            <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Tambah Jadwal</a>
+            {{-- LOGIKA: Sembunyikan tombol Tambah untuk Mahasiswa --}}
+            @if(auth()->user()->role !== 'mahasiswa')
+                <a href="{{ route('jadwal.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tambah Jadwal
+                </a>
+            @endif
+            
             <div class="search-container">
                 <form action="{{ route('jadwal.index') }}" method="GET">
                     <input type="hidden" name="sort_by" value="{{ $sortBy ?? 'tanggal' }}">
@@ -53,7 +59,11 @@
 
                     <th>Topik</th>
                     <th>Catatan</th>
-                    <th>Aksi</th>
+                    
+                    {{-- Kolom Aksi hanya muncul jika BUKAN mahasiswa --}}
+                    @if(auth()->user()->role !== 'mahasiswa')
+                        <th>Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -65,54 +75,33 @@
                     <td>{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->waktu_selesai)->format('H:i') }}</td>
                     <td>{{ $jadwal->topik ?? '-' }}</td>
                     <td>{{ $jadwal->catatan ?? '-' }}</td>
-                    <td class="text-center">
-                        <div class="action-buttons">
-                            <a href="{{ route('jadwal.edit',$jadwal->id) }}" class="btn btn-edit-custom">
-                                <i class="fa fa-pen"></i> Edit
-                            </a>
-                            <form action="{{ route('jadwal.destroy',$jadwal->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin hapus data?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </button>
-                            </form>
-                        </div>
-                    </td>
+                    
+                    {{-- LOGIKA: Sembunyikan tombol Edit & Hapus untuk Mahasiswa --}}
+                    @if(auth()->user()->role !== 'mahasiswa')
+                        <td class="text-center">
+                            <div class="action-buttons">
+                                <a href="{{ route('jadwal.edit',$jadwal->id) }}" class="btn btn-edit-custom">
+                                    <i class="fa fa-pen"></i> Edit
+                                </a>
+                                <form action="{{ route('jadwal.destroy',$jadwal->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin hapus data?')">
+                                        <i class="fa fa-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    @endif
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" style="text-align: center;">Belum ada jadwal bimbingan atau data tidak ditemukan.</td>
+                    <td colspan="{{ auth()->user()->role !== 'mahasiswa' ? '7' : '6' }}" style="text-align: center;">
+                        Belum ada jadwal bimbingan atau data tidak ditemukan.
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleButton = document.querySelector('.menu-toggle');
-    const body = document.body;
-    const profileWrapper = document.querySelector('.user-profile-wrapper');
-    const userinfo = document.querySelector('.user-info');
-
-    if (toggleButton) {
-        toggleButton.addEventListener('click', function() {
-            body.classList.toggle('sidebar-closed');
-        });
-    }
-
-    if (userinfo && profileWrapper) {
-        userinfo.addEventListener('click', function(e) {
-            e.preventDefault();
-            profileWrapper.classList.toggle('active');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
-                profileWrapper.classList.remove('active');
-            }
-        });
-    }
-});
-</script>
 </div>

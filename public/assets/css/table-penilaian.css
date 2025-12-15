@@ -9,9 +9,11 @@ body {
 .main-content-wrapper {
     margin-top: 60px;
     margin-left: 260px;
-    padding: 30px;
+    /* UPDATE: Jarak atas 30px, Kanan 50px, Bawah 80px (untuk scroll), Kiri 50px */
+    padding: 30px 50px 80px 50px; 
     flex-grow: 1;
     transition: margin-left 0.3s ease;
+    box-sizing: border-box; 
 }
 
 body.sidebar-closed .main-content-wrapper {
@@ -32,7 +34,8 @@ body.sidebar-closed .main-content-wrapper {
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #5b8ad2;
+    /* UPDATE WARNA */
+    border-bottom: 2px solid #261FB3;
 }
 
 /* Table Styles */
@@ -42,7 +45,8 @@ body.sidebar-closed .main-content-wrapper {
 }
 
 .table thead tr {
-    background-color: #5b8ad2;
+    /* UPDATE WARNA */
+    background-color: #261FB3;
     color: #fff;
 }
 
@@ -74,12 +78,14 @@ body.sidebar-closed .main-content-wrapper {
 }
 
 .btn-primary {
-    background-color: #5b8ad2;
+    /* UPDATE WARNA */
+    background-color: #261FB3;
     color: #fff;
 }
 
 .btn-primary:hover {
-    background-color: #4a75b3;
+    /* UPDATE WARNA HOVER (LEBIH GELAP) */
+    background-color: #1B1680;
 }
 
 /* Action Buttons (Edit, Delete) Styles */

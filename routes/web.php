@@ -1,101 +1,183 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PerusahaanController;
+use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\PenilaianPerusahaanController;
 use App\Http\Controllers\JadwalBimbinganController;
 use App\Http\Controllers\PenilaianDospemController;
+use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\RatingDanReviewController;
 use App\Http\Controllers\DataDosenPembimbingController;
 use App\Http\Controllers\DosenPengujiController;
 use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\PenilaianPengujiController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\ManageUserController;
 
-// ========================================
-// AUTH & BASIC PAGES
-// ========================================
-Route::view('/', 'login')->name('login');
-Route::view('/registrasi', 'registrasi')->name('registrasi');
-Route::view('/home', 'home')->name('home');
-Route::view('/about', 'about')->name('about');
-Route::view('/menu', 'menu')->name('menu');
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
-// ========================================
-// PROFILE
-// ========================================
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+/*
+|--------------------------------------------------------------------------
+| Super Admin (KHUSUS KOORDINATOR)
+|--------------------------------------------------------------------------
+| Hanya Koordinator yang boleh mengelola User (Tambah/Edit/Hapus Akun).
+*/
+Route::middleware(['auth', 'role:koordinator'])->group(function () {
+    Route::resource('manage-users', ManageUserController::class);
+});
 
-// ========================================
-// MAHASISWA (CRUD)
-// ========================================
-Route::resource('mahasiswa', MahasiswaController::class);
-Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM']);
-Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM']);
+/*
+|--------------------------------------------------------------------------
+| Guest routes (unauthenticated)
+|--------------------------------------------------------------------------
+*/
 
-// ========================================
-// DOSEN (CRUD)
-// ========================================
-Route::resource('dosen', DosenController::class);
-Route::get('/cek-dosen-suggest', [DosenController::class, 'suggestNIP']);
-Route::get('/cek-dosen/{nip}', [DosenController::class, 'cekNIP']);
+Route::middleware('guest')->group(function () {
+    Route::view('/', 'login')->name('login');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login.submit');
 
-// ========================================
-// DATA DOSEN PEMBIMBING (CRUD)
-// ========================================
-Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
-Route::get('/cek-nip', [DataDosenPembimbingController::class, 'checkNip'])->name('datadosenpembimbing.checkNip');
+    // Google SSO
+    Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+});
 
-// ========================================
-// DOSEN PENGUJI (CRUD)
-// ========================================
-Route::resource('dosen_penguji', DosenPengujiController::class);
-Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+// Logout (authenticated)
+Route::post('logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->middleware('auth')->name('logout');
 
-// ========================================
-// PERUSAHAAN (CRUD)
-// ========================================
-Route::resource('perusahaan', PerusahaanController::class);
+/*
+|--------------------------------------------------------------------------
+| Authenticated routes (all logged-in users)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
 
-// ========================================
-// RATING & REVIEW PERUSAHAAN
-// ========================================
-Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
-Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])->name('lihatratingdanreview');
-Route::get('/ratingperusahaan/tambah/{id_perusahaan}', [RatingDanReviewController::class, 'create'])->name('tambahratingdanreview');
-Route::post('/ratingperusahaan/store', [RatingDanReviewController::class, 'store'])->name('ratingdanreview.store');
-Route::get('/ratingperusahaan/edit/{id_review}', [RatingDanReviewController::class, 'edit'])->name('ratingdanreview.edit');
-Route::put('/ratingperusahaan/update/{id_review}', [RatingDanReviewController::class, 'update'])->name('ratingdanreview.update');
-Route::delete('/ratingperusahaan/delete/{id_review}', [RatingDanReviewController::class, 'destroy'])->name('ratingdanreview.destroy');
+    // Static pages
+    Route::view('/home', 'home')->name('home');
+    Route::view('/about', 'about')->name('about');
+    Route::view('/menu', 'menu')->name('menu');
 
-// ========================================
-// JADWAL BIMBINGAN (CRUD)
-// ========================================
-Route::resource('jadwal', JadwalBimbinganController::class);
+    // Profil Pengguna
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-// ========================================
-// PENILAIAN DOSEN PEMBIMBING (CRUD)
-// ========================================
-Route::resource('penilaian', PenilaianDospemController::class);
+    /* * PERUBAHAN:
+     * - 'admin' dihapus (digantikan koordinator).
+     * - 'staff' ditambahkan ke rute manajemen (Jadwal, Transkrip, Data Master).
+     */
 
-// ========================================
-// PENILAIAN PENGUJI (CRUD)
-// ========================================
-Route::resource('penilaian-penguji', PenilaianPengujiController::class);
+    // Jadwal (role: mahasiswa, dosen_pembimbing, koordinator, staff)
+    Route::middleware(['role:mahasiswa,dosen_pembimbing,koordinator,staff'])->group(function () {
+        Route::resource('jadwal', JadwalBimbinganController::class);
+    });
 
-// ========================================
-// NILAI MAHASISWA (CRUD)
-// ========================================
-Route::resource('nilai', NilaiController::class);
+    // Transkrip (role: mahasiswa, koordinator, staff, superadmin)
+    // Staff perlu akses untuk mengelola nilai/kelayakan
+    Route::middleware(['role:mahasiswa,koordinator,staff,superadmin'])->group(function () {
+        // Transkrip Analyze PDF - must be defined BEFORE resource route
+        Route::get('/transkrip/analyze-pdf', [TranscriptController::class, 'analyzePdfView'])->name('transkrip.analyzePdfView');
+        Route::post('/transkrip/upload-pdf', [TranscriptController::class, 'uploadPdf'])->name('transkrip.uploadPdf');
 
-// ========================================
-// TRANSKRIP (CRUD & ANALYSIS)
-// ========================================
-Route::resource('transkrip', TranscriptController::class);
-Route::get('/transkrip-analyze', [TranscriptController::class, 'analyzeTranscript'])->name('transkrip.analyze.page');
-Route::post('/transkrip/analyze', [TranscriptController::class, 'analyze'])->name('transkrip.analyze');
-Route::post('/transkrip/save-multiple', [TranscriptController::class, 'saveMultiple'])->name('transkrip.save.multiple');
+        Route::resource('transkrip', TranscriptController::class);
+    });
+
+    // Penilaian pembimbing (role: dosen_pembimbing, koordinator, staff)
+    // Staff ditambahkan untuk rekapitulasi nilai jika perlu
+    Route::middleware(['role:dosen_pembimbing,koordinator,staff'])->group(function () {
+        Route::resource('penilaian', PenilaianDospemController::class);
+    });
+
+    // Penilaian penguji (role: dosen_penguji, koordinator, staff)
+    Route::middleware(['role:dosen_penguji,koordinator,staff'])->group(function () {
+        Route::resource('penilaian-penguji', PenilaianPengujiController::class);
+    });
+
+    // Data Master (Dikelola oleh Koordinator & Staff)
+    // Menggantikan 'role:admin,koordinator' menjadi 'role:koordinator,staff'
+    Route::middleware(['role:koordinator,staff'])->group(function () {
+        // Only koordinator may perform CRUD on perusahaan
+        Route::resource('perusahaan', PerusahaanController::class)->middleware('role:koordinator');
+        Route::resource('/kriteria', KriteriaController::class);
+        Route::resource('/penilaian-perusahaan', PenilaianPerusahaanController::class);
+        // restrict datadosenpembimbing CRUD to koordinator only
+        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class)->middleware('role:koordinator');
+        Route::resource('mahasiswa', MahasiswaController::class);
+
+        Route::resource('dosen_penguji', DosenPengujiController::class);
+        Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
+
+        Route::resource('nilai', NilaiController::class);
+        // Ensure only koordinator may perform CRUD on dosen
+        Route::resource('dosen', DosenController::class)->middleware('role:koordinator');
+        Route::resource('penilaian-perusahaan', PenilaianPerusahaanController::class);
+    });
+
+    // Rating & review routes
+    // Viewing (read-only) routes are available to a broader set of roles
+    Route::middleware(['role:mahasiswa,dosen_pembimbing,koordinator,staff,perusahaan,dosen,dosen_penguji,ketua_prodi'])->group(function () {
+        // Halaman ranking utama
+        Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
+
+        // Detail rating per perusahaan (id numeric)
+        Route::get('/ratingperusahaan/{id_perusahaan}', [RatingDanReviewController::class, 'index'])
+            ->name('lihatratingdanreview')
+            ->whereNumber('id_perusahaan');
+    });
+
+    // Actions that modify data (create/store/edit/update/destroy) are restricted
+    // to students (`mahasiswa`) and `koordinator` only.
+    Route::middleware(['role:mahasiswa,koordinator'])->group(function () {
+        // membuat review untuk perusahaan tertentu (form)
+        Route::get('/ratingdanreview/tambah/{id_perusahaan}', [RatingDanReviewController::class, 'create'])
+            ->name('tambahratingdanreview')
+            ->whereNumber('id_perusahaan');
+
+        // fallback jika akses tanpa id
+        Route::get('/ratingdanreview/tambah', function () {
+            return redirect()->route('ratingperusahaan')
+                ->with('error', 'Silakan pilih perusahaan terlebih dahulu untuk menambahkan review.');
+        })->name('tambahratingdanreview.fallback');
+
+        // resource routes (store, edit, update, destroy)
+        Route::resource('ratingdanreview', RatingDanReviewController::class)
+            ->except(['show', 'index', 'create']);
+
+        // Koordinator-only action: delete all ratings
+        Route::post('/ratingdanreview/destroy-all', [RatingDanReviewController::class, 'destroyAll'])
+            ->name('ratingdanreview.destroyAll');
+    });
+
+    // AJAX endpoints
+    Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM'])->name('ajax.mahasiswa.suggest');
+    Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM'])->name('ajax.mahasiswa.byNim');
+    Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
+    Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
+});
+
+/*
+|--------------------------------------------------------------------------
+| (Optional) Debug or helper routes
+|--------------------------------------------------------------------------
+| Jangan biarkan route debug ini production — hapus jika sudah tidak diperlukan.
+|*/
+// Route::get('/debug-clear-all', function () {
+//     \Artisan::call('route:clear');
+//     \Artisan::call('view:clear');
+//     \Artisan::call('cache:clear');
+//     return 'cleared';
+// });
 

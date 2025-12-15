@@ -119,8 +119,9 @@
                     <thead>
                         <tr>
                             <th style="width: 5%;">No</th>
-                            <th style="width: 15%;">NIP</th>
-                            <th style="width: 25%;">Nama Dosen</th>
+                            <th style="width: 10%;">NIP</th>
+                            <th style="width: 25%;">nama_dosen</th>
+                            <th style="width: 5%;"> nama_mahasiswa</th>
                             <th style="width: 25%;">Email</th>
                             <th style="width: 15%;">No HP</th>
                             <th style="width: 15%;">Aksi</th>
@@ -131,12 +132,13 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $dp->nip }}</td>
-                                <td class="text-start">{{ $dp->nama_dosen }}</td>
+                                <td>{{ $dp->nama_dosen }}</td>
+                                <td>{{ $dp->nama_mahasiswa ?? 'N/A' }}</td>
                                 <td class="text-start">{{ $dp->email }}</td>
                                 <td>{{ $dp->no_hp }}</td>
                                 <td>
                                     <a href="{{ route('dosen_penguji.edit', $dp->id_penguji) }}"
-                                        class="btn btn-warning btn-sm btn-action text-white">
+                                        class="btn btn-warning btn-sm btn-action">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
                                     <form action="{{ route('dosen_penguji.destroy', $dp->id_penguji) }}" method="POST"

@@ -26,13 +26,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #5b8ad2;
+    border-bottom: 2px solid #261FB3;
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
 
 .table-header .title {
-    color: #5b8ad2;
+    color: #261FB3;
     font-weight: 700;
     font-size: 22px;
 }
@@ -51,8 +51,9 @@ body {
 }
 
 .search-input:focus {
-    border-color: #5b8ad2;
-    box-shadow: 0 0 4px rgba(91, 138, 210, 0.4);
+    border-color: #261FB3;
+    /* gunakan warna terkait #261FB3 untuk shadow */
+    box-shadow: 0 0 6px rgba(38,31,179,0.14);
 }
 
 /* ====== Tabel ====== */
@@ -65,7 +66,7 @@ body {
 }
 
 .table thead tr {
-    background-color: #5b8ad2;
+    background-color: #261FB3;
     color: #fff;
 }
 
@@ -148,15 +149,25 @@ body {
     transition: all 0.2s ease;
 }
 
+/* Ubah .btn-primary jadi warna 261FB3 (untuk tombol pencarian & Tambah) */
 .btn-primary {
-    background-color: #5b8ad2;
-    color: #fff;
+    background-color: #261FB3 !important;
+    color: #fff !important;
+    border: 1px solid #261FB3 !important;
 }
 
 .btn-primary:hover {
-    background-color: #4a75b3;
+    /* sedikit gelapkan saat hover */
+    background-color: #1f1799 !important;
+    border-color: #1f1799 !important;
 }
 
+.btn-primary:focus, .btn-primary:active {
+    box-shadow: 0 0 10px rgba(38,31,179,0.18);
+    outline: none;
+}
+
+/* Tombol edit/custom dan danger tetap sama (tidak diubah) */
 .btn-edit-custom {
     background-color: #00A19D;
     color: #fff;
@@ -168,6 +179,7 @@ body {
 
 .btn-danger {
     background-color: #dc3545;
+    color: #fff;
 }
 
 .btn-danger:hover {
@@ -199,4 +211,70 @@ body {
     .table td:nth-child(4) {
         width: auto;
     }
+}
+
+/* ======================================================
+   FIX: SUPAYA DROPDOWN SIDEBAR TIDAK BENTROK BOOTSTRAP
+   ====================================================== */
+
+/* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
+.sidebar .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    inset: auto !important;
+    transform: none !important;
+    min-width: 0 !important;
+
+    /* selalu dianggap list biasa; styling warna masih ikut style-pkl.css */
+    display: block !important;
+    list-style: none;
+
+    /* HAPUS STROKE/BORDER & BAYANGAN KOTAK */
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Saat dikasih class .collapsed oleh JS, baru disembunyikan */
+.sidebar .dropdown-menu.collapsed {
+    display: none !important;
+}
+
+/* Force dropdown profile terlihat meskipun ada override lain */
+.user-profile-wrapper { position: relative !important; z-index: 20000 !important; }
+.header { z-index: 21000 !important; }
+
+/* Pastikan dropdown muncul saat wrapper punya class .active */
+.profile-dropdown-menu {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transform: translateY(10px) !important;
+    transition: opacity 0.18s ease, transform 0.18s ease !important;
+    z-index: 22000 !important;
+}
+
+/* Saat aktif: tunjukkan */
+.user-profile-wrapper.active .profile-dropdown-menu {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Pastikan header tidak memotong dropdown dengan overflow */
+.header, .user-profile-wrapper {
+    overflow: visible !important;
+}
+
+/* Pastikan tombol di dropdown dapat diklik */
+.profile-dropdown-menu .dropdown-item,
+.profile-dropdown-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: transparent;
+    border: 0;
+    width: 100%;
+    cursor: pointer;
+    color: inherit;
 }

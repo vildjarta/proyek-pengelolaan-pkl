@@ -61,6 +61,12 @@ class Dosen extends Model
         return $this->hasMany(DataDosenPembimbing::class, 'id_dosen', 'id_dosen');
     }
 
+    // relation to penguji (if you want)
+    public function pengujiRecords()
+    {
+        return $this->hasMany(dosen_penguji::class, 'id_dosen', 'id_dosen');
+    }
+
     // alias so $dosen->id works in views
     public function getIdAttribute()
     {

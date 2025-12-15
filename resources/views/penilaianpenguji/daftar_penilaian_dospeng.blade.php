@@ -1,133 +1,96 @@
-{{-- ====== PANGGIL HEADER & SIDEBAR SEKALI SAJA ====== --}}
-@include('layout.header')
-@include('layout.sidebar')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Penilaian Dosen Penguji - Sistem PKL JOZZ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style-pkl.css">
+    <link rel="stylesheet" href="/assets/css/nilai.css">
+</head>
+<body>
 
-{{-- ====== PANGGIL CSS ====== --}}
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
-
-{{-- ====== WRAPPER UTAMA ====== --}}
-<div class="main-content-wrapper">
-    <div class="content">
-        <div class="card shadow border-0 rounded-3">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h4 class="mb-0 fw-bold">
-                    <i class="fa fa-clipboard me-2"></i> Daftar Penilaian Dosen Penguji
-                </h4>
-                <a href="{{ route('penilaian-penguji.create') }}" class="btn btn-light btn-sm text-primary fw-bold">
-    <i class="fa fa-plus me-1"></i> Tambah Penilaian
-</a>
-            </div>
-
-            <div class="card-body p-4">
-                {{-- Pesan sukses --}}
-                @if(session('success'))
-                    <div class="alert alert-success fw-bold">
-                        <i class="fa fa-check-circle me-2"></i>{{ session('success') }}
-                    </div>
-                @endif
-
-                {{-- TABEL PENILAIAN --}}
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle text-center">
-                        <thead class="table-dark">
-                            <tr>
-                                <th rowspan="2">NIP</th>
-                                <th rowspan="2">Nama Dosen</th>
-                                <th rowspan="2">Nama Mahasiswa</th>
-                                <th rowspan="2">Judul</th>
-                                <th colspan="5">Komponen Penilaian</th>
-                                <th rowspan="2">Total Nilai</th>
-                                <th rowspan="2">Nilai Akhir (20%)</th>
-                                <th rowspan="2">Tanggal</th>
-                                <th rowspan="2">Aksi</th>
-                            </tr>
-                            <tr>
-                                <th>Presentasi (10%)</th>
-                                <th>Pemahaman Materi (15%)</th>
-                                <th>Hasil (40%)</th>
-                                <th>Objektivitas (20%)</th>
-                                <th>Laporan (15%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($penilaian as $p)
-                            <tr>
-                                <td>{{ $p->dosen->nip ?? '-' }}</td>
-                                <td>{{ $p->dosen->nama_dosen ?? '-' }}</td>
-                                <td>{{ $p->nama_mahasiswa }}</td>
-                                <td>{{ $p->judul }}</td>
-                                <td>{{ $p->presentasi }}</td>
-                                <td>{{ $p->materi }}</td>
-                                <td>{{ $p->hasil }}</td>
-                                <td>{{ $p->objektif }}</td>
-                                <td>{{ $p->laporan }}</td>
-                                <td>{{ $p->total_nilai }}</td>
-                                <td>{{ $p->nilai_akhir }}</td>
-                                <td>{{ $p->tanggal_ujian }}</td>
-                                <td>
-                                    <a href="{{ route('penilaian-penguji.edit', $p->id) }}" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('penilaian-penguji.destroy', $p->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Yakin hapus data ini?')">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="13" class="text-center fw-bold">Belum ada data penilaian</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="d-flex">
+    @include('layout.header')
 </div>
 
-{{-- ====== JAVASCRIPT ====== --}}
-<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    function setupSidebarToggle() {
-        const toggleButton = document.querySelector('.menu-toggle');
-        const body = document.body;
-        const profileWrapper = document.querySelector('.user-profile-wrapper');
-        const userinfo = document.querySelector('.user-info');
+<div class="d-flex">
+    @include('layout.sidebar')
+</div>
 
-        // 🔹 Toggle sidebar
-        if (toggleButton) {
-            toggleButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                body.classList.toggle('sidebar-closed');
-            });
-        } else {
-            setTimeout(setupSidebarToggle, 1000);
-        }
+<div class="main-content-wrapper">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>Daftar Penilaian Dosen Penguji</h2>
+        <a href="{{ route('penilaian-penguji.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Penilaian
+        </a>
+    </div>
 
-        // 🔹 Dropdown profil user
-        if (userinfo && profileWrapper) {
-            userinfo.addEventListener('click', function(e) {
-                e.preventDefault();
-                profileWrapper.classList.toggle('active');
-            });
+    @if(session('success'))
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
 
-            document.addEventListener('click', function(e) {
-                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
-                    profileWrapper.classList.remove('active');
-                }
-            });
-        }
-    }
+    @if(session('error'))
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+        </div>
+    @endif
 
-    setupSidebarToggle();
-});
-</script>
+    <div class="result-card">
+        @if(count($penilaian) > 0)
+            <div class="table-wrapper">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>NIP</th>
+                            <th>Nama Dosen</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Total Nilai</th>
+                            <th>Nilai Akhir (20%)</th>
+                            <th>Tanggal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($penilaian as $index => $p)
+                        <tr>
+                            <td data-label="No">{{ $index + 1 }}</td>
+                            <td data-label="NIP">{{ $p->dosen->nip ?? '-' }}</td>
+                            <td data-label="Nama Dosen">{{ $p->dosen->nama ?? '-' }}</td>
+                            <td data-label="Nama Mahasiswa">{{ $p->nama_mahasiswa }}</td>
+                            <td data-label="Total Nilai">{{ $p->total_nilai }}</td>
+                            <td data-label="Nilai Akhir">{{ $p->nilai_akhir }}</td>
+                            <td data-label="Tanggal">{{ $p->tanggal_ujian }}</td>
+                            <td data-label="Aksi">
+                                <a href="{{ route('penilaian-penguji.edit', $p->id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form action="{{ route('penilaian-penguji.destroy', $p->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus penilaian ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>Belum ada data penilaian.</p>
+                <a href="{{ route('penilaian-penguji.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tambah Penilaian Pertama
+                </a>
+            </div>
+        @endif
+    </div>
+</div>
+</body>
+</html>

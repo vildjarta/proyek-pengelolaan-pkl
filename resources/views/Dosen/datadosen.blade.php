@@ -33,13 +33,15 @@
                         <!-- Form Pencarian -->
                         <div class="search-container d-flex align-items-center">
                             <input type="text" id="searchInput" class="search-input" placeholder="Cari Dosen...">
-                            <button class="btn btn-search ms-2" id="searchBtn"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-search ms-2" id="searchBtn" title="Cari"><i class="fa fa-search"></i></button>
                         </div>
 
-                        <!-- Tombol Tambah -->
-                        <a href="{{ route('dosen.create') }}" class="btn btn-primary btn-add">
-                            <i class="fa fa-plus"></i> Tambah
-                        </a>
+                        <!-- Tombol Tambah (hanya untuk koordinator) -->
+                        @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                            <a href="{{ route('dosen.create') }}" class="btn btn-primary btn-add">
+                                <i class="fa fa-plus"></i> Tambah
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -70,17 +72,19 @@
                                     <td class="text-center small">{{ $row->no_hp ?? $row->nomor_hp ?? '-' }}</td>
                                     <td class="text-center">
                                         <div class="action-buttons d-inline-flex gap-2">
-                                            <a href="{{ route('dosen.edit', $row->id) }}" class="btn btn-edit-custom btn-sm" title="Edit">
-                                                <i class="fa fa-pen"></i>
-                                            </a>
+                                            @if(auth()->check() && isset(auth()->user()->role) && auth()->user()->role === 'koordinator')
+                                                <a href="{{ route('dosen.edit', $row->id) }}" class="btn btn-edit-custom btn-sm" title="Edit">
+                                                    <i class="fa fa-pen"></i>
+                                                </a>
 
-                                            <form action="{{ route('dosen.destroy', $row->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-delete-custom btn-sm" title="Hapus">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
+                                                <form action="{{ route('dosen.destroy', $row->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-delete-custom btn-sm" title="Hapus">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -120,6 +124,32 @@
     // search button click
     document.getElementById('searchBtn').addEventListener('click', function(){
         document.getElementById('searchInput').dispatchEvent(new Event('keyup'));
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.querySelector('.menu-toggle');
+        const body = document.body;
+        const profileWrapper = document.querySelector('.user-profile-wrapper');
+        const userinfo = document.querySelector('.user-info');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                body.classList.toggle('sidebar-closed');
+            });
+        }
+
+        if (userinfo) {
+            userinfo.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileWrapper.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!profileWrapper.contains(e.target) && profileWrapper.classList.contains('active')) {
+                    profileWrapper.classList.remove('active');
+                }
+            });
+        }
     });
     </script>
 </body>

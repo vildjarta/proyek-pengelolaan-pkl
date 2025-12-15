@@ -32,8 +32,6 @@ class PerusahaanController extends Controller
             'level_legalitas' => 'required|string|max:100',
             'jumlah_mahasiswa' => 'required|string|max:100',
             'hari_operasi'   => 'required|string|max:100',
-            'lat'           => 'required|string|max:50',
-            'lng'           => 'required|string|max:50',
         ]);
 
         Perusahaan::create($validated);
@@ -68,8 +66,6 @@ class PerusahaanController extends Controller
             'level_legalitas' => 'required|string|max:100',
             'jumlah_mahasiswa' => 'required|string|max:100',
             'hari_operasi'   => 'required|string|max:100',
-            'lat'           => 'required|string|max:50',
-            'lng'           => 'required|string|max:50',
         ]);
 
         $perusahaan->update($validated);
