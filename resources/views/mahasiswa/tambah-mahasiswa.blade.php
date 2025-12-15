@@ -393,7 +393,7 @@
             </div>
 
             <div class="card-body p-4">
-    {{-- Form Tambah Mahasiswa --}}
+    {{-- Form Tambah Mahasiswa
     <form action="{{ route('mahasiswa.store') }}" method="POST">
         @csrf
         <div class="row g-4">
@@ -460,7 +460,7 @@
             <button type="submit" class="btn btn-primary rounded-pill px-4">
                 <i class="fa fa-save me-2"></i> Simpan Data
             </button>
-        </div>
+        </div> --}}
     </form>
 </div>
 
