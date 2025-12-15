@@ -4,101 +4,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistem Pengelolaan PKL</title>
+    <title>Login - SISTEM PENGELOLAAN PKL</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* === Background Baru === */
+        /* === Background & Body Style === */
         body {
-            background: linear-gradient(135deg, #F7FBFC 0%, #D6E6F2 35%, #B9D7EA 70%, #769FCD 100%);
+            background: url("{{ asset('assets/images/background-pkl.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
         }
 
-        /* === Card Login === */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 15, 35, 0.6);
+            z-index: -1;
+        }
+
+        /* === Card Login (Glassmorphism Effect) === */
         .login-card {
-            border-radius: 1rem;
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
-            background-color: #ffffff;
-            padding: 2rem;
-            border: 1px solid #e6f0fa;
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            /* UPDATE: Padding diperkecil agar lebih kompak */
+            padding: 2.5rem; 
+            color: #fff;
+        }
+
+        /* === Judul H3 === */
+        .login-title {
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            /* UPDATE: Font sedikit lebih kecil */
+            font-size: 1.75rem; 
+            margin-bottom: 1.5rem !important;
         }
 
         /* === Logo === */
         .logo-pkl {
-            width: 90px;
-            height: 90px;
-            background: #fff;
+            /* UPDATE: Logo sedikit diperkecil */
+            width: 110px; 
+            height: 110px;
+            background: rgba(0, 0, 0, 0.2); 
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem auto;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            padding: 0;
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
 
         .logo-pkl img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover; 
+        }
+
+        /* === Form Inputs & Labels === */
+        .form-label {
+            color: #e0e0e0;
+            font-weight: 500;
+            font-size: 0.95rem; /* Sedikit lebih kecil */
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px; /* Padding input disesuaikan */
+            font-size: 1rem;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: #769FCD;
+            box-shadow: 0 0 0 0.25rem rgba(118, 159, 205, 0.3);
+            color: #fff;
+        }
+
+        .form-check-label {
+            color: #e0e0e0;
+            font-size: 0.9rem;
         }
 
         /* === Tombol Login === */
         .btn-login {
-            background-color: #769FCD;
+            background: linear-gradient(45deg, #769FCD, #5f88b2);
             color: #fff;
             font-weight: 600;
             border: none;
-            border-radius: 8px;
-            padding: 10px;
-            transition: 0.3s ease-in-out;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(118, 159, 205, 0.4);
+            letter-spacing: 0.5px;
         }
 
         .btn-login:hover {
-            background-color: #5f88b2;
+            background: linear-gradient(45deg, #5f88b2, #4a6a8a);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(118, 159, 205, 0.5);
+        }
+
+        .divider-text {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-size: 0.9rem;
         }
 
         /* === Tombol Google === */
         .btn-google {
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.95);
             color: #444;
             font-weight: 600;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
             transition: 0.3s ease-in-out;
             text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 1rem;
         }
 
         .btn-google:hover {
-            background-color: #f8f9fa;
-            border-color: #999;
-            color: #444;
-        }
-
-        /* === Link bawah === */
-        .text-link a {
-            color: #769FCD;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .text-link a:hover {
-            color: #5f88b2;
-            text-decoration: underline;
+            background-color: #ffffff;
+            color: #333;
+            transform: translateY(-1px);
         }
     </style>
 </head>
 
 <body>
-    <div class="container d-flex align-items-center justify-content-center" style="min-height:100vh;">
-        <div class="col-md-5">
+    <div class="container d-flex align-items-center justify-content-center" style="min-height:100vh; position: relative; z-index: 2;">
+        
+        <div class="col-md-7 col-lg-5"> 
+            
             <div class="card login-card">
                 <div class="logo-pkl mb-3">
                     <img src="{{ asset('assets/images/logo-baru.png') }}" alt="Logo PKL">
                 </div>
 
-                <h3 class="text-center mb-4" style="color:#769FCD;">Sistem Pengelolaan PKL</h3>
+                <h3 class="text-center login-title">SISTEM PENGELOLAAN PKL</h3>
 
                 <form method="POST" action="{{ route('login.submit') }}">
                     @csrf
@@ -108,7 +177,7 @@
                             placeholder="nama@email.com" value="{{ old('email') }}">
 
                         @error('email')
-                            <div class="text-danger mt-1" style="font-size: 0.9rem;">
+                            <div class="mt-1" style="font-size: 0.9rem; color: #ff6b6b;">
                                 {{ $message }}
                             </div>
                         @enderror
@@ -116,17 +185,17 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">Kata Sandi</label>
                         <input type="password" class="form-control" id="password" name="password" required
-                            placeholder="">
+                            placeholder="Masukkan kata sandi">
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="remember" name="remember">
                         <label class="form-check-label" for="remember">Ingat Saya</label>
                     </div>
-                    <button type="submit" class="btn btn-login w-100">Masuk</button>
+                    <button type="submit" class="btn btn-login w-100 mb-3">Masuk</button>
                 </form>
 
-                <div class="text-center my-3">
-                    <span style="color: #999;">atau</span>
+                <div class="text-center mb-3">
+                    <span class="divider-text">atau</span>
                 </div>
 
                 <a href="{{ route('auth.google') }}" class="btn btn-google w-100 d-flex align-items-center justify-content-center">
@@ -138,10 +207,6 @@
                     </svg>
                     Masuk dengan Google
                 </a>
-
-                <div class="mt-2 text-center text-link">
-                    <small>Kembali ke <a href="/home">home</a></small>
-                </div>
             </div>
         </div>
     </div>
