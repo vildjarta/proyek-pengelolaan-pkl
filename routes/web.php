@@ -87,7 +87,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Transkrip (role: mahasiswa, koordinator, staff, superadmin)
     // Staff perlu akses untuk mengelola nilai/kelayakan
-    Route::middleware(['role:mahasiswa,koordinator,staff,superadmin'])->group(function () {
+    Route::middleware(['role:mahasiswa,koordinator,ketua_prodi'])->group(function () {
         // Transkrip Analyze PDF - must be defined BEFORE resource route
         Route::get('/transkrip/analyze-pdf', [TranscriptController::class, 'analyzePdfView'])->name('transkrip.analyzePdfView');
         Route::post('/transkrip/upload-pdf', [TranscriptController::class, 'uploadPdf'])->name('transkrip.uploadPdf');
@@ -106,9 +106,14 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('penilaian-penguji', PenilaianPengujiController::class);
     });
 
+        // data dosen pembimbing (role: koordinator , staff, mahasiswa,dosen pembimbing )
+    Route::middleware(['role:dosen_pembimbing,koordinator,staff,mahasiswa'])->group(function () {
+        Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
+    });
+
     // Data Master (Dikelola oleh Koordinator & Staff)
     // Menggantikan 'role:admin,koordinator' menjadi 'role:koordinator,staff'
-    Route::middleware(['role:koordinator,staff'])->group(function () {
+    Route::middleware(['role:koordinator,staff,ketua_prodi'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
         Route::resource('/kriteria', KriteriaController::class);
         Route::resource('/penilaian-perusahaan', PenilaianPerusahaanController::class);

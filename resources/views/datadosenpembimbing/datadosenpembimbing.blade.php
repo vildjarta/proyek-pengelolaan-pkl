@@ -22,14 +22,24 @@
                     <h2 class="title">Daftar Dosen Pembimbing</h2>
 
                     <div class="d-flex align-items-center gap-2">
-                        <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="d-flex align-items-center">
-                            <input type="text" name="search" id="searchInput" class="search-input" placeholder="Cari dosen..." value="{{ request('search') }}">
-                            <button class="btn btn-primary ms-2" type="submit"><i class="fa fa-search"></i></button>
-                        </form>
+                        
+                        {{-- LOGIKA 1: SEARCH --}}
+                        {{-- Koordinator, Staff, dan Dosen bisa mencari --}}
+                        {{-- Mahasiswa tidak melihat fitur pencarian --}}
+                        @if(in_array(Auth::user()->role, ['koordinator', 'staff', 'dosen_pembimbing']))
+                            <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="d-flex align-items-center">
+                                <input type="text" name="search" id="searchInput" class="search-input" placeholder="Cari dosen..." value="{{ request('search') }}">
+                                <button class="btn btn-primary ms-2" type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        @endif
 
-                        <a href="{{ route('datadosenpembimbing.create') }}" class="btn btn-primary">
-                            <i class="fa fa-plus"></i> Tambah
-                        </a>
+                        {{-- LOGIKA 2: TOMBOL TAMBAH --}}
+                        {{-- Hanya Koordinator yang bisa menambah dosen --}}
+                        @if(Auth::user()->role == 'koordinator')
+                            <a href="{{ route('datadosenpembimbing.create') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Tambah
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -47,7 +57,13 @@
                             <th class="text-center">Email</th>
                             <th class="text-center">No. HP</th>
                             <th class="text-start">Mahasiswa Bimbingan</th>
-                            <th class="text-center">Aksi</th>
+                            
+                            {{-- LOGIKA 3: KOLOM AKSI --}}
+                            {{-- Hanya muncul jika user adalah Koordinator ATAU Dosen Pembimbing --}}
+                            {{-- Staff dan Mahasiswa tidak melihat kolom ini --}}
+                            @if(in_array(Auth::user()->role, ['koordinator', 'dosen_pembimbing']))
+                                <th class="text-center">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -72,24 +88,36 @@
                                         <span class="text-muted">Belum memiliki mahasiswa</span>
                                     @endif
                                 </td>
-                                <td class="text-center">
-                                    <div class="action-buttons">
-                                        <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
-                                            <i class="fa fa-pen"></i>
-                                        </a>
-                                        <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" title="Hapus">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                                
+                                {{-- LOGIKA 4: ISI KOLOM AKSI --}}
+                                @if(in_array(Auth::user()->role, ['koordinator', 'dosen_pembimbing']))
+                                    <td class="text-center">
+                                        <div class="action-buttons">
+                                            {{-- TOMBOL EDIT: Koordinator DAN Dosen Pembimbing boleh edit --}}
+                                            {{-- (Opsional: Jika Dosen hanya boleh edit dirinya sendiri, perlu logika tambahan di Controller) --}}
+                                            <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
+                                                <i class="fa fa-pen"></i>
+                                            </a>
+
+                                            {{-- TOMBOL HAPUS: HANYA Koordinator --}}
+                                            @if(Auth::user()->role == 'koordinator')
+                                                <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger" title="Hapus">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">
+                                {{-- LOGIKA 5: COLSPAN DINAMIS --}}
+                                {{-- Jika kolom aksi muncul (koor/dosen) colspan 6, jika tidak (staff/mhs) colspan 5 --}}
+                                <td colspan="{{ in_array(Auth::user()->role, ['koordinator', 'dosen_pembimbing']) ? '6' : '5' }}" class="text-center text-muted py-4">
                                     Belum ada data dosen pembimbing.
                                 </td>
                             </tr>
@@ -101,15 +129,24 @@
     </div>
 
 <script>
-document.getElementById('searchInput').addEventListener('keyup', function() {
-    let filter = this.value.toLowerCase();
-    let rows = document.querySelectorAll('#dosenTable tbody tr');
+// Script pencarian Client-side hanya aktif jika elemen searchInput ada
+// (Karena search input disembunyikan untuk mahasiswa)
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#dosenTable tbody tr');
 
-    rows.forEach(row => {
-        let namaDosen = row.querySelectorAll('td')[1]?.textContent.toLowerCase() || '';
-        row.style.display = namaDosen.includes(filter) ? '' : 'none';
+        rows.forEach(row => {
+            // Pastikan row memiliki cell sebelum mengaksesnya
+            let cells = row.querySelectorAll('td');
+            if(cells.length > 1) {
+                let namaDosen = cells[1].textContent.toLowerCase() || '';
+                row.style.display = namaDosen.includes(filter) ? '' : 'none';
+            }
+        });
     });
-});
+}
 
 document.addEventListener('DOMContentLoaded', function() {
         const toggleButton = document.querySelector('.menu-toggle');
