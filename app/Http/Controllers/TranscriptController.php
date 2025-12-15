@@ -8,6 +8,11 @@ use Smalot\PdfParser\Parser;
 
 class TranscriptController extends Controller
 {
+    public function __construct()
+    {
+        // Batasi aksi yang mengubah data hanya untuk koordinator
+        $this->middleware('role:koordinator')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
     /**
      * Display a listing of the resource.
      */

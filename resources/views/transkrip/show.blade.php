@@ -22,9 +22,11 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Detail Transkrip Kelayakan PKL</h2>
         <div>
-            <a href="{{ route('transkrip.edit', $transkrip->id) }}" class="btn btn-primary" style="margin-right: 10px;">
-                <i class="fas fa-edit"></i> Edit
-            </a>
+            @if(auth()->check() && auth()->user()->role == 'koordinator')
+                <a href="{{ route('transkrip.edit', $transkrip->id) }}" class="btn btn-primary" style="margin-right: 10px;">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            @endif
             <a href="{{ route('transkrip.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
@@ -92,7 +94,7 @@
                     @else
                         <i class="fas fa-times-circle" style="color: red;"></i>
                     @endif
-                    <strong>IPK:</strong> {{ number_format($transkrip->ipk, 2) }} 
+                    <strong>IPK:</strong> {{ number_format($transkrip->ipk, 2) }}
                     (Minimal 2.5)
                 </li>
                 <li style="margin: 8px 0;">
@@ -101,7 +103,7 @@
                     @else
                         <i class="fas fa-times-circle" style="color: red;"></i>
                     @endif
-                    <strong>Total SKS D:</strong> {{ $transkrip->total_sks_d }} 
+                    <strong>Total SKS D:</strong> {{ $transkrip->total_sks_d }}
                     (Maksimal 6 SKS)
                 </li>
                 <li style="margin: 8px 0;">
@@ -110,7 +112,7 @@
                     @else
                         <i class="fas fa-times-circle" style="color: red;"></i>
                     @endif
-                    <strong>Nilai E:</strong> {{ $transkrip->has_e ? 'Ada' : 'Tidak Ada' }} 
+                    <strong>Nilai E:</strong> {{ $transkrip->has_e ? 'Ada' : 'Tidak Ada' }}
                     (Tidak boleh ada nilai E)
                 </li>
             </ul>
@@ -134,16 +136,18 @@
 
     <!-- Aksi -->
     <div class="form-actions">
-        <a href="{{ route('transkrip.edit', $transkrip->id) }}" class="btn btn-primary">
-            <i class="fas fa-edit"></i> Edit Data
-        </a>
-        <form action="{{ route('transkrip.destroy', $transkrip->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">
-                <i class="fas fa-trash"></i> Hapus Data
-            </button>
-        </form>
+        @if(auth()->check() && auth()->user()->role == 'koordinator')
+            <a href="{{ route('transkrip.edit', $transkrip->id) }}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Data
+            </a>
+            <form action="{{ route('transkrip.destroy', $transkrip->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Hapus Data
+                </button>
+            </form>
+        @endif
         <a href="{{ route('transkrip.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Kembali ke Daftar
         </a>

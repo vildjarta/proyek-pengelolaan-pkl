@@ -25,9 +25,11 @@
             <a href="{{ route('transkrip.analyzePdfView') }}" class="btn btn-info" style="margin-right: 10px;">
                 <i class="fas fa-file-import"></i> Analisa Transkrip
             </a>
-            <a href="{{ route('transkrip.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Tambah Data
-            </a>
+            @if(auth()->check() && auth()->user()->role == 'koordinator')
+                <a href="{{ route('transkrip.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tambah Data
+                </a>
+            @endif
         </div>
     </div>
 
@@ -85,16 +87,18 @@
                                 <a href="{{ route('transkrip.show', $row->id) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i> Detail
                                 </a>
-                                <a href="{{ route('transkrip.edit', $row->id) }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <form action="{{ route('transkrip.destroy', $row->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </button>
-                                </form>
+                                @if(auth()->check() && auth()->user()->role == 'koordinator')
+                                    <a href="{{ route('transkrip.edit', $row->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form action="{{ route('transkrip.destroy', $row->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

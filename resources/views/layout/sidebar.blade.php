@@ -6,10 +6,10 @@
                 $currentRoute = request()->path();
 
                 // --- 1. DEFINISI HAK AKSES (SESUAI REQUEST USER) ---
-                
+
                 // 1. Data Mahasiswa
                 // Koordinator (All), Staff (View), Kaprodi (View) -> Semua butuh akses menu
-                $showDataMahasiswa = in_array($userRole, ['koordinator', 'staff', 'ketua_prodi']); 
+                $showDataMahasiswa = in_array($userRole, ['koordinator', 'staff', 'ketua_prodi']);
 
                 // 2. Transkrip Kelayakan
                 // Koordinator (All), Kaprodi (View), Mahasiswa (Analisa/Edit/Hapus)
@@ -29,7 +29,7 @@
 
                 // 6. Data Perusahaan
                 // Koordinator (All), Staff(V), Mhs(V), Kaprodi(V), DosPeng(V), DosPem(V), Perusahaan(Edit Self)
-                $showDataPerusahaan  = in_array($userRole, ['koordinator', 'staff', 'mahasiswa', 'ketua_prodi', 'dosen_penguji', 'dosen_pembimbing', 'perusahaan']); 
+                $showDataPerusahaan  = in_array($userRole, ['koordinator', 'staff', 'mahasiswa', 'ketua_prodi', 'dosen_penguji', 'dosen_pembimbing', 'perusahaan']);
 
                 // 7. Jadwal Bimbingan
                 // Koordinator (All), Mahasiswa (View/Search), DosPem (All)
@@ -45,11 +45,11 @@
 
                 // 10. Nilai Perusahaan
                 // Koordinator (All), Perusahaan (All)
-                $showNilaiPerusahaan = in_array($userRole, ['koordinator', 'perusahaan']); 
+                $showNilaiPerusahaan = in_array($userRole, ['koordinator', 'perusahaan']);
 
                 // 11. Nilai Mahasiswa
                 // Koordinator (All), Mhs (View), DosPeng (View), DosPem (View)
-                $showNilaiMahasiswa  = in_array($userRole, ['koordinator', 'mahasiswa', 'dosen_penguji', 'dosen_pembimbing']); 
+                $showNilaiMahasiswa  = in_array($userRole, ['koordinator', 'mahasiswa', 'dosen_penguji', 'dosen_pembimbing']);
 
                 // 12. Rating Perusahaan
                 // Koordinator (All), Mhs (All), Staff(V), Kaprodi(V), DosPem(V), DosPeng(V)
@@ -62,9 +62,9 @@
 
                 // --- 2. LOGIKA DROPDOWN OPEN/CLOSE (TIDAK BERUBAH BANYAK) ---
                 $isDataAkademikOpen = request()->is('mahasiswa*') || request()->is('transkrip*');
-                
+
                 $isBimbinganOpen    = request()->is('datadosenpembimbing*') || request()->is('dosen_penguji*') || request()->is('dosen') || request()->is('dosen/*');
-                
+
                 $isPerusahaanOpen   = request()->is('perusahaan*');
                 $isJadwalOpen       = request()->is('jadwal*');
                 $isPenilaianOpen    = request()->is('penilaian*') || request()->is('penilaian-penguji*') || request()->is('penilaian_perusahaan*') || request()->is('nilai*') || request()->is('ratingperusahaan*');
@@ -98,7 +98,7 @@
                         </a>
                     </li>
                     @endif
-                    
+
                     @if($showTranskrip)
                     <li class="{{ (request()->is('transkrip') || request()->is('transkrip/*')) ? 'active' : '' }}">
                         <a href="{{ route('transkrip.index') }}">
@@ -116,7 +116,7 @@
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isBimbinganOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isBimbinganOpen ? 'false' : 'true' }}">
-                    
+
                     @if($showMasterDosen)
                     <li class="{{ (request()->is('dosen') || request()->is('dosen/*') && !request()->is('dosen_penguji*')) ? 'active' : '' }}">
                         <a href="{{ route('dosen.index') }}">
@@ -180,7 +180,7 @@
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isPenilaianOpen ? '' : 'collapsed' }}" aria-hidden="{{ $isPenilaianOpen ? 'false' : 'true' }}">
-                    
+
                     @if($showNilaiPembimbing)
                     <li class="{{ (request()->is('penilaian') || request()->is('penilaian/*') && !request()->is('penilaian_perusahaan*')) ? 'active' : '' }}">
                         <a href="{{ route('penilaian.index') }}">
@@ -199,7 +199,7 @@
 
                     @if($showNilaiPerusahaan)
                     <li class="{{ (request()->is('penilaian_perusahaan') || request()->is('penilaian_perusahaan/*')) ? 'active' : '' }}">
-                        <a href="{{ route('penilaian-perusahaan.index') }}">
+
                             <span class="label-text">Nilai Perusahaan</span>
                         </a>
                     </li>
@@ -255,7 +255,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const dropdownHeaders = document.querySelectorAll('.sidebar h4.menu-dropdown-toggle');
-        
+
         try {
             const stored = JSON.parse(localStorage.getItem('sidebar-open-menus') || '{}');
             dropdownHeaders.forEach(function (header) {
