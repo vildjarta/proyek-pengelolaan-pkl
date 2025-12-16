@@ -18,6 +18,8 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\AHPController;
+use App\Http\Controllers\SAWController;
 use App\Http\Controllers\ManageUserController;
 
 
@@ -86,39 +88,39 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('penilaian-penguji', PenilaianPengujiController::class);
     });
 
-                            // penilaian perusahaan (role: koordinator,perusahaan)
+    // penilaian perusahaan (role: koordinator,perusahaan)
     Route::middleware(['role:koordinator,perusahaan'])->group(function () {
         Route::resource('penilaian-perusahaan', PenilaianPerusahaanController::class);
     });
 
-        // data dosen pembimbing (role: koordinator , staff, mahasiswa,dosen pembimbing )
+    // data dosen pembimbing (role: koordinator , staff, mahasiswa,dosen pembimbing )
     Route::middleware(['role:dosen_pembimbing,koordinator,staff,mahasiswa'])->group(function () {
         Route::resource('datadosenpembimbing', DataDosenPembimbingController::class);
     });
 
-            // data mahasiswa (role: koordinator , staff, ketua prodi )
+    // data mahasiswa (role: koordinator , staff, ketua prodi )
     Route::middleware(['role:koordinator,staff,ketua_prodi'])->group(function () {
         Route::resource('mahasiswa', MahasiswaController::class);
     });
 
-                // data dosen penguji (role: koordinator , staff, dosen penguji, mahasiswa )
+    // data dosen penguji (role: koordinator , staff, dosen penguji, mahasiswa )
     Route::middleware(['role:koordinator,staff,dosen_penguji,mahasiswa'])->group(function () {
         Route::resource('dosen_penguji', DosenPengujiController::class);
         Route::get('/dosen_penguji/search', [DosenPengujiController::class, 'search'])->name('dosen_penguji.search');
     });
 
-            // Penilaian perusahaan (role: koordinator,perusahaan,staff,ketua_prodi,mahasiswa,dosen_penguji,dosen_pembimbing)
+    // Penilaian perusahaan (role: koordinator,perusahaan,staff,ketua_prodi,mahasiswa,dosen_penguji,dosen_pembimbing)
     Route::middleware(['role:koordinator,perusahaan,staff,ketua_prodi,mahasiswa,dosen_penguji,dosen_pembimbing'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
     });
 
-                    // nilai akhir (role: koordinator , staff, dosen penguji, mahasiswa )
+    // nilai akhir (role: koordinator , staff, dosen penguji, mahasiswa )
     Route::middleware(['role:koordinator,dosen_pembimbing,dosen_penguji,mahasiswa'])->group(function () {
         Route::resource('nilai', NilaiController::class);
         Route::get('/api/nilai/get-penilaian/{nim}', [NilaiController::class, 'getNilaiData'])->name('nilai.get-penilaian');
     });
 
-                        // data dosen dan manajemen user (role: koordinator)
+    // data dosen dan manajemen user (role: koordinator)
     Route::middleware(['role:koordinator'])->group(function () {
         Route::resource('dosen', DosenController::class);
         Route::resource('manage-users', ManageUserController::class);
@@ -158,6 +160,12 @@ Route::middleware(['auth'])->group(function () {
             ->name('ratingdanreview.destroyAll');
     });
 
+    // data ahp dan saw (role: koordinator)
+    Route::middleware(['role:koordinator'])->group(function () {
+        Route::resource('ahp', AHPController::class);
+        Route::resource('saw', SAWController::class);
+    });
+
     // AJAX endpoints
     Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM'])->name('ajax.mahasiswa.suggest');
     Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM'])->name('ajax.mahasiswa.byNim');
@@ -177,4 +185,3 @@ Route::middleware(['auth'])->group(function () {
 //     \Artisan::call('cache:clear');
 //     return 'cleared';
 // });
-
