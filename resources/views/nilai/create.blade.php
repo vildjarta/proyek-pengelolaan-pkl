@@ -32,6 +32,7 @@
         <!-- Info Mahasiswa -->
         <div class="form-section">
             <h3><i class="fas fa-user"></i> Informasi Mahasiswa</h3>
+            <div id="notifikasi-container" style="display: none; margin-bottom: 15px;"></div>
             <div class="form-row">
                 <div class="form-group">
                     <label>ID Nilai: <span class="required">*</span></label>
@@ -39,12 +40,15 @@
                 </div>
                 <div class="form-group">
                     <label>Pilih Mahasiswa: <span class="required">*</span></label>
-                    <select name="id_mahasiswa" class="form-control" required>
+                    <select name="id_mahasiswa" id="mahasiswa-select" class="form-control" required>
                         <option value="">-- Pilih Mahasiswa --</option>
                         @foreach($mahasiswa as $mhs)
                             <option value="{{ $mhs->nim }}">{{ $mhs->nim }} - {{ $mhs->nama }}</option>
                         @endforeach
                     </select>
+                    <small id="loading-indicator" style="display: none; color: #0066cc;">
+                        <i class="fas fa-spinner fa-spin"></i> Mengambil data penilaian...
+                    </small>
                 </div>
             </div>
         </div>
@@ -195,6 +199,84 @@
 </div>
 
 <script>
+    // Auto-populate nilai saat memilih mahasiswa
+    document.getElementById('mahasiswa-select').addEventListener('change', function() {
+        const nim = this.value;
+        const notifikasiContainer = document.getElementById('notifikasi-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        // Clear previous notifications
+        notifikasiContainer.innerHTML = '';
+        notifikasiContainer.style.display = 'none';
+
+        if (!nim) return;
+
+        loadingIndicator.style.display = 'inline';
+
+        // Fetch data dari API
+        fetch(`/api/nilai/get-penilaian/${nim}`)
+            .then(response => response.json())
+            .then(result => {
+                loadingIndicator.style.display = 'none';
+
+                if (!result.success) {
+                    showNotification(result.message, 'error');
+                    return;
+                }
+
+                const { data } = result;
+
+                // Populate nilai fields
+                Object.entries(data.nilai).forEach(([key, value]) => {
+                    const field = document.querySelector(`[name="${key}"]`);
+                    if (field) {
+                        field.value = value || 0;
+                    }
+                });
+
+                // Populate catatan
+                Object.entries(data.catatan).forEach(([key, value]) => {
+                    const field = document.querySelector(`[name="${key}"]`);
+                    if (field && value) {
+                        field.value = value;
+                    }
+                });
+
+                // Show notifications for missing data
+                const notifikasi = data.notifikasi;
+                const alerts = Object.values(notifikasi).filter(n => n);
+
+                if (alerts.length > 0) {
+                    alerts.forEach(alert => {
+                        showNotification(alert, 'warning');
+                    });
+                } else {
+                    showNotification('✓ Semua data penilaian ditemukan dan berhasil dimuat!', 'success');
+                }
+
+                // Trigger calculation
+                hitungTotal();
+            })
+            .catch(error => {
+                loadingIndicator.style.display = 'none';
+                console.error('Error:', error);
+                showNotification('Gagal mengambil data penilaian', 'error');
+            });
+    });
+
+    function showNotification(message, type) {
+        const notifikasiContainer = document.getElementById('notifikasi-container');
+        notifikasiContainer.style.display = 'block';
+
+        const alertClass = type === 'error' ? 'alert-danger' : (type === 'warning' ? 'alert-warning' : 'alert-success');
+        const alertHTML = `<div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>`;
+
+        notifikasiContainer.innerHTML += alertHTML;
+    }
+
     function hitungTotal() {
         // Pembimbing Lapangan
         const disiplin = parseFloat(document.querySelector('[name="disiplin"]').value) || 0;
