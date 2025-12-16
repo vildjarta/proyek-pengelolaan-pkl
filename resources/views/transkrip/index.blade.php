@@ -22,10 +22,19 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Daftar Transkrip Kelayakan PKL</h2>
         <div>
-            <a href="{{ route('transkrip.analyzePdfView') }}" class="btn btn-info" style="margin-right: 10px;">
-                <i class="fas fa-file-import"></i> Analisa Transkrip
-            </a>
-            @if(auth()->check() && auth()->user()->role == 'koordinator')
+            {{-- LOGIKA 1: Tombol 'Analisa Transkrip' --}}
+            {{-- Diakses oleh: Koordinator DAN Mahasiswa --}}
+            @if(in_array(Auth::user()->role, ['koordinator', 'mahasiswa']))
+                <a href="{{ route('transkrip.analyzePdfView') }}" class="btn btn-info" style="margin-right: 10px;">
+                    <i class="fas fa-file-import"></i> Analisa Transkrip
+                </a>
+            @endif
+
+            {{-- LOGIKA 2: Tombol 'Tambah Data' (Manual) --}}
+            {{-- Biasanya input manual hanya untuk Koordinator.
+                 Mahasiswa disarankan pakai 'Analisa'.
+                 Jika mahasiswa juga boleh input manual, tambahkan 'mahasiswa' di array --}}
+            @if(Auth::user()->role == 'koordinator')
                 <a href="{{ route('transkrip.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Tambah Data
                 </a>
@@ -84,13 +93,18 @@
                             </td>
                             <td data-label="Tanggal">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y H:i') }}</td>
                             <td data-label="Aksi">
+                                {{-- Tombol Detail: Semua Role (termasuk Ketua Prodi) Bisa Lihat --}}
                                 <a href="{{ route('transkrip.show', $row->id) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i> Detail
                                 </a>
-                                @if(auth()->check() && auth()->user()->role == 'koordinator')
+
+                                {{-- LOGIKA 3: Tombol Edit & Hapus --}}
+                                {{-- Hanya untuk Koordinator DAN Mahasiswa --}}
+                                @if(in_array(Auth::user()->role, ['koordinator', 'mahasiswa']))
                                     <a href="{{ route('transkrip.edit', $row->id) }}" class="btn btn-sm btn-primary">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
+
                                     <form action="{{ route('transkrip.destroy', $row->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                         @csrf
                                         @method('DELETE')
@@ -109,9 +123,13 @@
             <div class="empty-state">
                 <i class="fas fa-inbox"></i>
                 <p>Belum ada data transkrip kelayakan PKL.</p>
-                <a href="{{ route('transkrip.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Data Pertama
-                </a>
+
+                {{-- Tombol di Empty State juga harus diproteksi --}}
+                @if(in_array(Auth::user()->role, ['koordinator', 'mahasiswa']))
+                    <a href="{{ route('transkrip.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Data Pertama
+                    </a>
+                @endif
             </div>
         @endif
     </div>

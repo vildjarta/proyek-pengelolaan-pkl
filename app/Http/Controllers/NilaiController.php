@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Nilai;
 use App\Models\Mahasiswa;
+use App\Models\Penilaian_perusahaan;
+use App\Models\PenilaianDospem;
+use App\Models\PenilaianPenguji;
 
 class NilaiController extends Controller
 {
@@ -36,28 +39,61 @@ class NilaiController extends Controller
             'id_nilai' => 'required|unique:nilai_mahasiswa,id_nilai',
         ]);
 
-        // Hitung total nilai
-        $nilaiTotal =
-            // Pembimbing Lapangan (50%)
-            ($request->disiplin ?? 0) +
-            ($request->komunikasi ?? 0) +
-            ($request->kerja_tim ?? 0) +
-            ($request->kerja_mandiri ?? 0) +
-            ($request->penampilan ?? 0) +
-            ($request->sikap_etika_lapangan ?? 0) +
-            ($request->pengetahuan ?? 0) +
-            // Dosen Pembimbing (30%)
-            ($request->penguasaan_teori ?? 0) +
-            ($request->kemampuan_analisis ?? 0) +
-            ($request->keaktifan_bimbingan ?? 0) +
-            ($request->kemampuan_penulisan_laporan ?? 0) +
-            ($request->sikap_etika_dospem ?? 0) +
-            // Penguji (20%)
-            ($request->penyajian_presentasi ?? 0) +
-            ($request->pemahaman_materi ?? 0) +
-            ($request->hasil_yang_dicapai ?? 0) +
-            ($request->objektivitas_menangapi ?? 0) +
-            ($request->penulisan_laporan ?? 0);
+        $mahasiswa = Mahasiswa::where('nim', $request->id_mahasiswa)->first();
+        if (! $mahasiswa) {
+            return back()->withErrors(['id_mahasiswa' => 'Mahasiswa tidak ditemukan'])->withInput();
+        }
+
+        $perusahaan = \App\Models\Penilaian_perusahaan::where('id_mahasiswa', $request->id_mahasiswa)->latest()->first();
+        $dospem = \App\Models\PenilaianDospem::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
+        $penguji = \App\Models\PenilaianPenguji::where('nama_mahasiswa', $mahasiswa->nama)->latest()->first();
+
+        // Map nilai dari sumber lain (fallback ke 0 bila tidak ada)
+        $disiplin = $perusahaan->disiplin ?? 0;
+        $komunikasi = $perusahaan->komunikasi ?? 0;
+        $kerja_tim = $perusahaan->kerja_tim ?? 0;
+        $kerja_mandiri = $perusahaan->kerja_mandiri ?? 0;
+        $penampilan = $perusahaan->penampilan ?? 0;
+        $sikap_etika_lapangan = $perusahaan->sikap_etika ?? ($perusahaan->sikap_etika_lapangan ?? 0);
+        $pengetahuan = $perusahaan->pengetahuan ?? 0;
+
+        $penguasaan_teori = $dospem->penguasaan_teori ?? ($dospem->penguasaan ?? 0);
+        $kemampuan_analisis = $dospem->analisis_pemecahan_masalah ?? ($dospem->analisis ?? 0);
+        $keaktifan_bimbingan = $dospem->keaktifan_bimbingan ?? 0;
+        $kemampuan_penulisan_laporan = $dospem->penulisan_laporan ?? ($dospem->laporan ?? 0);
+        $sikap_etika_dospem = $dospem->sikap ?? ($dospem->sikap_etika ?? 0);
+
+        $penyajian_presentasi = $penguji->presentasi ?? 0;
+        $pemahaman_materi = $penguji->materi ?? 0;
+        $hasil_yang_dicapai = $penguji->hasil ?? 0;
+        $objektivitas_menangapi = $penguji->objektif ?? 0;
+        $penulisan_laporan_penguji = $penguji->laporan ?? 0;
+
+        // Hitung total nilai dengan bobot persentase (0-100 → 0-300)
+        $subtotalPembimbing =
+            ($disiplin * 0.15) +
+            ($komunikasi * 0.10) +
+            ($kerja_tim * 0.15) +
+            ($kerja_mandiri * 0.10) +
+            ($penampilan * 0.10) +
+            ($sikap_etika_lapangan * 0.20) +
+            ($pengetahuan * 0.20);
+
+        $subtotalDospem =
+            ($penguasaan_teori * 0.20) +
+            ($kemampuan_analisis * 0.25) +
+            ($keaktifan_bimbingan * 0.15) +
+            ($kemampuan_penulisan_laporan * 0.20) +
+            ($sikap_etika_dospem * 0.20);
+
+        $subtotalPenguji =
+            ($penyajian_presentasi * 0.10) +
+            ($pemahaman_materi * 0.15) +
+            ($hasil_yang_dicapai * 0.40) +
+            ($objektivitas_menangapi * 0.20) +
+            ($penulisan_laporan_penguji * 0.15);
+
+        $nilaiTotal = $subtotalPembimbing + $subtotalDospem + $subtotalPenguji;
 
         $nilaiHuruf = Nilai::konversiNilaiHuruf($nilaiTotal);
         $skor = Nilai::konversiSkor($nilaiTotal);
@@ -66,29 +102,29 @@ class NilaiController extends Controller
             'id_mahasiswa' => $request->id_mahasiswa,
             'id_nilai' => $request->id_nilai,
             // Pembimbing Lapangan
-            'disiplin' => $request->disiplin ?? 0,
-            'komunikasi' => $request->komunikasi ?? 0,
-            'kerja_tim' => $request->kerja_tim ?? 0,
-            'kerja_mandiri' => $request->kerja_mandiri ?? 0,
-            'penampilan' => $request->penampilan ?? 0,
-            'sikap_etika_lapangan' => $request->sikap_etika_lapangan ?? 0,
-            'pengetahuan' => $request->pengetahuan ?? 0,
+            'disiplin' => $disiplin,
+            'komunikasi' => $komunikasi,
+            'kerja_tim' => $kerja_tim,
+            'kerja_mandiri' => $kerja_mandiri,
+            'penampilan' => $penampilan,
+            'sikap_etika_lapangan' => $sikap_etika_lapangan,
+            'pengetahuan' => $pengetahuan,
             // Dosen Pembimbing
-            'penguasaan_teori' => $request->penguasaan_teori ?? 0,
-            'kemampuan_analisis' => $request->kemampuan_analisis ?? 0,
-            'keaktifan_bimbingan' => $request->keaktifan_bimbingan ?? 0,
-            'kemampuan_penulisan_laporan' => $request->kemampuan_penulisan_laporan ?? 0,
-            'sikap_etika_dospem' => $request->sikap_etika_dospem ?? 0,
+            'penguasaan_teori' => $penguasaan_teori,
+            'kemampuan_analisis' => $kemampuan_analisis,
+            'keaktifan_bimbingan' => $keaktifan_bimbingan,
+            'kemampuan_penulisan_laporan' => $kemampuan_penulisan_laporan,
+            'sikap_etika_dospem' => $sikap_etika_dospem,
             // Penguji
-            'penyajian_presentasi' => $request->penyajian_presentasi ?? 0,
-            'pemahaman_materi' => $request->pemahaman_materi ?? 0,
-            'hasil_yang_dicapai' => $request->hasil_yang_dicapai ?? 0,
-            'objektivitas_menangapi' => $request->objektivitas_menangapi ?? 0,
-            'penulisan_laporan' => $request->penulisan_laporan ?? 0,
+            'penyajian_presentasi' => $penyajian_presentasi,
+            'pemahaman_materi' => $pemahaman_materi,
+            'hasil_yang_dicapai' => $hasil_yang_dicapai,
+            'objektivitas_menangapi' => $objektivitas_menangapi,
+            'penulisan_laporan' => $penulisan_laporan_penguji,
             // Catatan
-            'catatan_pembimbing' => $request->catatan_pembimbing,
-            'catatan_dospem' => $request->catatan_dospem,
-            'catatan_penguji' => $request->catatan_penguji,
+            'catatan_pembimbing' => $perusahaan->catatan ?? null,
+            'catatan_dospem' => $dospem->catatan ?? null,
+            'catatan_penguji' => $penguji->catatan ?? null,
             // Total
             'nilai_total' => $nilaiTotal,
             'nilai_huruf' => $nilaiHuruf,
@@ -130,28 +166,61 @@ class NilaiController extends Controller
             'id_nilai' => 'required|unique:nilai_mahasiswa,id_nilai,' . $id,
         ]);
 
-        // Hitung total nilai
-        $nilaiTotal =
-            // Pembimbing Lapangan (50%)
-            ($request->disiplin ?? 0) +
-            ($request->komunikasi ?? 0) +
-            ($request->kerja_tim ?? 0) +
-            ($request->kerja_mandiri ?? 0) +
-            ($request->penampilan ?? 0) +
-            ($request->sikap_etika_lapangan ?? 0) +
-            ($request->pengetahuan ?? 0) +
-            // Dosen Pembimbing (30%)
-            ($request->penguasaan_teori ?? 0) +
-            ($request->kemampuan_analisis ?? 0) +
-            ($request->keaktifan_bimbingan ?? 0) +
-            ($request->kemampuan_penulisan_laporan ?? 0) +
-            ($request->sikap_etika_dospem ?? 0) +
-            // Penguji (20%)
-            ($request->penyajian_presentasi ?? 0) +
-            ($request->pemahaman_materi ?? 0) +
-            ($request->hasil_yang_dicapai ?? 0) +
-            ($request->objektivitas_menangapi ?? 0) +
-            ($request->penulisan_laporan ?? 0);
+        $mahasiswa = Mahasiswa::where('nim', $request->id_mahasiswa)->first();
+        if (! $mahasiswa) {
+            return back()->withErrors(['id_mahasiswa' => 'Mahasiswa tidak ditemukan'])->withInput();
+        }
+
+        $perusahaan = \App\Models\Penilaian_perusahaan::where('id_mahasiswa', $request->id_mahasiswa)->latest()->first();
+        $dospem = \App\Models\PenilaianDospem::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
+        $penguji = \App\Models\PenilaianPenguji::where('nama_mahasiswa', $mahasiswa->nama)->latest()->first();
+
+        // Map nilai dari sumber lain (fallback ke 0 bila tidak ada)
+        $disiplin = $perusahaan->disiplin ?? 0;
+        $komunikasi = $perusahaan->komunikasi ?? 0;
+        $kerja_tim = $perusahaan->kerja_tim ?? 0;
+        $kerja_mandiri = $perusahaan->kerja_mandiri ?? 0;
+        $penampilan = $perusahaan->penampilan ?? 0;
+        $sikap_etika_lapangan = $perusahaan->sikap_etika ?? ($perusahaan->sikap_etika_lapangan ?? 0);
+        $pengetahuan = $perusahaan->pengetahuan ?? 0;
+
+        $penguasaan_teori = $dospem->penguasaan_teori ?? ($dospem->penguasaan ?? 0);
+        $kemampuan_analisis = $dospem->analisis_pemecahan_masalah ?? ($dospem->analisis ?? 0);
+        $keaktifan_bimbingan = $dospem->keaktifan_bimbingan ?? 0;
+        $kemampuan_penulisan_laporan = $dospem->penulisan_laporan ?? ($dospem->laporan ?? 0);
+        $sikap_etika_dospem = $dospem->sikap ?? ($dospem->sikap_etika ?? 0);
+
+        $penyajian_presentasi = $penguji->presentasi ?? 0;
+        $pemahaman_materi = $penguji->materi ?? 0;
+        $hasil_yang_dicapai = $penguji->hasil ?? 0;
+        $objektivitas_menangapi = $penguji->objektif ?? 0;
+        $penulisan_laporan_penguji = $penguji->laporan ?? 0;
+
+        // Hitung total nilai dengan bobot persentase (0-100 → 0-300)
+        $subtotalPembimbing =
+            ($disiplin * 0.15) +
+            ($komunikasi * 0.10) +
+            ($kerja_tim * 0.15) +
+            ($kerja_mandiri * 0.10) +
+            ($penampilan * 0.10) +
+            ($sikap_etika_lapangan * 0.20) +
+            ($pengetahuan * 0.20);
+
+        $subtotalDospem =
+            ($penguasaan_teori * 0.20) +
+            ($kemampuan_analisis * 0.25) +
+            ($keaktifan_bimbingan * 0.15) +
+            ($kemampuan_penulisan_laporan * 0.20) +
+            ($sikap_etika_dospem * 0.20);
+
+        $subtotalPenguji =
+            ($penyajian_presentasi * 0.10) +
+            ($pemahaman_materi * 0.15) +
+            ($hasil_yang_dicapai * 0.40) +
+            ($objektivitas_menangapi * 0.20) +
+            ($penulisan_laporan_penguji * 0.15);
+
+        $nilaiTotal = $subtotalPembimbing + $subtotalDospem + $subtotalPenguji;
 
         $nilaiHuruf = Nilai::konversiNilaiHuruf($nilaiTotal);
         $skor = Nilai::konversiSkor($nilaiTotal);
@@ -160,29 +229,29 @@ class NilaiController extends Controller
             'id_mahasiswa' => $request->id_mahasiswa,
             'id_nilai' => $request->id_nilai,
             // Pembimbing Lapangan
-            'disiplin' => $request->disiplin ?? 0,
-            'komunikasi' => $request->komunikasi ?? 0,
-            'kerja_tim' => $request->kerja_tim ?? 0,
-            'kerja_mandiri' => $request->kerja_mandiri ?? 0,
-            'penampilan' => $request->penampilan ?? 0,
-            'sikap_etika_lapangan' => $request->sikap_etika_lapangan ?? 0,
-            'pengetahuan' => $request->pengetahuan ?? 0,
+            'disiplin' => $disiplin,
+            'komunikasi' => $komunikasi,
+            'kerja_tim' => $kerja_tim,
+            'kerja_mandiri' => $kerja_mandiri,
+            'penampilan' => $penampilan,
+            'sikap_etika_lapangan' => $sikap_etika_lapangan,
+            'pengetahuan' => $pengetahuan,
             // Dosen Pembimbing
-            'penguasaan_teori' => $request->penguasaan_teori ?? 0,
-            'kemampuan_analisis' => $request->kemampuan_analisis ?? 0,
-            'keaktifan_bimbingan' => $request->keaktifan_bimbingan ?? 0,
-            'kemampuan_penulisan_laporan' => $request->kemampuan_penulisan_laporan ?? 0,
-            'sikap_etika_dospem' => $request->sikap_etika_dospem ?? 0,
+            'penguasaan_teori' => $penguasaan_teori,
+            'kemampuan_analisis' => $kemampuan_analisis,
+            'keaktifan_bimbingan' => $keaktifan_bimbingan,
+            'kemampuan_penulisan_laporan' => $kemampuan_penulisan_laporan,
+            'sikap_etika_dospem' => $sikap_etika_dospem,
             // Penguji
-            'penyajian_presentasi' => $request->penyajian_presentasi ?? 0,
-            'pemahaman_materi' => $request->pemahaman_materi ?? 0,
-            'hasil_yang_dicapai' => $request->hasil_yang_dicapai ?? 0,
-            'objektivitas_menangapi' => $request->objektivitas_menangapi ?? 0,
-            'penulisan_laporan' => $request->penulisan_laporan ?? 0,
+            'penyajian_presentasi' => $penyajian_presentasi,
+            'pemahaman_materi' => $pemahaman_materi,
+            'hasil_yang_dicapai' => $hasil_yang_dicapai,
+            'objektivitas_menangapi' => $objektivitas_menangapi,
+            'penulisan_laporan' => $penulisan_laporan_penguji,
             // Catatan
-            'catatan_pembimbing' => $request->catatan_pembimbing,
-            'catatan_dospem' => $request->catatan_dospem,
-            'catatan_penguji' => $request->catatan_penguji,
+            'catatan_pembimbing' => $perusahaan->catatan ?? null,
+            'catatan_dospem' => $dospem->catatan ?? null,
+            'catatan_penguji' => $penguji->catatan ?? null,
             // Total
             'nilai_total' => $nilaiTotal,
             'nilai_huruf' => $nilaiHuruf,
@@ -201,5 +270,72 @@ class NilaiController extends Controller
         $nilai->delete();
 
         return redirect()->route('nilai.index')->with('success', 'Nilai berhasil dihapus.');
+    }
+
+    /**
+     * API: Get nilai data dari penilaian lain berdasarkan NIM mahasiswa
+     */
+    public function getNilaiData($nim)
+    {
+        try {
+            $mahasiswa = Mahasiswa::where('nim', $nim)->first();
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mahasiswa tidak ditemukan'
+                ], 404);
+            }
+
+            $perusahaan = Penilaian_perusahaan::where('id_mahasiswa', $nim)->latest()->first();
+            $dospem = PenilaianDospem::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->latest()->first();
+            $penguji = PenilaianPenguji::where('nama_mahasiswa', $mahasiswa->nama)->latest()->first();
+
+            $data = [
+                'mahasiswa_found' => true,
+                'mahasiswa_nama' => $mahasiswa->nama,
+                'perusahaan_found' => !!$perusahaan,
+                'dospem_found' => !!$dospem,
+                'penguji_found' => !!$penguji,
+                'nilai' => [
+                    'disiplin' => $perusahaan->disiplin ?? 0,
+                    'komunikasi' => $perusahaan->komunikasi ?? 0,
+                    'kerja_tim' => $perusahaan->kerja_tim ?? 0,
+                    'kerja_mandiri' => $perusahaan->kerja_mandiri ?? 0,
+                    'penampilan' => $perusahaan->penampilan ?? 0,
+                    'sikap_etika_lapangan' => $perusahaan->sikap_etika ?? ($perusahaan->sikap_etika_lapangan ?? 0),
+                    'pengetahuan' => $perusahaan->pengetahuan ?? 0,
+                    'penguasaan_teori' => $dospem->penguasaan_teori ?? ($dospem->penguasaan ?? 0),
+                    'kemampuan_analisis' => $dospem->analisis_pemecahan_masalah ?? ($dospem->analisis ?? 0),
+                    'keaktifan_bimbingan' => $dospem->keaktifan_bimbingan ?? 0,
+                    'kemampuan_penulisan_laporan' => $dospem->penulisan_laporan ?? ($dospem->laporan ?? 0),
+                    'sikap_etika_dospem' => $dospem->sikap ?? ($dospem->sikap_etika ?? 0),
+                    'penyajian_presentasi' => $penguji->presentasi ?? 0,
+                    'pemahaman_materi' => $penguji->materi ?? 0,
+                    'hasil_yang_dicapai' => $penguji->hasil ?? 0,
+                    'objektivitas_menangapi' => $penguji->objektif ?? 0,
+                    'penulisan_laporan' => $penguji->laporan ?? 0,
+                ],
+                'catatan' => [
+                    'catatan_pembimbing' => $perusahaan->catatan ?? null,
+                    'catatan_dospem' => $dospem->catatan ?? null,
+                    'catatan_penguji' => $penguji->catatan ?? null,
+                ],
+                'notifikasi' => [
+                    'perusahaan' => !$perusahaan ? '⚠️ Data penilaian perusahaan tidak ditemukan' : null,
+                    'dospem' => !$dospem ? '⚠️ Data penilaian dosen pembimbing tidak ditemukan' : null,
+                    'penguji' => !$penguji ? '⚠️ Data penilaian penguji tidak ditemukan' : null,
+                ]
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -33,6 +33,14 @@ class DataDosenPembimbing extends Model
         return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
 
+    /**
+     * Optional relation to the user account for this pembimbing (foreign key `id_user` -> `users.id`).
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
+
     public function getIdAttribute()
     {
         return $this->attributes[$this->getKeyName()] ?? $this->getKey();

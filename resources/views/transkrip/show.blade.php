@@ -22,18 +22,21 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Detail Transkrip Kelayakan PKL</h2>
         <div>
-            @if(auth()->check() && auth()->user()->role == 'koordinator')
+            {{-- LOGIKA 1: Tombol Edit di Header --}}
+            {{-- Hanya untuk Koordinator & Mahasiswa --}}
+            @if(in_array(Auth::user()->role, ['koordinator', 'mahasiswa']))
                 <a href="{{ route('transkrip.edit', $transkrip->id) }}" class="btn btn-primary" style="margin-right: 10px;">
                     <i class="fas fa-edit"></i> Edit
                 </a>
             @endif
+
+            {{-- Tombol Kembali muncul untuk SEMUA role --}}
             <a href="{{ route('transkrip.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
         </div>
     </div>
 
-    <!-- Info Mahasiswa -->
     <div class="form-section">
         <h3><i class="fas fa-user"></i> Informasi Mahasiswa</h3>
         <div class="detail-row">
@@ -48,7 +51,6 @@
         </div>
     </div>
 
-    <!-- Data Akademik -->
     <div class="form-section">
         <h3><i class="fas fa-graduation-cap"></i> Data Akademik</h3>
         <div class="detail-row">
@@ -67,7 +69,6 @@
         </div>
     </div>
 
-    <!-- Analisis Kelayakan -->
     <div class="form-section">
         <h3><i class="fas fa-clipboard-check"></i> Analisis Kelayakan PKL</h3>
         <div class="detail-row">
@@ -119,7 +120,6 @@
         </div>
     </div>
 
-    <!-- Info Tambahan -->
     <div class="form-section">
         <h3><i class="fas fa-info-circle"></i> Informasi Tambahan</h3>
         <div class="detail-row">
@@ -134,12 +134,14 @@
         </div>
     </div>
 
-    <!-- Aksi -->
     <div class="form-actions">
-        @if(auth()->check() && auth()->user()->role == 'koordinator')
+        {{-- LOGIKA 2: Tombol Edit & Hapus di Bawah --}}
+        {{-- Hanya untuk Koordinator & Mahasiswa --}}
+        @if(in_array(Auth::user()->role, ['koordinator', 'mahasiswa']))
             <a href="{{ route('transkrip.edit', $transkrip->id) }}" class="btn btn-primary">
                 <i class="fas fa-edit"></i> Edit Data
             </a>
+
             <form action="{{ route('transkrip.destroy', $transkrip->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                 @csrf
                 @method('DELETE')
@@ -148,6 +150,7 @@
                 </button>
             </form>
         @endif
+
         <a href="{{ route('transkrip.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Kembali ke Daftar
         </a>

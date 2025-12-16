@@ -1,24 +1,43 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transcript;
 use App\Models\Mahasiswa;
+use Illuminate\Support\Facades\Auth; // <--- TAMBAHAN: Untuk cek user login
 use Smalot\PdfParser\Parser;
 
 class TranscriptController extends Controller
 {
-    public function __construct()
+    /**
+     * Helper: Cek apakah user adalah koordinator
+     */
+    private function requireCoordinator()
     {
-        // Batasi aksi yang mengubah data hanya untuk koordinator
-        $this->middleware('role:koordinator')->only(['create', 'store', 'edit', 'update', 'destroy']);
+        if (!Auth::check() || Auth::user()->role !== 'koordinator') {
+            abort(403, 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
+        }
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Transcript::latest()->get();
+        // --- LOGIKA TAMBAHAN MULAI ---
+        $user = Auth::user();
+
+        // Jika user yang login adalah mahasiswa, tampilkan hanya data miliknya (filter by NIM)
+        if ($user->role == 'mahasiswa') {
+            // Pastikan tabel users Anda memiliki kolom 'nim' yang isinya sama dengan data transkrip
+            $data = Transcript::where('nim', $user->nim)->latest()->get();
+        } else {
+            // Jika Koordinator atau Ketua Prodi, tampilkan semua data
+            $data = Transcript::latest()->get();
+        }
+        // --- LOGIKA TAMBAHAN SELESAI ---
+
         return view('transkrip.index', compact('data'));
     }
 
@@ -27,6 +46,7 @@ class TranscriptController extends Controller
      */
     public function create()
     {
+        $this->requireCoordinator();
         return view('transkrip.create');
     }
 
@@ -35,6 +55,8 @@ class TranscriptController extends Controller
      */
     public function store(Request $request)
     {
+        $this->requireCoordinator();
+
         $request->validate([
             'nim' => 'required|unique:transcripts,nim',
             'nama_mahasiswa' => 'required',
@@ -72,18 +94,19 @@ class TranscriptController extends Controller
      */
     public function edit(string $id)
     {
+        $this->requireCoordinator();
+
         $transkrip = Transcript::findOrFail($id);
         return view('transkrip.edit', compact('transkrip'));
     }
-
-
-
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
+        $this->requireCoordinator();
+
         $transkrip = Transcript::findOrFail($id);
 
         $request->validate([
@@ -114,6 +137,8 @@ class TranscriptController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->requireCoordinator();
+
         $transkrip = Transcript::findOrFail($id);
         $transkrip->delete();
 
@@ -212,7 +237,9 @@ class TranscriptController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
-    }    /**
+    }
+
+    /**
      * Extract IPK from PDF text with multiple patterns
      */
     private function extractIPK($text)
@@ -404,5 +431,4 @@ class TranscriptController extends Controller
 
         return 0;
     }
-
 }

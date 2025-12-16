@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\DataDosenPembimbing;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DataDosenPembimbingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = DataDosenPembimbing::with('mahasiswa');
+        $query = DataDosenPembimbing::with('mahasiswa', 'user');
 
         if ($request->filled('search')) {
             $q = $request->search;
@@ -22,7 +25,6 @@ class DataDosenPembimbingController extends Controller
         }
 
         $data = $query->orderBy('nama')->get();
-
         return view('datadosenpembimbing.datadosenpembimbing', compact('data'));
     }
 
@@ -40,12 +42,17 @@ class DataDosenPembimbingController extends Controller
             'email' => 'nullable|email',
             'no_hp' => 'nullable|string|max:30',
             'nim'   => 'nullable|array',
-            'nim.*' => 'nullable|exists:mahasiswa,nim',
+            'nim.*' => 'exists:mahasiswa,nim',
         ]);
 
+        // ===================== DOSEN =====================
         $dosen = Dosen::firstOrCreate(
             ['nip' => $request->NIP],
-            ['nama' => $request->nama, 'email' => $request->email, 'no_hp' => $request->no_hp]
+            [
+                'nama'  => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+            ]
         );
 
         $dosen->update([
@@ -54,25 +61,41 @@ class DataDosenPembimbingController extends Controller
             'no_hp' => $request->no_hp,
         ]);
 
-        $dosenPembimbing = DataDosenPembimbing::create([
-            'id_dosen' => $dosen->id_dosen ?? null,
+        // ===================== USER (LOGIN DOSEN) =====================
+        if (!$dosen->id_user && $dosen->email) {
+            $user = User::firstOrCreate(
+                ['email' => $dosen->email],
+                [
+                    'name'     => $dosen->nama,
+                    'password' => Hash::make(Str::random(16)),
+                    'role'     => 'dosen',
+                ]
+            );
+
+            $dosen->update(['id_user' => $user->id]);
+        }
+
+        // ===================== DOSEN PEMBIMBING =====================
+        $pembimbing = DataDosenPembimbing::create([
+            'id_dosen' => $dosen->id_dosen,
             'NIP'      => $request->NIP,
             'nama'     => $request->nama,
             'email'    => $request->email,
             'no_hp'    => $request->no_hp,
-            'id_user'  => $request->input('id_user', null),
+            'id_user'  => $dosen->id_user,
         ]);
 
+        // ===================== MAHASISWA =====================
         if ($request->filled('nim')) {
-            foreach ($request->nim as $nim) {
-                Mahasiswa::where('nim', $nim)->update(['id_pembimbing' => $dosenPembimbing->id_pembimbing]);
-            }
+            Mahasiswa::whereIn('nim', $request->nim)
+                ->update(['id_pembimbing' => $pembimbing->id_pembimbing]);
         }
 
-        return redirect()->route('datadosenpembimbing.index')->with('success', 'Data dosen pembimbing berhasil ditambahkan.');
+        return redirect()
+            ->route('datadosenpembimbing.index')
+            ->with('success', 'Data dosen pembimbing berhasil ditambahkan.');
     }
 
-    // bila user mengakses GET /datadosenpembimbing/{id}, redirect ke edit (hindari 404)
     public function show($id)
     {
         return redirect()->route('datadosenpembimbing.edit', $id);
@@ -82,6 +105,7 @@ class DataDosenPembimbingController extends Controller
     {
         $item = DataDosenPembimbing::with('mahasiswa')->findOrFail($id);
         $mahasiswa = Mahasiswa::orderBy('nama')->get();
+
         return view('datadosenpembimbing.editdatadosenpembimbing', compact('item', 'mahasiswa'));
     }
 
@@ -95,7 +119,7 @@ class DataDosenPembimbingController extends Controller
             'email' => 'nullable|email',
             'no_hp' => 'nullable|string|max:30',
             'nim'   => 'nullable|array',
-            'nim.*' => 'nullable|exists:mahasiswa,nim',
+            'nim.*' => 'exists:mahasiswa,nim',
         ]);
 
         $dosen = Dosen::firstOrCreate(['nip' => $request->NIP]);
@@ -106,22 +130,25 @@ class DataDosenPembimbingController extends Controller
         ]);
 
         $item->update([
-            'id_dosen' => $dosen->id_dosen ?? null,
+            'id_dosen' => $dosen->id_dosen,
             'NIP'      => $request->NIP,
             'nama'     => $request->nama,
             'email'    => $request->email,
             'no_hp'    => $request->no_hp,
         ]);
 
-        Mahasiswa::where('id_pembimbing', $item->id_pembimbing)->update(['id_pembimbing' => null]);
+        // reset mahasiswa lama
+        Mahasiswa::where('id_pembimbing', $item->id_pembimbing)
+            ->update(['id_pembimbing' => null]);
 
         if ($request->filled('nim')) {
-            foreach ($request->nim as $nim) {
-                Mahasiswa::where('nim', $nim)->update(['id_pembimbing' => $item->id_pembimbing]);
-            }
+            Mahasiswa::whereIn('nim', $request->nim)
+                ->update(['id_pembimbing' => $item->id_pembimbing]);
         }
 
-        return redirect()->route('datadosenpembimbing.index')->with('success', 'Data dosen pembimbing berhasil diperbarui.');
+        return redirect()
+            ->route('datadosenpembimbing.index')
+            ->with('success', 'Data dosen pembimbing berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -133,7 +160,9 @@ class DataDosenPembimbingController extends Controller
 
         $item->delete();
 
-        return redirect()->route('datadosenpembimbing.index')->with('success', 'Data dosen pembimbing berhasil dihapus.');
+        return redirect()
+            ->route('datadosenpembimbing.index')
+            ->with('success', 'Data dosen pembimbing berhasil dihapus.');
     }
 
     public function suggest(Request $request)
@@ -142,19 +171,19 @@ class DataDosenPembimbingController extends Controller
 
         if ($q === '') return response()->json([]);
 
-        $results = Dosen::where('nip', 'LIKE', "%{$q}%")
+        return Dosen::where('nip', 'LIKE', "%{$q}%")
             ->orWhere('nama', 'LIKE', "%{$q}%")
             ->limit(10)
             ->get(['nip', 'nama', 'email', 'no_hp']);
-
-        return response()->json($results);
     }
 
     public function cekByNip($nip)
     {
         $dosen = Dosen::where('nip', $nip)->first();
 
-        if (! $dosen) return response()->json(['exists' => false]);
+        if (! $dosen) {
+            return response()->json(['exists' => false]);
+        }
 
         return response()->json([
             'exists' => true,

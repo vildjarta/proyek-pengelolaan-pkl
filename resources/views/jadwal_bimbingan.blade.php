@@ -20,7 +20,7 @@
                     <input type="text" name="search" class="form-control search-input" placeholder="Cari Mahasiswa/Dosen..." value="{{ $search ?? '' }}">
                 </form>
             </div>
-        </div>
+        </div> 
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>

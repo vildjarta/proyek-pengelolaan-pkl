@@ -34,6 +34,13 @@ class Mahasiswa extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function dosen()
+    {
+        // Asumsi: tabel mahasiswa punya kolom 'dosen_id'
+        // Sesuaikan 'dosen_id' dengan nama foreign key di database kamu
+        return $this->belongsTo(Dosen::class, 'dosen_id');
+    }
+
     public function dosen_penguji()
     {
         return $this->hasOne(dosen_penguji::class, 'id_mahasiswa', 'id_mahasiswa');
