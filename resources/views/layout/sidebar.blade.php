@@ -52,6 +52,7 @@
                 $showNilaiPerusahaan = in_array($userRole, ['koordinator', 'perusahaan']);
                 $showNilaiMahasiswa  = in_array($userRole, ['koordinator', 'mahasiswa', 'dosen_penguji', 'dosen_pembimbing']);
                 $showRatingPerusahaan= in_array($userRole, ['koordinator', 'mahasiswa', 'staff', 'ketua_prodi', 'dosen_pembimbing', 'dosen_penguji', 'perusahaan']);
+                $showAhpSaw          = ($userRole == 'koordinator');
                 $showManajemenUser   = ($userRole == 'koordinator');
 
                 // --- 2. LOGIKA STATE (OPEN/CLOSE) ---
@@ -61,6 +62,7 @@
                 $isPerusahaanOpen   = request()->is('perusahaan*');
                 $isJadwalOpen       = request()->is('jadwal*');
                 $isPenilaianOpen    = request()->is('penilaian*') || request()->is('penilaian-penguji*') || request()->is('penilaian_perusahaan*') || request()->is('nilai*') || request()->is('ratingperusahaan*');
+                $isAhpSawOpen       = request()->is('ahp*') || request()->is('saw*');
                 $isAkunOpen         = request()->is('profile*') || request()->is('manage-users*');
             @endphp
 
