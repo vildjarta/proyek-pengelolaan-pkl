@@ -10,11 +10,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        /* Style tetap sama seperti sebelumnya */
         :root {
             --header-height: 60px;
             --sidebar-width: 285px;
             --sidebar-collapsed: 70px;
+            --primary-custom: #261FB3;
         }
 
         body { margin: 0; }
@@ -41,7 +41,16 @@
         }
 
         .page-header { margin-bottom: 12px; }
+        
+        /* Table Styling */
         table { font-size: 14px; }
+        
+        thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
 
         @media (max-width: 768px) {
             .main-content {
@@ -54,21 +63,49 @@
             }
         }
 
-        .sidebar .dropdown-menu {
-            position: static !important;
-            float: none !important;
-            inset: auto !important;
-            transform: none !important;
-            min-width: 0 !important;
-            display: block !important;
-            list-style: none;
-            border: none !important;
-            box-shadow: none !important;
-            outline: none !important;
+        /* --- CUSTOM COLORS --- */
+        .bg-custom-blue {
+            background-color: var(--primary-custom) !important;
+        }
+        .text-custom-blue {
+            color: var(--primary-custom) !important;
         }
 
-        .sidebar .dropdown-menu.collapsed {
-            display: none !important;
+        /* --- BUTTON STYLES --- */
+        .btn-action {
+            width: 32px; /* Diperkecil sedikit agar lebih kompak */
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            border: 1px solid transparent;
+        }
+
+        .btn-edit-custom {
+            color: var(--primary-custom);
+            border-color: var(--primary-custom);
+            background-color: rgba(38, 31, 179, 0.05);
+        }
+        .btn-edit-custom:hover {
+            background-color: var(--primary-custom);
+            color: white;
+            box-shadow: 0 4px 6px rgba(38, 31, 179, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-delete-custom {
+            color: #dc3545;
+            border-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+        .btn-delete-custom:hover {
+            background-color: #dc3545;
+            color: white;
+            box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -81,78 +118,92 @@
         <div class="main-scroll">
             <div class="container-fluid">
                 <div class="card shadow border-0 rounded-3">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0 fw-bold">
+                    
+                    <div class="card-header bg-custom-blue text-white d-flex justify-content-between align-items-center py-3">
+                        <h4 class="mb-0 fw-bold fs-5">
                             <i class="fa fa-users me-2"></i> Daftar Mahasiswa
                         </h4>
                         
-                        {{-- LOGIKA 1: Tombol Tambah hanya untuk Koordinator --}}
-                        {{-- Ganti 'koordinator' sesuai value di database Anda --}}
                         @if(Auth::user()->role == 'koordinator')
-                            <a href="{{ route('mahasiswa.create') }}" class="btn btn-light btn-sm text-primary fw-bold">
+                            <a href="{{ route('mahasiswa.create') }}" class="btn btn-light btn-sm text-custom-blue fw-bold shadow-sm">
                                 <i class="fa fa-plus me-1"></i> Tambah Mahasiswa
                             </a>
                         @endif
                     </div>
 
-                    <div class="card-body p-3">
+                    {{-- UPDATE: Padding dikurangi dari p-4 menjadi p-2 agar jarak tidak terlalu jauh --}}
+                    <div class="card-body p-2">
                         @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
+                            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm m-2" role="alert">
+                                <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                         @endif
 
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover align-middle text-center mb-0">
+                            {{-- UPDATE: border-spacing dikurangi menjadi 0 2px agar baris lebih rapat --}}
+                            <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0 2px;">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>NIM</th>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                        <th>No HP</th>
-                                        <th>Prodi</th>
-                                        <th>Angkatan</th>
-                                        <th>IPK</th>
-                                        <th>Perusahaan</th>
+                                        <th class="border-0 rounded-start ps-3">NIM</th>
+                                        <th class="border-0">Nama</th>
+                                        <th class="border-0">Email</th>
+                                        <th class="border-0 text-center">No HP</th>
+                                        <th class="border-0">Prodi</th>
+                                        <th class="border-0 text-center">Angkatan</th>
+                                        <th class="border-0 text-center">IPK</th>
+                                        <th class="border-0">Perusahaan</th>
                                         
-                                        {{-- LOGIKA 2: Kolom Header Aksi hanya muncul untuk Koordinator --}}
                                         @if(Auth::user()->role == 'koordinator')
-                                            <th>Aksi</th>
+                                            <th class="border-0 rounded-end text-center" width="120px">Aksi</th>
                                         @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($mahasiswa as $m)
-                                    <tr>
-                                        <td>{{ $m->nim }}</td>
-                                        <td class="text-start">{{ $m->nama }}</td>
-                                        <td class="text-start">{{ $m->email }}</td>
-                                        <td>{{ $m->no_hp ?? '-' }}</td>
-                                        <td>{{ $m->prodi }}</td>
-                                        <td>{{ $m->angkatan }}</td>
-                                        <td>{{ $m->ipk ?? '-' }}</td>
-                                        <td class="text-start">{{ $m->perusahaan ?? '-' }}</td>
+                                    <tr class="shadow-sm bg-white rounded">
+                                        {{-- Font Regular (tidak tebal) --}}
+                                        <td class="border-0 rounded-start ps-3 text-secondary">{{ $m->nim }}</td>
+                                        <td class="border-0 text-dark">{{ $m->nama }}</td>
+                                        <td class="border-0 text-muted">{{ $m->email }}</td>
+                                        <td class="border-0 text-center">{{ $m->no_hp ?? '-' }}</td>
+                                        <td class="border-0"><span class="badge bg-light text-dark border fw-normal">{{ $m->prodi }}</span></td>
+                                        <td class="border-0 text-center">{{ $m->angkatan }}</td>
+                                        <td class="border-0 text-center">{{ $m->ipk ?? '-' }}</td>
+                                        <td class="border-0">{{ $m->perusahaan ?? '-' }}</td>
                                         
-                                        {{-- LOGIKA 3: Tombol Edit & Hapus hanya untuk Koordinator --}}
                                         @if(Auth::user()->role == 'koordinator')
-                                            <td>
-                                                <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}" class="btn btn-warning btn-sm">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Yakin hapus data ini?')">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                            <td class="border-0 rounded-end text-center">
+                                                <div class="d-flex justify-content-center gap-1">
+                                                    <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}" 
+                                                       class="btn-action btn-edit-custom" 
+                                                       data-bs-toggle="tooltip" 
+                                                       title="Edit Data">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                    
+                                                    <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" 
+                                                                class="btn-action btn-delete-custom"
+                                                                data-bs-toggle="tooltip" 
+                                                                title="Hapus Data"
+                                                                onclick="return confirm('Apakah Anda yakin ingin menghapus data {{ $m->nama }}?')">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         @endif
                                     </tr>
                                     @empty
                                     <tr>
-                                        {{-- LOGIKA 4: Sesuaikan Colspan agar tabel tetap rapi --}}
-                                        <td colspan="{{ Auth::user()->role == 'koordinator' ? 9 : 8 }}" class="text-center text-muted">
-                                            Belum ada data mahasiswa.
+                                        <td colspan="{{ Auth::user()->role == 'koordinator' ? 9 : 8 }}" class="text-center py-4 text-muted bg-light rounded">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="fa fa-folder-open fa-2x mb-2 text-secondary opacity-50"></i>
+                                                <h6 class="fw-normal">Belum ada data mahasiswa</h6>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforelse
@@ -196,6 +247,11 @@
             window.addEventListener('resize', syncHeights);
             window.addEventListener('load', syncHeights);
             syncHeights();
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
         });
     </script>
 
