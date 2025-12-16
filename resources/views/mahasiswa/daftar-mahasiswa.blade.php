@@ -41,10 +41,10 @@
         }
 
         .page-header { margin-bottom: 12px; }
-        
+
         /* Table Styling */
         table { font-size: 14px; }
-        
+
         thead th {
             font-weight: 600;
             text-transform: uppercase;
@@ -118,12 +118,12 @@
         <div class="main-scroll">
             <div class="container-fluid">
                 <div class="card shadow border-0 rounded-3">
-                    
+
                     <div class="card-header bg-custom-blue text-white d-flex justify-content-between align-items-center py-3">
                         <h4 class="mb-0 fw-bold fs-5">
                             <i class="fa fa-users me-2"></i> Daftar Mahasiswa
                         </h4>
-                        
+
                         @if(Auth::user()->role == 'koordinator')
                             <a href="{{ route('mahasiswa.create') }}" class="btn btn-light btn-sm text-custom-blue fw-bold shadow-sm">
                                 <i class="fa fa-plus me-1"></i> Tambah Mahasiswa
@@ -153,7 +153,7 @@
                                         <th class="border-0 text-center">Angkatan</th>
                                         <th class="border-0 text-center">IPK</th>
                                         <th class="border-0">Perusahaan</th>
-                                        
+
                                         @if(Auth::user()->role == 'koordinator')
                                             <th class="border-0 rounded-end text-center" width="120px">Aksi</th>
                                         @endif
@@ -169,25 +169,25 @@
                                         <td class="border-0 text-center">{{ $m->no_hp ?? '-' }}</td>
                                         <td class="border-0"><span class="badge bg-light text-dark border fw-normal">{{ $m->prodi }}</span></td>
                                         <td class="border-0 text-center">{{ $m->angkatan }}</td>
-                                        <td class="border-0 text-center">{{ $m->ipk ?? '-' }}</td>
+                                        <td class="border-0 text-center">{{ optional($m->transcript)->ipk ?? $m->ipk ?? '-' }}</td>
                                         <td class="border-0">{{ $m->perusahaan ?? '-' }}</td>
-                                        
+
                                         @if(Auth::user()->role == 'koordinator')
                                             <td class="border-0 rounded-end text-center">
                                                 <div class="d-flex justify-content-center gap-1">
-                                                    <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}" 
-                                                       class="btn-action btn-edit-custom" 
-                                                       data-bs-toggle="tooltip" 
+                                                    <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}"
+                                                       class="btn-action btn-edit-custom"
+                                                       data-bs-toggle="tooltip"
                                                        title="Edit Data">
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                     </a>
-                                                    
+
                                                     <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" 
+                                                        <button type="submit"
                                                                 class="btn-action btn-delete-custom"
-                                                                data-bs-toggle="tooltip" 
+                                                                data-bs-toggle="tooltip"
                                                                 title="Hapus Data"
                                                                 onclick="return confirm('Apakah Anda yakin ingin menghapus data {{ $m->nama }}?')">
                                                             <i class="fa-solid fa-trash-can"></i>
@@ -211,10 +211,10 @@
                             </table>
                         </div>
                     </div>
-                </div> 
-            </div> 
-        </div> 
-    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>

@@ -12,7 +12,8 @@ class MahasiswaController extends Controller
      */
     public function index()
     {
-        $mahasiswa = Mahasiswa::all();
+        // Eager-load `transcript` untuk mengambil IPK dari tabel transkrip jika tersedia
+        $mahasiswa = Mahasiswa::with('transcript')->get();
         return view('mahasiswa.daftar-mahasiswa', compact('mahasiswa'));
     }
 
