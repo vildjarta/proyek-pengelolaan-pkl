@@ -68,7 +68,7 @@ class DataDosenPembimbingController extends Controller
                 [
                     'name'     => $dosen->nama,
                     'password' => Hash::make(Str::random(16)),
-                    'role'     => 'dosen',
+                    'role'     => 'dosen_pembimbing',
                 ]
             );
 
@@ -101,9 +101,20 @@ class DataDosenPembimbingController extends Controller
         return redirect()->route('datadosenpembimbing.edit', $id);
     }
 
+// ... namespace dan use tetap sama
     public function edit($id)
     {
         $item = DataDosenPembimbing::with('mahasiswa')->findOrFail($id);
+        
+        // --- LOGIKA TAMBAHAN: CEK KEPEMILIKAN DATA ---
+        $user = auth()->user();
+        
+        // Jika user adalah 'dosen_pembimbing' DAN id_user pada data tidak sama dengan id user yang login
+        if ($user->role == 'dosen_pembimbing' && $item->id_user != $user->id) {
+            return abort(403, 'Anda tidak memiliki akses untuk mengedit data dosen lain.');
+        }
+        // ---------------------------------------------
+
         $mahasiswa = Mahasiswa::orderBy('nama')->get();
 
         return view('datadosenpembimbing.editdatadosenpembimbing', compact('item', 'mahasiswa'));
@@ -112,6 +123,13 @@ class DataDosenPembimbingController extends Controller
     public function update(Request $request, $id)
     {
         $item = DataDosenPembimbing::findOrFail($id);
+
+        // --- LOGIKA TAMBAHAN: CEK KEPEMILIKAN DATA (Sama seperti edit) ---
+        $user = auth()->user();
+        if ($user->role == 'dosen_pembimbing' && $item->id_user != $user->id) {
+            return abort(403, 'Anda tidak memiliki akses untuk mengubah data dosen lain.');
+        }
+        // -----------------------------------------------------------------
 
         $request->validate([
             'NIP'   => 'required|digits:18',
@@ -122,6 +140,8 @@ class DataDosenPembimbingController extends Controller
             'nim.*' => 'exists:mahasiswa,nim',
         ]);
 
+        // ... (kode update selanjutnya tetap sama seperti file asli Anda)
+        
         $dosen = Dosen::firstOrCreate(['nip' => $request->NIP]);
         $dosen->update([
             'nama'  => $request->nama,
