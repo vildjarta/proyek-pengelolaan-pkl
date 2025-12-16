@@ -40,7 +40,7 @@
 .profile-sidebar-menu li.active a,
 .profile-sidebar-menu li a:hover {
     background-color: #eef2ff; /* Biru muda (sesuai edlink) */
-    color: #3b82f6; /* Biru */
+    color: #261FB3; /* Biru */
 }
 
 /* Konten Profil (Kolom Kanan) */
@@ -95,7 +95,7 @@
 .form-group input[type="text"]:focus,
 .form-group input[type="email"]:focus,
 .form-group input[type="password"]:focus {
-    border-color: #3b82f6;
+    border-color: #261FB3;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     outline: none;
 }
@@ -124,7 +124,7 @@
     cursor: pointer;
 }
 .radio-group input[type="radio"] {
-    accent-color: #3b82f6;
+    accent-color: #261FB3;
 }
 
 /* Tombol Form */
@@ -148,11 +148,11 @@
 }
 
 .btn-primary {
-    background-color: #3b82f6; /* Biru */
+    background-color: #261FB3; /* Biru */
     color: white;
 }
 .btn-primary:hover {
-    background-color: #2563eb;
+    background-color: #261FB3;
 }
 
 .btn-secondary {
@@ -204,7 +204,7 @@
 .profile-pic-wrapper .upload-button {
     font-size: 14px;
     font-weight: 500;
-    color: #3b82f6;
+    color: #261FB3;
     cursor: pointer;
     background: #eef2ff;
     padding: 8px 14px;
