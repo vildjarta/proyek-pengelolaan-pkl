@@ -58,7 +58,7 @@ class PenilaianPerusahaan extends Model
         $total += self::hitungNilaiDenganBobot($data['penampilan'] ?? 0, self::BOBOT_PENAMPILAN);
         $total += self::hitungNilaiDenganBobot($data['sikap_etika'] ?? 0, self::BOBOT_SIKAP_ETIKA);
         $total += self::hitungNilaiDenganBobot($data['pengetahuan'] ?? 0, self::BOBOT_PENGETAHUAN);
-        
+
         return $total;
     }
 
