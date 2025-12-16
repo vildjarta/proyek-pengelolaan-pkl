@@ -69,28 +69,31 @@ class NilaiController extends Controller
         $objektivitas_menangapi = $penguji->objektif ?? 0;
         $penulisan_laporan_penguji = $penguji->laporan ?? 0;
 
-        // Hitung total nilai (sama formula sebelumnya)
-        $nilaiTotal =
-            // Pembimbing Lapangan (50%)
-            $disiplin +
-            $komunikasi +
-            $kerja_tim +
-            $kerja_mandiri +
-            $penampilan +
-            $sikap_etika_lapangan +
-            $pengetahuan +
-            // Dosen Pembimbing (30%)
-            $penguasaan_teori +
-            $kemampuan_analisis +
-            $keaktifan_bimbingan +
-            $kemampuan_penulisan_laporan +
-            $sikap_etika_dospem +
-            // Penguji (20%)
-            $penyajian_presentasi +
-            $pemahaman_materi +
-            $hasil_yang_dicapai +
-            $objektivitas_menangapi +
-            $penulisan_laporan_penguji;
+        // Hitung total nilai dengan bobot persentase (0-100 → 0-300)
+        $subtotalPembimbing =
+            ($disiplin * 0.15) +
+            ($komunikasi * 0.10) +
+            ($kerja_tim * 0.15) +
+            ($kerja_mandiri * 0.10) +
+            ($penampilan * 0.10) +
+            ($sikap_etika_lapangan * 0.20) +
+            ($pengetahuan * 0.20);
+
+        $subtotalDospem =
+            ($penguasaan_teori * 0.20) +
+            ($kemampuan_analisis * 0.25) +
+            ($keaktifan_bimbingan * 0.15) +
+            ($kemampuan_penulisan_laporan * 0.20) +
+            ($sikap_etika_dospem * 0.20);
+
+        $subtotalPenguji =
+            ($penyajian_presentasi * 0.10) +
+            ($pemahaman_materi * 0.15) +
+            ($hasil_yang_dicapai * 0.40) +
+            ($objektivitas_menangapi * 0.20) +
+            ($penulisan_laporan_penguji * 0.15);
+
+        $nilaiTotal = $subtotalPembimbing + $subtotalDospem + $subtotalPenguji;
 
         $nilaiHuruf = Nilai::konversiNilaiHuruf($nilaiTotal);
         $skor = Nilai::konversiSkor($nilaiTotal);
@@ -193,28 +196,31 @@ class NilaiController extends Controller
         $objektivitas_menangapi = $penguji->objektif ?? 0;
         $penulisan_laporan_penguji = $penguji->laporan ?? 0;
 
-        // Hitung total nilai (sama formula sebelumnya)
-        $nilaiTotal =
-            // Pembimbing Lapangan (50%)
-            $disiplin +
-            $komunikasi +
-            $kerja_tim +
-            $kerja_mandiri +
-            $penampilan +
-            $sikap_etika_lapangan +
-            $pengetahuan +
-            // Dosen Pembimbing (30%)
-            $penguasaan_teori +
-            $kemampuan_analisis +
-            $keaktifan_bimbingan +
-            $kemampuan_penulisan_laporan +
-            $sikap_etika_dospem +
-            // Penguji (20%)
-            $penyajian_presentasi +
-            $pemahaman_materi +
-            $hasil_yang_dicapai +
-            $objektivitas_menangapi +
-            $penulisan_laporan_penguji;
+        // Hitung total nilai dengan bobot persentase (0-100 → 0-300)
+        $subtotalPembimbing =
+            ($disiplin * 0.15) +
+            ($komunikasi * 0.10) +
+            ($kerja_tim * 0.15) +
+            ($kerja_mandiri * 0.10) +
+            ($penampilan * 0.10) +
+            ($sikap_etika_lapangan * 0.20) +
+            ($pengetahuan * 0.20);
+
+        $subtotalDospem =
+            ($penguasaan_teori * 0.20) +
+            ($kemampuan_analisis * 0.25) +
+            ($keaktifan_bimbingan * 0.15) +
+            ($kemampuan_penulisan_laporan * 0.20) +
+            ($sikap_etika_dospem * 0.20);
+
+        $subtotalPenguji =
+            ($penyajian_presentasi * 0.10) +
+            ($pemahaman_materi * 0.15) +
+            ($hasil_yang_dicapai * 0.40) +
+            ($objektivitas_menangapi * 0.20) +
+            ($penulisan_laporan_penguji * 0.15);
+
+        $nilaiTotal = $subtotalPembimbing + $subtotalDospem + $subtotalPenguji;
 
         $nilaiHuruf = Nilai::konversiNilaiHuruf($nilaiTotal);
         $skor = Nilai::konversiSkor($nilaiTotal);

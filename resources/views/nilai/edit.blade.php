@@ -57,36 +57,36 @@
             <h3><i class="fas fa-briefcase"></i> Penilaian Pembimbing Lapangan (Bobot 50%)</h3>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Disiplin (Max 15%):</label>
-                    <input type="number" step="0.01" name="disiplin" class="form-control nilai-input" max="15" value="{{ $nilai->disiplin }}" onchange="hitungTotal()">
+                    <label>Disiplin (0-100):</label>
+                    <input type="number" step="0.01" name="disiplin" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->disiplin }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Komunikasi (Max 10%):</label>
-                    <input type="number" step="0.01" name="komunikasi" class="form-control nilai-input" max="10" value="{{ $nilai->komunikasi }}" onchange="hitungTotal()">
+                    <label>Komunikasi (0-100):</label>
+                    <input type="number" step="0.01" name="komunikasi" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->komunikasi }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Kerja Tim (Max 15%):</label>
-                    <input type="number" step="0.01" name="kerja_tim" class="form-control nilai-input" max="15" value="{{ $nilai->kerja_tim }}" onchange="hitungTotal()">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Kerja Mandiri (Max 10%):</label>
-                    <input type="number" step="0.01" name="kerja_mandiri" class="form-control nilai-input" max="10" value="{{ $nilai->kerja_mandiri }}" onchange="hitungTotal()">
-                </div>
-                <div class="form-group">
-                    <label>Penampilan (Max 10%):</label>
-                    <input type="number" step="0.01" name="penampilan" class="form-control nilai-input" max="10" value="{{ $nilai->penampilan }}" onchange="hitungTotal()">
-                </div>
-                <div class="form-group">
-                    <label>Sikap/Etika (Max 20%):</label>
-                    <input type="number" step="0.01" name="sikap_etika_lapangan" class="form-control nilai-input" max="20" value="{{ $nilai->sikap_etika_lapangan }}" onchange="hitungTotal()">
+                    <label>Kerja Tim (0-100):</label>
+                    <input type="number" step="0.01" name="kerja_tim" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->kerja_tim }}" onchange="hitungTotal()">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Pengetahuan (Max 20%):</label>
-                    <input type="number" step="0.01" name="pengetahuan" class="form-control nilai-input" max="20" value="{{ $nilai->pengetahuan }}" onchange="hitungTotal()">
+                    <label>Kerja Mandiri (0-100):</label>
+                    <input type="number" step="0.01" name="kerja_mandiri" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->kerja_mandiri }}" onchange="hitungTotal()">
+                </div>
+                <div class="form-group">
+                    <label>Penampilan (0-100):</label>
+                    <input type="number" step="0.01" name="penampilan" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->penampilan }}" onchange="hitungTotal()">
+                </div>
+                <div class="form-group">
+                    <label>Sikap/Etika (0-100):</label>
+                    <input type="number" step="0.01" name="sikap_etika_lapangan" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->sikap_etika_lapangan }}" onchange="hitungTotal()">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pengetahuan (0-100):</label>
+                    <input type="number" step="0.01" name="pengetahuan" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->pengetahuan }}" onchange="hitungTotal()">
                 </div>
             </div>
             <div class="form-group">
@@ -103,26 +103,26 @@
             <h3><i class="fas fa-chalkboard-teacher"></i> Penilaian Dosen Pembimbing (Bobot 30%)</h3>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Penguasaan Teori (Max 20%):</label>
-                    <input type="number" step="0.01" name="penguasaan_teori" class="form-control nilai-input" max="20" value="{{ $nilai->penguasaan_teori }}" onchange="hitungTotal()">
+                    <label>Penguasaan Teori (0-100):</label>
+                    <input type="number" step="0.01" name="penguasaan_teori" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->penguasaan_teori }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Kemampuan Analisis (Max 25%):</label>
-                    <input type="number" step="0.01" name="kemampuan_analisis" class="form-control nilai-input" max="25" value="{{ $nilai->kemampuan_analisis }}" onchange="hitungTotal()">
+                    <label>Kemampuan Analisis (0-100):</label>
+                    <input type="number" step="0.01" name="kemampuan_analisis" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->kemampuan_analisis }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Keaktifan Bimbingan (Max 15%):</label>
-                    <input type="number" step="0.01" name="keaktifan_bimbingan" class="form-control nilai-input" max="15" value="{{ $nilai->keaktifan_bimbingan }}" onchange="hitungTotal()">
+                    <label>Keaktifan Bimbingan (0-100):</label>
+                    <input type="number" step="0.01" name="keaktifan_bimbingan" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->keaktifan_bimbingan }}" onchange="hitungTotal()">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Kemampuan Penulisan Laporan (Max 20%):</label>
-                    <input type="number" step="0.01" name="kemampuan_penulisan_laporan" class="form-control nilai-input" max="20" value="{{ $nilai->kemampuan_penulisan_laporan }}" onchange="hitungTotal()">
+                    <label>Kemampuan Penulisan Laporan (0-100):</label>
+                    <input type="number" step="0.01" name="kemampuan_penulisan_laporan" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->kemampuan_penulisan_laporan }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Sikap/Etika (Max 20%):</label>
-                    <input type="number" step="0.01" name="sikap_etika_dospem" class="form-control nilai-input" max="20" value="{{ $nilai->sikap_etika_dospem }}" onchange="hitungTotal()">
+                    <label>Sikap/Etika (0-100):</label>
+                    <input type="number" step="0.01" name="sikap_etika_dospem" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->sikap_etika_dospem }}" onchange="hitungTotal()">
                 </div>
             </div>
             <div class="form-group">
@@ -139,26 +139,26 @@
             <h3><i class="fas fa-clipboard-check"></i> Penilaian Penguji (Bobot 20%)</h3>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Penyajian Presentasi (Max 10%):</label>
-                    <input type="number" step="0.01" name="penyajian_presentasi" class="form-control nilai-input" max="10" value="{{ $nilai->penyajian_presentasi }}" onchange="hitungTotal()">
+                    <label>Penyajian Presentasi (0-100):</label>
+                    <input type="number" step="0.01" name="penyajian_presentasi" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->penyajian_presentasi }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Pemahaman Materi (Max 15%):</label>
-                    <input type="number" step="0.01" name="pemahaman_materi" class="form-control nilai-input" max="15" value="{{ $nilai->pemahaman_materi }}" onchange="hitungTotal()">
+                    <label>Pemahaman Materi (0-100):</label>
+                    <input type="number" step="0.01" name="pemahaman_materi" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->pemahaman_materi }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Hasil yang Dicapai (Max 40%):</label>
-                    <input type="number" step="0.01" name="hasil_yang_dicapai" class="form-control nilai-input" max="40" value="{{ $nilai->hasil_yang_dicapai }}" onchange="hitungTotal()">
+                    <label>Hasil yang Dicapai (0-100):</label>
+                    <input type="number" step="0.01" name="hasil_yang_dicapai" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->hasil_yang_dicapai }}" onchange="hitungTotal()">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Objektivitas Menanggapi (Max 20%):</label>
-                    <input type="number" step="0.01" name="objektivitas_menangapi" class="form-control nilai-input" max="20" value="{{ $nilai->objektivitas_menangapi }}" onchange="hitungTotal()">
+                    <label>Objektivitas Menanggapi (0-100):</label>
+                    <input type="number" step="0.01" name="objektivitas_menangapi" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->objektivitas_menangapi }}" onchange="hitungTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Penulisan Laporan (Max 15%):</label>
-                    <input type="number" step="0.01" name="penulisan_laporan" class="form-control nilai-input" max="15" value="{{ $nilai->penulisan_laporan }}" onchange="hitungTotal()">
+                    <label>Penulisan Laporan (0-100):</label>
+                    <input type="number" step="0.01" name="penulisan_laporan" class="form-control nilai-input" min="0" max="100" value="{{ $nilai->penulisan_laporan }}" onchange="hitungTotal()">
                 </div>
             </div>
             <div class="form-group">
@@ -199,36 +199,36 @@
 
 <script>
     function hitungTotal() {
-        // Pembimbing Lapangan
-        const disiplin = parseFloat(document.querySelector('[name="disiplin"]').value) || 0;
-        const komunikasi = parseFloat(document.querySelector('[name="komunikasi"]').value) || 0;
-        const kerja_tim = parseFloat(document.querySelector('[name="kerja_tim"]').value) || 0;
-        const kerja_mandiri = parseFloat(document.querySelector('[name="kerja_mandiri"]').value) || 0;
-        const penampilan = parseFloat(document.querySelector('[name="penampilan"]').value) || 0;
-        const sikap_etika_lapangan = parseFloat(document.querySelector('[name="sikap_etika_lapangan"]').value) || 0;
-        const pengetahuan = parseFloat(document.querySelector('[name="pengetahuan"]').value) || 0;
+        // Pembimbing Lapangan (nilai 0-100, dikonversi dengan bobot)
+        const disiplin = (parseFloat(document.querySelector('[name="disiplin"]').value) || 0) * 0.15;
+        const komunikasi = (parseFloat(document.querySelector('[name="komunikasi"]').value) || 0) * 0.10;
+        const kerja_tim = (parseFloat(document.querySelector('[name="kerja_tim"]').value) || 0) * 0.15;
+        const kerja_mandiri = (parseFloat(document.querySelector('[name="kerja_mandiri"]').value) || 0) * 0.10;
+        const penampilan = (parseFloat(document.querySelector('[name="penampilan"]').value) || 0) * 0.10;
+        const sikap_etika_lapangan = (parseFloat(document.querySelector('[name="sikap_etika_lapangan"]').value) || 0) * 0.20;
+        const pengetahuan = (parseFloat(document.querySelector('[name="pengetahuan"]').value) || 0) * 0.20;
 
         const subtotalPembimbing = disiplin + komunikasi + kerja_tim + kerja_mandiri + penampilan + sikap_etika_lapangan + pengetahuan;
 
-        // Dosen Pembimbing
-        const penguasaan_teori = parseFloat(document.querySelector('[name="penguasaan_teori"]').value) || 0;
-        const kemampuan_analisis = parseFloat(document.querySelector('[name="kemampuan_analisis"]').value) || 0;
-        const keaktifan_bimbingan = parseFloat(document.querySelector('[name="keaktifan_bimbingan"]').value) || 0;
-        const kemampuan_penulisan_laporan = parseFloat(document.querySelector('[name="kemampuan_penulisan_laporan"]').value) || 0;
-        const sikap_etika_dospem = parseFloat(document.querySelector('[name="sikap_etika_dospem"]').value) || 0;
+        // Dosen Pembimbing (nilai 0-100, dikonversi dengan bobot)
+        const penguasaan_teori = (parseFloat(document.querySelector('[name="penguasaan_teori"]').value) || 0) * 0.20;
+        const kemampuan_analisis = (parseFloat(document.querySelector('[name="kemampuan_analisis"]').value) || 0) * 0.25;
+        const keaktifan_bimbingan = (parseFloat(document.querySelector('[name="keaktifan_bimbingan"]').value) || 0) * 0.15;
+        const kemampuan_penulisan_laporan = (parseFloat(document.querySelector('[name="kemampuan_penulisan_laporan"]').value) || 0) * 0.20;
+        const sikap_etika_dospem = (parseFloat(document.querySelector('[name="sikap_etika_dospem"]').value) || 0) * 0.20;
 
         const subtotalDospem = penguasaan_teori + kemampuan_analisis + keaktifan_bimbingan + kemampuan_penulisan_laporan + sikap_etika_dospem;
 
-        // Penguji
-        const penyajian_presentasi = parseFloat(document.querySelector('[name="penyajian_presentasi"]').value) || 0;
-        const pemahaman_materi = parseFloat(document.querySelector('[name="pemahaman_materi"]').value) || 0;
-        const hasil_yang_dicapai = parseFloat(document.querySelector('[name="hasil_yang_dicapai"]').value) || 0;
-        const objektivitas_menangapi = parseFloat(document.querySelector('[name="objektivitas_menangapi"]').value) || 0;
-        const penulisan_laporan = parseFloat(document.querySelector('[name="penulisan_laporan"]').value) || 0;
+        // Penguji (nilai 0-100, dikonversi dengan bobot)
+        const penyajian_presentasi = (parseFloat(document.querySelector('[name="penyajian_presentasi"]').value) || 0) * 0.10;
+        const pemahaman_materi = (parseFloat(document.querySelector('[name="pemahaman_materi"]').value) || 0) * 0.15;
+        const hasil_yang_dicapai = (parseFloat(document.querySelector('[name="hasil_yang_dicapai"]').value) || 0) * 0.40;
+        const objektivitas_menangapi = (parseFloat(document.querySelector('[name="objektivitas_menangapi"]').value) || 0) * 0.20;
+        const penulisan_laporan = (parseFloat(document.querySelector('[name="penulisan_laporan"]').value) || 0) * 0.15;
 
         const subtotalPenguji = penyajian_presentasi + pemahaman_materi + hasil_yang_dicapai + objektivitas_menangapi + penulisan_laporan;
 
-        // Total
+        // Total (subtotal sudah termasuk bobot persentase)
         const nilaiTotal = subtotalPembimbing + subtotalDospem + subtotalPenguji;
 
         // Konversi nilai huruf
