@@ -124,7 +124,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Rating & review (gabungan roles)
-    Route::middleware(['role:mahasiswa,dosen_pembimbing,dosen_penguji,ketua_prodi,koordinator,staff'])->group(function () {
+    Route::middleware(['role:mahasiswa,dosen_pembimbing,dosen_penguji,ketua_prodi,koordinator,staff,perusahaan'])->group(function () {
         // Halaman ranking utama
         Route::get('/ratingperusahaan', [RatingDanReviewController::class, 'showRanking'])->name('ratingperusahaan');
 
