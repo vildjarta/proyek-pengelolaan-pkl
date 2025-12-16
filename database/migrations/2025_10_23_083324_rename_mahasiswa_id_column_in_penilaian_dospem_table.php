@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('penilaian_dospem', function (Blueprint $table) {
-            // Pastikan kolom mahasiswa_id ada sebelum menggantinya
-            if (Schema::hasColumn('penilaian_dospem', 'mahasiswa_id')) {
-                $table->renameColumn('mahasiswa_id', 'id_mahasiswa');
+            // Pastikan kolom id_mahasiswa ada sebelum menggantinya
+            if (Schema::hasColumn('penilaian_dospem', 'id_mahasiswa')) {
+                $table->renameColumn('id_mahasiswa', 'id_mahasiswa');
             }
         });
     }
@@ -26,7 +26,7 @@ return new class extends Migration
     {
         Schema::table('penilaian_dospem', function (Blueprint $table) {
             if (Schema::hasColumn('penilaian_dospem', 'id_mahasiswa')) {
-                $table->renameColumn('id_mahasiswa', 'mahasiswa_id');
+                $table->renameColumn('id_mahasiswa', 'id_mahasiswa');
             }
         });
     }

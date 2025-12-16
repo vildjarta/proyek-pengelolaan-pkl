@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Transcript;
 
 class Mahasiswa extends Model
 {
@@ -42,6 +43,15 @@ public function dosen()
     public function dosen_penguji()
     {
         return $this->hasOne(dosen_penguji::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
+
+    /**
+     * Relasi ke tabel transcripts berdasarkan `nim`.
+     * Mengambil data transkrip terakhir (jika ada).
+     */
+    public function transcript()
+    {
+        return $this->hasOne(Transcript::class, 'nim', 'nim');
     }
 
     /**

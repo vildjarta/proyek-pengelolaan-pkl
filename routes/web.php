@@ -117,6 +117,7 @@ Route::middleware(['auth'])->group(function () {
     // nilai akhir (role: koordinator , staff, dosen penguji, mahasiswa )
     Route::middleware(['role:koordinator,dosen_pembimbing,dosen_penguji,mahasiswa'])->group(function () {
         Route::resource('nilai', NilaiController::class);
+        Route::get('/api/nilai/get-penilaian/{nim}', [NilaiController::class, 'getNilaiData'])->name('nilai.get-penilaian');
     });
 
     // data dosen dan manajemen user (role: koordinator)

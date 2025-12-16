@@ -8,51 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // add foreign constraints if columns exist
-        if (Schema::hasTable('dosen')) {
-            Schema::table('dosen', function (Blueprint $table) {
-                if (! $this->hasForeign('dosen', 'dosen_id_user_foreign') && Schema::hasColumn('dosen', 'id_user')) {
-                    $table->foreign('id_user')->references('id')->on('users')->onDelete('set null');
-                }
-            });
-        }
-
-        if (Schema::hasTable('dosen_pembimbing')) {
-            Schema::table('dosen_pembimbing', function (Blueprint $table) {
-                if (! $this->hasForeign('dosen_pembimbing', 'dosen_pembimbing_id_user_foreign') && Schema::hasColumn('dosen_pembimbing', 'id_user')) {
-                    $table->foreign('id_user')->references('id')->on('users')->onDelete('set null');
-                }
-            });
-        }
+        // NOTE: Foreign keys for id_user in dosen and dosen_pembimbing tables
+        // are already defined in original migrations:
+        // - 2025_09_23_235959_create_dosen_table.php
+        // - 2025_09_24_000000_create_dosen_pembimbing_table.php
+        // This migration is a no-op to avoid "Duplicate key" errors (errno 1005)
     }
 
     public function down(): void
     {
-        if (Schema::hasTable('dosen')) {
-            Schema::table('dosen', function (Blueprint $table) {
-                $table->dropForeign(['id_user']);
-            });
-        }
-
-        if (Schema::hasTable('dosen_pembimbing')) {
-            Schema::table('dosen_pembimbing', function (Blueprint $table) {
-                $table->dropForeign(['id_user']);
-            });
-        }
-    }
-
-    // helper: check if a foreign exists (best-effort)
-    private function hasForeign(string $table, string $indexName): bool
-    {
-        try {
-            $sm = Schema::getConnection()->getDoctrineSchemaManager();
-            $indexes = $sm->listTableForeignKeys($table);
-            foreach ($indexes as $idx) {
-                if ($idx->getName() === $indexName) return true;
-            }
-        } catch (\Exception $e) {
-            // ignore
-        }
-        return false;
+        // This migration is a no-op, nothing to rollback
     }
 };

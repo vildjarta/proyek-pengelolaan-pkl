@@ -21,9 +21,11 @@
 <div class="main-content-wrapper">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Daftar Nilai Mahasiswa PKL</h2>
-        <a href="{{ route('nilai.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Tambah Nilai
-        </a>
+        @if(auth()->check() && auth()->user()->role == 'koordinator')
+            <a href="{{ route('nilai.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tambah Nilai
+            </a>
+        @endif
     </div>
 
     @if(session('success'))
@@ -72,16 +74,18 @@
                                 <a href="{{ route('nilai.show', $row->id) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i> Detail
                                 </a>
-                                <a href="{{ route('nilai.edit', $row->id) }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <form action="{{ route('nilai.destroy', $row->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus nilai ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </button>
-                                </form>
+                                @if(auth()->check() && auth()->user()->role == 'koordinator')
+                                    <a href="{{ route('nilai.edit', $row->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form action="{{ route('nilai.destroy', $row->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus nilai ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -92,9 +96,11 @@
             <div class="empty-state">
                 <i class="fas fa-inbox"></i>
                 <p>Belum ada data nilai mahasiswa.</p>
-                <a href="{{ route('nilai.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Nilai Pertama
-                </a>
+                @if(auth()->check() && auth()->user()->role == 'koordinator')
+                    <a href="{{ route('nilai.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Nilai Pertama
+                    </a>
+                @endif
             </div>
         @endif
     </div>

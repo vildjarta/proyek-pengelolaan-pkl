@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -19,7 +18,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // Simpan URL sebelumnya (selain halaman edit profil)
+        // Simpan URL sebelumnya (agar tombol kembali berfungsi)
         if (!session()->has('profile_prev')) {
             $previous = url()->previous();
             $current = route('profile.edit');
@@ -41,100 +40,77 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // ================= VALIDASI =================
+        // 1. VALIDASI DATA UMUM
         $request->validate([
-            'name'         => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'phone_number' => ['nullable', 'string', 'max:15'],
-            'gender'       => ['nullable', Rule::in(['Laki-laki', 'Perempuan'])],
-            'avatar'       => ['nullable', 'image', 'max:8192'],
-
-            // password baru (opsional)
-            'new_password' => ['nullable', 'min:6', 'confirmed'],
+            'gender' => ['nullable', Rule::in(['Laki-laki', 'Perempuan'])],
+            'avatar' => ['nullable', 'image', 'max:8192'],
+            'new_password' => ['nullable', 'min:6', 'confirmed'], 
         ]);
 
-        /* ======================================================
-         | LOGIKA PASSWORD
-         | - User biasa: wajib isi current_password
-         | - User Google (password NULL): boleh langsung set
-         ====================================================== */
+        // 2. LOGIKA PASSWORD (SOLUSI INTI)
         if ($request->filled('new_password')) {
-
-            // Jika user punya password lama → wajib konfirmasi
-            if (!empty($user->password)) {
-
+            
+            // Cek: Apakah ini user login biasa (BUKAN user Google)?
+            // Kita asumsikan user Google pasti punya kolom 'google_id' yang terisi.
+            if (empty($user->google_id)) {
+                
+                // Jika user biasa (tidak punya google_id), WAJIB masukkan password lama
                 if (!$request->filled('current_password')) {
-                    return back()->withErrors([
-                        'current_password' => 'Kata sandi saat ini wajib diisi.'
-                    ]);
+                    return back()->withErrors(['current_password' => 'Harap masukkan kata sandi saat ini untuk konfirmasi.']);
                 }
 
                 if (!Hash::check($request->current_password, $user->password)) {
-                    return back()->withErrors([
-                        'current_password' => 'Kata sandi saat ini tidak sesuai.'
-                    ]);
+                    return back()->withErrors(['current_password' => 'Kata sandi saat ini salah.']);
                 }
             }
-
-            // User Google akan langsung loncat ke sini (bypass pengecekan sandi lama)
+            
+            // Jika user Google (google_id ada isinya), kode di atas dilewati (BYPASS).
+            // Sistem langsung menyimpan password baru tanpa tanya password lama.
             $user->password = Hash::make($request->new_password);
         }
 
-        /* ======================================================
-         | UPDATE DATA DASAR
-         ====================================================== */
+        // 3. UPDATE DATA LAINNYA
         $user->name = $request->name;
         $user->phone_number = $request->phone_number;
         $user->gender = $request->gender;
 
-        /* ======================================================
-         | AVATAR (CROPPED BASE64 / FILE UPLOAD)
-         ====================================================== */
-        $avatarCropped = $request->input('avatar_cropped');
-
-        try {
-            if ($avatarCropped) {
-
-                if (preg_match('/^data:image\/(\w+);base64,/', $avatarCropped, $type)) {
-                    $data = substr($avatarCropped, strpos($avatarCropped, ',') + 1);
-                    $data = base64_decode($data);
-
-                    if ($data !== false) {
-                        $filename = 'avatars/' . Str::uuid() . '.jpg';
-                        Storage::disk('public')->put($filename, $data);
-
-                        // hapus avatar lama
+        // 4. LOGIKA AVATAR (CROP & UPLOAD)
+        $avatarCropped = $request->input('avatar_cropped', null);
+        if ($avatarCropped) {
+            try {
+                // Proses base64 image
+                $avatarCropped = trim($avatarCropped);
+                if (preg_match('/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s', $avatarCropped, $matches)) {
+                    $b64 = str_replace(' ', '+', $matches[2]);
+                    $decoded = base64_decode($b64);
+                    if ($decoded !== false) {
+                        $filename = 'avatars/' . Str::random(32) . '.jpg';
+                        Storage::disk('public')->put($filename, $decoded);
+                        
+                        // Hapus avatar lama jika bukan default
                         if ($user->avatar && $user->avatar !== 'avatars/default.png') {
                             Storage::disk('public')->delete($user->avatar);
                         }
-
                         $user->avatar = $filename;
                     }
                 }
-
-            } elseif ($request->hasFile('avatar')) {
-
-                $path = $request->file('avatar')->store('avatars', 'public');
-
-                if ($user->avatar && $user->avatar !== 'avatars/default.png') {
-                    Storage::disk('public')->delete($user->avatar);
-                }
-
-                $user->avatar = $path;
+            } catch (\Throwable $e) {
+                // Silent fail
             }
-
-        } catch (\Throwable $e) {
-            Log::warning('Avatar upload failed: ' . $e->getMessage());
+        } elseif ($request->hasFile('avatar')) {
+            // Fallback upload biasa
+            $path = $request->file('avatar')->store('avatars', 'public');
+            if ($user->avatar && $user->avatar !== 'avatars/default.png') {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $user->avatar = $path;
         }
 
-        /* ======================================================
-         | SIMPAN
-         ====================================================== */
+        // 5. SIMPAN KE DATABASE
         $user->save();
 
-        // Redirect ke halaman asal jika ada
-        $redirectTo = session()->pull('profile_prev', route('profile.edit'));
-
-        return redirect($redirectTo)
-            ->with('success', 'Profil berhasil diperbarui.');
+        return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui! Sekarang Anda bisa login menggunakan password baru.');
     }
 }
