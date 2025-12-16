@@ -8,9 +8,20 @@ use App\Models\Mahasiswa;
 use App\Models\Penilaian_perusahaan;
 use App\Models\PenilaianDospem;
 use App\Models\PenilaianPenguji;
+use Illuminate\Support\Facades\Auth;
 
 class NilaiController extends Controller
 {
+    /**
+     * Helper: Cek apakah user adalah koordinator
+     */
+    private function requireCoordinator()
+    {
+        if (!Auth::check() || Auth::user()->role !== 'koordinator') {
+            abort(403, 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
+        }
+    }
+
     /**
      * Display daftar resource.
      */
@@ -25,6 +36,8 @@ class NilaiController extends Controller
      */
     public function create()
     {
+        $this->requireCoordinator();
+
         $mahasiswa = Mahasiswa::all();
         return view('nilai.create', compact('mahasiswa'));
     }
@@ -34,6 +47,8 @@ class NilaiController extends Controller
      */
     public function store(Request $request)
     {
+        $this->requireCoordinator();
+
         $request->validate([
             'id_mahasiswa' => 'required',
             'id_nilai' => 'required|unique:nilai_mahasiswa,id_nilai',
@@ -149,6 +164,8 @@ class NilaiController extends Controller
      */
     public function edit(string $id)
     {
+        $this->requireCoordinator();
+
         $nilai = Nilai::findOrFail($id);
         $mahasiswa = Mahasiswa::all();
         return view('nilai.edit', compact('nilai', 'mahasiswa'));
@@ -159,6 +176,8 @@ class NilaiController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->requireCoordinator();
+
         $nilai = Nilai::findOrFail($id);
 
         $request->validate([
@@ -266,6 +285,8 @@ class NilaiController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->requireCoordinator();
+
         $nilai = Nilai::findOrFail($id);
         $nilai->delete();
 

@@ -22,9 +22,11 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Detail Nilai Mahasiswa PKL</h2>
         <div>
-            <a href="{{ route('nilai.edit', $nilai->id) }}" class="btn btn-primary">
-                <i class="fas fa-edit"></i> Edit
-            </a>
+            @if(auth()->check() && auth()->user()->role == 'koordinator')
+                <a href="{{ route('nilai.edit', $nilai->id) }}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            @endif
             <a href="{{ route('nilai.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>

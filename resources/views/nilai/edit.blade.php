@@ -26,6 +26,7 @@
         </a>
     </div>
 
+    @if(auth()->check() && auth()->user()->role == 'koordinator')
     <form action="{{ route('nilai.update', $nilai->id) }}" method="POST" id="nilaiForm">
         @csrf
         @method('PUT')
@@ -252,6 +253,13 @@
         document.getElementById('skor').textContent = skor.toFixed(2);
     }
 </script>
+    </form>
+    @else
+        <div class="alert alert-warning">
+            <i class="fas fa-lock"></i> Anda tidak memiliki izin untuk mengubah nilai. Hanya koordinator yang dapat melakukan tindakan ini.
+        </div>
+        <a href="{{ route('nilai.index') }}" class="btn btn-secondary">Kembali</a>
+    @endif
 
 </body>
 </html>
