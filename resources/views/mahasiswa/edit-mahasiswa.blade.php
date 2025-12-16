@@ -437,6 +437,66 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Auto-fetch IPK from transcript based on NIM
+    const nimInput = document.getElementById('nim');
+    const ipkInput = document.getElementById('ipk');
+    
+    if (nimInput && ipkInput) {
+        // Fetch IPK on page load if NIM exists
+        const initialNim = nimInput.value.trim();
+        if (initialNim.length >= 10) {
+            fetchIPK(initialNim);
+        }
+
+        // Fetch IPK when NIM changes
+        nimInput.addEventListener('blur', function() {
+            const nim = this.value.trim();
+            if (nim.length >= 10) {
+                fetchIPK(nim);
+            }
+        });
+
+        function fetchIPK(nim) {
+            fetch(`/get-ipk/${nim}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.found) {
+                        ipkInput.value = parseFloat(data.ipk).toFixed(2);
+                        ipkInput.readOnly = true;
+                        ipkInput.style.backgroundColor = '#e9ecef';
+                        
+                        // Show info message
+                        let infoMsg = ipkInput.parentElement.querySelector('.ipk-info');
+                        if (!infoMsg) {
+                            infoMsg = document.createElement('small');
+                            infoMsg.className = 'ipk-info';
+                            infoMsg.style.color = '#28a745';
+                            infoMsg.style.display = 'block';
+                            infoMsg.style.marginTop = '5px';
+                            ipkInput.parentElement.appendChild(infoMsg);
+                        }
+                        infoMsg.innerHTML = '<i class="fas fa-check-circle"></i> IPK diambil dari data transkrip';
+                    } else {
+                        ipkInput.readOnly = false;
+                        ipkInput.style.backgroundColor = '#fafbfc';
+                        let infoMsg = ipkInput.parentElement.querySelector('.ipk-info');
+                        if (!infoMsg) {
+                            infoMsg = document.createElement('small');
+                            infoMsg.className = 'ipk-info';
+                            infoMsg.style.display = 'block';
+                            infoMsg.style.marginTop = '5px';
+                            ipkInput.parentElement.appendChild(infoMsg);
+                        }
+                        infoMsg.innerHTML = '<i class="fas fa-info-circle"></i> Data transkrip belum ada, silakan input manual';
+                        infoMsg.style.color = '#6c757d';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching IPK:', error);
+                });
+        }
+    }
 });
 </script>
 

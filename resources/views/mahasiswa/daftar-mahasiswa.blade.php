@@ -10,58 +10,47 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        /* ========== Perbaikan spacing / scroll agar header tidak menutupi konten ganda ==========
-           - Tidak mengubah tampilan (warna/ukuran), hanya rapikan jarak
-           - Sesuaikan --header-height kalau header mu berbeda
-        */
         :root {
-            --header-height: 60px;      /* sesuai header CSS kamu */
-            --sidebar-width: 285px;     /* sesuai sidebar CSS kamu */
-            --sidebar-collapsed: 70px;  /* sesuai behavior CSS */
+            --header-height: 60px;
+            --sidebar-width: 285px;
+            --sidebar-collapsed: 70px;
+            --primary-custom: #261FB3;
         }
 
-        /* Aturan utama: header fixed, sehingga jangan beri margin-top ganda pada .main-content */
-        body {
-            margin: 0;
-            /* header partial kemungkinan sudah menambahkan body { padding-top: var(--header-height) }.
-               Supaya tidak terjadi gap ganda, kita tidak menambahkan margin-top lagi di sini. */
-        }
+        body { margin: 0; }
 
-        /* Konten utama: cukup gap kecil di dalam card, dan gunakan scroll area khusus */
         .main-content {
-            /* jangan gunakan margin-top besar — header sudah mengatur ruang melalui padding-top di header partial */
             margin-left: var(--sidebar-width);
             margin-top: 0;
             padding: 20px;
             transition: margin-left 0.3s ease;
             box-sizing: border-box;
-
-            /* pastikan area utama mengisi tinggi layar minus header */
             min-height: calc(100vh - var(--header-height));
-            /* kita akan menempatkan overflow pada .main-scroll, bukan di body */
             position: relative;
             background: transparent;
         }
 
-        /* Jika body diberi class sidebar-closed oleh header toggle, geser margin-left */
         body.sidebar-closed .main-content {
             margin-left: var(--sidebar-collapsed);
         }
 
-        /* Ini adalah viewport scroll area untuk konten — header & sidebar tetap visible */
         .main-scroll {
-            height: calc(100vh - var(--header-height)); /* total tinggi yang bisa discroll */
+            height: calc(100vh - var(--header-height));
             overflow-y: auto;
-            padding-bottom: 40px; /* beri ruang di bawah supaya konten terakhir tidak mepet */
+            padding-bottom: 40px;
         }
 
-        /* sedikit spacing supaya card header tidak terasa terlalu jauh bawah */
-        .page-header {
-            margin-bottom: 12px;
-        }
-
-        /* kosmetik tabel kecil (tetap sama, tidak ubah tampilan) */
+        .page-header { margin-bottom: 12px; }
+        
+        /* Table Styling */
         table { font-size: 14px; }
+        
+        thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
 
         @media (max-width: 768px) {
             .main-content {
@@ -69,118 +58,166 @@
                 width: 100% !important;
                 padding: 12px;
             }
-            /* ketika di mobile, .main-scroll tetap bekerja */
             .main-scroll {
                 height: calc(100vh - var(--header-height));
             }
         }
 
-        /* ===== keep your existing dropdown fix (tidak dihapus) ===== */
-        /* Dropdown di sidebar: pakai behaviour sendiri, bukan Bootstrap */
-        .sidebar .dropdown-menu {
-            position: static !important;
-            float: none !important;
-            inset: auto !important;
-            transform: none !important;
-            min-width: 0 !important;
-
-            display: block !important;
-            list-style: none;
-
-            border: none !important;
-            box-shadow: none !important;
-            outline: none !important;
+        /* --- CUSTOM COLORS --- */
+        .bg-custom-blue {
+            background-color: var(--primary-custom) !important;
+        }
+        .text-custom-blue {
+            color: var(--primary-custom) !important;
         }
 
-        .sidebar .dropdown-menu.collapsed {
-            display: none !important;
+        /* --- BUTTON STYLES --- */
+        .btn-action {
+            width: 32px; /* Diperkecil sedikit agar lebih kompak */
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            border: 1px solid transparent;
+        }
+
+        .btn-edit-custom {
+            color: var(--primary-custom);
+            border-color: var(--primary-custom);
+            background-color: rgba(38, 31, 179, 0.05);
+        }
+        .btn-edit-custom:hover {
+            background-color: var(--primary-custom);
+            color: white;
+            box-shadow: 0 4px 6px rgba(38, 31, 179, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-delete-custom {
+            color: #dc3545;
+            border-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+        .btn-delete-custom:hover {
+            background-color: #dc3545;
+            color: white;
+            box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
+            transform: translateY(-1px);
         }
     </style>
 </head>
 <body>
 
-    {{-- Header & Sidebar partial (tetap sama seperti sekarang) --}}
     @include('layout.header')
     @include('layout.sidebar')
 
-    {{-- MAIN CONTENT: gunakan .main-scroll untuk scroll area sehingga header/sidebar selalu terlihat --}}
     <div class="main-content">
         <div class="main-scroll">
             <div class="container-fluid">
                 <div class="card shadow border-0 rounded-3">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0 fw-bold">
+                    
+                    <div class="card-header bg-custom-blue text-white d-flex justify-content-between align-items-center py-3">
+                        <h4 class="mb-0 fw-bold fs-5">
                             <i class="fa fa-users me-2"></i> Daftar Mahasiswa
                         </h4>
-                        <a href="{{ route('mahasiswa.create') }}" class="btn btn-light btn-sm text-primary fw-bold">
-                            <i class="fa fa-plus me-1"></i> Tambah Mahasiswa
-                        </a>
+                        
+                        @if(Auth::user()->role == 'koordinator')
+                            <a href="{{ route('mahasiswa.create') }}" class="btn btn-light btn-sm text-custom-blue fw-bold shadow-sm">
+                                <i class="fa fa-plus me-1"></i> Tambah Mahasiswa
+                            </a>
+                        @endif
                     </div>
 
-                    <div class="card-body p-3">
-                        {{-- ALERT jika ada pesan sukses --}}
+                    {{-- UPDATE: Padding dikurangi dari p-4 menjadi p-2 agar jarak tidak terlalu jauh --}}
+                    <div class="card-body p-2">
                         @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
+                            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm m-2" role="alert">
+                                <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                         @endif
 
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover align-middle text-center mb-0">
+                            {{-- UPDATE: border-spacing dikurangi menjadi 0 2px agar baris lebih rapat --}}
+                            <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0 2px;">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>NIM</th>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                        <th>No HP</th>
-                                        <th>Prodi</th>
-                                        <th>Angkatan</th>
-                                        <th>IPK</th>
-                                        <th>Perusahaan</th>
-                                        <th>Aksi</th>
+                                        <th class="border-0 rounded-start ps-3">NIM</th>
+                                        <th class="border-0">Nama</th>
+                                        <th class="border-0">Email</th>
+                                        <th class="border-0 text-center">No HP</th>
+                                        <th class="border-0">Prodi</th>
+                                        <th class="border-0 text-center">Angkatan</th>
+                                        <th class="border-0 text-center">IPK</th>
+                                        <th class="border-0">Perusahaan</th>
+                                        
+                                        @if(Auth::user()->role == 'koordinator')
+                                            <th class="border-0 rounded-end text-center" width="120px">Aksi</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($mahasiswa as $m)
-                                    <tr>
-                                        <td>{{ $m->nim }}</td>
-                                        <td class="text-start">{{ $m->nama }}</td>
-                                        <td class="text-start">{{ $m->email }}</td>
-                                        <td>{{ $m->no_hp ?? '-' }}</td>
-                                        <td>{{ $m->prodi }}</td>
-                                        <td>{{ $m->angkatan }}</td>
-                                        <td>{{ $m->ipk ?? '-' }}</td>
-                                        <td class="text-start">{{ $m->perusahaan ?? '-' }}</td>
-                                        <td>
-                                            <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}" class="btn btn-warning btn-sm">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Yakin hapus data ini?')">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
+                                    <tr class="shadow-sm bg-white rounded">
+                                        {{-- Font Regular (tidak tebal) --}}
+                                        <td class="border-0 rounded-start ps-3 text-secondary">{{ $m->nim }}</td>
+                                        <td class="border-0 text-dark">{{ $m->nama }}</td>
+                                        <td class="border-0 text-muted">{{ $m->email }}</td>
+                                        <td class="border-0 text-center">{{ $m->no_hp ?? '-' }}</td>
+                                        <td class="border-0"><span class="badge bg-light text-dark border fw-normal">{{ $m->prodi }}</span></td>
+                                        <td class="border-0 text-center">{{ $m->angkatan }}</td>
+                                        <td class="border-0 text-center">{{ $m->ipk ?? '-' }}</td>
+                                        <td class="border-0">{{ $m->perusahaan ?? '-' }}</td>
+                                        
+                                        @if(Auth::user()->role == 'koordinator')
+                                            <td class="border-0 rounded-end text-center">
+                                                <div class="d-flex justify-content-center gap-1">
+                                                    <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}" 
+                                                       class="btn-action btn-edit-custom" 
+                                                       data-bs-toggle="tooltip" 
+                                                       title="Edit Data">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                    
+                                                    <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" 
+                                                                class="btn-action btn-delete-custom"
+                                                                data-bs-toggle="tooltip" 
+                                                                title="Hapus Data"
+                                                                onclick="return confirm('Apakah Anda yakin ingin menghapus data {{ $m->nama }}?')">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted">Belum ada data mahasiswa.</td>
+                                        <td colspan="{{ Auth::user()->role == 'koordinator' ? 9 : 8 }}" class="text-center py-4 text-muted bg-light rounded">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="fa fa-folder-open fa-2x mb-2 text-secondary opacity-50"></i>
+                                                <h6 class="fw-normal">Belum ada data mahasiswa</h6>
+                                            </div>
+                                        </td>
                                     </tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div> <!-- card -->
-            </div> <!-- container-fluid -->
-        </div> <!-- main-scroll -->
-    </div> <!-- main-content -->
+                </div> 
+            </div> 
+        </div> 
+    </div> 
 
-    {{-- SCRIPT --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Pastikan sidebar toggle tetap berfungsi seperti sebelumnya (menambahkan class di body)
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.querySelector('.menu-toggle');
             const bodyEl = document.body;
@@ -188,27 +225,21 @@
             if (toggleButton) {
                 toggleButton.addEventListener('click', function() {
                     bodyEl.classList.toggle('sidebar-closed');
-
-                    // simpan preferensi ke localStorage supaya persist di halaman lain
                     try {
                         localStorage.setItem('app_sidebar_closed', bodyEl.classList.contains('sidebar-closed') ? '1' : '0');
                     } catch(e) {}
                 });
-
-                // restore dari localStorage (jika ada)
                 try {
                     const stored = localStorage.getItem('app_sidebar_closed');
                     if (stored === '1') bodyEl.classList.add('sidebar-closed');
                 } catch(e) {}
             }
 
-            // Sync heights untuk .main-scroll agar pas ketika jendela diresize
             function syncHeights() {
                 const root = getComputedStyle(document.documentElement);
                 const headerHeight = parseInt(root.getPropertyValue('--header-height')) || 60;
                 const mainScroll = document.querySelector('.main-scroll');
                 if (mainScroll) mainScroll.style.height = (window.innerHeight - headerHeight) + 'px';
-                // sidebar height juga disesuaikan supaya tidak meninggalkan gap
                 const sidebar = document.querySelector('.sidebar');
                 if (sidebar) sidebar.style.height = (window.innerHeight - headerHeight) + 'px';
             }
@@ -216,6 +247,11 @@
             window.addEventListener('resize', syncHeights);
             window.addEventListener('load', syncHeights);
             syncHeights();
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
         });
     </script>
 

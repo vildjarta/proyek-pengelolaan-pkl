@@ -164,6 +164,7 @@ Route::middleware(['auth'])->group(function () {
     // AJAX endpoints
     Route::get('/cek-nim-suggest', [MahasiswaController::class, 'suggestNIM'])->name('ajax.mahasiswa.suggest');
     Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM'])->name('ajax.mahasiswa.byNim');
+    Route::get('/get-ipk/{nim}', [MahasiswaController::class, 'getIpkByNim'])->name('ajax.mahasiswa.getIpk');
     Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
     Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
 });

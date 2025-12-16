@@ -39,6 +39,11 @@ class Mahasiswa extends Model
         return $this->hasOne(dosen_penguji::class, 'id_mahasiswa', 'id_mahasiswa');
     }
 
+    public function transcript()
+    {
+        return $this->hasOne(Transcript::class, 'nim', 'nim');
+    }
+
     /**
      * ACCESSOR: URL avatar final
      */

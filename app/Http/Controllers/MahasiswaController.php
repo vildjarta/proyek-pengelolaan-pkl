@@ -218,4 +218,28 @@ class MahasiswaController extends Controller
 
         return response()->json($results);
     }
+
+    /**
+     * 📊 AJAX: Get IPK from transcript by NIM
+     * Route: GET /get-ipk/{nim}
+     */
+    public function getIpkByNim($nim)
+    {
+        $transcript = \App\Models\Transcript::where('nim', $nim)->first();
+
+        if ($transcript) {
+            return response()->json([
+                'found' => true,
+                'ipk' => $transcript->ipk,
+                'eligible' => $transcript->eligible,
+                'has_e' => $transcript->has_e,
+                'total_sks_d' => $transcript->total_sks_d,
+            ]);
+        }
+
+        return response()->json([
+            'found' => false,
+            'message' => 'Data transkrip tidak ditemukan untuk NIM ini'
+        ]);
+    }
 }

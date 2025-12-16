@@ -19,4 +19,9 @@ class Transcript extends Model
         'ipk' => 'decimal:2',
         'total_sks_d' => 'integer',
     ];
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
+    }
 }
