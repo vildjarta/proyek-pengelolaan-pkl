@@ -83,7 +83,7 @@
             </div> --}}
 
             <div class="text-end">
-                <button type="submit" class="btn btn-success">Simpan</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
                 <a href="{{ route('dosen_penguji.index') }}" class="btn btn-secondary">Batal</a>
             </div>
         </form>

@@ -28,7 +28,7 @@ class PerusahaanController extends Controller
     {
         $validated = $request->validate([
             'nama'          => 'required|string|max:255',
-            'email'         => 'nullable|email',
+            'email'         => 'nullable|email|max:255' ,
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
@@ -83,7 +83,7 @@ class PerusahaanController extends Controller
 
         $validated = $request->validate([
             'nama'          => 'required|string|max:255',
-            'email'         => 'nullable|email',
+            'email'         => 'nullable|email|max:255' ,
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',

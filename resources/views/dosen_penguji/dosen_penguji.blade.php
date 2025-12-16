@@ -21,7 +21,7 @@
         }
 
         h1 {
-            color: #0d6efd;
+            color: #000000;
             font-weight: 600;
         }
 
@@ -120,8 +120,8 @@
                         <tr>
                             <th style="width: 5%;">No</th>
                             <th style="width: 10%;">NIP</th>
-                            <th style="width: 25%;">nama_dosen</th>
-                            <th style="width: 5%;"> nama_mahasiswa</th>
+                            <th style="width: 25%;">nama dosen</th>
+                            <th style="width: 5%;"> nama mahasiswa</th>
                             <th style="width: 25%;">Email</th>
                             <th style="width: 15%;">No HP</th>
                             <th style="width: 15%;">Aksi</th>
@@ -138,8 +138,8 @@
                                 <td>{{ $dp->no_hp }}</td>
                                 <td>
                                     <a href="{{ route('dosen_penguji.edit', $dp->id_penguji) }}"
-                                        class="btn btn-warning btn-sm btn-action">
-                                        <i class="bi bi-pencil-square"></i> Edit
+                                        class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil-square"></i> 
                                     </a>
                                     <form action="{{ route('dosen_penguji.destroy', $dp->id_penguji) }}" method="POST"
                                         style="display:inline;">
@@ -147,7 +147,7 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Yakin mau hapus data ini?')">
-                                            <i class="bi bi-trash3-fill"></i> Hapus
+                                            <i class="bi bi-trash3-fill"></i> 
                                         </button>
                                     </form>
                                 </td>

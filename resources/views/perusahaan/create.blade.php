@@ -132,57 +132,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM6yhmdJP1BPXmzo852fIlEc4GlZtXtXU"></script>
 
-    <script>
-        let map;
-        let marker;
-
-        function initMap() {
-            // Lokasi default (misalnya Indonesia)
-            const defaultLocation = {
-                lat: -2.5489,
-                lng: 118.0149
-            };
-
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: defaultLocation,
-                zoom: 5,
-            });
-
-            // Klik di peta untuk memilih lokasi
-            map.addListener("click", (event) => {
-                const lat = event.latLng.lat();
-                const lng = event.latLng.lng();
-
-                // Hapus marker sebelumnya
-                if (marker) {
-                    marker.setMap(null);
-                }
-
-                // Tambahkan marker baru
-                marker = new google.maps.Marker({
-                    position: {
-                        lat,
-                        lng
-                    },
-                    map: map,
-                });
-
-                // Isi ke input form
-                document.getElementById("lat").value = lat;
-                document.getElementById("lng").value = lng;
-            });
-        }
-
-        // Inisialisasi peta saat modal dibuka
-        const mapModal = document.getElementById('mapModal');
-        mapModal.addEventListener('shown.bs.modal', function() {
-            if (!map) {
-                initMap();
-            } else {
-                google.maps.event.trigger(map, "resize");
-            }
-        });
-    </script>
 </body>
 
 </html>

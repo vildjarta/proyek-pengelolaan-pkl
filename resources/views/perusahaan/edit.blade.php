@@ -123,13 +123,9 @@
                             value="{{ old('jumlah_mahasiswa', $perusahaan->jumlah_mahasiswa) }}" min="0"
                             required>
                     </div>
-
-
-
                     <br>
-
                     <button type="submit" class="btn btn-success">Update</button>
-                    <a href="{{ route('perusahaan.index') }}" class="btn btn-secondary">Batal</a>
+                    <a href="{{ route('perusahaan.index') }}" class="btn btn-primary">Batal</a>
                 </form>
             </main>
         </div>
@@ -140,69 +136,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM6yhmdJP1BPXmzo852fIlEc4GlZtXtXU"></script>
 
-    <script>
-        let map;
-        let marker;
-
-        function initMap() {
-            const latInput = document.getElementById("lat");
-            const lngInput = document.getElementById("lng");
-
-            const lat = parseFloat(latInput.value) || -2.5489; // default Indonesia
-            const lng = parseFloat(lngInput.value) || 118.0149;
-
-            const location = {
-                lat,
-                lng
-            };
-
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: location,
-                zoom: latInput.value && lngInput.value ? 13 : 5,
-            });
-
-            // Jika sudah ada koordinat, tampilkan marker awal
-            if (latInput.value && lngInput.value) {
-                marker = new google.maps.Marker({
-                    position: location,
-                    map: map,
-                });
-            }
-
-            // Klik peta untuk ganti lokasi
-            map.addListener("click", (event) => {
-                const newLat = event.latLng.lat();
-                const newLng = event.latLng.lng();
-
-                // Hapus marker lama
-                if (marker) marker.setMap(null);
-
-                // Tambahkan marker baru
-                marker = new google.maps.Marker({
-                    position: {
-                        lat: newLat,
-                        lng: newLng
-                    },
-                    map: map,
-                });
-
-                // Isi input
-                latInput.value = newLat;
-                lngInput.value = newLng;
-            });
-        }
-
-        // Inisialisasi peta saat modal dibuka
-        const mapModal = document.getElementById('mapModal');
-        mapModal.addEventListener('shown.bs.modal', function() {
-            if (!map) {
-                initMap();
-            } else {
-                google.maps.event.trigger(map, "resize");
-                if (marker) map.setCenter(marker.getPosition());
-            }
-        });
-    </script>
 </body>
 
 </html>

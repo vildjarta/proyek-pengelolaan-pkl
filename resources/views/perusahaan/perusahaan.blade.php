@@ -162,6 +162,10 @@
                                                         {{ $prs->status }}
                                                     </span>
                                                 </div>
+                                                <div class="mb-3">
+                                                    <strong><i class="fas fa-industry me-2"></i>email:</strong>
+                                                    <p class="mb-0 mt-1">{{ $prs->email }}</p>
+                                                </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3">
@@ -183,25 +187,25 @@
                                                     <p class="mb-0 mt-1">{{ $prs->hari_operasi }}</p>
                                                 </div>
                                             </div>
-                                        </div><!--style="background-color: #0d6efd; color: white;"-->
+                                            </div><!--style="background-color: #0d6efd; color: white;"-->
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                            <i class="fas fa-times me-1"></i> Tutup
-                                        </button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                <i class="fas fa-times me-1"></i> Tutup
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <div class="alert alert-info text-center py-4">
-                                <i class="fas fa-info-circle fa-2x mb-3"></i>
-                                <h5>Belum ada data perusahaan</h5>
-                                <p class="mb-0">Mulai dengan menambahkan perusahaan pertama Anda</p>
+                        @empty
+                            <div class="col-12">
+                                <div class="alert alert-info text-center py-4">
+                                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                                    <h5>Belum ada data perusahaan</h5>
+                                    <p class="mb-0">Mulai dengan menambahkan perusahaan pertama Anda</p>
+                                </div>
                             </div>
-                        </div>
                     @endforelse
                 </div>
             </main>
