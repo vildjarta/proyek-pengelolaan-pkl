@@ -15,7 +15,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'google_id',    // penting untuk SSO
+        'google_id',   
         'phone_number',
         'gender',
         'avatar',
