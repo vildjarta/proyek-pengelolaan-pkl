@@ -102,28 +102,42 @@
                                 </td>
 
                                 {{-- LOGIKA 4: ISI KOLOM AKSI --}}
-                                @if(in_array(Auth::user()->role, ['koordinator', 'dosen_pembimbing']))
-                                    <td class="text-center">
-                                        <div class="action-buttons">
-                                            {{-- TOMBOL EDIT: Koordinator DAN Dosen Pembimbing boleh edit --}}
-                                            {{-- (Opsional: Jika Dosen hanya boleh edit dirinya sendiri, perlu logika tambahan di Controller) --}}
-                                            <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
-                                                <i class="fa fa-pen"></i>
-                                            </a>
+                            @if(in_array(Auth::user()->role, ['koordinator', 'dosen_pembimbing']))
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    
+                                    @php
+                                        // Cek apakah user adalah pemilik data ini
+                                        $isOwnData = (Auth::user()->role == 'dosen_pembimbing' && $row->id_user == Auth::id());
+                                        // Cek apakah user adalah koordinator (bisa edit semua)
+                                        $isKoordinator = (Auth::user()->role == 'koordinator');
+                                    @endphp
 
-                                            {{-- TOMBOL HAPUS: HANYA Koordinator --}}
-                                            @if(Auth::user()->role == 'koordinator')
-                                                <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger" title="Hapus">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
-                                    </td>
-                                @endif
+                                    {{-- TOMBOL EDIT: Hanya muncul jika Koordinator ATAU Pemilik Data --}}
+                                    @if($isKoordinator || $isOwnData)
+                                        <a href="{{ route('datadosenpembimbing.edit', $row->id_pembimbing) }}" class="btn btn-edit-custom" title="Edit">
+                                            <i class="fa fa-pen"></i>
+                                        </a>
+                                    @else
+                                        {{-- Opsi: Tampilkan tombol disabled atau kosong jika tidak punya hak --}}
+                                        <button class="btn btn-secondary" disabled title="Tidak ada akses">
+                                            <i class="fa fa-lock"></i>
+                                        </button>
+                                    @endif
+
+                                    {{-- TOMBOL HAPUS: HANYA Koordinator (Logika sudah benar di file asli) --}}
+                                    @if(Auth::user()->role == 'koordinator')
+                                        <form action="{{ route('datadosenpembimbing.destroy', $row->id_pembimbing) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" title="Hapus">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </td>
+                        @endif
                             </tr>
                         @empty
                             <tr>

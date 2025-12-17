@@ -70,7 +70,7 @@
 
 /* --- Total Nilai Box --- */
 .total-nilai-box {
-    background: linear-gradient(135deg, var(--color-primary-blue), #4a7bc4);
+    background: linear-gradient(135deg, var(--color-primary-blue), #261FB3);
     color: white;
     padding: 25px;
     border-radius: 10px;
@@ -175,7 +175,7 @@
 
 /* --- Total Nilai Card --- */
 .total-nilai-card {
-    background: linear-gradient(135deg, var(--color-primary-blue), #4a7bc4);
+    background: linear-gradient(135deg, var(--color-primary-blue), #261FB3);
     color: white;
     padding: 30px;
     border-radius: 10px;

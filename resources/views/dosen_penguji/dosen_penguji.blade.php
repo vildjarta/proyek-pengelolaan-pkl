@@ -1,153 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
+    <title>Data Dosen Penguji - PKL JOZZ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Dosen Penguji</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/style-header-sidebar.css') }}">
     <style>
-        body {
-            background-color: #f4f8ff;
-        }
-
-        .main-content-wrapper {
-            background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 2px 10px rgba(0, 60, 130, 0.1);
-            margin: 2rem;
-            padding: 2rem;
-        }
-
-        h1 {
-            font-weight: 600;
-        }
-
-        thead {
-            background-color: #0d6efd;
-            color: white;
-        }
-
-        tbody tr:hover {
-            background-color: #e9f2ff;
-        }
-
-        .search-bar {
-            max-width: 350px;
-        }
-
-        .btn {
-            border-radius: 8px;
-        }
-
-        .table-responsive {
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        td,
-        th {
-            white-space: nowrap;
-            vertical-align: middle;
-            font-size: 0.95rem;
-        }
-    </style>
+    .main-content-wrapper { padding: 20px; }    
+    /* TAMBAHAN BARU: Warna Header Tabel */
+    .table thead.bg-blue-custom th {
+        background-color: #261FB3 !important;
+        color: white;
+        border-color: #261FB3; /* Opsional: agar border menyatu */
+    }
+        </style>
 </head>
-
 <body>
 
-    {{-- HEADER --}}
     @include('layout.header')
-
-    {{-- SIDEBAR --}}
     @include('layout.sidebar')
 
-    <div class="main-content-wrapper">
-        <div class="content">
-
-            @php
-                $user = auth()->user();
-            @endphp
-
-            {{-- JUDUL + SEARCH + TAMBAH --}}
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                <h1>Daftar Dosen Penguji</h1>
-
-                <div class="d-flex gap-2">
-                    <form action="{{ route('dosen_penguji.search') }}" method="GET">
-                        <input type="text" name="q" class="form-control search-bar"
-                            placeholder="Cari dosen...">
-                    </form>
-
-                    @if ($user && $user->role === 'koordinator')
-                        <a href="{{ route('dosen_penguji.create') }}" class="btn btn-primary">
-                            <i class="bi bi-person-plus-fill"></i> Tambah
-                        </a>
-                    @endif
-                </div>
+    <div class="main-content-wrapper" id="mainContent">
+        <div class="content container-fluid">   
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Daftar Dosen Penguji</h2>
+                
+                {{-- LOGIKA 1: TOMBOL TAMBAH --}}
+                {{-- HANYA KOORDINATOR yang bisa melihat tombol ini --}}
+                {{-- Dosen Penguji, Staff, Mahasiswa TIDAK BISA --}}
+                @if(Auth::user()->role == 'koordinator')
+                    <a href="{{ route('dosen_penguji.create') }}" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Tambah Penguji
+                    </a>
+                @endif
             </div>
 
-            {{-- TABEL --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="table-responsive">
-                <table class="table table-bordered table-sm text-center align-middle">
-                    <thead>
+                <table class="table table-striped table-hover">
+                    {{-- GANTI DARI table-dark KE bg-blue-custom --}}
+                    <thead class="bg-blue-custom">
                         <tr>
-                            <th>No</th>
-                            <th>NIP</th>
+                            <th class="text-center" width="5%">No</th>
                             <th>Nama Dosen</th>
-                            <th>Nama Mahasiswa</th>
-                            <th>Email</th>
-                            <th>No HP</th>
-                            <th>Aksi</th>
+                            <th>NIP</th>
+                            <th>Mahasiswa yang Diuji</th>
+                            <th class="text-center" width="15%">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @forelse($dosenPenguji as $index => $dp)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $dp->nip }}</td>
-                                <td>{{ $dp->nama_dosen }}</td>
-                                <td>{{ $dp->nama_mahasiswa ?? '-' }}</td>
-                                <td class="text-start">{{ $dp->email }}</td>
-                                <td>{{ $dp->no_hp }}</td>
-                                <td>
+                    @forelse($dosenPenguji as $row)
+                        <tr>
+                            <td class="text-center">{{ $loop->iteration }}</td>
+                            
+                            <td>
+                                <strong>{{ $row->nama_dosen }}</strong><br>
+                                <small class="text-muted">{{ $row->email }}</small>
+                            </td>
+                            <td>{{ $row->nip }}</td>
+                            <td>{{ $row->nama_mahasiswa }}</td>
 
-                                        <a href="{{ route('dosen_penguji.edit', $dp->id_penguji) }}"
-                                            class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil-square"></i>
+                            <td class="text-center">
+                                @php
+                                    $user = Auth::user();
+                                    $canEdit = false;
+                                    $canDelete = false;
+
+                                    // LOGIKA IZIN AKSES
+                                    if ($user->role == 'koordinator') {
+                                        // Koordinator: BISA Edit & Hapus
+                                        $canEdit = true;
+                                        $canDelete = true;
+                                    } 
+                                    elseif (in_array($user->role, ['dosen', 'dosen_penguji'])) {
+                                        // Dosen Penguji: BISA Edit (Punya Sendiri), TAPI TIDAK BISA Hapus
+                                        if ($row->id_user == $user->id) {
+                                            $canEdit = true;
+                                            $canDelete = false; // <--- Dosen dilarang hapus
+                                        }
+                                    }
+                                    // Staff & Mahasiswa: Tetap False semua
+                                @endphp
+
+                                <div class="d-flex justify-content-center gap-1">
+                                    @if($canEdit)
+                                        {{-- Tombol Edit --}}
+                                        <a href="{{ route('dosen_penguji.edit', $row->id_penguji) }}" class="btn btn-sm btn-warning text-white" title="Edit">
+                                            <i class="fa fa-pen"></i>
                                         </a>
+                                    @endif
 
-                                        <form action="{{ route('dosen_penguji.destroy', $dp->id_penguji) }}"
-                                            method="POST" style="display:inline;">
+                                    @if($canDelete)
+                                        {{-- Tombol Hapus (Hanya muncul untuk Koordinator) --}}
+                                        <form action="{{ route('dosen_penguji.destroy', $row->id_penguji) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Yakin hapus data ini?')">
-                                                <i class="bi bi-trash3-fill"></i>
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                                                <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
-                                    @else
-                                        <span class="text-muted">-</span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-muted py-4">
-                                    Belum ada data dosen penguji
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
+                                    @endif
+
+                                    @if(!$canEdit && !$canDelete)
+                                        {{-- Tampilan Read Only (Staff, Mahasiswa, atau Dosen melihat data orang lain) --}}
+                                        <span class="badge bg-secondary">
+                                            <i class="fa fa-lock"></i> Read Only
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                Belum ada data dosen penguji.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
                 </table>
             </div>
 
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

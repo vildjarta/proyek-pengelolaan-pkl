@@ -49,11 +49,8 @@ class DosenController extends Controller
                 'name' => $validated['nama'],
                 'email' => $generatedEmail,
                 'password' => Hash::make(Str::random(16)),
-                'role' => 'dosen',
             ]);
         } else {
-            // ensure role & name are in sync
-            $user->update(['name' => $validated['nama'], 'role' => 'dosen']);
         }
 
         Dosen::create([
@@ -105,7 +102,6 @@ class DosenController extends Controller
                 'name' => $validated['nama'],
                 'email' => $validated['email'],
                 'password' => Hash::make(Str::random(16)),
-                'role' => 'dosen',
             ]);
         } elseif ($user) {
             $user->update(['name' => $validated['nama'], 'role' => 'dosen']);
