@@ -11,25 +11,25 @@ use Illuminate\Support\Facades\Auth; // Tambahkan ini
 class DosenPengujiController extends Controller
 {
     // Menampilkan daftar dosen penguji
-public function index()
-{
-    $dosenPenguji = dosen_penguji::leftjoin('mahasiswa', 'mahasiswa.id_mahasiswa', '=', 'dosen_penguji.id_mahasiswa')
-        ->leftjoin('dosen', 'dosen.id_dosen', '=', 'dosen_penguji.id_dosen')
-        ->select(
-            'dosen_penguji.id_penguji',  // <--- PASTIKAN INI ADA
-            'dosen_penguji.id_dosen',
-            'dosen_penguji.id_mahasiswa',
-            'mahasiswa.nama as nama_mahasiswa', 
-            'dosen.nama as nama_dosen', 
-            'dosen.nip', 
-            'dosen.email', 
-            'dosen.no_hp',
-            'dosen.id_user'
-        )
-        ->get();
-        
-    return view('dosen_penguji.dosen_penguji', compact('dosenPenguji'));
-}
+    public function index()
+    {
+        $dosenPenguji = dosen_penguji::leftjoin('mahasiswa', 'mahasiswa.id_mahasiswa', '=', 'dosen_penguji.id_mahasiswa')
+            ->leftjoin('dosen', 'dosen.id_dosen', '=', 'dosen_penguji.id_dosen')
+            ->select(
+                'dosen_penguji.id_penguji',  // <--- PASTIKAN INI ADA
+                'dosen_penguji.id_dosen',
+                'dosen_penguji.id_mahasiswa',
+                'mahasiswa.nama as nama_mahasiswa',
+                'dosen.nama as nama_dosen',
+                'dosen.nip',
+                'dosen.email',
+                'dosen.no_hp',
+                'dosen.id_user'
+            )
+            ->get();
+
+        return view('dosen_penguji.dosen_penguji', compact('dosenPenguji'));
+    }
 
     public function search(Request $request)
     {
@@ -87,7 +87,7 @@ public function index()
     public function edit($id)
     {
         $dosenPenguji = dosen_penguji::findOrFail($id);
-        
+
         // Ambil data dosen terkait untuk pengecekan user
         $dosen = Dosen::find($dosenPenguji->id_dosen);
 
@@ -101,15 +101,19 @@ public function index()
         // 2. Dosen Penguji hanya boleh edit DATANYA SENDIRI
         // (Kecuali Koordinator boleh edit semua)
         if ($user->role == 'dosen_penguji' || $user->role == 'dosen') { // jaga-jaga nama rolenya dosen
-             if ($dosen && $dosen->id_user != $user->id) {
-                 abort(403, 'Anda tidak bisa mengedit data penguji lain.');
-             }
+            if ($dosen && $dosen->id_user != $user->id) {
+                abort(403, 'Anda tidak bisa mengedit data penguji lain.');
+            }
         }
 
-        $Mahasiswa = Mahasiswa::all();
-        $listDosen = Dosen::all(); // Ganti nama variabel biar tidak bentrok
-        
-        return view('dosen_penguji.edit', compact('dosenPenguji', 'Mahasiswa', 'listDosen'));
+        $mahasiswa = Mahasiswa::all();
+        $listDosen = Dosen::all();
+
+        return view('dosen_penguji.edit', compact(
+            'dosenPenguji',
+            'mahasiswa',
+            'listDosen'
+        ));
     }
 
     // Proses update dosen penguji
@@ -124,7 +128,7 @@ public function index()
             abort(403, 'Akses ditolak.');
         }
         if (($user->role == 'dosen_penguji' || $user->role == 'dosen') && $dosen && $dosen->id_user != $user->id) {
-             abort(403, 'Anda tidak bisa mengubah data penguji lain.');
+            abort(403, 'Anda tidak bisa mengubah data penguji lain.');
         }
 
         $validated = $request->validate([
@@ -139,20 +143,20 @@ public function index()
     }
 
     // Proses hapus dosen penguji
-// Proses hapus dosen penguji
-public function destroy($id)
-{
-    // LOGIKA KEAMANAN BARU:
-    // HANYA KOORDINATOR yang boleh menghapus.
-    // Dosen Penguji (meskipun datanya sendiri) TIDAK BOLEH menghapus.
-    if (Auth::user()->role !== 'koordinator') {
-        return abort(403, 'Akses ditolak. Hanya Koordinator yang memiliki hak menghapus data.');
+    // Proses hapus dosen penguji
+    public function destroy($id)
+    {
+        // LOGIKA KEAMANAN BARU:
+        // HANYA KOORDINATOR yang boleh menghapus.
+        // Dosen Penguji (meskipun datanya sendiri) TIDAK BOLEH menghapus.
+        if (Auth::user()->role !== 'koordinator') {
+            return abort(403, 'Akses ditolak. Hanya Koordinator yang memiliki hak menghapus data.');
+        }
+
+        $dosenPenguji = dosen_penguji::findOrFail($id);
+        $dosenPenguji->delete();
+
+        return redirect()->route('dosen_penguji.index')
+            ->with('success', 'Data dosen penguji berhasil dihapus!');
     }
-
-    $dosenPenguji = dosen_penguji::findOrFail($id);
-    $dosenPenguji->delete();
-
-    return redirect()->route('dosen_penguji.index')
-        ->with('success', 'Data dosen penguji berhasil dihapus!');
-}
 }

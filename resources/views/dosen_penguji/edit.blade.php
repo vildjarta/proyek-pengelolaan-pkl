@@ -57,7 +57,7 @@
                 <label for="id_dosen" class="form-label fw-bold">Pilih Dosen</label>
                 <select name="id_dosen" id="id_dosen" class="form-select" required>
                     <option value="">-- Pilih Dosen --</option>
-                    @foreach ($dosen as $dsn)
+                    @foreach ($listDosen as $dsn)
                         <option value="{{ $dsn->id_dosen }}"
                             {{ $dosenPenguji['id_dosen'] == $dsn->id_dosen ? 'selected' : '' }}>
                             {{ $dsn->nama }} - {{ $dsn->nip ?? 'NIP' }}
@@ -72,7 +72,7 @@
                 <label for="id_mahasiswa" class="form-label fw-bold">Pilih Mahasiswa</label>
                 <select name="id_mahasiswa" id="id_mahasiswa" class="form-select" required>
                     <option value="">-- Pilih Mahasiswa --</option>
-                    @foreach ($Mahasiswa as $mhs)
+                    @foreach ($mahasiswa as $mhs)
                         <option value="{{ $mhs->id_mahasiswa }}"
                             {{ $dosenPenguji['id_mahasiswa'] == $mhs->id_mahasiswa ? 'selected' : '' }}>
                             {{ $mhs->nama }} - {{ $mhs->nim ?? 'NIM' }}
