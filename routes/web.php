@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PerusahaanController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\PenilaianPerusahaanController;
 use App\Http\Controllers\JadwalBimbinganController;
@@ -48,8 +49,8 @@ Route::post('logout', function () {
 */
 Route::middleware(['auth'])->group(function () {
 
-    // Static pages
-    Route::view('/home', 'home')->name('home');
+    // Home dashboard (controller provides dynamic data)
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::view('/about', 'about')->name('about');
     Route::view('/menu', 'menu')->name('menu');
 
