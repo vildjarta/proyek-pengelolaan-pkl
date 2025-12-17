@@ -51,6 +51,6 @@ class Perusahaan extends Model
      */
     public function perusahaan()
     {
-        return $this->hasOne(Penilaian_perusahaan::class, 'id_perusahaan', 'id_perusahaan');
+        return $this->hasOne(Penilaianperusahaan::class, 'id_perusahaan', 'id_perusahaan');
     }
 }

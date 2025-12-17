@@ -114,6 +114,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('perusahaan', PerusahaanController::class);
     });
 
+
     // nilai akhir (role: koordinator , staff, dosen penguji, mahasiswa )
     Route::middleware(['role:koordinator,dosen_pembimbing,dosen_penguji,mahasiswa'])->group(function () {
         Route::resource('nilai', NilaiController::class);

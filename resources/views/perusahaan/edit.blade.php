@@ -124,7 +124,7 @@
                             required>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-success">Update</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                     <a href="{{ route('perusahaan.index') }}" class="btn btn-primary">Batal</a>
                 </form>
             </main>

@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Dosen Penguji</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <style>
         body {
             background-color: #f4f8ff;
@@ -21,23 +23,16 @@
         }
 
         h1 {
-            color: #000000;
             font-weight: 600;
         }
 
-        table {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
         thead {
-            background-color: #0d6efd !important;
+            background-color: #0d6efd;
             color: white;
         }
 
         tbody tr:hover {
             background-color: #e9f2ff;
-            transition: 0.2s;
         }
 
         .search-bar {
@@ -48,133 +43,111 @@
             border-radius: 8px;
         }
 
-        .btn i {
-            margin-right: 4px;
-        }
-
-        .table-wrapper {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        #dosenTable th,
-        #dosenTable td {
-            white-space: nowrap;
-            /* Biar teks tidak turun ke baris baru */
-            vertical-align: middle;
-        }
-
-        #dosenTable td {
-            font-size: 0.95rem;
-            padding: 0.5rem;
-        }
-
-        /* Batasi lebar maksimum tabel agar tidak keluar layar */
         .table-responsive {
             max-height: 70vh;
             overflow-y: auto;
+        }
+
+        td,
+        th {
+            white-space: nowrap;
+            vertical-align: middle;
+            font-size: 0.95rem;
         }
     </style>
 </head>
 
 <body>
-    <div class="d-flex">
-        {{-- header --}}
-        @include('layout.header')
-    </div>
 
-    <div class="d-flex">
-        {{-- sidebar --}}
-        @include('layout.sidebar')
-    </div>
+    {{-- HEADER --}}
+    @include('layout.header')
+
+    {{-- SIDEBAR --}}
+    @include('layout.sidebar')
 
     <div class="main-content-wrapper">
         <div class="content">
-            {{-- Baris atas: Judul, Pencarian, dan Tombol Tambah --}}
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                <h1 class="mb-0">Daftar Dosen Penguji</h1>
 
-                <div class="d-flex align-items-center gap-2">
-                    <form action="{{ route('dosen_penguji.search') }}" method="get" class="d-flex align-items-center">
-                        <div class="input-group search-bar">
-                            <input type="text" id="searchInput" name="q" class="form-control"
-                                placeholder="Cari dosen...">
-                            {{-- Jika ingin tombol search aktif, tinggal hapus komentar di bawah --}}
-                            {{-- <button class="btn btn-primary" id="searchBtn">
-                            <i class="bi bi-search"></i> Search
-                        </button> --}}
-                        </div>
+            @php
+                $user = auth()->user();
+            @endphp
+
+            {{-- JUDUL + SEARCH + TAMBAH --}}
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h1>Daftar Dosen Penguji</h1>
+
+                <div class="d-flex gap-2">
+                    <form action="{{ route('dosen_penguji.search') }}" method="GET">
+                        <input type="text" name="q" class="form-control search-bar"
+                            placeholder="Cari dosen...">
                     </form>
 
-                    <a href="{{ route('dosen_penguji.create') }}" class="btn btn-primary shadow-sm">
-                        <i class="bi bi-person-plus-fill"></i> Tambah
-                    </a>
+                    @if ($user && $user->role === 'koordinator')
+                        <a href="{{ route('dosen_penguji.create') }}" class="btn btn-primary">
+                            <i class="bi bi-person-plus-fill"></i> Tambah
+                        </a>
+                    @endif
                 </div>
             </div>
 
-            {{-- Tabel Data Dosen Penguji --}}
-            <div class="table-responsive table-wrapper">
-                <table class="table table-bordered align-middle text-center table-sm" id="dosenTable">
+            {{-- TABEL --}}
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm text-center align-middle">
                     <thead>
                         <tr>
-                            <th style="width: 5%;">No</th>
-                            <th style="width: 10%;">NIP</th>
-                            <th style="width: 25%;">nama dosen</th>
-                            <th style="width: 5%;"> nama mahasiswa</th>
-                            <th style="width: 25%;">Email</th>
-                            <th style="width: 15%;">No HP</th>
-                            <th style="width: 15%;">Aksi</th>
+                            <th>No</th>
+                            <th>NIP</th>
+                            <th>Nama Dosen</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Email</th>
+                            <th>No HP</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        @forelse ($dosenPenguji as $index => $dp)
+                        @forelse($dosenPenguji as $index => $dp)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $dp->nip }}</td>
                                 <td>{{ $dp->nama_dosen }}</td>
-                                <td>{{ $dp->nama_mahasiswa ?? 'N/A' }}</td>
+                                <td>{{ $dp->nama_mahasiswa ?? '-' }}</td>
                                 <td class="text-start">{{ $dp->email }}</td>
                                 <td>{{ $dp->no_hp }}</td>
                                 <td>
-                                    <a href="{{ route('dosen_penguji.edit', $dp->id_penguji) }}"
-                                        class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil-square"></i> 
-                                    </a>
-                                    <form action="{{ route('dosen_penguji.destroy', $dp->id_penguji) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin mau hapus data ini?')">
-                                            <i class="bi bi-trash3-fill"></i> 
-                                        </button>
-                                    </form>
+
+                                        <a href="{{ route('dosen_penguji.edit', $dp->id_penguji) }}"
+                                            class="btn btn-warning btn-sm">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+                                        <form action="{{ route('dosen_penguji.destroy', $dp->id_penguji) }}"
+                                            method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Yakin hapus data ini?')">
+                                                <i class="bi bi-trash3-fill"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-muted">-</span>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">Belum ada data dosen penguji</td>
+                                <td colspan="7" class="text-muted py-4">
+                                    Belum ada data dosen penguji
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
 
-
-    <script>
-        // Pencarian sederhana di sisi client
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            let filter = this.value.toLowerCase();
-            let rows = document.querySelectorAll('#dosenTable tbody tr');
-            rows.forEach(row => {
-                let text = row.textContent.toLowerCase();
-                row.style.display = text.includes(filter) ? '' : 'none';
-            });
-        });
-    </script>
 </body>
 
 </html>

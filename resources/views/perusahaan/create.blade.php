@@ -121,7 +121,7 @@
 
                     <br>
 
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="{{ route('perusahaan.index') }}" class="btn btn-secondary">Batal</a>
                 </form>
             </main>

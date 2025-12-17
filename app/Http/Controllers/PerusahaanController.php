@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Perusahaan;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -28,7 +29,7 @@ class PerusahaanController extends Controller
     {
         $validated = $request->validate([
             'nama'          => 'required|string|max:255',
-            'email'         => 'nullable|email|max:255' ,
+            'email'         => 'nullable|email|max:255',
             'alamat'        => 'required|string|max:255',
             'status'        => 'required|string|max:50',
             'bidang_usaha'  => 'required|string|max:100',
@@ -64,58 +65,66 @@ class PerusahaanController extends Controller
             ->with('success', 'Perusahaan berhasil ditambahkan!');
     }
 
-    // Tampilkan form edit perusahaan
     public function edit($id)
     {
         $perusahaan = Perusahaan::findOrFail($id);
-        return view('perusahaan.edit', compact('perusahaan'));
+        $user = Auth::user();
+
+        // KOORDINATOR: bebas edit
+        if ($user->role === 'koordinator') {
+            return view('perusahaan.edit', compact('perusahaan'));
+        }
+
+        // PERUSAHAAN: hanya boleh edit MILIKNYA
+        if ($user->role === 'perusahaan' && $perusahaan->id_user === $user->id) {
+            return view('perusahaan.edit', compact('perusahaan'));
+        }
+
+        // SELAIN ITU: DITOLAK
+        abort(403, 'Anda tidak boleh mengedit perusahaan ini');
     }
+
     public function show($id)
     {
         $perusahaan = Perusahaan::findOrFail($id);
         return view('perusahaan.show', compact('perusahaan'));
     }
 
-    // Proses update perusahaan
     public function update(Request $request, $id)
     {
         $perusahaan = Perusahaan::findOrFail($id);
+        $user = Auth::user();
+
+        // HAK AKSES FINAL
+        if (
+            $user->role !== 'koordinator' &&
+            !($user->role === 'perusahaan' && $perusahaan->id_user === $user->id)
+        ) {
+            abort(403, 'Anda tidak boleh mengedit perusahaan ini');
+        }
 
         $validated = $request->validate([
-            'nama'          => 'required|string|max:255',
-            'email'         => 'nullable|email|max:255' ,
-            'alamat'        => 'required|string|max:255',
-            'status'        => 'required|string|max:50',
-            'bidang_usaha'  => 'required|string|max:100',
-            'fasilitas'     => 'required|string|max:100',
+            'nama' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'status' => 'required|string|max:50',
+            'bidang_usaha' => 'required|string|max:100',
+            'fasilitas' => 'required|string|max:100',
             'level_legalitas' => 'required|string|max:100',
             'jumlah_mahasiswa' => 'required|string|max:100',
-            'hari_operasi'   => 'required|string|max:100',
+            'hari_operasi' => 'required|string|max:100',
         ]);
 
-        // keep user in sync if email/name changed
-        $user = null;
-        if (!empty($validated['email'])) {
-            $user = User::where('email', $validated['email'])->first();
+        // PERUSAHAAN TIDAK BOLEH GANTI PEMILIK
+        if ($user->role === 'perusahaan') {
+            unset($validated['email']);
         }
 
-        if (!$user && !empty($validated['email'])) {
-            $user = User::create([
-                'name' => $validated['nama'],
-                'email' => $validated['email'],
-                'password' => Hash::make(Str::random(16)),
-                'role' => 'perusahaan',
-            ]);
-        } elseif ($user) {
-            $user->update(['name' => $validated['nama'], 'role' => 'perusahaan']);
-        }
-
-        $validated['id_user'] = $user ? $user->id : $perusahaan->id_user;
         $perusahaan->update($validated);
 
         return redirect()->route('perusahaan.index')
-            ->with('success', 'Perusahaan berhasil diperbarui!');
+            ->with('success', 'Perusahaan berhasil diperbarui');
     }
+
 
     // Proses hapus perusahaan
     public function destroy($id)
