@@ -73,7 +73,7 @@ class RatingDanReviewController extends Controller
             }
         }
 
-        return view('rating.ratingperusahaan', compact(
+        return view('Rating.ratingperusahaan', compact(
             'perusahaans',
             'currentMahasiswa',
             'canAddMap'
@@ -87,7 +87,7 @@ class RatingDanReviewController extends Controller
     {
         $perusahaan = Perusahaan::findOrFail($id_perusahaan);
 
-        $reviews = RatingDanReview::with(['mahasiswa.user'])
+        $reviews = RatingDanReview::with(['mahasiswa', 'perusahaan'])
             ->where('id_perusahaan', $id_perusahaan)
             ->when($request->search, function ($q, $search) {
                 $q->where(function ($sub) use ($search) {
@@ -108,7 +108,7 @@ class RatingDanReviewController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('rating.lihatratingdanreview', compact('reviews', 'perusahaan'));
+        return view('Rating.lihatratingdanreview', compact('reviews', 'perusahaan'));
     }
 
     /* ======================================================
@@ -135,7 +135,8 @@ class RatingDanReviewController extends Controller
                 ->with('error', 'Akun tidak terhubung dengan mahasiswa.');
         }
 
-        if ($this->resolveMahasiswaCompanyId($mahasiswa) != $perusahaan->id_perusahaan) {
+        $companyId = $this->resolveMahasiswaCompanyId($mahasiswa);
+        if (!$companyId || $companyId != $perusahaan->id_perusahaan) {
             return redirect()->route('ratingperusahaan')
                 ->with('error', 'Anda hanya boleh memberi review di tempat PKL.');
         }
@@ -150,7 +151,7 @@ class RatingDanReviewController extends Controller
                 ->with('error', 'Anda sudah memberi review.');
         }
 
-        return view('rating.ratingdanreview', compact('perusahaan', 'mahasiswa'));
+        return view('Rating.ratingdanreview', compact('perusahaan', 'mahasiswa'));
     }
 
     /* ======================================================
@@ -177,7 +178,8 @@ class RatingDanReviewController extends Controller
             'review'        => 'required|string|max:500',
         ]);
 
-        if ($this->resolveMahasiswaCompanyId($mahasiswa) != $validated['id_perusahaan']) {
+        $companyId = $this->resolveMahasiswaCompanyId($mahasiswa);
+        if (!$companyId || $companyId != $validated['id_perusahaan']) {
             return back()->with('error', 'Perusahaan tidak sesuai PKL.');
         }
 
@@ -203,6 +205,10 @@ class RatingDanReviewController extends Controller
         $perusahaan = Perusahaan::findOrFail($review->id_perusahaan);
 
         $user = Auth::user();
+        if (!$user) {
+            abort(403, 'User tidak ditemukan.');
+        }
+
         $mahasiswa = Mahasiswa::where('email', $user->email)->first();
 
         $isOwner = $mahasiswa && $mahasiswa->id_mahasiswa == $review->id_mahasiswa;
@@ -216,7 +222,7 @@ class RatingDanReviewController extends Controller
         // The edit view expects a variable named $ratingdanreview
         $ratingdanreview = $review;
 
-        return view('rating.editratingdanreview', compact('ratingdanreview', 'perusahaan'));
+        return view('Rating.editratingdanreview', compact('ratingdanreview', 'perusahaan'));
     }
 
     public function update(Request $request, $id_review)
@@ -225,6 +231,10 @@ class RatingDanReviewController extends Controller
 
         // authorization: only owner (mahasiswa) or koordinator may update
         $user = Auth::user();
+        if (!$user) {
+            abort(403, 'User tidak ditemukan.');
+        }
+
         $mahasiswa = Mahasiswa::where('email', $user->email)->first();
         $isOwner = $mahasiswa && $mahasiswa->id_mahasiswa == $review->id_mahasiswa;
         $isKoordinator = $user->role === 'koordinator';
@@ -268,6 +278,10 @@ class RatingDanReviewController extends Controller
     {
         $review = RatingDanReview::findOrFail($id_review);
         $user = Auth::user();
+
+        if (!$user) {
+            abort(403, 'User tidak ditemukan.');
+        }
 
         $mahasiswa = Mahasiswa::where('email', $user->email)->first();
         $isOwner = $mahasiswa && $mahasiswa->id_mahasiswa == $review->id_mahasiswa;
