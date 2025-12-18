@@ -36,7 +36,7 @@ class DosenPengujiController extends Controller
         $query = $request->input('q');
 
         // Sesuaikan query pencarian agar join tetap jalan (jika diperlukan) atau gunakan model relations
-        // Untuk sederhananya kita gunakan query builder yang sama dengan index tapi difilter
+        // disini saya gunakan query builder yang sama dengan index tapi difilter
         $dosenPenguji = dosen_penguji::leftjoin('mahasiswa', 'mahasiswa.id_mahasiswa', '=', 'dosen_penguji.id_mahasiswa')
             ->leftjoin('dosen', 'dosen.id_dosen', '=', 'dosen_penguji.id_dosen')
             ->select('dosen_penguji.*', 'mahasiswa.nama as nama_mahasiswa', 'dosen.nama as nama_dosen', 'dosen.nip', 'dosen.email', 'dosen.no_hp', 'dosen.id_user')
