@@ -54,6 +54,15 @@
         </div>
     @endif
 
+    {{-- search --}}
+    <div class="search-container">
+        <form action="{{ route('transkrip.index') }}" method="GET">
+            <input type="text" name="search" id="searchInput" class="search-input" placeholder="Cari NIM atau Nama Mahasiswa..." value="{{ request('search') }}">
+            <button type="submit" class="btn btn-search" id="searchBtn" title="Cari"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+
+    <div class="content-wrapper">
     <div class="result-card">
         @if(count($data) > 0)
             <div class="table-wrapper">
@@ -134,6 +143,27 @@
         @endif
     </div>
 </div>
+
+    <!-- Live Search -->
+    <script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        const filter = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('.table-wrapper tbody tr');
+
+        rows.forEach(row => {
+            const nim = (row.querySelectorAll('td')[1]?.textContent || '').toLowerCase();
+            const nama = (row.querySelectorAll('td')[2]?.textContent || '').toLowerCase();
+
+            const match = nim.includes(filter) || nama.includes(filter);
+            row.style.display = match ? '' : 'none';
+        });
+    });
+
+    // search button click
+    document.getElementById('searchBtn').addEventListener('click', function(){
+        document.getElementById('searchInput').dispatchEvent(new Event('keyup'));
+    });
+    </script>
 
 </body>
 </html>

@@ -166,7 +166,8 @@
                                         <td class="border-0 rounded-start ps-3 text-secondary">{{ $m->nim }}</td>
                                         <td class="border-0 text-dark">{{ $m->nama }}</td>
                                         <td class="border-0 text-muted">{{ $m->email }}</td>
-                                        <td class="border-0 text-center">{{ $m->no_hp ?? '-' }}</td>
+                                        {{-- no_hp ganti 08 menjaadi +62 --}}
+                                        <td class="border-0 text-center">{{ preg_replace('/^0/', '+62 ', $m->no_hp) }}</td>
                                         <td class="border-0"><span class="badge bg-light text-dark border fw-normal">{{ $m->prodi }}</span></td>
                                         <td class="border-0 text-center">{{ $m->angkatan }}</td>
                                         <td class="border-0 text-center">{{ optional($m->transcript)->ipk ?? $m->ipk ?? '-' }}</td>
