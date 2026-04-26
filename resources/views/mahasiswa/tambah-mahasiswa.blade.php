@@ -2,14 +2,14 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Tambah Data Mahasiswa - Sistem PKL JOZZ</title>
+    <title>Tambah Data Mahasiswa - SIMPKL-TI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     {{-- CSS --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style-pkl.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/nilai.css') }}">
-    
+
     <style>
         /* Layout utama */
         .main-content-wrapper {
@@ -34,7 +34,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             border-left: 5px solid #4a6baf;
         }
-        
+
         .form-section h3 {
             color: #4a6baf;
             margin-top: 0;
@@ -46,7 +46,7 @@
             gap: 12px;
             font-size: 1.3em;
         }
-        
+
         /* LAYOUT FORM-ROW SEPERTI FORM EDIT */
         .form-row {
             display: flex;
@@ -54,12 +54,12 @@
             gap: 20px;
             margin-bottom: 20px;
         }
-        
+
         .form-group {
             flex: 1;
             min-width: 300px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
@@ -67,7 +67,7 @@
             color: #333;
             font-size: 14px;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 12px 15px;
@@ -78,14 +78,14 @@
             background-color: #fafbfc;
             box-sizing: border-box;
         }
-        
+
         .form-control:focus {
             border-color: #4a6baf;
             background-color: #fff;
             outline: none;
             box-shadow: 0 0 0 3px rgba(74, 107, 175, 0.15);
         }
-        
+
         .form-group select.form-control {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234a6baf' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
@@ -94,12 +94,12 @@
             background-size: 12px;
             padding-right: 40px;
         }
-        
+
         .required {
             color: #e74c3c;
             font-weight: bold;
         }
-        
+
         .invalid-feedback {
             color: #e74c3c;
             font-size: 12px;
@@ -107,12 +107,12 @@
             display: block;
             font-weight: 500;
         }
-        
+
         .is-invalid {
             border-color: #e74c3c !important;
             background-color: #fdf2f2 !important;
         }
-        
+
         .form-actions {
             display: flex;
             gap: 15px;
@@ -121,7 +121,7 @@
             padding-top: 25px;
             border-top: 2px solid #f0f4f8;
         }
-        
+
         .btn {
             padding: 12px 24px;
             border: none;
@@ -137,31 +137,31 @@
             min-width: 140px;
             justify-content: center;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #4a6baf, #3a5a9f);
             color: white;
             box-shadow: 0 2px 4px rgba(74, 107, 175, 0.3);
         }
-        
+
         .btn-primary:hover {
             background: linear-gradient(135deg, #3a5a9f, #2a4a8f);
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(74, 107, 175, 0.4);
         }
-        
+
         .btn-secondary {
             background: linear-gradient(135deg, #6c757d, #5a6268);
             color: white;
             box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
         }
-        
+
         .btn-secondary:hover {
             background: linear-gradient(135deg, #5a6268, #495057);
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(108, 117, 125, 0.4);
         }
-        
+
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -170,7 +170,7 @@
             padding-bottom: 20px;
             border-bottom: 2px solid #e9ecef;
         }
-        
+
         .page-header h2 {
             color: #2c3e50;
             margin: 0;
@@ -179,7 +179,7 @@
             align-items: center;
             gap: 12px;
         }
-        
+
         .page-header h2 i {
             color: #4a6baf;
         }
@@ -190,32 +190,32 @@
                 margin-left: 0;
                 padding: 20px 15px;
             }
-            
+
             .form-row {
                 flex-direction: column;
                 gap: 15px;
             }
-            
+
             .form-group {
                 min-width: 100%;
             }
-            
+
             .form-section {
                 padding: 20px;
             }
-            
+
             .btn {
                 padding: 10px 20px;
                 min-width: 120px;
                 font-size: 13px;
             }
-            
+
             .page-header {
                 flex-direction: column;
                 gap: 15px;
                 align-items: flex-start;
             }
-            
+
             .page-header h2 {
                 font-size: 1.5em;
             }
@@ -225,7 +225,7 @@
         .form-section {
             animation: fadeInUp 0.5s ease-out;
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -236,13 +236,13 @@
                 transform: translateY(0);
             }
         }
-        
+
         /* Placeholder styling */
         .form-control::placeholder {
             color: #a0a0a0;
             font-size: 14px;
         }
-        
+
         /* Hover effects */
         .form-control:hover {
             border-color: #c8d1e0;
@@ -276,7 +276,7 @@
             <!-- Informasi Mahasiswa -->
             <div class="form-section">
                 <h3><i class="fas fa-user"></i> Informasi Mahasiswa</h3>
-                
+
                 <!-- BARIS PERTAMA: NIM dan Nama -->
                 <div class="form-row">
                     <div class="form-group">
@@ -315,7 +315,7 @@
             <!-- Akademik -->
             <div class="form-section">
                 <h3><i class="fas fa-graduation-cap"></i> Data Akademik</h3>
-                
+
                 <!-- BARIS PERTAMA: Prodi, Angkatan, IPK -->
                 <div class="form-row">
                     <div class="form-group">
@@ -354,26 +354,26 @@
             <!-- Tempat PKL -->
             <div class="form-section">
                 <h3><i class="fas fa-building"></i> Tempat PKL</h3>
-                
+
                 <!-- BARIS: Perusahaan -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="perusahaan">Perusahaan (Tempat PKL)</label>
-                        <input type="text" 
-                               name="perusahaan" 
+                        <input type="text"
+                               name="perusahaan"
                                id="perusahaan"
                                class="form-control @error('perusahaan') is-invalid @enderror"
                                placeholder="Ketik atau pilih nama perusahaan"
                                value="{{ old('perusahaan') }}"
                                list="perusahaan-list"
                                autocomplete="off">
-                        
+
                         <datalist id="perusahaan-list">
                             @foreach($perusahaan as $p)
                                 <option value="{{ $p->nama }}">{{ $p->nama }}</option>
                             @endforeach
                         </datalist>
-                        
+
                         @error('perusahaan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         <small style="color: #6c757d; display: block; margin-top: 5px;">
                             <i class="fas fa-info-circle"></i> Ketik untuk mencari atau pilih dari dropdown
@@ -489,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Auto-format untuk input tahun angkatan
     const angkatanInput = document.getElementById('angkatan');
     if (angkatanInput) {

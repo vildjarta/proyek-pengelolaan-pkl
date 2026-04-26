@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Rating & Review | Sistem PKL JOZZ</title>
+  <title>Edit Rating & Review | SIMPKL-TI</title>
 
   {{-- Bootstrap & FontAwesome --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

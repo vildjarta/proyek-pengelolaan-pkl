@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Penilaian Perusahaan - Sistem PKL JOZZ</title>
+    <title>Edit Penilaian Perusahaan - SIMPKL-TI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/style-pkl.css">
@@ -181,8 +181,8 @@
         document.getElementById('pengetahuan_terbobot').textContent = pengetahuanTerbobot.toFixed(2);
 
         // Hitung total
-        const nilaiTotal = disiplinTerbobot + komunikasiTerbobot + kerjaTimTerbobot + 
-                          kerjaMandiriTerbobot + penampilanTerbobot + sikapEtikaTerbobot + 
+        const nilaiTotal = disiplinTerbobot + komunikasiTerbobot + kerjaTimTerbobot +
+                          kerjaMandiriTerbobot + penampilanTerbobot + sikapEtikaTerbobot +
                           pengetahuanTerbobot;
 
         // Konversi ke huruf dan skor
