@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="assets/css/style-pkl.css">
 </head>
 <body>
-  
+
 <div class="header">
   <div class="header-left">
     <div class="logo">
-      <img src="assets/images/logo-baru.png" alt="Logo PKL JOZZ">
-      <span>PKL JOZZ</span>
+      <img src="assets/images/logo-baru.png" alt="Logo SIMPKL-TI">
+      <span>SIMPKL-TI</span>
     </div>
     <i class="fa fa-bars menu-toggle"></i>
   </div>
@@ -94,7 +94,7 @@
   <div class="content">
     <h2><i class="fa fa-user"></i> Profil Pengguna</h2>
     <p>Perbarui informasi akun Anda di sini.</p>
-    
+
     <div class="form-container">
       <form action="/profile/update" method="POST">
         <div class="form-group">

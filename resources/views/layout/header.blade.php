@@ -29,13 +29,13 @@
         }
 
         .menu-toggle { font-size: 14px; line-height:1; color: #555; }
-        
+
         /* Modifikasi Teks Logo */
-        .header .logo span { 
-            font-size: 1.2rem; 
+        .header .logo span {
+            font-size: 1.2rem;
             letter-spacing: .5px;
-            font-weight: 700; 
-            color: #black; 
+            font-weight: 700;
+            color: #black;
             text-transform: uppercase;
         }
 
@@ -45,17 +45,17 @@
             width: 40px;        /* Ukuran ditetapkan agar rasio kotak */
             height: 40px;       /* Sama dengan width */
             object-fit: cover;  /* Agar gambar pas di dalam lingkaran */
-            margin-right: 10px; /* Jarak ke teks "PKL JOZZ" */
+            margin-right: 10px; /* Jarak ke teks "SIMPKL-TI" */
             border: 1px solid #e6f0fa; /* Opsional: border tipis agar rapi */
         }
 
         /* Hilangkan outline/blue highlight pada avatar/tap */
-        .avatar img { 
-            outline: none; 
-            -webkit-tap-highlight-color: transparent; 
-            object-fit: cover; 
+        .avatar img {
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            object-fit: cover;
             border-radius: 50%;
-            border: 2px solid #e6f0fa; 
+            border: 2px solid #e6f0fa;
             transition: transform 0.2s;
         }
         .avatar img:focus { outline: none; box-shadow: none; }
@@ -109,13 +109,13 @@
         .profile-dropdown-menu .dropdown-item { text-decoration: none !important; -webkit-text-decoration-skip: none; }
 
         /* Slight spacing for icon inside dropdown */
-        .profile-dropdown-menu .icon { 
-            width: 28px; 
-            display:inline-flex; 
-            align-items:center; 
-            justify-content:center; 
-            margin-right:8px; 
-            color:inherit; 
+        .profile-dropdown-menu .icon {
+            width: 28px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            margin-right:8px;
+            color:inherit;
         }
 
         /* Ensure dropdown menu aligns under the user-info nicely */
@@ -134,8 +134,8 @@
     <div class="header-left">
         <div class="logo" aria-hidden="true">
             {{-- Gambar logo ini sekarang akan tampil bulat karena style CSS di atas --}}
-            <img src="{{ asset('assets/images/logo-baru.png') }}" alt="Logo PKL JOZZ">
-            <span>PKL JOZZ</span>
+            <img src="{{ asset('assets/images/logo-baru.png') }}" alt="Logo SIMPKL-TI">
+            <span>SIMPKL-TI</span>
         </div>
 
         <button class="menu-toggle" id="sidebarToggle" aria-label="Toggle sidebar" title="Toggle sidebar">

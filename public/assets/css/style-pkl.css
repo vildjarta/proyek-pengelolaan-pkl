@@ -7,11 +7,19 @@
 /* --- Font --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* --- Root variables (utama: gunakan versi terbaru + mempertahankan warna lama) --- */
+/* --- Root variables (Color Palette SIMPKL-TI) --- */
 :root{
-  --color-primary-blue: #261FB3;
-  --color-light-blue-bg: #eaf1f8;
-  --color-text-dark: #333333;
+  /* Color Palette SIMPKL-TI */
+  --oxford-blue: #192338;      /* Warna utama (background navbar/sidebar) */
+  --space-cadet: #1E2E4F;      /* Secondary background */
+  --yinmn-blue: #31487A;       /* Tombol utama / highlight */
+  --jordy-blue: #8FB3E2;       /* Hover / accent */
+  --lavender: #D9E1F1;         /* Background ringan / card / text ringan */
+
+  /* Legacy variables untuk compatibility */
+  --color-primary-blue: var(--yinmn-blue);
+  --color-light-blue-bg: var(--lavender);
+  --color-text-dark: var(--oxford-blue);
   --color-text-gray: #6b6b6b;
   --color-white: #ffffff;
   --color-shadow: rgba(0,0,0,0.08);
@@ -29,7 +37,7 @@
 
 /* --- Base / Reset --- */
 * { box-sizing: border-box; }
-html, body { height:100%; margin:0; padding:0; font-family: 'Poppins', sans-serif; background-color:#f4f7f9; overflow-x: hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+html, body { height:100%; margin:0; padding:0; font-family: 'Poppins', sans-serif; background-color:var(--lavender); overflow-x: hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 body { padding-top: var(--header-height); transition: all var(--transition-medium) ease; }
 
 /* Ensure inputs clickable if overlays exist */
@@ -129,7 +137,7 @@ input, textarea, select { position: relative; z-index: 5; }
   left: 0;
   width: var(--sidebar-width);
   height: calc(100vh - var(--header-height));
-  background: var(--color-primary-blue);
+  background: var(--oxford-blue);
   color: #fff;
   overflow-y:auto;
   -webkit-overflow-scrolling: touch;
@@ -216,7 +224,7 @@ body.sidebar-closed .main-content-wrapper{ margin-left: var(--sidebar-collapsed)
   box-shadow:0 2px 8px var(--color-shadow);
   margin-top:20px;
 }
-.table thead{ background-color:var(--color-primary-blue); color:var(--color-white); }
+.table thead{ background-color:var(--yinmn-blue); color:var(--color-white); }
 .table thead th{ padding:15px; text-align:left; font-weight:600; font-size:0.95rem; border:none; }
 .table tbody tr{ border-bottom:1px solid #e0e0e0; transition:background-color .2s ease; }
 .table tbody tr:hover{ background-color:var(--color-light-blue-bg); }
@@ -252,7 +260,7 @@ body.sidebar-closed .main-content-wrapper{ margin-left: var(--sidebar-collapsed)
 }
 
 /* --- Result card --- */
-.result-card{ background:var(--color-white); border-radius:12px; padding:25px; box-shadow:0 2px 8px var(--color-shadow); margin-bottom:20px; }
+.result-card{ background:var(--lavender); border-radius:12px; padding:25px; box-shadow:0 2px 8px var(--color-shadow); margin-bottom:20px; }
 
 /* --- Status badges (from original) --- */
 .status-badge{ display:inline-block; padding:5px 12px; border-radius:20px; font-weight:500; font-size:0.85rem; }
@@ -271,12 +279,12 @@ body.sidebar-closed .main-content-wrapper{ margin-left: var(--sidebar-collapsed)
   transition: all var(--transition-medium) ease; display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-weight:500;
 }
 .btn:hover{ transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-.btn-primary{ background-color: var(--color-primary-blue); color: white; border-radius:6px; }
-.btn-primary:hover{ background-color:#4a7bc4; }
-.btn-info{ background-color:#17a2b8; color:white; }
-.btn-info:hover{ background-color:#138496; }
-.btn-success{ background-color:#28a745; color:white; }
-.btn-success:hover{ background-color:#218838; }
+.btn-primary{ background-color: var(--yinmn-blue); color: white; border-radius:6px; }
+.btn-primary:hover{ background-color: var(--jordy-blue); }
+.btn-info{ background-color: var(--space-cadet); color:white; }
+.btn-info:hover{ background-color: var(--yinmn-blue); }
+.btn-success{ background-color: var(--yinmn-blue); color:white; }
+.btn-success:hover{ background-color: var(--jordy-blue); }
 .btn-danger{ background-color:#dc3545; color:white; }
 .btn-danger:hover{ background-color:#c82333; }
 

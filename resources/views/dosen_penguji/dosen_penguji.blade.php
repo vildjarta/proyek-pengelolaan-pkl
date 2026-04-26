@@ -2,13 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Data Dosen Penguji - PKL JOZZ</title>
+    <title>Data Dosen Penguji - SIMPKL-TI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/style-header-sidebar.css') }}">
     <style>
-    .main-content-wrapper { padding: 20px; }    
+    .main-content-wrapper { padding: 20px; }
     /* TAMBAHAN BARU: Warna Header Tabel */
     .table thead.bg-blue-custom th {
         background-color: #261FB3 !important;
@@ -23,11 +23,11 @@
     @include('layout.sidebar')
 
     <div class="main-content-wrapper" id="mainContent">
-        <div class="content container-fluid">   
-            
+        <div class="content container-fluid">
+
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Daftar Dosen Penguji</h2>
-                
+
                 {{-- LOGIKA 1: TOMBOL TAMBAH --}}
                 {{-- HANYA KOORDINATOR yang bisa melihat tombol ini --}}
                 {{-- Dosen Penguji, Staff, Mahasiswa TIDAK BISA --}}
@@ -62,7 +62,7 @@
                     @forelse($dosenPenguji as $row)
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
-                            
+
                             <td>
                                 <strong>{{ $row->nama_dosen }}</strong><br>
                                 <small class="text-muted">{{ $row->email }}</small>
@@ -81,7 +81,7 @@
                                         // Koordinator: BISA Edit & Hapus
                                         $canEdit = true;
                                         $canDelete = true;
-                                    } 
+                                    }
                                     elseif (in_array($user->role, ['dosen', 'dosen_penguji'])) {
                                         // Dosen Penguji: BISA Edit (Punya Sendiri), TAPI TIDAK BISA Hapus
                                         if ($row->id_user == $user->id) {

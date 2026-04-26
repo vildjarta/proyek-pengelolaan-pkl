@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Data Dosen Pembimbing - PKL JOZZ</title>
+    <title>Data Dosen Pembimbing - SIMPKL-TI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -27,12 +27,12 @@
 {{-- SEMUA ROLE (koordinator, staff, dosen_pembimbing, mahasiswa) bisa mencari --}}
 @if(in_array(Auth::user()->role, ['koordinator', 'staff', 'dosen_pembimbing', 'mahasiswa']))
     <form action="{{ route('datadosenpembimbing.index') }}" method="GET" class="d-flex align-items-center">
-        <input 
-            type="text" 
-            name="search" 
-            id="searchInput" 
-            class="search-input" 
-            placeholder="Cari dosen..." 
+        <input
+            type="text"
+            name="search"
+            id="searchInput"
+            class="search-input"
+            placeholder="Cari dosen..."
             value="{{ request('search') }}"
         >
         <button class="btn btn-primary ms-2" type="submit">
@@ -105,7 +105,7 @@
                             @if(in_array(Auth::user()->role, ['koordinator', 'dosen_pembimbing']))
                             <td class="text-center">
                                 <div class="action-buttons">
-                                    
+
                                     @php
                                         // Cek apakah user adalah pemilik data ini
                                         $isOwnData = (Auth::user()->role == 'dosen_pembimbing' && $row->id_user == Auth::id());

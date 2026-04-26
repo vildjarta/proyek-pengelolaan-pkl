@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Lihat Rating & Review - PKL JOZZ</title>
+    <title>Lihat Rating & Review - SIMPKL-TI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap & Font Awesome -->

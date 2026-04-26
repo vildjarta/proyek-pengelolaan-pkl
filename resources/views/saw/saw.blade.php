@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Perhitungan SAW - PKL JOZZ</title>
+    <title>Perhitungan SAW - SIMPKL-TI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {{-- Font Awesome & Bootstrap --}}
@@ -78,7 +78,7 @@
                     <tbody>
                         @foreach ($perusahaan as $m)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>                            
+                            <td>{{ $loop->iteration }}</td>
                             <td class="text-start">{{ $m->nama }}</td>
                             <td>{{ $m->jumlah_mahasiswa }}</td>
                             <td>{{ $m->fasilitas }}</td>
@@ -124,7 +124,7 @@
                         @php $no = 1; @endphp
                         @foreach ($normalisasi as $id => $n)
                         <tr>
-                            <td>{{ $no++ }}</td>                            
+                            <td>{{ $no++ }}</td>
                             <td class="text-start">{{ $n['nama'] }}</td>
                             <td>{{ number_format($n['jumlah_mahasiswa'], 4) }}</td>
                             <td>{{ number_format($n['fasilitas'], 4) }}</td>
@@ -201,7 +201,7 @@
                         @php $no = 1; @endphp
                         @foreach ($hasilSAW as $id => $h)
                         <tr>
-                            <td>{{ $no++ }}</td>                            
+                            <td>{{ $no++ }}</td>
                             <td class="text-start">{{ $h['nama'] }}</td>
                             <td>{{ number_format($h['nilai'], 4) }}</td>
                         </tr>
@@ -240,7 +240,7 @@
                                     <i class="fa fa-award" style="color: #cd7f32;"></i>
                                 @endif
                                 {{ $r['ranking'] }}
-                            </td>                            
+                            </td>
                             <td class="text-start">{{ $r['nama'] }}</td>
                             <td>{{ number_format($r['nilai'], 4) }}</td>
                         </tr>

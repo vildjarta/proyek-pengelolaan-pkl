@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Perhitungan Bobot AHP - PKL JOZZ</title>
+    <title>Perhitungan Bobot AHP - SIMPKL-TI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -12,7 +12,7 @@
 
     {{-- CSS Layout Global --}}
     <link rel="stylesheet" href="{{ asset('assets/css/style-header-sidebar.css') }}">
-    
+
     <style>
         .ahp-card {
             background: #fff;
@@ -273,7 +273,7 @@
 
                 <form action="{{ route('ahp.store') }}" method="POST">
                     @csrf
-                    
+
                     <div class="table-responsive">
                         <table class="comparison-table">
                             <thead>

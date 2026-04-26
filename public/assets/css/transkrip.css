@@ -8,7 +8,7 @@
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 8px;
-    background: #f9f9f9;
+    background: var(--lavender);
     transition: all 0.3s ease;
     max-width: 100%;
     box-sizing: border-box;
@@ -20,7 +20,7 @@
 }
 
 .transcript-entry h4 {
-    color: var(--color-primary-blue);
+    color: var(--yinmn-blue);
     margin: 0 0 15px 0;
     font-size: 1.1em;
 }
