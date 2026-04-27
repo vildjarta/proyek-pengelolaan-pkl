@@ -22,6 +22,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\AHPController;
 use App\Http\Controllers\SAWController;
 use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\DocumentController;
 
 
 
@@ -173,6 +174,35 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cek-nim/{nim}', [MahasiswaController::class, 'cekNIM'])->name('ajax.mahasiswa.byNim');
     Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
     Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
+
+    // Document Management Routes
+    Route::prefix('documents')->name('documents.')->group(function () {
+        Route::get('/', [DocumentController::class, 'index'])->name('index');
+
+        // Proposal Routes
+        Route::prefix('proposal')->name('proposal.')->group(function () {
+            Route::get('/', [DocumentController::class, 'proposalIndex'])->name('index');
+            Route::get('/download/{filename}', [DocumentController::class, 'downloadProposalTemplate'])->name('download');
+            Route::post('/upload', [DocumentController::class, 'uploadProposal'])->name('upload');
+        });
+
+        // Undangan Routes
+        Route::prefix('undangan')->name('undangan.')->group(function () {
+            Route::get('/', [DocumentController::class, 'undanganIndex'])->name('index');
+            Route::get('/download/{filename}', [DocumentController::class, 'downloadUndanganTemplate'])->name('download');
+            Route::post('/upload', [DocumentController::class, 'uploadUndangan'])->name('upload');
+        });
+
+        // Laporan Routes
+        Route::prefix('laporan')->name('laporan.')->group(function () {
+            Route::get('/', [DocumentController::class, 'laporanIndex'])->name('index');
+            Route::get('/download/{filename}', [DocumentController::class, 'downloadLaporanTemplate'])->name('download');
+            Route::post('/upload', [DocumentController::class, 'uploadLaporan'])->name('upload');
+        });
+
+        // Uploads listing
+        Route::get('/uploads/{type?}', [DocumentController::class, 'listUploads'])->name('uploads');
+    });
 });
 
 /*

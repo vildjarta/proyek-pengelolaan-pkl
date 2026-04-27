@@ -54,6 +54,7 @@
                 $showRatingPerusahaan= in_array($userRole, ['koordinator', 'mahasiswa', 'staff', 'ketua_prodi', 'dosen_pembimbing', 'dosen_penguji', 'perusahaan']);
                 $showAhpSaw          = ($userRole == 'koordinator');
                 $showManajemenUser   = ($userRole == 'koordinator');
+                $showDocuments       = in_array($userRole, ['koordinator', 'staff', 'mahasiswa', 'ketua_prodi', 'dosen_pembimbing', 'dosen_penguji']);
 
                 // --- 2. LOGIKA STATE (OPEN/CLOSE) ---
                 $isHomeOpen         = $currentRoute == 'home';
@@ -64,6 +65,7 @@
                 $isPenilaianOpen    = request()->is('penilaian*') || request()->is('penilaian-penguji*') || request()->is('penilaian_perusahaan*') || request()->is('nilai*') || request()->is('ratingperusahaan*');
                 $isAhpSawOpen       = request()->is('ahp*') || request()->is('saw*');
                 $isAkunOpen         = request()->is('profile*') || request()->is('manage-users*');
+                $isDocumentsOpen    = request()->is('documents*');
             @endphp
 
             {{-- HEADER BERANDA --}}
@@ -242,6 +244,39 @@
                 </ul>
             @endif
 
+            {{-- MENU DOKUMEN PKL --}}
+            @if ($showDocuments)
+                <h4 class="menu-dropdown-toggle {{ $isDocumentsOpen ? '' : 'collapsed' }}" tabindex="0" data-persist-id="menu-dokumen">
+                    <span>
+                        <i class="fas fa-file-word"></i>
+                        <span class="label-text">Dokumen PKL</span>
+                    </span>
+                    <i class="fa fa-chevron-down dropdown-caret"></i>
+                </h4>
+                <ul class="dropdown-menu {{ $isDocumentsOpen ? '' : 'collapsed' }}"
+                    aria-hidden="{{ $isDocumentsOpen ? 'false' : 'true' }}">
+                    <li class="{{ request()->is('documents') ? 'active' : '' }}">
+                        <a href="{{ route('documents.index') }}">
+                            <span class="label-text">Manajemen Dokumen</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('documents/proposal*') ? 'active' : '' }}">
+                        <a href="{{ route('documents.proposal.index') }}">
+                            <span class="label-text">Proposal PKL</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('documents/undangan*') ? 'active' : '' }}">
+                        <a href="{{ route('documents.undangan.index') }}">
+                            <span class="label-text">Undangan</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('documents/laporan*') ? 'active' : '' }}">
+                        <a href="{{ route('documents.laporan.index') }}">
+                            <span class="label-text">Laporan PKL</span>
+                        </a>
+                    </li>
+                </ul>
+            @endif
 
             {{-- MENU AKUN --}}
             <h4 class="menu-dropdown-toggle {{ $isAkunOpen ? '' : 'collapsed' }}" tabindex="0" data-persist-id="menu-akun">
