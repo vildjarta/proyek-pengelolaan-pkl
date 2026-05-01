@@ -52,12 +52,12 @@
                 $showNilaiPerusahaan = in_array($userRole, ['koordinator', 'perusahaan']);
                 $showNilaiMahasiswa  = in_array($userRole, ['koordinator', 'mahasiswa', 'dosen_penguji', 'dosen_pembimbing']);
                 $showRatingPerusahaan= in_array($userRole, ['koordinator', 'mahasiswa', 'staff', 'ketua_prodi', 'dosen_pembimbing', 'dosen_penguji', 'perusahaan']);
-                $showAhpSaw          = ($userRole == 'koordinator');
+                $showAhpSaw          = false; // ($userRole == 'koordinator');
                 $showManajemenUser   = ($userRole == 'koordinator');
-                $showDocuments       = in_array($userRole, ['koordinator', 'staff', 'mahasiswa', 'ketua_prodi', 'dosen_pembimbing', 'dosen_penguji']);
+                $showDocuments       = true; // Semua user bisa download template
 
                 // --- 2. LOGIKA STATE (OPEN/CLOSE) ---
-                $isHomeOpen         = $currentRoute == 'home';
+                $isHomeOpen         = $currentRoute == 'home' || $currentRoute == 'vmts';
                 $isDataAkademikOpen = request()->is('mahasiswa*') || request()->is('transkrip*');
                 $isBimbinganOpen    = request()->is('datadosenpembimbing*') || request()->is('dosen_penguji*') || request()->is('dosen') || request()->is('dosen/*');
                 $isPerusahaanOpen   = request()->is('perusahaan*');
@@ -65,7 +65,7 @@
                 $isPenilaianOpen    = request()->is('penilaian*') || request()->is('penilaian-penguji*') || request()->is('penilaian_perusahaan*') || request()->is('nilai*') || request()->is('ratingperusahaan*');
                 $isAhpSawOpen       = request()->is('ahp*') || request()->is('saw*');
                 $isAkunOpen         = request()->is('profile*') || request()->is('manage-users*');
-                $isDocumentsOpen    = request()->is('documents*');
+                $isDocumentsOpen    = request()->is('dokumen*');
             @endphp
 
             {{-- HEADER BERANDA --}}
@@ -77,6 +77,11 @@
                 <li class="{{ $currentRoute == 'home' ? 'active' : '' }}">
                     <a href="{{ url('/home') }}">
                         <span class="label-text">Beranda</span>
+                    </a>
+                </li>
+                <li class="{{ $currentRoute == 'vmts' ? 'active' : '' }}">
+                    <a href="{{ url('/vmts') }}">
+                        <span class="label-text">VMTS Politala</span>
                     </a>
                 </li>
             </ul>
@@ -247,30 +252,31 @@
             {{-- MENU DOKUMEN PKL --}}
             @if ($showDocuments)
                 <h4 class="menu-dropdown-toggle {{ $isDocumentsOpen ? '' : 'collapsed' }}" tabindex="0" data-persist-id="menu-dokumen">
-                    <span>
-                        <i class="fas fa-file-word"></i>
-                        <span class="label-text">Dokumen PKL</span>
-                    </span>
+                    <span><i class="fa fas fa-file-word"></i> <span class="label-text">Dokumen PKL</span></span>
                     <i class="fa fa-chevron-down dropdown-caret"></i>
                 </h4>
                 <ul class="dropdown-menu {{ $isDocumentsOpen ? '' : 'collapsed' }}"
                     aria-hidden="{{ $isDocumentsOpen ? 'false' : 'true' }}">
-                    <li class="{{ request()->is('documents') ? 'active' : '' }}">
+                    
+                    @if (in_array($userRole, ['koordinator', 'staff']))
+                    <li class="{{ request()->is('dokumen') ? 'active' : '' }}">
                         <a href="{{ route('documents.index') }}">
                             <span class="label-text">Manajemen Dokumen</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('documents/proposal*') ? 'active' : '' }}">
+                    @endif
+
+                    <li class="{{ request()->is('dokumen/proposal') ? 'active' : '' }}">
                         <a href="{{ route('documents.proposal.index') }}">
                             <span class="label-text">Proposal PKL</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('documents/undangan*') ? 'active' : '' }}">
+                    <li class="{{ request()->is('dokumen/undangan') ? 'active' : '' }}">
                         <a href="{{ route('documents.undangan.index') }}">
                             <span class="label-text">Undangan</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('documents/laporan*') ? 'active' : '' }}">
+                    <li class="{{ request()->is('dokumen/laporan') ? 'active' : '' }}">
                         <a href="{{ route('documents.laporan.index') }}">
                             <span class="label-text">Laporan PKL</span>
                         </a>
@@ -311,34 +317,58 @@
         const dropdownHeaders = document.querySelectorAll('.sidebar h4.menu-dropdown-toggle');
 
         // --- LOGIKA 1: SCROLL OTOMATIS KE MENU AKTIF ---
-        // Kita tidak pakai localStorage scroll, tapi kita cari menu yg "active"
-        // dan paksa browser mengarahkan pandangan ke situ.
         setTimeout(() => {
             const activeLink = document.querySelector('.sidebar .dropdown-menu li.active');
             if (activeLink) {
-                // Scroll elemen active ke tengah (center) dari viewport sidebar
                 activeLink.scrollIntoView({ block: 'center', behavior: 'smooth' });
             }
-        }, 300); // Delay sedikit agar layout selesai render
+        }, 300);
 
         // --- LOGIKA 2: RESTORE MENU OPEN/CLOSE ---
+        let stored = {};
         try {
-            const stored = JSON.parse(localStorage.getItem('sidebar-open-menus') || '{}');
-            dropdownHeaders.forEach(function (header) {
-                const id = header.getAttribute('data-persist-id');
-                const menu = header.nextElementSibling;
-                const isActiveByPhp = menu.querySelector('li.active');
-
-                // Jika aktif dari PHP atau tersimpan OPEN di localStorage
-                if (isActiveByPhp || stored[id] === true) {
-                    menu.classList.remove('collapsed');
-                    header.classList.remove('collapsed');
-                    menu.setAttribute('aria-hidden', 'false');
-                }
-            });
+            const rawStored = localStorage.getItem('sidebar-open-menus');
+            if (rawStored) {
+                stored = JSON.parse(rawStored);
+            }
         } catch (err) {
             console.warn('sidebar restore error', err);
         }
+
+        dropdownHeaders.forEach(function (header) {
+            const id = header.getAttribute('data-persist-id');
+            const menu = header.nextElementSibling;
+            const isActiveByPhp = menu.querySelector('li.active');
+
+            if (isActiveByPhp) {
+                // Selalu buka menu yang berisi halaman aktif saat ini
+                menu.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+                menu.setAttribute('aria-hidden', 'false');
+                stored[id] = true;
+            } else {
+                // Ikuti preferensi dari localStorage
+                if (stored.hasOwnProperty(id)) {
+                    if (stored[id] === true) {
+                        menu.classList.remove('collapsed');
+                        header.classList.remove('collapsed');
+                        menu.setAttribute('aria-hidden', 'false');
+                    } else {
+                        menu.classList.add('collapsed');
+                        header.classList.add('collapsed');
+                        menu.setAttribute('aria-hidden', 'true');
+                    }
+                } else {
+                    // Default tutup jika tidak ada di localStorage
+                    menu.classList.add('collapsed');
+                    header.classList.add('collapsed');
+                    menu.setAttribute('aria-hidden', 'true');
+                }
+            }
+        });
+        
+        // Simpan state yang sudah diupdate
+        localStorage.setItem('sidebar-open-menus', JSON.stringify(stored));
 
         // --- LOGIKA 3: KLIK TOGGLE ---
         dropdownHeaders.forEach(function (header, idx) {
@@ -353,11 +383,11 @@
 
                     if (wasCollapsed) {
                         menu.classList.remove('collapsed');
-                        header.classList.remove('collapsed'); // Panah ke Bawah
+                        header.classList.remove('collapsed');
                         menu.setAttribute('aria-hidden', 'false');
                     } else {
                         menu.classList.add('collapsed');
-                        header.classList.add('collapsed'); // Panah ke Samping
+                        header.classList.add('collapsed');
                         menu.setAttribute('aria-hidden', 'true');
                     }
                     persistSidebarState();

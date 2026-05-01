@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
@@ -12,234 +12,189 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        // Get all templates from each category
-        $proposalTemplates = $this->getTemplatesFromFolder('proposal');
-        $undanganTemplates = $this->getTemplatesFromFolder('undangan');
-        $laporanTemplates = $this->getTemplatesFromFolder('laporan-pkl');
+        // Check if user has permission (koordinator or staff)
+        if (!Auth::check() || !in_array(Auth::user()->role, ['koordinator', 'staff'])) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini');
+        }
 
-        // Count templates
-        $proposalCount = count($proposalTemplates);
-        $undanganCount = count($undanganTemplates);
-        $laporanCount = count($laporanTemplates);
+        // Get document statistics
+        $documents = $this->getDocumentsList();
 
-        return view('documents.index', compact(
-            'proposalTemplates',
-            'undanganTemplates',
-            'laporanTemplates',
-            'proposalCount',
-            'undanganCount',
-            'laporanCount'
-        ));
+        return view('documents.index', compact('documents'));
     }
 
     /**
-     * Helper: Get templates from folder
+     * Get documents list from storage
      */
-    private function getTemplatesFromFolder($folder)
+    private function getDocumentsList()
     {
-        $path = public_path("documents/templates/{$folder}");
-        $templates = [];
+        $documents = [];
+        $base_path = public_path('documents/templates');
+
+        // Check each category
+        $categories = [
+            'proposal' => 'Proposal PKL',
+            'undangan' => 'Undangan',
+            'laporan-pkl' => 'Laporan PKL'
+        ];
+
+        foreach ($categories as $folder => $label) {
+            $path = $base_path . '/' . $folder;
+            if (is_dir($path)) {
+                $files = scandir($path);
+                foreach ($files as $file) {
+                    if ($file !== '.' && $file !== '..') {
+                        $documents[] = [
+                            'filename' => $file,
+                            'display_name' => $this->getDisplayName($file),
+                            'category' => $folder,
+                            'label' => $label,
+                            'path' => 'documents/templates/' . $folder . '/' . $file,
+                            'size' => filesize($path . '/' . $file),
+                            'type' => pathinfo($file, PATHINFO_EXTENSION)
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $documents;
+    }
+
+    /**
+     * Download document
+     */
+    public function download($category, $filename)
+    {
+        // Check permission
+        if (!Auth::check() || !in_array(Auth::user()->role, ['koordinator', 'staff'])) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini');
+        }
+
+        $filePath = public_path('documents/templates/' . $category . '/' . $filename);
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan');
+        }
+
+        return response()->download($filePath);
+    }
+
+    /**
+     * Upload document
+     */
+    public function upload(Request $request)
+    {
+        // Check permission
+        if (!Auth::check() || !in_array(Auth::user()->role, ['koordinator', 'staff'])) {
+            abort(403, 'Anda tidak memiliki izin untuk melakukan tindakan ini');
+        }
+
+        $request->validate([
+            'category' => 'required|in:proposal,undangan,laporan-pkl',
+            'document' => 'required|file|mimes:docx,doc,pdf|max:10240'
+        ]);
+
+        $category = $request->category;
+        $file = $request->file('document');
+
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = public_path('documents/templates/' . $category);
+
+        // Create directory if not exists
+        if (!is_dir($path)) {
+            mkdir($path, 0755, true);
+        }
+
+        $file->move($path, $filename);
+
+        return redirect()->back()->with('success', 'Dokumen berhasil diupload');
+    }
+
+    /**
+     * Delete document
+     */
+    public function delete($category, $filename)
+    {
+        // Check permission
+        if (!Auth::check() || !in_array(Auth::user()->role, ['koordinator', 'staff'])) {
+            abort(403, 'Anda tidak memiliki izin untuk melakukan tindakan ini');
+        }
+
+        $filePath = public_path('documents/templates/' . $category . '/' . $filename);
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan');
+        }
+
+        if (unlink($filePath)) {
+            return redirect()->back()->with('success', 'Dokumen berhasil dihapus');
+        } else {
+            return redirect()->back()->with('error', 'Gagal menghapus dokumen');
+        }
+    }
+
+    /**
+     * Proposal page (download only)
+     */
+    public function proposal()
+    {
+        $documents = $this->getDocumentsByCategory('proposal');
+        return view('documents.proposal.index', compact('documents'));
+    }
+
+    /**
+     * Undangan page (download only)
+     */
+    public function undangan()
+    {
+        $documents = $this->getDocumentsByCategory('undangan');
+        return view('documents.undangan.index', compact('documents'));
+    }
+
+    /**
+     * Laporan page (download only)
+     */
+    public function laporan()
+    {
+        $documents = $this->getDocumentsByCategory('laporan-pkl');
+        return view('documents.laporan.index', compact('documents'));
+    }
+
+    /**
+     * Get documents by category
+     */
+    private function getDocumentsByCategory($category)
+    {
+        $documents = [];
+        $path = public_path('documents/templates/' . $category);
 
         if (is_dir($path)) {
             $files = scandir($path);
             foreach ($files as $file) {
                 if ($file !== '.' && $file !== '..') {
-                    $extension = pathinfo($file, PATHINFO_EXTENSION);
-                    $displayName = $this->getDisplayName($file);
-                    $templates[$file] = [
-                        'name' => $displayName,
-                        'type' => $extension,
-                        'size' => filesize($path . '/' . $file)
-                    ];
+                    $documents[$file] = $this->getDisplayName($file);
                 }
             }
         }
 
-        return $templates;
+        return $documents;
     }
 
     /**
-     * Helper: Get display name for file
+     * Get display name for file
      */
     private function getDisplayName($filename)
     {
-        $displayName = str_replace(['-', '_'], ' ', $filename);
-        $displayName = str_replace('.docx', '', $displayName);
-        $displayName = str_replace('.pdf', '', $displayName);
-        return ucwords($displayName);
-    }
-
-    // ==================== PROPOSAL ====================
-
-    /**
-     * Display proposal templates
-     */
-    public function proposalIndex()
-    {
-        $templates = [
-            'template-proposal.docx' => 'Template Proposal PKL'
-        ];
-
-        return view('documents.proposal.index', compact('templates'));
-    }
-
-    /**
-     * Download proposal template
-     */
-    public function downloadProposalTemplate($filename)
-    {
-        $path = "documents/templates/proposal/{$filename}";
-
-        // Cek file di public folder langsung
-        $fullPath = public_path($path);
-        if (!file_exists($fullPath)) {
-            return redirect()->back()->with('error', 'Template tidak ditemukan: ' . $filename);
-        }
-
-        return response()->download($fullPath);
-    }
-
-    /**
-     * Upload proposal document
-     */
-    public function uploadProposal(Request $request)
-    {
-        $request->validate([
-            'proposal_file' => 'required|mimes:docx|max:10240',
-            'nim' => 'required|string',
-            'judul' => 'required|string'
-        ]);
-
-        $file = $request->file('proposal_file');
-        $nim = $request->nim;
-        $judul = $request->judul;
-
-        $filename = 'proposal_' . $nim . '_' . time() . '.docx';
-        $path = "documents/uploads/proposal/{$filename}";
-
-        Storage::disk('public')->put($path, file_get_contents($file));
-
-        return redirect()->back()->with('success', 'Proposal berhasil diupload');
-    }
-
-    // ==================== UNDANGAN ====================
-
-    /**
-     * Display undangan templates
-     */
-    public function undanganIndex()
-    {
-        $templates = [
-            'undangan-seminar.docx' => 'Undangan Seminar Proposal'
-        ];
-
-        return view('documents.undangan.index', compact('templates'));
-    }
-
-    /**
-     * Download undangan template
-     */
-    public function downloadUndanganTemplate($filename)
-    {
-        $path = "documents/templates/undangan/{$filename}";
-
-        // Cek file di public folder langsung
-        $fullPath = public_path($path);
-        if (!file_exists($fullPath)) {
-            return redirect()->back()->with('error', 'Template tidak ditemukan: ' . $filename);
-        }
-
-        return response()->download($fullPath);
-    }
-
-    /**
-     * Upload undangan document
-     */
-    public function uploadUndangan(Request $request)
-    {
-        $request->validate([
-            'undangan_file' => 'required|mimes:docx|max:10240',
-            'jenis' => 'required|string',
-            'nama' => 'required|string'
-        ]);
-
-        $file = $request->file('undangan_file');
-        $jenis = $request->jenis;
-        $nama = $request->nama;
-
-        $filename = 'undangan_' . $jenis . '_' . $nama . '_' . time() . '.docx';
-        $path = "documents/uploads/undangan/{$filename}";
-
-        Storage::disk('public')->put($path, file_get_contents($file));
-
-        return redirect()->back()->with('success', 'Undangan berhasil diupload');
-    }
-
-    // ==================== LAPORAN PKL ====================
-
-    /**
-     * Display laporan PKL templates
-     */
-    public function laporanIndex()
-    {
-        $templates = [
-            'pedoman-laporan.pdf' => 'Pedoman Penulisan Laporan PKL (PDF)'
-        ];
-
-        return view('documents.laporan.index', compact('templates'));
-    }
-
-    /**
-     * Download laporan template
-     */
-    public function downloadLaporanTemplate($filename)
-    {
-        $path = "documents/templates/laporan-pkl/{$filename}";
-
-        // Cek file di public folder langsung
-        $fullPath = public_path($path);
-        if (!file_exists($fullPath)) {
-            return redirect()->back()->with('error', 'Template tidak ditemukan: ' . $filename);
-        }
-
-        return response()->download($fullPath);
-    }
-
-    /**
-     * Upload laporan PKL
-     */
-    public function uploadLaporan(Request $request)
-    {
-        $request->validate([
-            'laporan_file' => 'required|mimes:docx|max:20480',
-            'nim' => 'required|string',
-            'judul_laporan' => 'required|string'
-        ]);
-
-        $file = $request->file('laporan_file');
-        $nim = $request->nim;
-        $judul = $request->judul_laporan;
-
-        $filename = 'laporan_' . $nim . '_' . time() . '.docx';
-        $path = "documents/uploads/laporan/{$filename}";
-
-        Storage::disk('public')->put($path, file_get_contents($file));
-
-        return redirect()->back()->with('success', 'Laporan PKL berhasil diupload');
-    }
-
-    /**
-     * List uploaded documents
-     */
-    public function listUploads($type = null)
-    {
-        $path = "documents/uploads";
-        if ($type) {
-            $path .= "/{$type}";
-        }
-
-        $files = Storage::disk('public')->files($path);
-
-        return view('documents.uploads', compact('files', 'type'));
+        // Hapus unix timestamp dari nama file (format: 10 angka diikuti underscore)
+        $displayName = preg_replace('/^\d{10}_/', '', $filename);
+        
+        // Hapus ekstensi
+        $displayName = str_replace(['.docx', '.doc', '.pdf'], '', $displayName);
+        
+        // Ganti underscore dan strip dengan spasi
+        $displayName = str_replace(['-', '_'], ' ', $displayName);
+        
+        return ucwords(trim($displayName));
     }
 }

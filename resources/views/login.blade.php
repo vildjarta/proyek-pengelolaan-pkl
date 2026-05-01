@@ -169,6 +169,20 @@
 
                 <h3 class="text-center login-title">SISTEM PENGELOLAAN PKL</h3>
 
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert" style="background: rgba(220, 53, 69, 0.8); color: white; border: none;">
+                        <strong>Pemberitahuan:</strong> {{ session('error') }}
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="background: rgba(40, 167, 69, 0.8); color: white; border: none;">
+                        <strong>Berhasil:</strong> {{ session('success') }}
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('login.submit') }}">
                     @csrf
                     <div class="mb-3">

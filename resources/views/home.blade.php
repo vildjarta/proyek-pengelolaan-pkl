@@ -4,9 +4,16 @@
 <main class="main-content">
     <div class="dashboard-container">
         <!-- Welcome Section -->
-        <div style="margin-bottom:24px">
-            <h2 style="margin:0 0 8px 0;font-size:28px;font-weight:700">Selamat Datang di Dashboard PKL</h2>
-            <p style="margin:0;color:var(--muted);font-size:14px">{{ now()->translatedFormat('l, d F Y') }}</p>
+        <div style="margin-bottom:24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h2 style="margin:0 0 8px 0;font-size:28px;font-weight:700">Selamat Datang di Dashboard PKL</h2>
+                <p style="margin:0;color:var(--muted);font-size:14px">{{ now()->translatedFormat('l, d F Y') }}</p>
+            </div>
+            <div>
+                <a href="{{ route('vmts') }}" class="btn btn-primary" style="background: linear-gradient(135deg, #0f2e5a, #1a4a8c); border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; box-shadow: 0 4px 10px rgba(15, 46, 90, 0.2); display: inline-flex; align-items: center; gap: 8px; color: white; text-decoration: none;">
+                    <i class="fas fa-bullseye"></i> Lihat Visi & Misi
+                </a>
+            </div>
         </div>
 
         <!-- Carousel Section -->

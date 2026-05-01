@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::view('/about', 'about')->name('about');
     Route::view('/menu', 'menu')->name('menu');
+    Route::view('/vmts', 'vmts')->name('vmts');
 
     // Profil Pengguna
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -175,34 +176,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cek-dosen-suggest', [DataDosenPembimbingController::class, 'suggest'])->name('ajax.dosen.suggest');
     Route::get('/cek-dosen/{nip}', [DataDosenPembimbingController::class, 'cekByNip'])->name('ajax.dosen.byNip');
 
-    // Document Management Routes
-    Route::prefix('documents')->name('documents.')->group(function () {
-        Route::get('/', [DocumentController::class, 'index'])->name('index');
-
-        // Proposal Routes
-        Route::prefix('proposal')->name('proposal.')->group(function () {
-            Route::get('/', [DocumentController::class, 'proposalIndex'])->name('index');
-            Route::get('/download/{filename}', [DocumentController::class, 'downloadProposalTemplate'])->name('download');
-            Route::post('/upload', [DocumentController::class, 'uploadProposal'])->name('upload');
-        });
-
-        // Undangan Routes
-        Route::prefix('undangan')->name('undangan.')->group(function () {
-            Route::get('/', [DocumentController::class, 'undanganIndex'])->name('index');
-            Route::get('/download/{filename}', [DocumentController::class, 'downloadUndanganTemplate'])->name('download');
-            Route::post('/upload', [DocumentController::class, 'uploadUndangan'])->name('upload');
-        });
-
-        // Laporan Routes
-        Route::prefix('laporan')->name('laporan.')->group(function () {
-            Route::get('/', [DocumentController::class, 'laporanIndex'])->name('index');
-            Route::get('/download/{filename}', [DocumentController::class, 'downloadLaporanTemplate'])->name('download');
-            Route::post('/upload', [DocumentController::class, 'uploadLaporan'])->name('upload');
-        });
-
-        // Uploads listing
-        Route::get('/uploads/{type?}', [DocumentController::class, 'listUploads'])->name('uploads');
+    // Document Management Routes (role: koordinator, staff)
+    Route::middleware(['role:koordinator,staff'])->group(function () {
+        Route::get('/dokumen', [DocumentController::class, 'index'])->name('documents.index');
+        Route::post('/dokumen/upload', [DocumentController::class, 'upload'])->name('documents.upload');
+        Route::delete('/dokumen/delete/{category}/{filename}', [DocumentController::class, 'delete'])->name('documents.delete');
     });
+
+    // Document Download Routes (all authenticated users)
+    Route::get('/dokumen/download/{category}/{filename}', [DocumentController::class, 'download'])->name('documents.download');
+    Route::get('/dokumen/proposal', [DocumentController::class, 'proposal'])->name('documents.proposal.index');
+    Route::get('/dokumen/undangan', [DocumentController::class, 'undangan'])->name('documents.undangan.index');
+    Route::get('/dokumen/laporan', [DocumentController::class, 'laporan'])->name('documents.laporan.index');
 });
 
 /*

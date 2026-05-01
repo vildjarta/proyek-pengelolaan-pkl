@@ -2,6 +2,9 @@
 
 @section('title', 'Template Proposal - SIMPKL-TI')
 
+<!-- Add Bootstrap 5 CSS for styling -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
 <div class="d-flex">
     @include('layout.sidebar')
 </div>
@@ -22,7 +25,7 @@
                 <i class="fas fa-file-alt me-2"></i>
                 Template Proposal PKL
             </h1>
-            <p class="text-muted">Download template proposal dan upload dokumen proposal</p>
+            <p class="text-muted">Download template proposal PKL</p>
         </div>
 
         <!-- Templates Section -->
@@ -37,22 +40,23 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            @if(!empty($templates))
-                                @foreach($templates as $file => $title)
-                                <div class="col-md-6 mb-3">
-                                    <div class="template-item d-flex align-items-center p-3 border rounded">
-                                        <div class="icon-box me-3">
-                                            <i class="fas fa-file-word fa-2x text-primary"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">{{ $title }}</h6>
-                                            <small class="text-muted">{{ $file }}</small>
-                                        </div>
-                                        <div>
-                                            <a href="{{ route('documents.proposal.download', $file) }}"
-                                               class="btn btn-sm btn-primary">
-                                                <i class="fas fa-download me-1"></i>Download
-                                            </a>
+                            @if(!empty($documents))
+                                @foreach($documents as $file => $title)
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="template-item card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                                        <div class="card-body d-flex flex-column p-4">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="icon-box rounded-circle bg-primary bg-opacity-10 text-primary me-3 flex-shrink-0" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-file-word fa-lg"></i>
+                                                </div>
+                                                <h6 class="mb-0 fw-bold text-dark lh-sm">{{ $title }}</h6>
+                                            </div>
+                                            <div class="mt-auto pt-3">
+                                                <a href="{{ route('documents.download', ['proposal', $file]) }}"
+                                                   class="btn btn-primary w-100 rounded-3 py-2 fw-semibold">
+                                                    <i class="fas fa-download me-2"></i>Download
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -61,73 +65,11 @@
                                 <div class="col-12">
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle me-2"></i>
-                                        Template proposal sedang dalam proses update. Silakan upload file proposal Anda atau hubungi administrator.
+                                        Template proposal tidak tersedia saat ini.
                                     </div>
                                 </div>
                             @endif
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Upload Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-upload me-2"></i>
-                            Upload Proposal
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
-                        @if(session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
-                        <form action="{{ route('documents.proposal.upload') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="nim" class="form-label">NIM</label>
-                                        <input type="text" class="form-control" id="nim" name="nim" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="judul" class="form-label">Judul Proposal</label>
-                                        <input type="text" class="form-control" id="judul" name="judul" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="proposal_file" class="form-label">File Proposal (.docx)</label>
-                                        <input type="file" class="form-control" id="proposal_file" name="proposal_file"
-                                               accept=".docx" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-upload me-2"></i>Upload Proposal
-                                </button>
-                                <a href="{{ route('documents.proposal.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-redo me-2"></i>Reset
-                                </a>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
