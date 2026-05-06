@@ -14,7 +14,7 @@ class PerusahaanController extends Controller
     // Menampilkan daftar perusahaan
     public function index()
     {
-        $perusahaans = Perusahaan::all();
+        $perusahaans = Perusahaan::paginate(10);
         return view('perusahaan.perusahaan', compact('perusahaans'));
     }
 

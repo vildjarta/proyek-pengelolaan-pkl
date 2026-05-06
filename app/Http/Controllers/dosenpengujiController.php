@@ -11,78 +11,54 @@ use Illuminate\Support\Facades\Auth; // Tambahkan ini
 class DosenPengujiController extends Controller
 {
     // Menampilkan daftar dosen penguji
-    public function index()
+    public function index(Request $request)
     {
-        $dosenPenguji = dosen_penguji::leftjoin('mahasiswa', 'mahasiswa.id_mahasiswa', '=', 'dosen_penguji.id_mahasiswa')
-            ->leftjoin('dosen', 'dosen.id_dosen', '=', 'dosen_penguji.id_dosen')
+        $search = $request->search;
+
+        $dosenPenguji = dosen_penguji::leftJoin(
+            'mahasiswa',
+            'mahasiswa.id_mahasiswa',
+            '=',
+            'dosen_penguji.id_mahasiswa'
+        )
+            ->leftJoin(
+                'dosen',
+                'dosen.id_dosen',
+                '=',
+                'dosen_penguji.id_dosen'
+            )
             ->select(
-                'dosen_penguji.id_penguji',  // <--- PASTIKAN INI ADA
+                'dosen_penguji.id_penguji',
                 'dosen_penguji.id_dosen',
                 'dosen_penguji.id_mahasiswa',
+
                 'mahasiswa.nama as nama_mahasiswa',
+                'mahasiswa.nim as nim_mahasiswa',
+
                 'dosen.nama as nama_dosen',
                 'dosen.nip',
                 'dosen.email',
                 'dosen.no_hp',
                 'dosen.id_user'
             )
+
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('dosen.nama', 'like', '%' . $search . '%')
+                        ->orWhere('dosen.nip', 'like', '%' . $search . '%')
+                        ->orWhere('dosen.email', 'like', '%' . $search . '%')
+                        ->orWhere('mahasiswa.nama', 'like', '%' . $search . '%')
+                        ->orWhere('mahasiswa.nim', 'like', '%' . $search . '%');
+                });
+            })
+
             ->get();
 
-        return view('dosen_penguji.dosen_penguji', compact('dosenPenguji'));
+        return view(
+            'dosen_penguji.dosen_penguji',
+            compact('dosenPenguji', 'search')
+        );
     }
-
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
-
-        // Sesuaikan query pencarian agar join tetap jalan (jika diperlukan) atau gunakan model relations
-        // Untuk sederhananya kita gunakan query builder yang sama dengan index tapi difilter
-        $dosenPenguji = dosen_penguji::leftjoin('mahasiswa', 'mahasiswa.id_mahasiswa', '=', 'dosen_penguji.id_mahasiswa')
-            ->leftjoin('dosen', 'dosen.id_dosen', '=', 'dosen_penguji.id_dosen')
-            ->select('dosen_penguji.*', 'mahasiswa.nama as nama_mahasiswa', 'dosen.nama as nama_dosen', 'dosen.nip', 'dosen.email', 'dosen.no_hp', 'dosen.id_user')
-            ->where('dosen.nama', 'like', "%{$query}%")
-            ->orWhere('dosen.nip', 'like', "%{$query}%")
-            ->orWhere('dosen.email', 'like', "%{$query}%")
-            ->get();
-
-        return view('dosen_penguji.dosen_penguji', compact('dosenPenguji', 'query'));
-    }
-
-    // Tampilkan form tambah dosen penguji
-    public function create()
-    {
-        // LOGIKA KEAMANAN: Staff dan Mahasiswa DILARANG akses halaman ini
-        if (in_array(Auth::user()->role, ['staff', 'mahasiswa'])) {
-            abort(403, 'Anda tidak memiliki akses untuk menambah data.');
-        }
-
-        $dosen = Dosen::all();
-        $Mahasiswa = Mahasiswa::all();
-        return view('dosen_penguji.create', compact('Mahasiswa', 'dosen'));
-    }
-
-    // Proses simpan dosen penguji baru
-    public function store(Request $request)
-    {
-        // LOGIKA KEAMANAN
-        if (in_array(Auth::user()->role, ['staff', 'mahasiswa'])) {
-            abort(403, 'Akses ditolak.');
-        }
-
-        $validated = $request->validate([
-            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
-            'id_dosen'    => 'required|exists:dosen,id_dosen',
-        ]);
-
-        // Opsional: Jika Dosen Penguji menambah data, pastikan dia hanya bisa memilih dirinya sendiri (tergantung kebijakan kampus)
-        // Disini kita biarkan terbuka asalkan bukan staff/mahasiswa
-
-        dosen_penguji::create($validated);
-
-        return redirect()->route('dosen_penguji.index')
-            ->with('success', 'Data dosen penguji berhasil ditambahkan!');
-    }
-
     // Tampilkan form edit dosen penguji
     public function edit($id)
     {

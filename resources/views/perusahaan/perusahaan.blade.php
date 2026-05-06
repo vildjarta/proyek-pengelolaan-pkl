@@ -83,7 +83,7 @@
                     </div>
 
                     {{-- TAMBAH PERUSAHAAN: HANYA KOORDINATOR --}}
-                    @if(Auth::user()->role == 'koordinator')
+                    @if (Auth::user()->role == 'koordinator')
                         <a href="{{ route('perusahaan.create') }}" class="btn btn-primary btn-add">
                             <i class="fas fa-plus"></i> Tambah Perusahaan
                         </a>
@@ -141,6 +141,7 @@
                             </div>
                         </div>
 
+
                         {{-- MODAL DETAIL --}}
                         <div class="modal fade" id="detailModal{{ $prs->id_perusahaan }}" tabindex="-1">
                             <div class="modal-dialog modal-lg">
@@ -185,6 +186,18 @@
                             </div>
                         </div>
                     @endforelse
+                </div>
+
+                <!-- Pagination DI LUAR -->
+                <div class="mt-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        Showing {{ $perusahaans->firstItem() }} to {{ $perusahaans->lastItem() }}
+                        of {{ $perusahaans->total() }} results
+                    </div>
+
+                    <div>
+                        {{ $perusahaans->links() }}
+                    </div>
                 </div>
             </main>
         </div>
